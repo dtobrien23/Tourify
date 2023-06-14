@@ -1,0 +1,17 @@
+.App {
+    height: 100vh;
+    width: 100vw;
+  }
+  
+  /* height is currently 84vh,
+  this is the ideal number for my screen,
+  elements may become very slightly 
+  off-centered on other screens when 
+  switching between the nav-bar tabs, 
+  will need to fix this */
+  .map-container {
+    height: 84vh;
+    width: 100%;
+    border-radius: 20px;
+  }
+  
