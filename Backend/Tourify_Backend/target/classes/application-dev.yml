@@ -1,0 +1,11 @@
+server:
+  port: 8001
+  servlet:
+    context-path: /api
+
+
+spring:
+
+  jackson:
+    time-zone: Europe/Dublin
+    date-format: yyyy-MM-dd HH:mm:ss
