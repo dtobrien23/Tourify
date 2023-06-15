@@ -3,6 +3,7 @@ import "./App.css";
 import Map from './components/Map';
 import UserMenu from './components/UserMenu'
 import LoginButtons from './components/LoginButtons'
+import AttractionsList from './components/AttractionsList';
 import {
   ChakraProvider,
   Box,
@@ -58,7 +59,7 @@ function App() {
               <Map />
             </TabPanel>
             <TabPanel>
-              <p>Coming soon!</p>
+              <AttractionsList />
             </TabPanel>
             <TabPanel>   
               <p>Coming soon!</p>

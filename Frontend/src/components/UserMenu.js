@@ -20,7 +20,7 @@ export default function UserMenu({ handleLogout }) {
               <Avatar size="md" src="avatar.jpg" />
               <Flex flexDir="column" ml={3}>
                 <Heading as="h3" size="sm">Elon Musk</Heading>
-                  <Text color="gray" fontSize="14px">Tourist</Text>
+                <Text color="gray" fontSize="14px">Tourist</Text>
               </Flex>
             </Flex>
             </MenuButton>
