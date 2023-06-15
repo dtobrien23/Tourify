@@ -3,22 +3,16 @@ import "./App.css";
 import Map from './components/Map';
 import UserMenu from './components/UserMenu'
 import LoginButtons from './components/LoginButtons'
-import SignUpButton from './components/SignUpButton'
 import {
   ChakraProvider,
   Box,
   theme,
   Flex,
-  Button, 
   Tabs, 
   TabList, 
   TabPanels, 
   Tab, 
   TabPanel,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
 } from '@chakra-ui/react'
 
 
