@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./App.css";
 import Map from './components/Map';
-import UserDropdown from './components/UserDropdown';
+import UserMenu from './components/UserMenu'
+import LoginButtons from './components/LoginButtons'
+import SignUpButton from './components/SignUpButton'
 import {
   ChakraProvider,
   Box,
@@ -18,10 +20,19 @@ import {
   MenuList,
   MenuItem,
 } from '@chakra-ui/react'
-import { FaChevronDown } from 'react-icons/fa';
 
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false)
+  };
+
   return (
     <ChakraProvider theme={theme}>
       <Box>
@@ -38,16 +49,13 @@ function App() {
               </TabList>
             </Flex>
             <Box position="absolute" right="10">
-              <Menu>
-                <MenuButton as={Button} rightIcon={<FaChevronDown />} h="60px" bg="white" border="1px" borderColor="orangered">
-                  <UserDropdown />
-                </MenuButton>
-                <MenuList>
-                  <MenuItem>My Profile</MenuItem>
-                  <MenuItem>My Data</MenuItem>
-                  <MenuItem color="red">Log Out</MenuItem>
-                </MenuList>
-              </Menu>
+              {isLoggedIn ? (
+                <UserMenu handleLogout={handleLogout}/>
+              ) : (
+                <Flex>
+                  <LoginButtons handleLogin={handleLogin}/>
+                </Flex>
+              )}
             </Box>
           </Flex>
 
