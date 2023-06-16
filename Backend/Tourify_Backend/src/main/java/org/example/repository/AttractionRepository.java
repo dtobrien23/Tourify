@@ -23,9 +23,11 @@ public interface AttractionRepository  {
 
     // MongoTemplate Method ----------------------------------------------------------------------
 
-    public void saveAttraction(AttractionDO attractionDO);
+    void saveAttraction(AttractionDO attractionDO);
 
-    public AttractionDO findAttractionByName(String attractionName);
+    AttractionDO findAttractionByName(String attractionName);
+
+    List<AttractionDO> getAllAttraction();
 
 
 

@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import com.mongodb.client.result.UpdateResult;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Component;
+
+
+import java.util.List;
 
 
 /**
@@ -42,8 +42,19 @@ public class AttractionRepositoryImpl implements AttractionRepository {
      */
     @Override
     public AttractionDO findAttractionByName(String attractionName) {
-        Query query=new Query(Criteria.where("userName").is(attractionName));
+        Query query=new Query(Criteria.where("name").is(attractionName));
         AttractionDO attractionDO =  mongoTemplate.findOne(query , AttractionDO.class);
         return attractionDO;
+    }
+
+    /**
+     * get all attraction
+     * @param
+     * @return
+     */
+
+    @Override
+    public List<AttractionDO> getAllAttraction() {
+        return mongoTemplate.findAll(AttractionDO.class);
     }
 }
