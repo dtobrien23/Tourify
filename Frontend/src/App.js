@@ -1,59 +1,37 @@
 import React, { useState } from 'react';
-import "./App.css";
+import './App.css';
 import Map from './components/Map';
-import UserMenu from './components/UserMenu'
-import LoginButtons from './components/LoginButtons'
 import AttractionsList from './components/AttractionsList';
+import NavBar from './components/NavBar';
 import {
   ChakraProvider,
   Box,
   theme,
-  Flex,
-  Tabs, 
-  TabList, 
-  TabPanels, 
-  Tab, 
+  Tabs,
+  TabPanels,
   TabPanel,
-} from '@chakra-ui/react'
-
+} from '@chakra-ui/react';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
+
   const handleLogin = () => {
     setIsLoggedIn(true);
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false)
+    setIsLoggedIn(false);
   };
 
   return (
     <ChakraProvider theme={theme}>
       <Box>
-        <Tabs align="center" flexDirection="row">
-          <Flex align="center" justify="space-between" h="75px" mt="10px"> 
-            <Box position="absolute" left="10">
-              <img src="logo.png" alt="Tourify Logo" />
-            </Box>
-            <Flex flex="1" justifyContent="center">
-              <TabList>
-                <Tab color="orangered">Map</Tab>
-                <Tab color="orangered">Attractions</Tab>
-                <Tab color="orangered">Badges</Tab>
-              </TabList>
-            </Flex>
-            <Box position="absolute" right="10">
-              {isLoggedIn ? (
-                <UserMenu handleLogout={handleLogout}/>
-              ) : (
-                <Flex>
-                  <LoginButtons handleLogin={handleLogin}/>
-                </Flex>
-              )}
-            </Box>
-          </Flex>
-
+        <Tabs align="center" flexDirection="column">
+          <NavBar
+            isLoggedIn={isLoggedIn}
+            handleLogin={handleLogin}
+            handleLogout={handleLogout}
+          />
           <TabPanels>
             <TabPanel>
               <Map />
@@ -61,12 +39,10 @@ function App() {
             <TabPanel>
               <AttractionsList />
             </TabPanel>
-            <TabPanel>   
-              <p>Coming soon!</p>
-            </TabPanel>
+            <TabPanel>Coming soon!</TabPanel>
           </TabPanels>
         </Tabs>
-      </Box>      
+      </Box>
     </ChakraProvider>
   );
 }
