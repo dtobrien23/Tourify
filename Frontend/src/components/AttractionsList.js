@@ -9,6 +9,7 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  SimpleGrid,
 } from '@chakra-ui/react';
 
 const attractions = [
@@ -448,11 +449,15 @@ function Attraction({ name, address, openingHours, website, image }) {
 
 export default function AttractionsList() {
   return (
-    <Box>
+    <SimpleGrid
+      flexDirection="column"
+      alignItems="center"
+      justifyItems="center"
+    >
       {attractions.map((attraction, index) => (
         <Attraction key={index} {...attraction} />
       ))}
-    </Box>
+    </SimpleGrid>
   );
 }
 
