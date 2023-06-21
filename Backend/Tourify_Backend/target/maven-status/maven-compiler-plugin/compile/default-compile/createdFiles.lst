@@ -1,7 +1,0 @@
-org/example/repository/AttractionRepositoryImpl.class
-org/example/repository/AttractionRepository.class
-org/example/config/OpenApiConfig.class
-org/example/model/GreetingDo.class
-org/example/model/AttractionDO.class
-org/example/SystemApplication.class
-org/example/controller/AttractionController.class

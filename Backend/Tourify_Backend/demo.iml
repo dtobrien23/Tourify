@@ -93,6 +93,7 @@
     <orderEntry type="library" name="Maven: jakarta.validation:jakarta.validation-api:3.0.2" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0" level="project" />
     <orderEntry type="library" name="Maven: org.webjars:swagger-ui:4.18.2" level="project" />
+    <orderEntry type="library" name="Maven: com.microsoft.onnxruntime:onnxruntime:1.15.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-data-mongodb:3.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-sync:4.9.1" level="project" />
     <orderEntry type="library" name="Maven: org.mongodb:bson:4.9.1" level="project" />
