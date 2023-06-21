@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import org.example.model.AttractionDO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +9,7 @@ import org.example.repository.AttractionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.example.config.*;
+import ai.onnxruntime.*;
 
 
 
@@ -56,4 +58,43 @@ public class AttractionController {
             return Result.success(attractionDOList);
         }
     }
+
+    @GetMapping("/getPrediction")
+    @Operation(summary = "get the attraction prediction", description = "get the attraction prediction using ONNX file")
+    public Result getPredictAttraction() {
+                try (OrtEnvironment env = OrtEnvironment.getEnvironment();
+                     OrtSession.SessionOptions options = new OrtSession.SessionOptions()) {
+                    // load the model
+                    String currentWorkingDir = System.getProperty("user.dir");
+                    String modelPath = currentWorkingDir + "/Tourify_Backend/src/main/resources/model.onnx";
+                    try (OrtSession session = env.createSession(modelPath, options)) {
+                        // create the input
+                        long[][] longArray = new long[1][9];
+                        longArray[0][0] = 1L;
+                        longArray[0][1] = 2L;
+                        longArray[0][2] = 3L;
+                        longArray[0][3] = 4L;
+                        longArray[0][4] = 5L;
+                        longArray[0][5] = 6L;
+                        longArray[0][6] = 7L;
+                        longArray[0][7] = 7L;
+                        longArray[0][8] = 12L;
+                        OnnxTensor tensor = OnnxTensor.createTensor(env, longArray);
+                        // Create a map to hold the input tensor
+                        HashMap<String, OnnxTensor> inputs = new HashMap<>();
+                        inputs.put("integer_input", tensor); // Replace "input_name" with the actual name of your model's input
+                        // run the model
+                        try (OrtSession.Result results = session.run(inputs)) {
+                            // get the output
+                            float[][] output = (float[][]) ((OnnxTensor)results.get(0)).getValue();
+                            System.out.println("Predicted: " + output[0][0]);  // modify this to suit your output shape
+                        }
+                    }
+                } catch (OrtException e) {
+                    e.printStackTrace();
+                }
+    return Result.success();
+    }
+
+
 }
