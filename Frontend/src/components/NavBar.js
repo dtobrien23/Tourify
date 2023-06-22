@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import UserMenu from './UserMenu';
 import LoginButtons from './LoginButtons';
 import {
@@ -13,26 +13,18 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 
-export default function NavBar({ isLoggedIn, handleLogin, handleLogout }) {
+export default function NavBar({
+  isLoggedIn,
+  handleLogin,
+  isMobile,
+  setIsMobile,
+  handleLogout,
+}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768); // Adjust the breakpoint as needed
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Set initial value
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   return (
     <Flex align="center" justify="space-between" h="75px" mt="10px" px="4">
@@ -70,10 +62,16 @@ export default function NavBar({ isLoggedIn, handleLogin, handleLogout }) {
               onClick={handleMenuToggle}
             />
             <MenuList>
-              <TabList>
-                <Tab color="orangered">Map</Tab>
-                <Tab color="orangered">Attractions</Tab>
-                <Tab color="orangered">Badges</Tab>
+              <TabList flexDirection="column">
+                <Tab color="orangered" onClick={handleMenuToggle}>
+                  Map
+                </Tab>
+                <Tab color="orangered" onClick={handleMenuToggle}>
+                  Attractions
+                </Tab>
+                <Tab color="orangered" onClick={handleMenuToggle}>
+                  Badges
+                </Tab>
               </TabList>
             </MenuList>
           </Menu>

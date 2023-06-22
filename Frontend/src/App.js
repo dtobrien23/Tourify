@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Map from './components/Map';
 import AttractionsList from './components/AttractionsList';
@@ -14,6 +14,20 @@ import {
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768); // Adjust the breakpoint as needed
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Set initial value
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -31,13 +45,14 @@ function App() {
             isLoggedIn={isLoggedIn}
             handleLogin={handleLogin}
             handleLogout={handleLogout}
+            isMobile={isMobile}
           />
           <TabPanels>
             <TabPanel>
               <Map />
             </TabPanel>
             <TabPanel>
-              <AttractionsList />
+              <AttractionsList isMobile={isMobile} />
             </TabPanel>
             <TabPanel>Coming soon!</TabPanel>
           </TabPanels>
