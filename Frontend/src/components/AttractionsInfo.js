@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Box,
   Flex,
-  Heading,
   Text,
   Alert,
   AlertIcon,
@@ -15,12 +14,13 @@ export default function AttractionsInfo({ name, address, openingHours, link }) {
     <>
       <Flex flex="2" justify="center">
         <Box>
-          <Heading as="h2" fontSize="xl">
-            {name}
-          </Heading>
           <Text>{address}</Text>
-          <Text>Opening Hours:</Text>
-          <Box ml={4}>
+          <Text>
+            <a href={link} target="_blank" rel="noopener noreferrer">
+              {link}
+            </a>
+          </Text>
+          <Box ml={4} w="200px">
             {Object.entries(openingHours).map(([day, hours]) => (
               <Flex key={day} justifyContent="space-between">
                 <Text>{day}:</Text>
@@ -28,12 +28,6 @@ export default function AttractionsInfo({ name, address, openingHours, link }) {
               </Flex>
             ))}
           </Box>
-          <Text>
-            Website:{' '}
-            <a href={link} target="_blank" rel="noopener noreferrer">
-              {link}
-            </a>
-          </Text>
         </Box>
       </Flex>
       <Flex flex="1" flexDirection="column" mr={7}>

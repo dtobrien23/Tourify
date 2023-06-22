@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 import attractions from '../data/attractions.json';
 import AttractionsImage from './AttractionsImage';
 import AttractionsInfo from './AttractionsInfo';
@@ -9,36 +9,51 @@ import {
   ModalOverlay,
   ModalContent,
   useDisclosure,
+  Heading,
 } from '@chakra-ui/react';
 
-function Attraction({ name, address, openingHours, link, image, isMobile }) {
+function Attraction({
+  name,
+  full_address,
+  openingHours,
+  link,
+  image,
+  isMobile,
+}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex
+      padding="20px"
       border="1px"
       borderRadius="20px"
       borderColor="orangered"
       bg="white"
-      justify="center"
-      align="center"
       w="80%"
+      flexDirection="column"
     >
       {' '}
       {!isMobile ? (
         <>
-          <AttractionsImage image={image} name={name} />
-          <AttractionsInfo
-            name={name}
-            address={address}
-            openingHours={openingHours}
-            link={link}
-          />
+          <Heading as="h2" fontSize="30px" mb={3}>
+            {name}
+          </Heading>
+          <Flex>
+            <AttractionsImage image={image} name={name} />
+            <AttractionsInfo
+              name={name}
+              address={full_address}
+              openingHours={openingHours}
+              link={link}
+            />
+          </Flex>
         </>
       ) : (
         <>
           <Flex flexDirection="column" onClick={onOpen} flex="auto">
-            <h1 style={{ fontWeight: 'bold' }}>{name}</h1>
+            <Heading as="h2" fontSize="20px" alignSelf="center" mb={2}>
+              {name}
+            </Heading>
             <AttractionsImage image={image} name={name} />
           </Flex>
           <Modal isOpen={isOpen} onClose={onClose}>
@@ -46,7 +61,7 @@ function Attraction({ name, address, openingHours, link, image, isMobile }) {
             <ModalContent>
               <AttractionsInfo
                 name={name}
-                address={address}
+                address={full_address}
                 openingHours={openingHours}
                 link={link}
               />
