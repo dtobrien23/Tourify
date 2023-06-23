@@ -1,11 +1,12 @@
 import React from 'react';
 import { Flex, Button } from '@chakra-ui/react';
+import LoginButtons_test from './LoginButtons_test';
+import SignUpButton_test from './SignUpButton_test';
 
-export default function LoginButtons({ handleLogin }) {
+export default function LoginButtons() {
   return (
     <Flex>
-      <Button
-        onClick={handleLogin}
+      <LoginButtons_test
         style={{ marginRight: '1em' }}
         color="black"
         bg="white"
@@ -14,10 +15,13 @@ export default function LoginButtons({ handleLogin }) {
         borderColor="orangered"
       >
         Log In
-      </Button>
-      <Button color="white" bg="orangered" borderRadius="10px">
+      </LoginButtons_test>
+      <SignUpButton_test 
+      color="white" bg="orangered" borderRadius="10px">
         Sign Up
-      </Button>
+      </SignUpButton_test>
     </Flex>
+
+    
   );
 }
