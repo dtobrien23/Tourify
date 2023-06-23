@@ -6,12 +6,6 @@ import '../App.css';
 mapboxgl.accessToken =
   'pk.eyJ1IjoiZGF2ZWRveWxlIiwiYSI6ImNsajVnNm0xYzA5a3ozZXBlYzJmY2FldWIifQ.flqjNTDCZ5tNntgbrBtB1A';
 
-// const container = {
-//   height: '84vh',
-//   width: '100%',
-//   borderRadius: '20px',
-// };
-
 const MapBox = () => {
   const mapContainerRef = useRef(null);
 

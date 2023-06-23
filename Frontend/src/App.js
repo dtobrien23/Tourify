@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import MapBox from './components/MapBox';
+import Map from './components/Map';
 import AttractionsList from './components/AttractionsList';
 import NavBar from './components/NavBar';
 import {
@@ -15,6 +16,7 @@ import {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
 
   useEffect(() => {
     const handleResize = () => {
@@ -42,7 +44,12 @@ function App() {
   return (
     <ChakraProvider theme={theme}>
       <Box>
-        <Tabs align="center" flexDirection="column" variant={tabVariant}>
+        <Tabs
+          align="center"
+          flexDirection="column"
+          variant={tabVariant}
+          onChange={index => setTabIndex(index)}
+        >
           <NavBar
             isLoggedIn={isLoggedIn}
             handleLogin={handleLogin}
@@ -51,7 +58,7 @@ function App() {
           />
           <TabPanels>
             <TabPanel>
-              <MapBox />
+              <MapBox tabIndex={tabIndex} />
             </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
