@@ -60,16 +60,26 @@ export default function NavBar({
               icon={<HamburgerIcon />}
               variant="ghost"
               onClick={handleMenuToggle}
+              l={1}
             />
             <MenuList>
               <TabList flexDirection="column">
-                <Tab color="orangered" onClick={handleMenuToggle}>
+                <Tab
+                  _selected={{ color: 'white', bg: '#ff4500' }}
+                  onClick={handleMenuToggle}
+                >
                   Map
                 </Tab>
-                <Tab color="orangered" onClick={handleMenuToggle}>
+                <Tab
+                  _selected={{ color: 'white', bg: '#ff4500' }}
+                  onClick={handleMenuToggle}
+                >
                   Attractions
                 </Tab>
-                <Tab color="orangered" onClick={handleMenuToggle}>
+                <Tab
+                  _selected={{ color: 'white', bg: '#ff4500' }}
+                  onClick={handleMenuToggle}
+                >
                   Badges
                 </Tab>
               </TabList>

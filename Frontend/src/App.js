@@ -37,10 +37,12 @@ function App() {
     setIsLoggedIn(false);
   };
 
+  const tabVariant = isMobile ? 'solid-rounded' : 'line';
+
   return (
     <ChakraProvider theme={theme}>
       <Box>
-        <Tabs align="center" flexDirection="column">
+        <Tabs align="center" flexDirection="column" variant={tabVariant}>
           <NavBar
             isLoggedIn={isLoggedIn}
             handleLogin={handleLogin}
