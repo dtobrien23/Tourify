@@ -6,18 +6,24 @@ import '../App.css';
 mapboxgl.accessToken =
   'pk.eyJ1IjoiZGF2ZWRveWxlIiwiYSI6ImNsajVnNm0xYzA5a3ozZXBlYzJmY2FldWIifQ.flqjNTDCZ5tNntgbrBtB1A';
 
-const MapBox = () => {
+const MapBox = props => {
   const mapContainerRef = useRef(null);
+  const { tabIndex } = props;
 
   useEffect(() => {
+    console.log(tabIndex, 'tab index is');
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/dark-v11',
+      style: 'mapbox://styles/mapbox/light-v11',
       center: [-73.978285, 40.755091],
       zoom: 13,
     });
 
     map.on('load', () => {
+      console.log(tabIndex, 'inside map load index');
+      if (tabIndex === 0) {
+        map.resize();
+      }
       // Add a GeoJSON source
       map.addSource('zones', {
         type: 'geojson',
@@ -85,12 +91,12 @@ const MapBox = () => {
       });
 
       // Add controls (optional)
-      map.addControl(new mapboxgl.NavigationControl());
+      // map.addControl(new mapboxgl.NavigationControl());
     });
 
-    // Clean up
-    return () => map.remove();
-  }, []);
+    // // Clean up
+    // return () => map.remove();
+  }, [tabIndex]);
 
   return <div ref={mapContainerRef} className="map" />;
 };

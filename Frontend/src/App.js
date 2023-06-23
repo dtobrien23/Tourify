@@ -16,7 +16,7 @@ import {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [tabIndex, setTabIndex] = useState(0);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
   useEffect(() => {
     const handleResize = () => {
@@ -39,6 +39,10 @@ function App() {
     setIsLoggedIn(false);
   };
 
+  const handleTabSelect = index => {
+    setSelectedTabIndex(index);
+  };
+
   const tabVariant = isMobile ? 'solid-rounded' : 'line';
 
   return (
@@ -48,7 +52,8 @@ function App() {
           align="center"
           flexDirection="column"
           variant={tabVariant}
-          onChange={index => setTabIndex(index)}
+          onChange={handleTabSelect}
+          selectedIndex={selectedTabIndex}
         >
           <NavBar
             isLoggedIn={isLoggedIn}
@@ -58,7 +63,7 @@ function App() {
           />
           <TabPanels>
             <TabPanel>
-              <MapBox tabIndex={tabIndex} />
+              <MapBox tabIndex={selectedTabIndex} />
             </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
