@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Map from './components/Map';
+import MapBox from './components/MapBox';
 import AttractionsList from './components/AttractionsList';
 import NavBar from './components/NavBar';
 import {
@@ -51,7 +51,7 @@ function App() {
           />
           <TabPanels>
             <TabPanel>
-              <Map />
+              <MapBox />
             </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
