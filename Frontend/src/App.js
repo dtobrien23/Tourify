@@ -15,6 +15,7 @@ import {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,21 +38,31 @@ function App() {
     setIsLoggedIn(false);
   };
 
+  const handleTabSelect = (index) => {
+    setSelectedTabIndex(index)};
+
   const tabVariant = isMobile ? 'solid-rounded' : 'line';
+
+
+  
 
   return (
     <ChakraProvider theme={theme}>
       <Box>
-        <Tabs align="center" flexDirection="column" variant={tabVariant}>
+        <Tabs  align="center" 
+                flexDirection="column" 
+                variant={tabVariant} 
+                onChange={handleTabSelect}
+                selectedIndex={selectedTabIndex}>
           <NavBar
             isLoggedIn={isLoggedIn}
             handleLogin={handleLogin}
             handleLogout={handleLogout}
             isMobile={isMobile}
           />
-          <TabPanels>
-            <TabPanel>
-              <MapBox />
+          <TabPanels >
+            <TabPanel >
+              <MapBox tabIndex ={selectedTabIndex} />
             </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
@@ -62,6 +73,6 @@ function App() {
       </Box>
     </ChakraProvider>
   );
-}
+};
 
 export default App;
