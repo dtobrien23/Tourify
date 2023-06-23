@@ -1,8 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '../App.css';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoiZGF2ZWRveWxlIiwiYSI6ImNsajVnNm0xYzA5a3ozZXBlYzJmY2FldWIifQ.flqjNTDCZ5tNntgbrBtB1A';
+
+// const container = {
+//   height: '84vh',
+//   width: '100%',
+//   borderRadius: '20px',
+// };
 
 const MapBox = () => {
   const mapContainerRef = useRef(null);
@@ -46,19 +54,25 @@ const MapBox = () => {
         },
       });
 
-      map.on('mousemove', 'zone', (e) => {
+      map.on('mousemove', 'zone', e => {
         const { objectid } = e.features[0].properties;
         console.log('Hovered Zone ID:', objectid);
 
         // Reset previously hovered zone to blue
-        map.querySourceFeatures('zones').forEach((feature) => {
-          map.setFeatureState({ source: 'zones', id: feature.id }, { hover: false });
+        map.querySourceFeatures('zones').forEach(feature => {
+          map.setFeatureState(
+            { source: 'zones', id: feature.id },
+            { hover: false }
+          );
         });
 
         // Set currently hovered zone to red
-        e.features.forEach((feature) => {
+        e.features.forEach(feature => {
           if (feature.properties.objectid === objectid) {
-            map.setFeatureState({ source: 'zones', id: feature.id }, { hover: true });
+            map.setFeatureState(
+              { source: 'zones', id: feature.id },
+              { hover: true }
+            );
           }
         });
 
@@ -66,8 +80,11 @@ const MapBox = () => {
       });
 
       map.on('mouseleave', 'zone', () => {
-        map.querySourceFeatures('zones').forEach((feature) => {
-          map.setFeatureState({ source: 'zones', id: feature.id }, { hover: false });
+        map.querySourceFeatures('zones').forEach(feature => {
+          map.setFeatureState(
+            { source: 'zones', id: feature.id },
+            { hover: false }
+          );
         });
 
         map.getCanvas().style.cursor = '';
@@ -81,7 +98,7 @@ const MapBox = () => {
     return () => map.remove();
   }, []);
 
-  return <div ref={mapContainerRef} style={{ width: '100%', height: '600px' }} />;
+  return <div ref={mapContainerRef} className="map" />;
 };
 
 export default MapBox;

@@ -53,7 +53,7 @@ export default function NavBar({
           </Box>
         </>
       ) : (
-        <Box display={{ base: 'block', md: 'none' }}>
+        <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
           <Menu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)}>
             <MenuButton
               as={IconButton}
