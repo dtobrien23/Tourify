@@ -26,9 +26,12 @@ const MapBox = (props) => {
     });
 
 
+    
+
     map.on('load', () => {
       console.log(tabIndex, 'inside map load index')
       if (tabIndex===0){map.resize()}
+      console.log(map, 'this is the map log after resize!!')
       // Add a GeoJSON source
       map.addSource('zones', {
         type: 'geojson',
