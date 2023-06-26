@@ -12,6 +12,7 @@ import {
   TabPanels,
   TabPanel,
 } from '@chakra-ui/react';
+import { GoogleLogin } from '@react-oauth/google';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,6 +46,13 @@ function App() {
 
   const tabVariant = isMobile ? 'solid-rounded' : 'line';
 
+  const responseMessage = response => {
+    console.log(response);
+  };
+  const errorMessage = error => {
+    console.log(error);
+  };
+
   return (
     <ChakraProvider theme={theme}>
       <Box>
@@ -71,6 +79,12 @@ function App() {
             <TabPanel>Coming soon!</TabPanel>
           </TabPanels>
         </Tabs>
+        <div>
+          <h2>React Google Login</h2>
+          <br />
+          <br />
+          <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+        </div>
       </Box>
     </ChakraProvider>
   );
