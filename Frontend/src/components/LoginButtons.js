@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Button } from '@chakra-ui/react';
 import LoginButtons_test from './LoginButtons_test';
-import SignUpButton_test from './SignUpButton_test';
+import SignUpForm from './SignUpForm';
 
 export default function LoginButtons() {
   return (
@@ -16,10 +16,10 @@ export default function LoginButtons() {
       >
         Log In
       </LoginButtons_test>
-      <SignUpButton_test 
+      <SignUpForm 
       color="white" bg="orangered" borderRadius="10px">
         Sign Up
-      </SignUpButton_test>
+      </SignUpForm>
     </Flex>
 
     

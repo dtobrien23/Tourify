@@ -9,6 +9,7 @@ mapboxgl.accessToken =
 const MapBox = props => {
   const mapContainerRef = useRef(null);
   const { tabIndex } = props;
+  const mapRef = useRef(null);
 
   useEffect(() => {
     console.log(tabIndex, 'tab index is');
@@ -19,14 +20,10 @@ const MapBox = props => {
       zoom: 13,
     });
 
-
-    
-
     map.on('load', () => {
       console.log(tabIndex, 'inside map load index');
-      if (tabIndex === 0) {
-        map.resize();
-      }
+      // Store the map reference in the ref
+      mapRef.current = map;
       // Add a GeoJSON source
       map.addSource('zones', {
         type: 'geojson',
@@ -99,6 +96,13 @@ const MapBox = props => {
 
     // // Clean up
     // return () => map.remove();
+  });
+
+  useEffect(() => {
+    if (mapRef.current) {
+      // Resize the map when the tab index changes
+      mapRef.current.resize();
+    }
   }, [tabIndex]);
 
   return <div ref={mapContainerRef} className="map" />;

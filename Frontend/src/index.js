@@ -11,8 +11,7 @@ const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 
 root.render(
-  <GoogleOAuthProvider clientId = {process.env.REACT_APP_CLIENT_ID} >
-    console.log(clientId)
+  <GoogleOAuthProvider clientId = "568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com" >
   <StrictMode>
     <ColorModeScript />
     <App />

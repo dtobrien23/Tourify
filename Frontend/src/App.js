@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import MapBox from './components/MapBox';
-import Map from './components/Map';
 import AttractionsList from './components/AttractionsList';
 import NavBar from './components/NavBar';
 import {
@@ -11,13 +10,16 @@ import {
   Tabs,
   TabPanels,
   TabPanel,
+  
 } from '@chakra-ui/react';
-import { GoogleLogin } from '@react-oauth/google';
+
+
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -32,13 +34,7 @@ function App() {
     };
   }, []);
 
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-  };
+ 
 
   const handleTabSelect = index => {
     setSelectedTabIndex(index);
@@ -46,12 +42,7 @@ function App() {
 
   const tabVariant = isMobile ? 'solid-rounded' : 'line';
 
-  const responseMessage = response => {
-    console.log(response);
-  };
-  const errorMessage = error => {
-    console.log(error);
-  };
+ 
 
   return (
     <ChakraProvider theme={theme}>
@@ -64,9 +55,7 @@ function App() {
           selectedIndex={selectedTabIndex}
         >
           <NavBar
-            isLoggedIn={isLoggedIn}
-            handleLogin={handleLogin}
-            handleLogout={handleLogout}
+            
             isMobile={isMobile}
           />
           <TabPanels>
@@ -79,13 +68,8 @@ function App() {
             <TabPanel>Coming soon!</TabPanel>
           </TabPanels>
         </Tabs>
-        <div>
-          <h2>React Google Login</h2>
-          <br />
-          <br />
-          <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
-        </div>
       </Box>
+      
     </ChakraProvider>
   );
 }
