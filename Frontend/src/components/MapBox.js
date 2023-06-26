@@ -6,18 +6,12 @@ import '../App.css';
 mapboxgl.accessToken =
   'pk.eyJ1IjoiZGF2ZWRveWxlIiwiYSI6ImNsajVnNm0xYzA5a3ozZXBlYzJmY2FldWIifQ.flqjNTDCZ5tNntgbrBtB1A';
 
-// const container = {
-//   height: '84vh',
-//   width: '100%',
-//   borderRadius: '20px',
-// };
-
-const MapBox = (props) => {
+const MapBox = props => {
   const mapContainerRef = useRef(null);
-  const {tabIndex} = props;
+  const { tabIndex } = props;
 
   useEffect(() => {
-    console.log(tabIndex,'tab index is')
+    console.log(tabIndex, 'tab index is');
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/light-v11',
@@ -29,9 +23,10 @@ const MapBox = (props) => {
     
 
     map.on('load', () => {
-      console.log(tabIndex, 'inside map load index')
-      if (tabIndex===0){map.resize()}
-      console.log(map, 'this is the map log after resize!!')
+      console.log(tabIndex, 'inside map load index');
+      if (tabIndex === 0) {
+        map.resize();
+      }
       // Add a GeoJSON source
       map.addSource('zones', {
         type: 'geojson',
@@ -96,13 +91,7 @@ const MapBox = (props) => {
         });
 
         map.getCanvas().style.cursor = '';
-      
-      
-        
-      
       });
-
-      
 
       // Add controls (optional)
       // map.addControl(new mapboxgl.NavigationControl());

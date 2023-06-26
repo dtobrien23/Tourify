@@ -210,25 +210,25 @@
     "image": "/images/broadway.jpg"
   },
   {
-    "name": "Radio City Music Hall",
-    "coordinates_lat": 40.759976,
-    "coordinates_lng": -73.9799772,
-    "type": "theater",
+    "name": "Madame Tussauds New York",
+    "coordinates_lat": 40.7564269,
+    "coordinates_lng": -73.9888338,
+    "type": "museum",
     "openingHours": {
-      "Monday": "9-20",
-      "Tuesday": "9-20",
-      "Wednesday": "9-20",
-      "Thursday": "9-20",
-      "Friday": "9-20",
-      "Saturday": "9-20",
-      "Sunday": "9-22"
+      "Monday": "10-20",
+      "Tuesday": "10-20",
+      "Wednesday": "10-20",
+      "Thursday": "10-20",
+      "Friday": "10-22",
+      "Saturday": "10-22",
+      "Sunday": "10-20"
     },
-    "full_address": "1260 6th Ave, New York, NY 10020, United States",
+    "full_address": "234 W 42nd St New York, NY 10036 United States",
     "in_or_out": "in",
-    "price_dollars": "50-140",
-    "estimated_hours_visiting": "01-02",
-    "link": "https://www.msg.com/radio-city-music-hall",
-    "image": "/images/radiocity.jpg"
+    "price_dollars": 50,
+    "estimated_hours_visiting": "1-2 hours",
+    "link": "https://www.madametussauds.com/new-york/",
+    "image": "/images/madame-tussauds.jpg"
   },
   {
     "name": "Lincoln Center",

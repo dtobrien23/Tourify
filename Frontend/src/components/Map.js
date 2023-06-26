@@ -220,7 +220,7 @@ export default function Map() {
       zoom={mapZoom}
       center={mapCenter}
       options={mapOptions}
-      mapContainerClassName="map-container"
+      mapContainerClassName="map"
     />
   );
 }

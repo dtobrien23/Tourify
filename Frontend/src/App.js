@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import MapBox from './components/MapBox';
+import Map from './components/Map';
 import AttractionsList from './components/AttractionsList';
 import NavBar from './components/NavBar';
 import {
@@ -38,31 +39,31 @@ function App() {
     setIsLoggedIn(false);
   };
 
-  const handleTabSelect = (index) => {
-    setSelectedTabIndex(index)};
+  const handleTabSelect = index => {
+    setSelectedTabIndex(index);
+  };
 
   const tabVariant = isMobile ? 'solid-rounded' : 'line';
-
-
-  
 
   return (
     <ChakraProvider theme={theme}>
       <Box>
-        <Tabs  align="center" 
-                flexDirection="column" 
-                variant={tabVariant} 
-                onChange={handleTabSelect}
-                selectedIndex={selectedTabIndex}>
+        <Tabs
+          align="center"
+          flexDirection="column"
+          variant={tabVariant}
+          onChange={handleTabSelect}
+          selectedIndex={selectedTabIndex}
+        >
           <NavBar
             isLoggedIn={isLoggedIn}
             handleLogin={handleLogin}
             handleLogout={handleLogout}
             isMobile={isMobile}
           />
-          <TabPanels >
-            <TabPanel >
-              <MapBox tabIndex ={selectedTabIndex} />
+          <TabPanels>
+            <TabPanel>
+              <MapBox tabIndex={selectedTabIndex} />
             </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
@@ -73,6 +74,6 @@ function App() {
       </Box>
     </ChakraProvider>
   );
-};
+}
 
 export default App;

@@ -13,8 +13,8 @@ def resize_images(input_dir, output_dir, size):
             print(f"Resized image: {filename}")
 
 # Example usage
-input_directory = "C://Users//35385//Desktop//image_test"
-output_directory = "C://Users//35385//Desktop//image_out"
-target_size = (1536, 1152)
+input_directory = "/Users/deanobrien/Desktop/Tourify/images/jimmy"
+output_directory = "/Users/deanobrien/Desktop/Tourify/images/attractions-resized"
+target_size = (225, 225)
 
 resize_images(input_directory, output_directory, target_size)
