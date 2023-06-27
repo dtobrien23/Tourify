@@ -56,7 +56,7 @@ function SignUpForm() {
             <Avatar
               size={'md'}
               marginTop={'0.5em'}
-              marginRight={'0.5em'}
+              marginLeft={'3em'}
               name={profile.name}
               src={profile.picture}
               alt="user image"
@@ -70,12 +70,14 @@ function SignUpForm() {
                   marginRight: '0.5em',
                   marginTop: '0.5em',
                   marginBottom: '0.5em',
+                  marginLeft: '5em'
+                  
                 }}
                 color="black"
                 bg="white"
                 border="1px"
-                // borderRadius="10px"
                 borderColor="orangered"
+                size='sm'
               >
                 Log out
               </Button>
