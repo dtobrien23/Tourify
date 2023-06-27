@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Button, VStack, Badge } from '@chakra-ui/react';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
+import { Avatar, AvatarBadge } from '@chakra-ui/react';
 
 function SignUpForm() {
   const [user, setUser] = useState(null);
@@ -42,30 +43,38 @@ function SignUpForm() {
       <div>
         {profile ? (
           <div>
-            <div>
-              <Badge>
-              <img src={profile.picture} alt="user image" />
-              <h3>User Logged in</h3>
-              <p>Name: {profile.name}</p>
-              <p>Email Address: {profile.email}</p>
-              </Badge>
-            </div>
-            <Button
-              onClick={logOut}
-              style={{ marginRight: '1em' }}
-              color="black"
-              bg="white"
-              border="1px"
-              borderRadius="10px"
-              borderColor="orangered"
+            <Avatar
+              size={'md'}
+              marginTop={'0.5em'}
+              marginRight={'0.5em'}
+              name={profile.name}
+              src={profile.picture}
+              alt="user image"
             >
-              Log out
-            </Button>
+              <AvatarBadge boxSize="1.25em" bg="green.500" />
+            </Avatar>
+            <div>
+              <Button
+                onClick={logOut}
+                style={{
+                  marginRight: '0.5em',
+                  marginTop: '0.5em',
+                  marginBottom: '0.5em',
+                }}
+                color="black"
+                bg="white"
+                border="1px"
+                // borderRadius="10px"
+                borderColor="orangered"
+              >
+                Log out
+              </Button>
+            </div>
           </div>
         ) : (
           <Button
             onClick={() => login()}
-            style={{ marginRight: '1em' }}
+            style={{ marginRight: '1em' , marginTop: '1em'}}
             color="black"
             bg="white"
             border="1px"
@@ -76,7 +85,7 @@ function SignUpForm() {
           </Button>
         )}
       </div>
-      );
+      
     </VStack>
   );
 }

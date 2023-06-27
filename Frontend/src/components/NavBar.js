@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import UserMenu from './UserMenu';
-import LoginButtons from './LoginButtons';
 import {
   Box,
   Flex,
@@ -12,6 +10,7 @@ import {
   MenuList,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
+import SignUpForm from './SignUpForm';
 
 export default function NavBar({
   isLoggedIn,
@@ -31,28 +30,18 @@ export default function NavBar({
       <Box>
         <img src="logo.png" alt="Tourify Logo" />
       </Box>
-      {!isMobile ? (
-        <>
-          <Flex
-            flex="1"
-            justifyContent="center"
-            display={{ base: 'none', md: 'flex' }}
-          >
-            <TabList>
-              <Tab color="orangered">Map</Tab>
-              <Tab color="orangered">Attractions</Tab>
-              <Tab color="orangered">Badges</Tab>
-            </TabList>
-          </Flex>
-          <Box>
-            {isLoggedIn ? (
-              <UserMenu handleLogout={handleLogout} />
-            ) : (
-              <LoginButtons handleLogin={handleLogin} />
-            )}
-          </Box>
-        </>
-      ) : (
+      <Flex
+        flex="1"
+        justifyContent="center"
+        display={{ base: 'none', md: 'flex' }}
+      >
+        <TabList>
+          <Tab color="orangered">Map</Tab>
+          <Tab color="orangered">Attractions</Tab>
+          <Tab color="orangered">Badges</Tab>
+        </TabList>
+      </Flex>
+      {isMobile && (
         <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
           <Menu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)}>
             <MenuButton
@@ -83,9 +72,17 @@ export default function NavBar({
                   Badges
                 </Tab>
               </TabList>
+              <Flex>
+                <SignUpForm   />
+              </Flex>
             </MenuList>
           </Menu>
         </Box>
+      )}
+      {!isMobile && (
+        <Flex>
+          <SignUpForm align="center" />
+        </Flex>
       )}
     </Flex>
   );
