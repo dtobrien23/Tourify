@@ -1,5 +1,5 @@
 import React from 'react';
-import attractions from '../data/attractions.json';
+import attractions from '../static/attractions.json';
 import AttractionsImage from './AttractionsImage';
 import AttractionsInfo from './AttractionsInfo';
 import {

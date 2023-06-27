@@ -5,7 +5,6 @@ import {
   Input,
   Button,
   VStack,
-  useToast,
 } from '@chakra-ui/react';
 
 const SignUpForm = () => {
@@ -15,7 +14,7 @@ const SignUpForm = () => {
   const [password, setPassword] = useState('');
   const [isFormInvalid, setIsFormInvalid] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
 
     if (!username || !email || !password) {
@@ -35,7 +34,10 @@ const SignUpForm = () => {
       {isSubmitted ? (
         <div>
           <p>Application submitted!</p>
-          <p>Thanks for submitting your application. Check your email for verification.</p>
+          <p>
+            Thanks for submitting your application. Check your email for
+            verification.
+          </p>
         </div>
       ) : (
         <VStack spacing={4} align="start">
@@ -46,7 +48,12 @@ const SignUpForm = () => {
                 <span style={{ color: 'red' }}> (required)</span>
               )}
             </FormLabel>
-            <Input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+            <Input
+              type="text"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              required
+            />
           </FormControl>
 
           <FormControl isRequired>
@@ -56,7 +63,12 @@ const SignUpForm = () => {
                 <span style={{ color: 'red' }}> (required)</span>
               )}
             </FormLabel>
-            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <Input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
           </FormControl>
 
           <FormControl isRequired>
@@ -66,7 +78,12 @@ const SignUpForm = () => {
                 <span style={{ color: 'red' }}> (required)</span>
               )}
             </FormLabel>
-            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <Input
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
           </FormControl>
 
           <Button onClick={handleSubmit} type="submit" colorScheme="blue">
