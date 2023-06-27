@@ -10,16 +10,12 @@ import {
   Tabs,
   TabPanels,
   TabPanel,
-  
 } from '@chakra-ui/react';
-
-
+import LocationComponent from './components/LocationComponent';
 
 function App() {
   const [isMobile, setIsMobile] = useState(false);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
-
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,18 +30,16 @@ function App() {
     };
   }, []);
 
- 
-
   const handleTabSelect = index => {
     setSelectedTabIndex(index);
   };
 
   const tabVariant = isMobile ? 'solid-rounded' : 'line';
 
- 
-
   return (
     <ChakraProvider theme={theme}>
+      <LocationComponent />
+
       <Box>
         <Tabs
           align="center"
@@ -54,10 +48,7 @@ function App() {
           onChange={handleTabSelect}
           selectedIndex={selectedTabIndex}
         >
-          <NavBar
-            
-            isMobile={isMobile}
-          />
+          <NavBar isMobile={isMobile} />
           <TabPanels>
             <TabPanel>
               <MapBox tabIndex={selectedTabIndex} />
@@ -69,7 +60,6 @@ function App() {
           </TabPanels>
         </Tabs>
       </Box>
-      
     </ChakraProvider>
   );
 }
