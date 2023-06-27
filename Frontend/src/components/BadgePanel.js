@@ -81,7 +81,7 @@ function BadgePanel() {
       "description": "Acquire the Music Maestro badge by exploring the music scene in Manhattan.",
       "acquisition": "Visit Carnegie Hall.",
       "points": 1000,
-      "image": "badgeimages/music_maestro_badge.png"
+      "image": "badgeimages/explorer_badge_test.png"
     }
   ];
 
@@ -90,7 +90,7 @@ function BadgePanel() {
       {badges.map((badge) => (
         <GridItem key={badge.id} bg="blue.500" color="white" p={4}borderRadius={'20px'}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' , }}>
-            <img src={badge.image} alt={badge.name} style={{ width: '100px', height: '100px' }} />
+            <img src={process.env.PUBLIC_URL + '/' + badge.image} alt={badge.name} style={{ width: '100px', height: '100px' }} />
           </div>
           <div>
             <h3>{badge.name}</h3>
