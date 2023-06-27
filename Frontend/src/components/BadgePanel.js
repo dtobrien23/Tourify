@@ -88,8 +88,8 @@ function BadgePanel() {
   return (
     <Grid templateColumns="repeat(2, 1fr)" gap={6}>
       {badges.map((badge) => (
-        <GridItem key={badge.id} bg="blue.500" color="white" p={4}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <GridItem key={badge.id} bg="blue.500" color="white" p={4}borderRadius={'20px'}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' , }}>
             <img src={badge.image} alt={badge.name} style={{ width: '100px', height: '100px' }} />
           </div>
           <div>
