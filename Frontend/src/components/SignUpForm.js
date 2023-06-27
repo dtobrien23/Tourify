@@ -14,7 +14,15 @@ function SignUpForm() {
   });
 
   useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  useEffect(() => {
     if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
       axios
         .get(
           `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
@@ -35,7 +43,9 @@ function SignUpForm() {
   // log out function to log the user out of google and set the profile array to null
   const logOut = () => {
     googleLogout();
+    localStorage.removeItem('user');
     setProfile(null);
+    setUser(null);
   };
 
   return (
@@ -74,7 +84,7 @@ function SignUpForm() {
         ) : (
           <Button
             onClick={() => login()}
-            style={{ marginRight: '1em' , marginTop: '1em'}}
+            style={{ marginRight: '1em', marginTop: '1em' }}
             color="black"
             bg="white"
             border="1px"
@@ -85,7 +95,6 @@ function SignUpForm() {
           </Button>
         )}
       </div>
-      
     </VStack>
   );
 }
