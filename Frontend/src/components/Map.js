@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import PlacesAutocomplete, {
   geocodeByAddress,
@@ -6,17 +6,19 @@ import PlacesAutocomplete, {
 } from 'react-places-autocomplete';
 import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
-import { Button, Flex, Divider } from '@chakra-ui/react';
+import { Flex, Divider } from '@chakra-ui/react';
 import '../App.css';
 import LocationButton from './LocationButton';
 
 export default function Map() {
   const [map, setMap] = useState(null);
   const [address, setAddress] = useState('');
+  const currentLocationInputRef = useRef(null);
 
   const google = window.google;
   const mapCenter = { lat: 40.755091, lng: -73.978285 };
   const mapZoom = 13;
+  let currentLocation;
 
   const getPosition = () => {
     if (navigator.geolocation) {
@@ -43,9 +45,40 @@ export default function Map() {
   };
 
   const showPosition = position => {
-    let lat = position.coords.latitude;
-    let long = position.coords.longitude;
-    console.log('Success!');
+    const latlng = {
+      lat: parseFloat(position.coords.latitude),
+      lng: parseFloat(position.coords.longitude),
+    };
+
+    const geocoder = new google.maps.Geocoder();
+    // const infowindow = new google.maps.InfoWindow();
+
+    geocoder
+      .geocode({ location: latlng })
+      .then(response => {
+        if (response.results[0]) {
+          currentLocation = response.results[0].formatted_address;
+          console.log(latlng);
+          map.setCenter(latlng);
+          map.setZoom(15);
+
+          if (currentLocationInputRef.current) {
+            currentLocationInputRef.current.value = currentLocation;
+          }
+
+          // eslint-disable-next-line
+          const marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+          });
+
+          // infowindow.setContent('You are here!');
+          // infowindow.open(map, marker);
+        } else {
+          window.alert('No results found');
+        }
+      })
+      .catch(e => window.alert('Geocoder failed due to: ' + e));
   };
 
   const { isLoaded, loadError } = useLoadScript({
@@ -56,6 +89,7 @@ export default function Map() {
   useEffect(() => {
     if (map) {
       attractions.forEach(attraction => {
+        // eslint-disable-next-line
         const marker = new google.maps.Marker({
           position: {
             lat: attraction.coordinates_lat,
@@ -67,6 +101,7 @@ export default function Map() {
         });
       });
     }
+    // eslint-disable-next-line
   }, [map]);
 
   const handleChange = newAddress => {
@@ -150,10 +185,12 @@ export default function Map() {
         </PlacesAutocomplete>
         <Divider orientation="vertical" />
         <input
+          ref={currentLocationInputRef}
           style={{
             paddingLeft: '10px',
           }}
           placeholder={'Current Map View'}
+          value={currentLocation}
         />
         <LocationButton getPosition={getPosition} />
       </Flex>
