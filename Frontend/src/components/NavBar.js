@@ -73,7 +73,7 @@ export default function NavBar({
                 </Tab>
               </TabList>
               <Flex>
-                <SignUpForm   />
+                <SignUpForm />
               </Flex>
             </MenuList>
           </Menu>
