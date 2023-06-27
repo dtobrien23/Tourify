@@ -86,7 +86,7 @@ function SignUpForm() {
         ) : (
           <Button
             onClick={() => login()}
-            style={{ marginRight: '1em', marginTop: '1em' }}
+            style={{ marginLeft: '1.5em', marginTop: '1em' }}
             color="black"
             bg="white"
             border="1px"

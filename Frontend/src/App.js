@@ -12,6 +12,7 @@ import {
   TabPanel,
 } from '@chakra-ui/react';
 import LocationComponent from './components/LocationComponent';
+import BadgePanel from './components/BadgePanel';
 
 function App() {
   const [isMobile, setIsMobile] = useState(false);
@@ -56,7 +57,9 @@ function App() {
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
             </TabPanel>
-            <TabPanel>Coming soon!</TabPanel>
+            <TabPanel>
+              <BadgePanel />
+            </TabPanel>
           </TabPanels>
         </Tabs>
       </Box>

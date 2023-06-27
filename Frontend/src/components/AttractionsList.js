@@ -83,4 +83,3 @@ export default function AttractionsList({ isMobile }) {
   );
 }
 
-// ReactDOM.render(<App />, document.getElementById("root"));
