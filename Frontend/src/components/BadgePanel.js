@@ -9,7 +9,7 @@ function BadgePanel() {
       "description": "Acquire the Explorers' Delight badge by exploring iconic landmarks in Manhattan.",
       "acquisition": "Visit Statue of Liberty.",
       "points": 100,
-      "image": "badgeimages/explorers_delight_badge.png"
+      "image": "badgeimages/explorer_badge_test.png"
     },
     {
       "id": 2,
@@ -65,7 +65,7 @@ function BadgePanel() {
       "description": "Acquire the Nature Lover badge by enjoying the natural beauty of Manhattan.",
       "acquisition": "Visit Central Park Zoo.",
       "points": 800,
-      "image": "badgeimages/nature_lover_badge.png"
+      "image": "badgeimages/naturalist_badge.png"
     },
     {
       "id": 9,
@@ -81,7 +81,7 @@ function BadgePanel() {
       "description": "Acquire the Music Maestro badge by exploring the music scene in Manhattan.",
       "acquisition": "Visit Carnegie Hall.",
       "points": 1000,
-      "image": "badgeimages/explorer_badge_test.png"
+      "image": "badgeimages/music_badge.png"
     }
   ];
 
