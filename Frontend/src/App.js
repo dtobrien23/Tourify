@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
-import MapBox from './components/MapBox';
 import Map from './components/Map';
 import AttractionsList from './components/AttractionsList';
 import NavBar from './components/NavBar';
@@ -12,6 +10,7 @@ import {
   TabPanels,
   TabPanel,
 } from '@chakra-ui/react';
+import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -63,7 +62,7 @@ function App() {
           />
           <TabPanels>
             <TabPanel>
-              <MapBox tabIndex={selectedTabIndex} />
+              <Map />
             </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
