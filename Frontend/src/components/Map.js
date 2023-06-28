@@ -132,6 +132,9 @@ export default function Map() {
 
       // set the markers state
       setMarkers(newMarkers);
+
+      if (selectedFilters.includes('all')) {
+      }
     }
   }, [map, attractions, selectedFilters]);
 
@@ -243,19 +246,27 @@ export default function Map() {
             <button
               key={attractionType.value}
               onClick={() => {
-                if (selectedFilters.includes(attractionType.value)) {
-                  // Remove the attractionType.value from selectedFilters array
-                  setSelectedFilters(
-                    selectedFilters.filter(
-                      filter => filter !== attractionType.value
-                    )
-                  );
+                if (attractionType.value === 'all') {
+                  if (selectedFilters.includes('all')) {
+                    setSelectedFilters([]); // Unselect all filters
+                  } else {
+                    setSelectedFilters(['all']); // Select 'All' filter
+                  }
                 } else {
-                  // Add the attractionType.value to selectedFilters array
-                  setSelectedFilters([
-                    ...selectedFilters,
-                    attractionType.value,
-                  ]);
+                  if (selectedFilters.includes('all')) {
+                    setSelectedFilters([attractionType.value]); // Select the clicked filter only
+                  } else if (selectedFilters.includes(attractionType.value)) {
+                    setSelectedFilters(
+                      selectedFilters.filter(
+                        filter => filter !== attractionType.value
+                      )
+                    ); // Unselect the clicked filter
+                  } else {
+                    setSelectedFilters([
+                      ...selectedFilters,
+                      attractionType.value,
+                    ]); // Add the clicked filter
+                  }
                 }
               }}
               style={{
