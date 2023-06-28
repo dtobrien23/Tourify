@@ -10,7 +10,6 @@ import {
   TabPanels,
   TabPanel,
 } from '@chakra-ui/react';
-import LocationComponent from './components/LocationComponent';
 import BadgePanel from './components/BadgePanel';
 import './App.css';
 
@@ -39,7 +38,6 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      <LocationComponent />
 
       <Box>
         <Tabs
