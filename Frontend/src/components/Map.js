@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
 import { Flex, Divider } from '@chakra-ui/react';
 import '../App.css';
 import LocationButton from './LocationButton';
+import LocationInput from './LocationInput';
 
 export default function Map() {
   const [map, setMap] = useState(null);
@@ -149,6 +147,11 @@ export default function Map() {
 
       map.panTo(latLng);
       map.setZoom(15);
+      const marker = new google.maps.Marker({
+        position: { latLng },
+        map: map,
+        title: newAddress,
+      });
     } catch (error) {
       console.log('Error:', error);
     }
@@ -181,47 +184,9 @@ export default function Map() {
             height: '38px',
           }}
         >
-          <PlacesAutocomplete
-            value={address}
-            onChange={handleChange}
-            onSelect={handleSelect}
-          >
-            {({
-              getInputProps,
-              suggestions,
-              getSuggestionItemProps,
-              loading,
-            }) => (
-              <div
-                style={{
-                  borderRadius: '20px',
-                  padding: '5px',
-                  paddingLeft: '10px',
-                  flex: 1,
-                }}
-              >
-                <input
-                  {...getInputProps({ placeholder: 'Explore Manhattan' })}
-                />
-                <div>
-                  {loading ? <div>Loading...</div> : null}
-                  {suggestions.map(suggestion => {
-                    const style = {
-                      backgroundColor: suggestion.active ? '#eaeaea' : '#fff',
-                      cursor: 'pointer',
-                      padding: '5px 10px',
-                    };
-                    return (
-                      <div {...getSuggestionItemProps(suggestion, { style })}>
-                        {suggestion.description}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </PlacesAutocomplete>
+          <LocationInput map={map} />
           <Divider orientation="vertical" />
+          {/* <LocationInput map={map} /> */}
           <input
             ref={currentLocationInputRef}
             style={{

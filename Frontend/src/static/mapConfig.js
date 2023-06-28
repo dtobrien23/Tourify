@@ -1,5 +1,4 @@
 export const libraries = ['places'];
-
 export const mapOptions = {
   zoomControl: false,
   mapTypeControl: false,
