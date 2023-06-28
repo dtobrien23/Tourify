@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import {
   RangeSlider,
   RangeSliderTrack,
@@ -7,9 +8,33 @@ import {
   Box,
 } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
+import attractions from '../static/attractions.json';
+
 
 export default function SliderBar() {
-  return (
+    const [sliderValue, setSliderValue] = useState([0, 100]);
+    const [filteredAttractions, setFilteredAttractions] = useState(attractions);
+  
+    const handleSliderChange = (value) => {
+        setSliderValue(value);
+        const filtered = attractions.filter(
+          (attraction) =>
+             attraction.busyness_score >= sliderValue[0] && attraction.busyness_score <= sliderValue[1]
+        );
+        setFilteredAttractions(filtered);
+        console.log(sliderValue, 'slider value!!');
+        console.log(filteredAttractions, 'this is the filtered attraction!!');
+      };
+  
+  
+  
+  
+  
+  
+  
+  
+  
+    return (
     <Flex
       style={{
         border: 'solid 10px orangered',
@@ -27,9 +52,7 @@ export default function SliderBar() {
           // width: 'fit-content',
           width: '140px',
           marginTop: '10px',
-          marginLeft: '40px',
-          marginBottom: '35em',
-
+          marginBottom: '38em',
           padding: '5px',
           paddingRight: '10px',
           paddingLeft: '10px',
@@ -44,7 +67,7 @@ export default function SliderBar() {
       <RangeSlider
         aria-label={['min', 'max']}
         colorScheme="orange"
-        defaultValue={[10, 30]}
+        defaultValue={[0, 100]}
         orientation="vertical"
         minH="505"
         minWidth={'20'}
@@ -52,6 +75,7 @@ export default function SliderBar() {
         border={'solid 35px white'}
         borderRadius={'20px'}
         backgroundColor={'white'}
+        onChangeEnd={handleSliderChange}
       >
         <RangeSliderTrack>
           <RangeSliderFilledTrack />

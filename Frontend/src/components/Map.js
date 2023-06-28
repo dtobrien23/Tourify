@@ -280,7 +280,7 @@ export default function Map() {
             </button>
           ))}
         </Flex>
-        <SliderBar/>
+        <SliderBar attractions={attractions}/>
       </Flex>
       
     </GoogleMap>

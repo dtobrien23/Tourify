@@ -18,7 +18,8 @@
     "price_dollars": "44",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.esbnyc.com/",
-    "image": "/images/empirestate.jpg"
+    "image": "/images/empirestate.jpg",
+    "busyness_score": 20
   },
   {
     "name": "Statue of Liberty",
@@ -39,7 +40,9 @@
     "price_dollars": "31.5",
     "estimated_hours_visiting": "03-04",
     "link": "https://www.nps.gov/stli/index.htm",
-    "image": "/images/liberty.jpg"
+    "image": "/images/liberty.jpg",
+    "busyness_score": 50
+
   },
   {
     "name": "Brooklyn Bridge",
@@ -60,7 +63,9 @@
     "price_dollars": "0",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.brooklynbridgepark.org/",
-    "image": "/images/brooklynbridge.jpg"
+    "image": "/images/brooklynbridge.jpg",
+    "busyness_score": 30
+
   },
   {
     "name": "Metropolitan Museum of Art",
@@ -81,7 +86,9 @@
     "price_dollars": "30",
     "estimated_hours_visiting": "02-04",
     "link": "https://www.metmuseum.org/",
-    "image": "/images/met.jpg"
+    "image": "/images/met.jpg",
+    "busyness_score": 100
+
   },
   {
     "name": "Museum of Modern Art (MoMA)",
@@ -102,7 +109,9 @@
     "price_dollars": "25",
     "estimated_hours_visiting": "02-03",
     "link": "https://www.moma.org/",
-    "image": "/images/moma.jpg"
+    "image": "/images/moma.jpg",
+    "busyness_score": 100
+
   },
   {
     "name": "Guggenheim Museum",
@@ -123,7 +132,9 @@
     "price_dollars": "25",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.guggenheim.org/",
-    "image": "/images/guggenheim.jpg"
+    "image": "/images/guggenheim.jpg",
+    "busyness_score": 60
+
   },
   {
     "name": "Central Park",
@@ -144,7 +155,9 @@
     "price_dollars": "0",
     "estimated_hours_visiting": "02-04",
     "link": "https://www.centralparknyc.org/",
-    "image": "/images/centralpark.jpg"
+    "image": "/images/centralpark.jpg",
+    "busyness_score": 45
+
   },
   {
     "name": "Bryant Park",
@@ -165,7 +178,9 @@
     "price_dollars": "0",
     "estimated_hours_visiting": "01-02",
     "link": "https://bryantpark.org/",
-    "image": "/images/bryant.jpg"
+    "image": "/images/bryant.jpg",
+    "busyness_score": 100
+
   },
   {
     "name": "High Line",
@@ -186,7 +201,9 @@
     "price_dollars": "0",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.thehighline.org/",
-    "image": "/images/high-line.jpg"
+    "image": "/images/high-line.jpg",
+    "busyness_score": 78
+
   },
   {
     "name": "Broadway",
@@ -207,7 +224,9 @@
     "price_dollars": "50-700",
     "estimated_hours_visiting": "02-03",
     "link": "https://www.broadway.com/",
-    "image": "/images/broadway.jpg"
+    "image": "/images/broadway.jpg",
+    "busyness_score": 43
+
   },
   {
     "name": "Madame Tussauds New York",
@@ -228,7 +247,9 @@
     "price_dollars": 50,
     "estimated_hours_visiting": "1-2 hours",
     "link": "https://www.madametussauds.com/new-york/",
-    "image": "/images/madame-tussauds.jpg"
+    "image": "/images/madame-tussauds.jpg",
+    "busyness_score": 100
+
   },
   {
     "name": "Lincoln Center",
@@ -249,7 +270,9 @@
     "price_dollars": "5-35",
     "estimated_hours_visiting": "02-03",
     "link": "https://www.lincolncenter.org/home",
-    "image": "/images/lincoln.jpg"
+    "image": "/images/lincoln.jpg",
+    "busyness_score": 88
+
   },
   {
     "name": "Greenwich Village",
@@ -270,7 +293,9 @@
     "price_dollars": "0",
     "estimated_hours_visiting": "02-03",
     "link": "https://greenwichvillage.nyc/",
-    "image": "/images/greenwich.jpg"
+    "image": "/images/greenwich.jpg",
+    "busyness_score": 67
+
   },
   {
     "name": "Harlem",
@@ -291,7 +316,9 @@
     "price_dollars": "0",
     "estimated_hours_visiting": "02-03",
     "link": "https://welcometoharlem.com/",
-    "image": "/images/harlem.jpg"
+    "image": "/images/harlem.jpg",
+    "busyness_score": 99
+
   },
   {
     "name": "Eataly",
@@ -312,7 +339,9 @@
     "price_dollars": "5-80",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.eataly.com/us_en",
-    "image": "/images/eataly.jpg"
+    "image": "/images/eataly.jpg",
+    "busyness_score": 67
+
   },
   {
     "name": "Grand Central Market",
@@ -333,7 +362,9 @@
     "price_dollars": "1-30",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.grandcentralterminal.com/grand-central-market/",
-    "image": "/images/gcm.jpg"
+    "image": "/images/gcm.jpg",
+    "busyness_score": 22
+
   },
   {
     "name": "Whitney Museum",
@@ -354,7 +385,9 @@
     "price_dollars": "25",
     "estimated_hours_visiting": "02-03",
     "link": "https://whitney.org/",
-    "image": "/images/whitney.jpg"
+    "image": "/images/whitney.jpg",
+    "busyness_score": 10
+
   },
   {
     "name": "Museum of Arts and Design",
@@ -375,7 +408,9 @@
     "price_dollars": "18",
     "estimated_hours_visiting": "01-02",
     "link": "https://madmuseum.org/",
-    "image": "/images/museum-arts-design.jpg"
+    "image": "/images/museum-arts-design.jpg",
+    "busyness_score": 77
+
   },
   {
     "name": "New Museum",
@@ -396,7 +431,9 @@
     "price_dollars": "18",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.newmuseum.org/",
-    "image": "/images/new_museum.jpg"
+    "image": "/images/new_museum.jpg",
+    "busyness_score": 15
+
   },
   {
     "name": "Morgan Library & Museum",
@@ -417,7 +454,9 @@
     "price_dollars": "22",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.themorgan.org/",
-    "image": "/images/morgan-lib.jpg"
+    "image": "/images/morgan-lib.jpg",
+    "busyness_score": 91
+
   },
   {
     "name": "Trinity Church",
@@ -438,7 +477,9 @@
     "price_dollars": "0",
     "estimated_hours_visiting": "0.5-1",
     "link": "https://trinitywallstreet.org/",
-    "image": "/images/trinity.jpg"
+    "image": "/images/trinity.jpg",
+    "busyness_score": 23
+
   },
   {
     "name": "Fraunces Tavern",
@@ -459,7 +500,9 @@
     "price_dollars": "7",
     "estimated_hours_visiting": "01-02",
     "link": "https://frauncestavern.com/",
-    "image": "/images/frauncesJPG.jpg"
+    "image": "/images/frauncesJPG.jpg",
+    "busyness_score": 15
+
   },
   {
     "name": "One World Observatory",
@@ -480,7 +523,9 @@
     "price_dollars": "40",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.oneworldobservatory.com/",
-    "image": "/images/1wtc.jpg"
+    "image": "/images/1wtc.jpg",
+    "busyness_score": 72
+
   },
   {
     "name": "Top of the Rock",
@@ -501,7 +546,9 @@
     "price_dollars": "34-85",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.rockefellercenter.com/attractions/top-of-the-rock-observation-deck/",
-    "image": "/images/top-of-the-rock.jpg"
+    "image": "/images/top-of-the-rock.jpg",
+    "busyness_score": 100
+
   },
   {
     "name": "Edge Observation Deck",
@@ -522,6 +569,8 @@
     "price_dollars": "36-185",
     "estimated_hours_visiting": "01-02",
     "link": "https://www.edgenyc.com/en",
-    "image": "/images/edge.jpg"
+    "image": "/images/edge.jpg",
+    "busyness_score": 90
+
   }
 ]
