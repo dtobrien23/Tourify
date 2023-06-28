@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
-import MapBox from './components/MapBox';
+import Map from './components/Map';
 import AttractionsList from './components/AttractionsList';
 import NavBar from './components/NavBar';
 import {
@@ -13,6 +12,7 @@ import {
 } from '@chakra-ui/react';
 import LocationComponent from './components/LocationComponent';
 import BadgePanel from './components/BadgePanel';
+import './App.css';
 
 function App() {
   const [isMobile, setIsMobile] = useState(false);
@@ -52,7 +52,7 @@ function App() {
           <NavBar isMobile={isMobile} />
           <TabPanels>
             <TabPanel>
-              <MapBox tabIndex={selectedTabIndex} />
+              <Map />
             </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />

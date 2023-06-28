@@ -7,8 +7,6 @@ export default function AttractionsImage({ image, name }) {
       <img
         src={image}
         alt={name}
-        border="1px"
-        borderRadius="20px"
         style={{ height: '225px', width: '225px', borderRadius: '20px' }}
       />
     </Box>
