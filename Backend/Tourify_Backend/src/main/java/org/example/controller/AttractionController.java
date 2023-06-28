@@ -13,10 +13,10 @@ import ai.onnxruntime.*;
 
 
 
-
+@CrossOrigin
 @Tag(name = "Attraction API", description = "Desc for Attraction API")
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/attraction")
 public class AttractionController {
 
     @Autowired AttractionRepository attractionRepository;
@@ -24,21 +24,22 @@ public class AttractionController {
     //getMapping注解用于将/greeting的http请求定向到greeting方法上
     //@PostMapping, @RequestMapping等
     @GetMapping("")
-    @Operation(summary = "return greeting string", description = "testing return string")
+    @Operation(summary = "return greeting string", description = "testing return string (testing)")
     public String index() {
         return "Greetings from Spring Boot!";
     }
 
     @PostMapping("/addAttraction")
-    @Operation(summary = "adding attractions", description = "adding attractions to the mongoDB database")
+    @Operation(summary = "adding attractions", description = "adding attractions to the mongoDB database (connecting DB)")
     public Result addAttraction(@RequestBody AttractionDO attraction) {
         System.out.println("1");
         attractionRepository.saveAttraction(attraction);
         return Result.success(attraction);
     }
 
+    //TODO: 解决result raw usage问题
     @GetMapping("/findAttraction")
-    @Operation(summary = "find an attraction", description = "find an attraction by the name")
+    @Operation(summary = "find an attraction", description = "find an attraction by the name (connecting DB)")
     public Result findAttraction(@RequestParam(value = "name") String name) throws BusinessException {
         AttractionDO attractionDO = attractionRepository.findAttractionByName(name);
         if (attractionDO == null) {
@@ -49,7 +50,7 @@ public class AttractionController {
     }
 
     @GetMapping("/getAllAttraction")
-    @Operation(summary = "get all attraction", description = "get all attraction")
+    @Operation(summary = "get all attraction", description = "get all attraction (connecting DB)")
     public Result getAttraction() {
         List<AttractionDO> attractionDOList = attractionRepository.getAllAttraction();
         if (attractionDOList.isEmpty()) {
@@ -60,7 +61,7 @@ public class AttractionController {
     }
 
     @GetMapping("/getPrediction")
-    @Operation(summary = "get the attraction prediction", description = "get the attraction prediction using ONNX file")
+    @Operation(summary = "get the attraction prediction", description = "get the attraction prediction using ONNX file (connecting ONNX)")
     public Result getPredictAttraction() {
                 try (OrtEnvironment env = OrtEnvironment.getEnvironment();
                      OrtSession.SessionOptions options = new OrtSession.SessionOptions()) {
