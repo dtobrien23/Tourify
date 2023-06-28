@@ -9,6 +9,7 @@ import { libraries, mapOptions } from '../static/mapConfig.js';
 import { Flex, Divider } from '@chakra-ui/react';
 import '../App.css';
 import LocationButton from './LocationButton';
+import SliderBar from './SliderBar';
 
 export default function Map() {
   const [map, setMap] = useState(null);
@@ -279,7 +280,9 @@ export default function Map() {
             </button>
           ))}
         </Flex>
+        <SliderBar/>
       </Flex>
+      
     </GoogleMap>
   );
 }
