@@ -13,12 +13,28 @@ import LocationButton from './LocationButton';
 export default function Map() {
   const [map, setMap] = useState(null);
   const [address, setAddress] = useState('');
+  const [markers, setMarkers] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState(['all']);
   const currentLocationInputRef = useRef(null);
 
   const google = window.google;
   const mapCenter = { lat: 40.755091, lng: -73.978285 };
   const mapZoom = 13;
   let currentLocation;
+
+  const attractionTypes = [
+    { label: 'All', value: 'all' },
+    { label: 'Landmark', value: 'landmark' },
+    { label: 'Museum', value: 'museum' },
+    { label: 'Park', value: 'park' },
+    { label: 'Theatre', value: 'theater' },
+    { label: 'Neighborhood', value: 'neighborhood' },
+    { label: 'Dining', value: 'dining' },
+    { label: 'Gallery', value: 'gallery' },
+    { label: 'Library', value: 'library' },
+    { label: 'Historic Site', value: 'historic_site' },
+    { label: 'Observatory', value: 'observatory' },
+  ];
 
   const getPosition = () => {
     if (navigator.geolocation) {
@@ -89,8 +105,20 @@ export default function Map() {
 
   useEffect(() => {
     if (map) {
-      attractions.forEach(attraction => {
-        // eslint-disable-next-line
+      // clear existing markers from the map for filter
+      markers.forEach(marker => {
+        marker.setMap(null);
+      });
+
+      // filter attractions based on the selected filter value
+      const filteredMarkers = selectedFilters.includes('all')
+        ? attractions
+        : attractions.filter(attraction =>
+            selectedFilters.includes(attraction.type)
+          );
+
+      // add filtered markers
+      const newMarkers = filteredMarkers.map(attraction => {
         const marker = new google.maps.Marker({
           position: {
             lat: attraction.coordinates_lat,
@@ -98,12 +126,14 @@ export default function Map() {
           },
           map: map,
           title: attraction.name,
-          attractionType: attraction.type,
         });
+        return marker;
       });
+
+      // set the markers state
+      setMarkers(newMarkers);
     }
-    // eslint-disable-next-line
-  }, [map]);
+  }, [map, attractions, selectedFilters]);
 
   const handleChange = newAddress => {
     setAddress(newAddress);
@@ -135,65 +165,120 @@ export default function Map() {
       }}
     >
       <Flex
-        style={{
-          position: 'absolute',
-          top: 10,
-          left: 10,
-          border: 'solid 2px orangered',
-          borderRadius: '20px',
-          backgroundColor: 'white',
-          zIndex: 1,
-          height: '38px',
-        }}
+        flexDirection="column"
+        style={{ position: 'absolute', top: 10, left: 10 }}
       >
-        <PlacesAutocomplete
-          value={address}
-          onChange={handleChange}
-          onSelect={handleSelect}
+        <Flex
+          style={{
+            width: 'fit-content',
+            border: 'solid 2px orangered',
+            borderRadius: '20px',
+            backgroundColor: 'white',
+            zIndex: 1,
+            height: '38px',
+          }}
         >
-          {({
-            getInputProps,
-            suggestions,
-            getSuggestionItemProps,
-            loading,
-          }) => (
-            <div
+          <PlacesAutocomplete
+            value={address}
+            onChange={handleChange}
+            onSelect={handleSelect}
+          >
+            {({
+              getInputProps,
+              suggestions,
+              getSuggestionItemProps,
+              loading,
+            }) => (
+              <div
+                style={{
+                  borderRadius: '20px',
+                  padding: '5px',
+                  paddingLeft: '10px',
+                  flex: 1,
+                }}
+              >
+                <input
+                  {...getInputProps({ placeholder: 'Explore Manhattan' })}
+                />
+                <div>
+                  {loading ? <div>Loading...</div> : null}
+                  {suggestions.map(suggestion => {
+                    const style = {
+                      backgroundColor: suggestion.active ? '#eaeaea' : '#fff',
+                      cursor: 'pointer',
+                      padding: '5px 10px',
+                    };
+                    return (
+                      <div {...getSuggestionItemProps(suggestion, { style })}>
+                        {suggestion.description}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </PlacesAutocomplete>
+          <Divider orientation="vertical" />
+          <input
+            ref={currentLocationInputRef}
+            style={{
+              paddingLeft: '10px',
+            }}
+            placeholder={'Current Map View'}
+            value={currentLocation}
+          />
+          <LocationButton getPosition={getPosition} />
+        </Flex>
+        <Flex
+          flexDirection="column"
+          style={{
+            // position: 'absolute',
+            // top: 10,
+            // right: 10,
+            zIndex: 1,
+            height: '38px',
+          }}
+        >
+          {attractionTypes.map(attractionType => (
+            <button
+              key={attractionType.value}
+              onClick={() => {
+                if (selectedFilters.includes(attractionType.value)) {
+                  // Remove the attractionType.value from selectedFilters array
+                  setSelectedFilters(
+                    selectedFilters.filter(
+                      filter => filter !== attractionType.value
+                    )
+                  );
+                } else {
+                  // Add the attractionType.value to selectedFilters array
+                  setSelectedFilters([
+                    ...selectedFilters,
+                    attractionType.value,
+                  ]);
+                }
+              }}
               style={{
-                borderRadius: '20px',
+                // width: 'fit-content',
+                width: '140px',
+                marginTop: '10px',
                 padding: '5px',
+                paddingRight: '10px',
                 paddingLeft: '10px',
-                flex: 1,
+                border: 'solid 2px orangered',
+                borderRadius: '20px',
+                background: selectedFilters.includes(attractionType.value)
+                  ? 'orangered'
+                  : 'white',
+                color: selectedFilters.includes(attractionType.value)
+                  ? 'white'
+                  : 'black',
               }}
             >
-              <input {...getInputProps({ placeholder: 'Explore Manhattan' })} />
-              <div>
-                {loading ? <div>Loading...</div> : null}
-                {suggestions.map(suggestion => {
-                  const style = {
-                    backgroundColor: suggestion.active ? '#eaeaea' : '#fff',
-                    cursor: 'pointer',
-                    padding: '5px 10px',
-                  };
-                  return (
-                    <div {...getSuggestionItemProps(suggestion, { style })}>
-                      {suggestion.description}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-        </PlacesAutocomplete>
-        <Divider orientation="vertical" />
-        <input
-          ref={currentLocationInputRef}
-          style={{
-            paddingLeft: '10px',
-          }}
-          placeholder={'Current Map View'}
-          value={currentLocation}
-        />
-        <LocationButton getPosition={getPosition} />
+              {attractionType.label}
+            </button>
+          ))}
+        </Flex>
       </Flex>
     </GoogleMap>
   );
