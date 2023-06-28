@@ -181,6 +181,9 @@ const MapBox = props => {
       zoom: 13,
     });
 
+
+    
+
     map.on('load', () => {
       console.log(tabIndex, 'inside map load index');
       // Store the map reference in the ref
