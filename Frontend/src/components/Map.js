@@ -70,6 +70,7 @@ export default function Map() {
           const marker = new google.maps.Marker({
             position: latlng,
             map: map,
+            icon: '/images/you-are-here.png',
           });
 
           // infowindow.setContent('You are here!');
