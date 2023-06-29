@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   RangeSlider,
   RangeSliderTrack,
@@ -9,33 +8,26 @@ import {
 import { Flex } from '@chakra-ui/react';
 import attractions from '../static/attractions.json';
 
-//function takes setter method from map as arg so it can pass filtered list back to map
 export default function SliderBar({ setSliderListFunc }) {
-  //set the slider value state between 0-100
   const [sliderValue, setSliderValue] = useState([0, 100]);
-
-  // filter attractions from json file
   const [filteredAttractions, setFilteredAttractions] = useState(attractions);
 
-  //set the slider value as you move it
   const handleSliderChange = value => {
     setSliderValue(value);
+  };
 
-    // filter the attractions based on the slider value
+  useEffect(() => {
     const filtered = attractions.filter(
       attraction =>
-        //slider returns array of two ints [0,100], sliderValue[0] and [1] are array indexes
         attraction.busyness_score >= sliderValue[0] &&
         attraction.busyness_score <= sliderValue[1]
     );
-    //set the state of the filtered attractions list based on busyness score
     setFilteredAttractions(filtered);
-    // console.log(sliderValue, 'slider value!!');
-    // console.log(filteredAttractions, 'this is the filtered attraction!!');
+  }, [sliderValue]);
 
-    //sending the filtered list to the map by using setter method that came from map
+  useEffect(() => {
     setSliderListFunc(filteredAttractions);
-  };
+  }, [filteredAttractions, setSliderListFunc]);
 
   return (
     <Flex
@@ -86,7 +78,7 @@ export default function SliderBar({ setSliderListFunc }) {
           backgroundColor={'white'}
           step={1}
           // call function as slider moves
-          onChange={handleSliderChange}
+          onChangeEnd={handleSliderChange}
         >
           <RangeSliderTrack>
             <RangeSliderFilledTrack />

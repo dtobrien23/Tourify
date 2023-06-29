@@ -144,27 +144,6 @@ export default function Map() {
     }
   }, [map, sliderList, selectedFilters]);
 
-  // const handleChange = newAddress => {
-  //   setAddress(newAddress);
-  // };
-
-  // const handleSelect = async newAddress => {
-  //   try {
-  //     const results = await geocodeByAddress(newAddress);
-  //     const latLng = await getLatLng(results[0]);
-
-  //     map.panTo(latLng);
-  //     map.setZoom(15);
-  //     const marker = new google.maps.Marker({
-  //       position: { latLng },
-  //       map: map,
-  //       title: newAddress,
-  //     });
-  //   } catch (error) {
-  //     console.log('Error:', error);
-  //   }
-  // };
-
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
 
