@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.bean.util;
 
 import lombok.Getter;
 

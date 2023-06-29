@@ -1,20 +1,14 @@
 package org.example.controller;
 
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.util.*;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.config.BusinessException;
-import org.example.config.ResponseCode;
+import org.example.bean.util.ResponseCode;
 import org.example.config.Result;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,6 +36,20 @@ public class UserController {
         return Result.success("Testing Testing");
     }
 
+    // Receive the ID token from the front end and verify it
+    @PostMapping("/tokensignin")
+    public Result tokenSignIn(@RequestParam String idTokenString) throws Exception {
+        if (idTokenString == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_EMPTY);
+        }
+        // Process the token, authenticate user etc
+        Result result = userService.vaildateToken(idTokenString);
+        return result;
+    }
+
+
+
+
 //    // Test getting the cde token from Google. Then send the
 //    @GetMapping("/test/signin/info")
 //    @Operation(summary = "user sign in google and return full information", description = "User sign in api - return the user info")
@@ -54,22 +62,5 @@ public class UserController {
 //    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User oAuth2User) {
 //        return Collections.singletonMap("name", oAuth2User.getAttribute("name"));
 //    }
-
-    // Receive the ID token from the front end and verify it
-    @PostMapping("/tokensignin")
-    public Result tokenSignIn(@RequestParam String idTokenString) throws Exception {
-        if (idTokenString == null){
-            throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_EMPTY);
-        }
-        // Process the token, authenticate user etc
-        Result result = userService.vaildateToken(idTokenString);
-        return result;
-    }
-
-    @PostMapping("/tokensigninTest")
-    public Result tokenSignInTest(@RequestParam String idTokenString) throws Exception {
-        return Result.success(idTokenString);
-    }
-
 
 }

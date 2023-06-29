@@ -1,7 +1,6 @@
 package org.example.repository;
 
-import org.example.model.AttractionDO;
-import org.example.model.UserDO;
+import org.example.bean.model.UserDO;
 import org.springframework.stereotype.Repository;
 
 

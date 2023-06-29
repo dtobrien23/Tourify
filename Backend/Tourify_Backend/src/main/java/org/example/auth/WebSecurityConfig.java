@@ -1,4 +1,4 @@
-package org.example.Auth;
+package org.example.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                         // Allow public access to swagger
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**").permitAll()
                         // Allow public access to certain endpoint
-                        .requestMatchers("/user/test", "/user/tokensignin/**").permitAll()
+                        .requestMatchers("/user/test", "/user/tokensignin/**", "/attraction/**").permitAll()
                         // Require authentication for all other requests
                         .anyRequest().authenticated()
                 )

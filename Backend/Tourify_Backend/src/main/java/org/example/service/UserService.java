@@ -1,7 +1,7 @@
 package org.example.service;
 
 import org.example.config.BusinessException;
-import org.example.config.ResponseCode;
+import org.example.bean.util.ResponseCode;
 import org.example.config.Result;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,8 +11,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.Collections;
 
 /**
@@ -54,6 +52,7 @@ public class UserService {
                 String locale = (String) payload.get("locale");
                 String familyName = (String) payload.get("family_name");
                 String givenName = (String) payload.get("given_name");
+
 
                 // Use or store profile information
                 // ...

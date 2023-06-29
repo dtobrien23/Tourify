@@ -1,13 +1,11 @@
 package org.example.repository;
 
-import org.example.model.AttractionDO;
-import org.example.model.UserDO;
+import org.example.bean.model.UserDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
-import java.util.List;
 
 
 /**

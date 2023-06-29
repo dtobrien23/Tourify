@@ -1,11 +1,9 @@
 package org.example.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.example.bean.util.ResponseCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

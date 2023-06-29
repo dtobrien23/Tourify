@@ -2,9 +2,10 @@ package org.example.controller;
 
 import java.util.HashMap;
 import java.util.List;
-import org.example.model.AttractionDO;
+import org.example.bean.model.AttractionDO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.bean.util.ResponseCode;
 import org.example.repository.AttractionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class AttractionController {
 
     //getMapping注解用于将/greeting的http请求定向到greeting方法上
     //@PostMapping, @RequestMapping等
-    @GetMapping("")
+    @GetMapping("/test")
     @Operation(summary = "return greeting string", description = "testing return string (testing)")
     public String index() {
         return "Greetings from Spring Boot!";
@@ -32,16 +33,14 @@ public class AttractionController {
     @PostMapping("/addAttraction")
     @Operation(summary = "adding attractions", description = "adding attractions to the mongoDB database (connecting DB)")
     public Result addAttraction(@RequestBody AttractionDO attraction) {
-        System.out.println("1");
         attractionRepository.saveAttraction(attraction);
         return Result.success(attraction);
     }
 
-    //TODO: 解决result raw usage问题
     @GetMapping("/findAttraction")
-    @Operation(summary = "find an attraction", description = "find an attraction by the name (connecting DB)")
-    public Result findAttraction(@RequestParam(value = "name") String name) throws BusinessException {
-        AttractionDO attractionDO = attractionRepository.findAttractionByName(name);
+    @Operation(summary = "find an attraction", description = "find an attraction by the attraction id (connecting DB)")
+    public Result findAttraction(@RequestParam(value = "attraction_id") String attractionId) throws BusinessException {
+        AttractionDO attractionDO = attractionRepository.findAttractionById(attractionId);
         if (attractionDO == null) {
             return Result.fail(ResponseCode.PARAM_ATTRACTION_EMPTY);
         } else {

@@ -1,14 +1,14 @@
-package org.example.model;
+package org.example.bean.model;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.bean.util.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serializable;
-
 
 /**
  * Description of the class.
@@ -30,6 +30,34 @@ public class AttractionDO implements Serializable {
     private String coordinates_lat;
     private String coordinates_lng;
     private String full_address;
+    private AttractionTypeEnum attractionTypeEnum;
+    private AttractionSiteEnum attractionSiteEnum;
+    private Integer price; // shown in dollar
+    private float estimated_hours;
+    private String link;
+    private OpenHour openHour; // shown in dollar
+
+
+}
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class OpenHour {
+    private String mondayOpen;
+    private String mondayClose;
+    private String tuesdayOpen;
+    private String tuesdayClose;
+    private String wednesdayOpen;
+    private String wednesdayClose;
+    private String thursdayOpen;
+    private String thursdayClose;
+    private String fridayOpen;
+    private String fridayClose;
+    private String saturdayOpen;
+    private String saturdayClose;
+    private String sundayOpen;
+    private String sundayClose;
 
 
 }

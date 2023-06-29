@@ -1,7 +1,6 @@
 package org.example.repository;
 
-import org.example.model.AttractionDO;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.example.bean.model.AttractionDO;
 import org.springframework.stereotype.Repository;
 import java.util.*;
 
@@ -25,7 +24,7 @@ public interface AttractionRepository  {
 
     void saveAttraction(AttractionDO attractionDO);
 
-    AttractionDO findAttractionByName(String attractionName);
+    AttractionDO findAttractionById(String attractionId);
 
     List<AttractionDO> getAllAttraction();
 

@@ -1,4 +1,4 @@
-package org.example.Auth;
+package org.example.auth;
 
 import java.util.Collection;
 import java.util.Map;

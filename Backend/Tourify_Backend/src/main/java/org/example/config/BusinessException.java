@@ -1,6 +1,7 @@
 package org.example.config;
 
 import lombok.Data;
+import org.example.bean.util.ResponseCode;
 
 /**
  * Description of the class.
