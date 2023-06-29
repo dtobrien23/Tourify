@@ -17,7 +17,9 @@ export default function Map() {
   //receiving filtered attractions from slider
   //pass setSliderList method into slider to receive sliders filtered
   //attractions list, update sliderList state with that list we receive
-  const [sliderList,setSliderList]=useState([]);
+  const [sliderList,setSliderList]=useState(attractions);
+
+
   //console.log(sliderList, 'this came from the slider component to the map!!!!')
   const [map, setMap] = useState(null);
 

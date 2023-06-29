@@ -72,7 +72,7 @@ export default function SliderBar({setSliderListFunc}) {
       <RangeSlider
         aria-label={['min', 'max']}
         colorScheme="orange"
-        defaultValue={[0, 100]}
+        defaultValue={[0,100]}
         orientation="vertical"
         minH="505"
         minWidth={'20'}
@@ -80,9 +80,11 @@ export default function SliderBar({setSliderListFunc}) {
         border={'solid 35px white'}
         borderRadius={'20px'}
         backgroundColor={'white'}
+        step={1}
         
         // call function as slider moves
         onChange={handleSliderChange}
+        
       >
         <RangeSliderTrack>
           <RangeSliderFilledTrack />
