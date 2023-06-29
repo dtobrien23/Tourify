@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.bean.util;
 
 import lombok.Getter;
 
@@ -14,7 +14,10 @@ import lombok.Getter;
 public enum ResponseCode {
     SUCCESS(200, "response.message.success"),
     INTERNAL_ERROR(500, "response.message.internal.error"),
-    PARAM_ATTRACTION_EMPTY(10001, "param.attraction.not.exist");
+    PARAM_ATTRACTION_EMPTY(10001, "param.attraction.not.exist"),
+    PARAM_USER_IDTOKEN_EMPTY(10002, "param.user.idtoken.not.exist"),
+    PARAM_USER_IDTOKEN_NOT_VAILD(10003, "param.user.idtoken.not.valid");
+
 
 
     /**

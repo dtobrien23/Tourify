@@ -1,6 +1,6 @@
 package org.example.repository;
 
-import org.example.model.AttractionDO;
+import org.example.bean.model.AttractionDO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Component;
@@ -32,17 +32,18 @@ public class AttractionRepositoryImpl implements AttractionRepository {
      */
     @Override
     public void saveAttraction(AttractionDO attractionDO) {
+        attractionDO.setId(null);
         mongoTemplate.save(attractionDO);
     }
 
     /**
      * find attraction by name
-     * @param attractionName
+     * @param attractionId
      * @return
      */
     @Override
-    public AttractionDO findAttractionByName(String attractionName) {
-        Query query=new Query(Criteria.where("name").is(attractionName));
+    public AttractionDO findAttractionById(String attractionId) {
+        Query query=new Query(Criteria.where("id").is(attractionId));
         AttractionDO attractionDO =  mongoTemplate.findOne(query , AttractionDO.class);
         return attractionDO;
     }
