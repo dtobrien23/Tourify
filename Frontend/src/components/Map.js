@@ -22,16 +22,16 @@ export default function Map() {
 
   const attractionTypes = [
     { label: 'All', value: 'all' },
-    { label: 'Landmark', value: 'landmark' },
-    { label: 'Museum', value: 'museum' },
-    { label: 'Park', value: 'park' },
-    { label: 'Theatre', value: 'theater' },
-    { label: 'Neighborhood', value: 'neighborhood' },
+    { label: 'Landmarks', value: 'landmark' },
+    { label: 'Museums', value: 'museum' },
+    { label: 'Parks', value: 'park' },
+    { label: 'Theatres', value: 'theater' },
+    { label: 'Neighborhoods', value: 'neighborhood' },
     { label: 'Dining', value: 'dining' },
-    { label: 'Gallery', value: 'gallery' },
-    { label: 'Library', value: 'library' },
-    { label: 'Historic Site', value: 'historic_site' },
-    { label: 'Observatory', value: 'observatory' },
+    { label: 'Galleries', value: 'gallery' },
+    { label: 'Libraries', value: 'library' },
+    { label: 'Historic Sites', value: 'historic_site' },
+    { label: 'Observatories', value: 'observatory' },
   ];
 
   const getPosition = () => {
@@ -236,7 +236,7 @@ export default function Map() {
               }}
               style={{
                 // width: 'fit-content',
-                width: '140px',
+                width: '145px',
                 marginTop: '10px',
                 padding: '5px',
                 paddingRight: '10px',
