@@ -1,45 +1,29 @@
-import React from 'react';
-import { useState } from 'react';
-import {
-  RangeSlider,
-  RangeSliderTrack,
-  RangeSliderFilledTrack,
-  RangeSliderThumb,
-  
-} from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { RangeSlider, RangeSliderTrack, RangeSliderFilledTrack, RangeSliderThumb } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
 import attractions from '../static/attractions.json';
 
-//function takes setter method from map as arg so it can pass filtered list back to map
-export default function SliderBar({setSliderListFunc}) {
-   
-    //set the slider value state between 0-100
-    const [sliderValue, setSliderValue] = useState([0, 100]);
-    
-    // filter attractions from json file
-    const [filteredAttractions, setFilteredAttractions] = useState(attractions);
-  
-    //set the slider value as you move it
-    const handleSliderChange = (value) => {
-        setSliderValue(value);
+export default function SliderBar({ setSliderListFunc }) {
+  const [sliderValue, setSliderValue] = useState([0, 100]);
+  const [filteredAttractions, setFilteredAttractions] = useState(attractions);
 
-        // filter the attractions based on the slider value
-        const filtered = attractions.filter(
-          (attraction) =>
-            //slider returns array of two ints [0,100], sliderValue[0] and [1] are array indexes 
-            attraction.busyness_score >= sliderValue[0] && attraction.busyness_score <= sliderValue[1]
-        );
-        //set the state of the filtered attractions list based on busyness score
-        setFilteredAttractions(filtered);
-        // console.log(sliderValue, 'slider value!!');
-        // console.log(filteredAttractions, 'this is the filtered attraction!!');
+  const handleSliderChange = (value) => {
+    setSliderValue(value);
+  };
 
-        //sending the filtered list to the map by using setter method that came from map
-        setSliderListFunc(filteredAttractions);
-        
-      };
-  
-    return (
+  useEffect(() => {
+    const filtered = attractions.filter(
+      (attraction) =>
+        attraction.busyness_score >= sliderValue[0] && attraction.busyness_score <= sliderValue[1]
+    );
+    setFilteredAttractions(filtered);
+  }, [sliderValue]);
+
+  useEffect(() => {
+    setSliderListFunc(filteredAttractions);
+  }, [filteredAttractions, setSliderListFunc]);
+
+  return (
     <Flex
       style={{
         border: 'solid 10px orangered',
@@ -50,12 +34,13 @@ export default function SliderBar({setSliderListFunc}) {
         height: '510px',
         zIndex: 1,
         marginLeft: '85em',
+        position: 'absolute'
       }}
     >
       <button
         style={{
           width: 'fit-content',
-          width: '140px',
+          // width: '140px',
           marginTop: '10px',
           marginBottom: '38em',
           padding: '5px',
@@ -80,10 +65,10 @@ export default function SliderBar({setSliderListFunc}) {
         border={'solid 35px white'}
         borderRadius={'20px'}
         backgroundColor={'white'}
-        step={1}
+        step={10}
         
         // call function as slider moves
-        onChange={handleSliderChange}
+        onChangeEnd={handleSliderChange}
         
       >
         <RangeSliderTrack>
@@ -95,3 +80,4 @@ export default function SliderBar({setSliderListFunc}) {
     </Flex>
   );
 }
+

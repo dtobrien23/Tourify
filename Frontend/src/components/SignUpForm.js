@@ -61,6 +61,7 @@ function SignUpForm() {
               name={profile.name}
               src={profile.picture}
               alt="user image"
+              
             >
               <AvatarBadge boxSize="1.25em" bg="green.500" />
             </Avatar>
@@ -79,6 +80,7 @@ function SignUpForm() {
                 border="1px"
                 borderColor="orangered"
                 size='sm'
+                
               >
                 Log out
               </Button>
