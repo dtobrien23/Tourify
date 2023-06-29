@@ -48,13 +48,13 @@ export default function SliderBar({setSliderListFunc}) {
         justifyContent: 'right',
         width: '100px',
         height: '510px',
-        zIndex: 3,
+        zIndex: 1,
         marginLeft: '85em',
       }}
     >
       <button
         style={{
-          // width: 'fit-content',
+          width: 'fit-content',
           width: '140px',
           marginTop: '10px',
           marginBottom: '38em',
