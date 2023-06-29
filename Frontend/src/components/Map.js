@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
 import { Flex, Divider } from '@chakra-ui/react';
 import '../App.css';
 import LocationButton from './LocationButton';
 import SliderBar from './SliderBar';
+import LocationInput from './LocationInput';
 
 export default function Map() {
 
@@ -40,16 +38,16 @@ export default function Map() {
 
   const attractionTypes = [
     { label: 'All', value: 'all' },
-    { label: 'Landmark', value: 'landmark' },
-    { label: 'Museum', value: 'museum' },
-    { label: 'Park', value: 'park' },
-    { label: 'Theatre', value: 'theater' },
-    { label: 'Neighborhood', value: 'neighborhood' },
+    { label: 'Landmarks', value: 'landmark' },
+    { label: 'Museums', value: 'museum' },
+    { label: 'Parks', value: 'park' },
+    { label: 'Theatres', value: 'theater' },
+    { label: 'Neighborhoods', value: 'neighborhood' },
     { label: 'Dining', value: 'dining' },
-    { label: 'Gallery', value: 'gallery' },
-    { label: 'Library', value: 'library' },
-    { label: 'Historic Site', value: 'historic_site' },
-    { label: 'Observatory', value: 'observatory' },
+    { label: 'Galleries', value: 'gallery' },
+    { label: 'Libraries', value: 'library' },
+    { label: 'Historic Sites', value: 'historic_site' },
+    { label: 'Observatories', value: 'observatory' },
   ];
 
   const getPosition = () => {
@@ -148,6 +146,9 @@ export default function Map() {
 
       // set the markers state
       setMarkers(newMarkers);
+
+      if (selectedFilters.includes('all')) {
+      }
     }
   }, [map, sliderList, selectedFilters]);
 
@@ -162,6 +163,11 @@ export default function Map() {
 
       map.panTo(latLng);
       map.setZoom(15);
+      const marker = new google.maps.Marker({
+        position: { latLng },
+        map: map,
+        title: newAddress,
+      });
     } catch (error) {
       console.log('Error:', error);
     }
@@ -194,47 +200,9 @@ export default function Map() {
             height: '38px',
           }}
         >
-          <PlacesAutocomplete
-            value={address}
-            onChange={handleChange}
-            onSelect={handleSelect}
-          >
-            {({
-              getInputProps,
-              suggestions,
-              getSuggestionItemProps,
-              loading,
-            }) => (
-              <div
-                style={{
-                  borderRadius: '20px',
-                  padding: '5px',
-                  paddingLeft: '10px',
-                  flex: 1,
-                }}
-              >
-                <input
-                  {...getInputProps({ placeholder: 'Explore Manhattan' })}
-                />
-                <div>
-                  {loading ? <div>Loading...</div> : null}
-                  {suggestions.map(suggestion => {
-                    const style = {
-                      backgroundColor: suggestion.active ? '#eaeaea' : '#fff',
-                      cursor: 'pointer',
-                      padding: '5px 10px',
-                    };
-                    return (
-                      <div {...getSuggestionItemProps(suggestion, { style })}>
-                        {suggestion.description}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </PlacesAutocomplete>
+          <LocationInput map={map} />
           <Divider orientation="vertical" />
+          {/* <LocationInput map={map} /> */}
           <input
             ref={currentLocationInputRef}
             style={{
@@ -259,24 +227,32 @@ export default function Map() {
             <button
               key={attractionType.value}
               onClick={() => {
-                if (selectedFilters.includes(attractionType.value)) {
-                  // Remove the attractionType.value from selectedFilters array
-                  setSelectedFilters(
-                    selectedFilters.filter(
-                      filter => filter !== attractionType.value
-                    )
-                  );
+                if (attractionType.value === 'all') {
+                  if (selectedFilters.includes('all')) {
+                    setSelectedFilters([]); // Unselect all filters
+                  } else {
+                    setSelectedFilters(['all']); // Select 'All' filter
+                  }
                 } else {
-                  // Add the attractionType.value to selectedFilters array
-                  setSelectedFilters([
-                    ...selectedFilters,
-                    attractionType.value,
-                  ]);
+                  if (selectedFilters.includes('all')) {
+                    setSelectedFilters([attractionType.value]); // Select the clicked filter only
+                  } else if (selectedFilters.includes(attractionType.value)) {
+                    setSelectedFilters(
+                      selectedFilters.filter(
+                        filter => filter !== attractionType.value
+                      )
+                    ); // Unselect the clicked filter
+                  } else {
+                    setSelectedFilters([
+                      ...selectedFilters,
+                      attractionType.value,
+                    ]); // Add the clicked filter
+                  }
                 }
               }}
               style={{
                 // width: 'fit-content',
-                width: '140px',
+                width: '145px',
                 marginTop: '10px',
                 padding: '5px',
                 paddingRight: '10px',
