@@ -37,7 +37,7 @@ export default function SliderBar({ setSliderListFunc }) {
         alignItems: 'center',
         justifyContent: 'right',
         width: '100px',
-        height: '510px',
+        height: '100%',
         zIndex: 1,
         position: 'absolute',
         // marginTop: '5em',
@@ -62,7 +62,7 @@ export default function SliderBar({ setSliderListFunc }) {
           color: 'orangered',
         }}
       >
-        AHHHHHHHHHHHHHHHHHH
+        Busyness Filter
       </button>
       <Flex style={{ border: 'solid 10px orangered', borderRadius: '30px' }}>
         <RangeSlider

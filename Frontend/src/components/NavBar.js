@@ -25,10 +25,20 @@ export default function NavBar({
     setIsMenuOpen(!isMenuOpen);
   };
 
+  //refresh the page when clicking the logo
+  const handleLogoClick = () => {
+    window.location.reload();
+  };
+
   return (
     <Flex align="center" justify="space-between" h="75px" mt="10px" px="4">
       <Box>
-        <img src="logo.png" alt="Tourify Logo" />
+        <img
+          style={{ cursor: 'pointer' }}// cursor change on hover
+          onClick={handleLogoClick}
+          src="logo.png"
+          alt="Tourify Logo"
+        />
       </Box>
       <Flex
         flex="1"
