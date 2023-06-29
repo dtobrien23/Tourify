@@ -12,18 +12,22 @@ import LocationButton from './LocationButton';
 import SliderBar from './SliderBar';
 
 export default function Map() {
+
+  
+  //receiving filtered attractions from slider
+  //pass setSliderList method into slider to receive sliders filtered
+  //attractions list, update sliderList state with that list we receive
+  const [sliderList,setSliderList]=useState([]);
+  //console.log(sliderList, 'this came from the slider component to the map!!!!')
   const [map, setMap] = useState(null);
+
+
   const [address, setAddress] = useState('');
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['all']);
   const currentLocationInputRef = useRef(null);
 
 
-  //receiving filtered attractions from slider
-  //pass setSliderList method into slider to receive sliders filtered
-  //attractions list, update sliderList state with that list we receive
-  const [sliderList,setSliderList]=useState([]);
-  console.log(sliderList, 'this came from the slider component to the map!!!!')
 
 
 
@@ -115,15 +119,15 @@ export default function Map() {
 
   useEffect(() => {
     if (map) {
-      // clear existing markers from the map for filter
+      // // clear existing markers from the map for filter
       markers.forEach(marker => {
         marker.setMap(null);
       });
 
       // filter attractions based on the selected filter value
       const filteredMarkers = selectedFilters.includes('all')
-        ? attractions
-        : attractions.filter(attraction =>
+        ? sliderList
+        : sliderList.filter(attraction =>
             selectedFilters.includes(attraction.type)
           );
 
@@ -143,7 +147,7 @@ export default function Map() {
       // set the markers state
       setMarkers(newMarkers);
     }
-  }, [map, attractions, selectedFilters]);
+  }, [map, sliderList, selectedFilters]);
 
   const handleChange = newAddress => {
     setAddress(newAddress);
@@ -289,6 +293,10 @@ export default function Map() {
             </button>
           ))}
         </Flex>
+
+        {/* passing the setSliderListFunc to the slider from map 
+         data it receives will be used by setSliderList method to update
+        the sliderList state */}
         <SliderBar setSliderListFunc={setSliderList}/>
       </Flex>
       
