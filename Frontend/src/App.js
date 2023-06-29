@@ -38,7 +38,6 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-
       <Box>
         <Tabs
           align="center"
@@ -50,7 +49,7 @@ function App() {
           <NavBar isMobile={isMobile} />
           <TabPanels>
             <TabPanel>
-              <Map />
+              <Map/>
             </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />

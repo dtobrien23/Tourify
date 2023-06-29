@@ -18,6 +18,15 @@ export default function Map() {
   const [selectedFilters, setSelectedFilters] = useState(['all']);
   const currentLocationInputRef = useRef(null);
 
+
+  //receiving filtered attractions from slider
+  //pass setSliderList method into slider to receive sliders filtered
+  //attractions list, update sliderList state with that list we receive
+  const [sliderList,setSliderList]=useState([]);
+  console.log(sliderList, 'this came from the slider component to the map!!!!')
+
+
+
   const google = window.google;
   const mapCenter = { lat: 40.755091, lng: -73.978285 };
   const mapZoom = 13;
@@ -280,7 +289,7 @@ export default function Map() {
             </button>
           ))}
         </Flex>
-        <SliderBar attractions={attractions}/>
+        <SliderBar setSliderListFunc={setSliderList}/>
       </Flex>
       
     </GoogleMap>

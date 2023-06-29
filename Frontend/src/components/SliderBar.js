@@ -5,13 +5,13 @@ import {
   RangeSliderTrack,
   RangeSliderFilledTrack,
   RangeSliderThumb,
-  Box,
+  
 } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
 import attractions from '../static/attractions.json';
 
 
-export default function SliderBar() {
+export default function SliderBar({setSliderListFunc}) {
     const [sliderValue, setSliderValue] = useState([0, 100]);
     const [filteredAttractions, setFilteredAttractions] = useState(attractions);
   
@@ -22,17 +22,10 @@ export default function SliderBar() {
              attraction.busyness_score >= sliderValue[0] && attraction.busyness_score <= sliderValue[1]
         );
         setFilteredAttractions(filtered);
+        setSliderListFunc(filteredAttractions);
         console.log(sliderValue, 'slider value!!');
         console.log(filteredAttractions, 'this is the filtered attraction!!');
       };
-  
-  
-  
-  
-  
-  
-  
-  
   
     return (
     <Flex
@@ -75,7 +68,7 @@ export default function SliderBar() {
         border={'solid 35px white'}
         borderRadius={'20px'}
         backgroundColor={'white'}
-        onChangeEnd={handleSliderChange}
+        onChange={handleSliderChange}
       >
         <RangeSliderTrack>
           <RangeSliderFilledTrack />
