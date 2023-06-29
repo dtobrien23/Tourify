@@ -10,26 +10,18 @@ import SliderBar from './SliderBar';
 import LocationInput from './LocationInput';
 
 export default function Map() {
-
-  
   //receiving filtered attractions from slider
   //pass setSliderList method into slider to receive sliders filtered
   //attractions list, update sliderList state with that list we receive
-  const [sliderList,setSliderList]=useState(attractions);
-
+  const [sliderList, setSliderList] = useState(attractions);
 
   //console.log(sliderList, 'this came from the slider component to the map!!!!')
   const [map, setMap] = useState(null);
-
 
   const [address, setAddress] = useState('');
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['all']);
   const currentLocationInputRef = useRef(null);
-
-
-
-
 
   const google = window.google;
   const mapCenter = { lat: 40.755091, lng: -73.978285 };
@@ -152,26 +144,26 @@ export default function Map() {
     }
   }, [map, sliderList, selectedFilters]);
 
-  const handleChange = newAddress => {
-    setAddress(newAddress);
-  };
+  // const handleChange = newAddress => {
+  //   setAddress(newAddress);
+  // };
 
-  const handleSelect = async newAddress => {
-    try {
-      const results = await geocodeByAddress(newAddress);
-      const latLng = await getLatLng(results[0]);
+  // const handleSelect = async newAddress => {
+  //   try {
+  //     const results = await geocodeByAddress(newAddress);
+  //     const latLng = await getLatLng(results[0]);
 
-      map.panTo(latLng);
-      map.setZoom(15);
-      const marker = new google.maps.Marker({
-        position: { latLng },
-        map: map,
-        title: newAddress,
-      });
-    } catch (error) {
-      console.log('Error:', error);
-    }
-  };
+  //     map.panTo(latLng);
+  //     map.setZoom(15);
+  //     const marker = new google.maps.Marker({
+  //       position: { latLng },
+  //       map: map,
+  //       title: newAddress,
+  //     });
+  //   } catch (error) {
+  //     console.log('Error:', error);
+  //   }
+  // };
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -271,13 +263,11 @@ export default function Map() {
             </button>
           ))}
         </Flex>
-
-        {/* passing the setSliderListFunc to the slider from map 
+      </Flex>
+      {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update
         the sliderList state */}
-        <SliderBar setSliderListFunc={setSliderList}/>
-      </Flex>
-      
+      <SliderBar setSliderListFunc={setSliderList} />
     </GoogleMap>
   );
 }

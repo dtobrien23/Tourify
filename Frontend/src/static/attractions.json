@@ -42,7 +42,6 @@
     "link": "https://www.nps.gov/stli/index.htm",
     "image": "/images/liberty.jpg",
     "busyness_score": 50
-
   },
   {
     "name": "Brooklyn Bridge",
@@ -65,7 +64,6 @@
     "link": "https://www.brooklynbridgepark.org/",
     "image": "/images/brooklynbridge.jpg",
     "busyness_score": 30
-
   },
   {
     "name": "Metropolitan Museum of Art",
@@ -88,7 +86,6 @@
     "link": "https://www.metmuseum.org/",
     "image": "/images/met.jpg",
     "busyness_score": 100
-
   },
   {
     "name": "Museum of Modern Art (MoMA)",
@@ -111,7 +108,6 @@
     "link": "https://www.moma.org/",
     "image": "/images/moma.jpg",
     "busyness_score": 100
-
   },
   {
     "name": "Guggenheim Museum",
@@ -134,7 +130,6 @@
     "link": "https://www.guggenheim.org/",
     "image": "/images/guggenheim.jpg",
     "busyness_score": 60
-
   },
   {
     "name": "Central Park",
@@ -157,7 +152,6 @@
     "link": "https://www.centralparknyc.org/",
     "image": "/images/centralpark.jpg",
     "busyness_score": 45
-
   },
   {
     "name": "Bryant Park",
@@ -180,7 +174,6 @@
     "link": "https://bryantpark.org/",
     "image": "/images/bryant.jpg",
     "busyness_score": 100
-
   },
   {
     "name": "High Line",
@@ -203,7 +196,6 @@
     "link": "https://www.thehighline.org/",
     "image": "/images/high-line.jpg",
     "busyness_score": 78
-
   },
   {
     "name": "Broadway",
@@ -226,7 +218,6 @@
     "link": "https://www.broadway.com/",
     "image": "/images/broadway.jpg",
     "busyness_score": 43
-
   },
   {
     "name": "Madame Tussauds New York",
@@ -249,7 +240,6 @@
     "link": "https://www.madametussauds.com/new-york/",
     "image": "/images/madame-tussauds.jpg",
     "busyness_score": 100
-
   },
   {
     "name": "Lincoln Center",
@@ -272,7 +262,6 @@
     "link": "https://www.lincolncenter.org/home",
     "image": "/images/lincoln.jpg",
     "busyness_score": 88
-
   },
   {
     "name": "Greenwich Village",
@@ -295,7 +284,6 @@
     "link": "https://greenwichvillage.nyc/",
     "image": "/images/greenwich.jpg",
     "busyness_score": 67
-
   },
   {
     "name": "Harlem",
@@ -318,7 +306,6 @@
     "link": "https://welcometoharlem.com/",
     "image": "/images/harlem.jpg",
     "busyness_score": 99
-
   },
   {
     "name": "Eataly",
@@ -341,7 +328,6 @@
     "link": "https://www.eataly.com/us_en",
     "image": "/images/eataly.jpg",
     "busyness_score": 67
-
   },
   {
     "name": "Grand Central Market",
@@ -364,7 +350,6 @@
     "link": "https://www.grandcentralterminal.com/grand-central-market/",
     "image": "/images/gcm.jpg",
     "busyness_score": 22
-
   },
   {
     "name": "Whitney Museum",
@@ -387,7 +372,6 @@
     "link": "https://whitney.org/",
     "image": "/images/whitney.jpg",
     "busyness_score": 10
-
   },
   {
     "name": "Museum of Arts and Design",
@@ -410,7 +394,6 @@
     "link": "https://madmuseum.org/",
     "image": "/images/museum-arts-design.jpg",
     "busyness_score": 77
-
   },
   {
     "name": "New Museum",
@@ -433,7 +416,6 @@
     "link": "https://www.newmuseum.org/",
     "image": "/images/new_museum.jpg",
     "busyness_score": 15
-
   },
   {
     "name": "Morgan Library & Museum",
@@ -456,7 +438,6 @@
     "link": "https://www.themorgan.org/",
     "image": "/images/morgan-lib.jpg",
     "busyness_score": 91
-
   },
   {
     "name": "Trinity Church",
@@ -479,7 +460,6 @@
     "link": "https://trinitywallstreet.org/",
     "image": "/images/trinity.jpg",
     "busyness_score": 23
-
   },
   {
     "name": "Fraunces Tavern",
@@ -502,7 +482,6 @@
     "link": "https://frauncestavern.com/",
     "image": "/images/frauncesJPG.jpg",
     "busyness_score": 15
-
   },
   {
     "name": "One World Observatory",
@@ -525,7 +504,6 @@
     "link": "https://www.oneworldobservatory.com/",
     "image": "/images/1wtc.jpg",
     "busyness_score": 72
-
   },
   {
     "name": "Top of the Rock",
@@ -548,7 +526,6 @@
     "link": "https://www.rockefellercenter.com/attractions/top-of-the-rock-observation-deck/",
     "image": "/images/top-of-the-rock.jpg",
     "busyness_score": 100
-
   },
   {
     "name": "Edge Observation Deck",
@@ -571,6 +548,5 @@
     "link": "https://www.edgenyc.com/en",
     "image": "/images/edge.jpg",
     "busyness_score": 90
-
   }
 ]
