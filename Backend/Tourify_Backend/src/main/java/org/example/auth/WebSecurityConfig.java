@@ -44,9 +44,13 @@ public class WebSecurityConfig {
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))); // Return unauthorized status when not authenticated
         http
                 // disable csrf - Allow POST/PUT/etc request
-                .csrf(csrf -> csrf.disable());
+                .csrf(csrf -> csrf.disable())
+                // disable the CORS integration within Spring Security
+                .cors(cors -> cors.disable());
         return http.build();
     }
+
+
 
 //    // expose all endpoint
 //    @Autowired private CustomOAuth2UserService oauthUserService;
@@ -55,7 +59,6 @@ public class WebSecurityConfig {
 //        http
 //                .authorizeRequests(authorize -> authorize
 //                        .anyRequest().permitAll()
-//
 //                );
 //        http
 //                .csrf(csrf -> csrf.disable());
