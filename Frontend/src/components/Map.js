@@ -3,17 +3,32 @@ import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
-import { Flex, Divider } from '@chakra-ui/react';
+import { Flex, Divider, Drawer } from '@chakra-ui/react';
 import '../App.css';
 import LocationButton from './LocationButton';
 import SliderBar from './SliderBar';
 import LocationInput from './LocationInput';
+import MarkerDrawer from './MarkerDrawer';
 
 export default function Map() {
   //receiving filtered attractions from slider
   //pass setSliderList method into slider to receive sliders filtered
   //attractions list, update sliderList state with that list we receive
   const [sliderList, setSliderList] = useState(attractions);
+
+  //marker click state
+  const [markerState, setMarkerState] = useState(false);
+
+  const handleMarkerClick = () => {
+    // if (markerState) {
+    //   setMarkerState(false);
+    // } else setMarkerState(true);
+    setMarkerState(true);
+  };
+
+  const handleClose = () =>{
+    setMarkerState(false);
+  }
 
   //console.log(sliderList, 'this came from the slider component to the map!!!!')
   const [map, setMap] = useState(null);
@@ -133,6 +148,12 @@ export default function Map() {
           map: map,
           title: attraction.name,
         });
+
+        marker.addListener('click', handleMarkerClick);
+        // map.setZoom(8);
+        // map.setCenter(marker.getPosition());
+        console.log(markerState, 'marker has been clicked');
+
         return marker;
       });
 
@@ -142,7 +163,7 @@ export default function Map() {
       if (selectedFilters.includes('all')) {
       }
     }
-  }, [map, sliderList, selectedFilters]);
+  }, [map, markerState, sliderList, selectedFilters]);
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -247,6 +268,13 @@ export default function Map() {
          data it receives will be used by setSliderList method to update
         the sliderList state */}
       <SliderBar setSliderListFunc={setSliderList} />
+
+      <MarkerDrawer
+        isOpenFunc={markerState}
+        isCloseFunc={handleClose}
+        
+        
+      />
     </GoogleMap>
   );
 }
