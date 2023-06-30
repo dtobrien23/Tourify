@@ -1,48 +1,43 @@
 import React from 'react';
 import {
-    Drawer,
-    DrawerBody,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerOverlay,
-    DrawerContent,
-    DrawerCloseButton,Button,useState,Input
-  } from '@chakra-ui/react';
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  Button,
+  useState,
+  Input,
+} from '@chakra-ui/react';
 
-  function MarkerDrawer({isOpenFunc,isCloseFunc}) {
-
+//passing it marker state and method to change state so the X button can close the drawer
+function MarkerDrawer({ isOpenFunc, isCloseFunc,markerObject }) {
+    if (!markerObject) {
+        return null; // Return null when markerObject is null
+      }
     
-  
+    console.log(markerObject,'passed marker object')
+
     return (
-      <>
-        
-        <Drawer
-          isOpen={isOpenFunc}
-          placement='right'
-         onClose={isCloseFunc}
-        >
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader>Create your account</DrawerHeader>
-  
-            <DrawerBody>
-              <Input placeholder='Type here...' />
-            </DrawerBody>
-  
-            <DrawerFooter>
-              <Button variant='outline' mr={3} onClose={isCloseFunc}>
-                Cancel
-              </Button>
-              <Button colorScheme='blue'>Save</Button>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      </>
-    )
-  }
+    <>
+    
+      <Drawer isOpen={isOpenFunc} placement="right" onClose={isCloseFunc}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>
+          {markerObject.name.name}
+          </DrawerHeader>
 
-  export default MarkerDrawer;
+          <DrawerBody></DrawerBody>
 
+          <DrawerFooter></DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </>
+  );
+}
 
-
+export default MarkerDrawer;

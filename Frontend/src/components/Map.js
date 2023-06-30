@@ -16,19 +16,23 @@ export default function Map() {
   //attractions list, update sliderList state with that list we receive
   const [sliderList, setSliderList] = useState(attractions);
 
-  //marker click state
+  //marker click state to open drawer
   const [markerState, setMarkerState] = useState(false);
+  const[markerObject, setMarkerObject] = useState(null);
 
-  const handleMarkerClick = () => {
-    // if (markerState) {
-    //   setMarkerState(false);
-    // } else setMarkerState(true);
+  const handleMarkerClick = (marker) => {
+    const markerData = {
+      name: marker.name,
+      coordinates_lat: marker.position.lat(),
+      coordinates_lng: marker.position.lng()};
+      setMarkerObject(markerData);
     setMarkerState(true);
   };
 
   const handleClose = () =>{
     setMarkerState(false);
   }
+
 
   //console.log(sliderList, 'this came from the slider component to the map!!!!')
   const [map, setMap] = useState(null);
@@ -141,6 +145,7 @@ export default function Map() {
       // add filtered markers
       const newMarkers = filteredMarkers.map(attraction => {
         const marker = new google.maps.Marker({
+          name:{name: attraction.name},
           position: {
             lat: attraction.coordinates_lat,
             lng: attraction.coordinates_lng,
@@ -149,10 +154,10 @@ export default function Map() {
           title: attraction.name,
         });
 
-        marker.addListener('click', handleMarkerClick);
+        marker.addListener('click', () => handleMarkerClick(marker));
         // map.setZoom(8);
         // map.setCenter(marker.getPosition());
-        console.log(markerState, 'marker has been clicked');
+        console.log(marker, 'markerinfo here')
 
         return marker;
       });
@@ -270,8 +275,13 @@ export default function Map() {
       <SliderBar setSliderListFunc={setSliderList} />
 
       <MarkerDrawer
+      //marker state true opens drawer
+      //false closes it
+      //have to pass set state method into
+      //drawer so the X button can change state to false and close the drawer
         isOpenFunc={markerState}
         isCloseFunc={handleClose}
+        markerObject={markerObject}
         
         
       />
