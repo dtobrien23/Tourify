@@ -18,17 +18,21 @@ export default function Map() {
 
   //marker click state to open drawer
   const [markerState, setMarkerState] = useState(false);
+ // get the marker object info when clicking on a marker
   const[markerObject, setMarkerObject] = useState(null);
-
+//function call on marker click
   const handleMarkerClick = (marker) => {
+    // just take desired object info
     const markerData = {
       name: marker.name,
       coordinates_lat: marker.position.lat(),
       coordinates_lng: marker.position.lng()};
       setMarkerObject(markerData);
-    setMarkerState(true);
+    
+      //state opens drawer
+      setMarkerState(true);
   };
-
+// close the drawer when state goes to false
   const handleClose = () =>{
     setMarkerState(false);
   }
@@ -279,6 +283,7 @@ export default function Map() {
       //false closes it
       //have to pass set state method into
       //drawer so the X button can change state to false and close the drawer
+      // also pass in marker object to render infor in drawer
         isOpenFunc={markerState}
         isCloseFunc={handleClose}
         markerObject={markerObject}

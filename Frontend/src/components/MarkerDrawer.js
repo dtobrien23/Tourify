@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 
 //passing it marker state and method to change state so the X button can close the drawer
+// also passing in marker object to render info in drawer
 function MarkerDrawer({ isOpenFunc, isCloseFunc,markerObject }) {
     if (!markerObject) {
         return null; // Return null when markerObject is null
