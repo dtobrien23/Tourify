@@ -1,13 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
-import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
-import { Flex, Divider } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import '../App.css';
-import LocationButton from './LocationButton';
 import SliderBar from './SliderBar';
-import LocationInput from './LocationInput';
+import SearchBar from './SearchBar';
 
 export default function Map() {
   //receiving filtered attractions from slider
@@ -18,15 +16,12 @@ export default function Map() {
   //console.log(sliderList, 'this came from the slider component to the map!!!!')
   const [map, setMap] = useState(null);
 
-  const [address, setAddress] = useState('');
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['all']);
-  const currentLocationInputRef = useRef(null);
 
   const google = window.google;
   const mapCenter = { lat: 40.755091, lng: -73.978285 };
   const mapZoom = 13;
-  let currentLocation;
 
   const attractionTypes = [
     { label: 'All', value: 'all' },
@@ -41,68 +36,6 @@ export default function Map() {
     { label: 'Historic Sites', value: 'historic_site' },
     { label: 'Observatories', value: 'observatory' },
   ];
-
-  const getPosition = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition, posError);
-    } else {
-      alert('Sorry, Geolocation is not supported by this browser.');
-    }
-  };
-
-  const posError = () => {
-    if (navigator.permissions) {
-      navigator.permissions.query({ name: 'geolocation' }).then(res => {
-        if (res.state === 'denied') {
-          alert(
-            'Enable location permissions for this website in your browser settings.'
-          );
-        }
-      });
-    } else {
-      alert(
-        'Unable to access your location. You can continue by submitting location manually.'
-      );
-    }
-  };
-
-  const showPosition = position => {
-    const latlng = {
-      lat: parseFloat(position.coords.latitude),
-      lng: parseFloat(position.coords.longitude),
-    };
-
-    const geocoder = new google.maps.Geocoder();
-    // const infowindow = new google.maps.InfoWindow();
-
-    geocoder
-      .geocode({ location: latlng })
-      .then(response => {
-        if (response.results[0]) {
-          currentLocation = response.results[0].formatted_address;
-          console.log(latlng);
-          map.setCenter(latlng);
-          map.setZoom(15);
-
-          if (currentLocationInputRef.current) {
-            currentLocationInputRef.current.value = currentLocation;
-          }
-
-          // eslint-disable-next-line
-          const marker = new google.maps.Marker({
-            position: latlng,
-            map: map,
-            icon: '/images/you-are-here.png',
-          });
-
-          // infowindow.setContent('You are here!');
-          // infowindow.open(map, marker);
-        } else {
-          window.alert('No results found');
-        }
-      })
-      .catch(e => window.alert('Geocoder failed due to: ' + e));
-  };
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
@@ -159,39 +92,18 @@ export default function Map() {
     >
       <Flex
         flexDirection="column"
-        style={{ position: 'absolute', top: 10, left: 10 }}
+        style={{
+          position: 'absolute',
+          top: 10,
+          left: 10,
+        }}
       >
-        <Flex
-          style={{
-            width: 'fit-content',
-            border: 'solid 2px orangered',
-            borderRadius: '20px',
-            backgroundColor: 'white',
-            zIndex: 1,
-            height: '38px',
-          }}
-        >
-          <LocationInput map={map} />
-          <Divider orientation="vertical" />
-          {/* <LocationInput map={map} /> */}
-          <input
-            ref={currentLocationInputRef}
-            style={{
-              paddingLeft: '10px',
-            }}
-            placeholder={'Current Map View'}
-            value={currentLocation}
-          />
-          <LocationButton getPosition={getPosition} />
-        </Flex>
+        <SearchBar map={map} style={{ zIndex: 1 }} />
         <Flex
           flexDirection="column"
           style={{
-            // position: 'absolute',
-            // top: 10,
-            // right: 10,
-            zIndex: 1,
-            height: '38px',
+            zIndex: 0,
+            // height: '38px',
           }}
         >
           {attractionTypes.map(attractionType => (

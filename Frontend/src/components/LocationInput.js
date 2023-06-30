@@ -1,13 +1,24 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
+import LocationButton from './LocationButton';
+import { Flex } from '@chakra-ui/react';
 
 export default function LocationInput({ map }) {
-  const autocompleteRef = useRef(null);
   const google = window.google;
+  const autocompleteRef = useRef(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
+  const [buttonClicked, setButtonClicked] = useState(1); // to update input box each time current location button is clicked
+  const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    if (autocompleteRef.current && currentLocation !== null) {
+      setInputValue(currentLocation);
+    }
+  }, [currentLocation, buttonClicked]);
 
   const autocompleteOptions = {
     bounds: {
-      // Bounds for Manhattan
+      // bounds for Manhattan
       south: 40.700421,
       west: -74.018534,
       north: 40.882214,
@@ -17,6 +28,63 @@ export default function LocationInput({ map }) {
     types: ['establishment'],
   };
 
+  // getting user's current location
+  const getPosition = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition, posError);
+    } else {
+      alert('Sorry, Geolocation is not supported by this browser.');
+    }
+  };
+
+  const posError = () => {
+    if (navigator.permissions) {
+      navigator.permissions.query({ name: 'geolocation' }).then(res => {
+        if (res.state === 'denied') {
+          alert(
+            'Enable location permissions for this website in your browser settings.'
+          );
+        }
+      });
+    } else {
+      alert(
+        'Unable to access your location. You can continue by submitting location manually.'
+      );
+    }
+  };
+
+  const showPosition = position => {
+    const latlng = {
+      lat: parseFloat(position.coords.latitude),
+      lng: parseFloat(position.coords.longitude),
+    };
+
+    const geocoder = new google.maps.Geocoder();
+
+    geocoder
+      .geocode({ location: latlng })
+      .then(response => {
+        if (response.results[0]) {
+          const formattedAddress = response.results[0].formatted_address;
+          setCurrentLocation(formattedAddress);
+          map.setCenter(latlng);
+          map.setZoom(15);
+
+          // eslint-disable-next-line
+          const marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            icon: '/images/you-are-here.png',
+          });
+        } else {
+          window.alert('No results found');
+        }
+      })
+      .catch(e => window.alert('Geocoder failed due to: ' + e));
+    setButtonClicked(buttonClicked + 1);
+  };
+
+  // when user selects their current location
   const handlePlaceSelect = () => {
     const selectedPlace = autocompleteRef.current.getPlace();
     let latLng;
@@ -28,12 +96,11 @@ export default function LocationInput({ map }) {
         selectedPlace.geometry.location
       ) {
         latLng = selectedPlace.geometry.location;
-        // const latitude = lat();
-        // const longitude = lng();
       }
 
       map.panTo(latLng);
       map.setZoom(15);
+      // eslint-disable-next-line
       const marker = new google.maps.Marker({
         position: latLng,
         map: map,
@@ -44,29 +111,28 @@ export default function LocationInput({ map }) {
   };
 
   return (
-    <Autocomplete
-      onLoad={autocomplete => {
-        autocompleteRef.current = autocomplete;
-      }}
-      onPlaceChanged={handlePlaceSelect}
-      options={autocompleteOptions}
-    >
-      <input
-        type="text"
-        placeholder="Explore Manhattan"
-        style={{
-          // boxSizing: 'border-box',
-          // width: '100%',
-          // height: '40px',
-          // padding: '0 12px',
-          // borderRadius: '4px',
-          // border: '1px solid #ced4da',
-          // fontSize: '14px',
-          padding: '5px',
-          paddingLeft: '15px',
-          borderRadius: '20px',
+    <Flex w={'270px'}>
+      <Autocomplete
+        onLoad={autocomplete => {
+          autocompleteRef.current = autocomplete;
         }}
-      />
-    </Autocomplete>
+        onPlaceChanged={handlePlaceSelect}
+        options={autocompleteOptions}
+      >
+        <input
+          type="text"
+          placeholder="I am currently at..."
+          value={inputValue}
+          onChange={e => setInputValue(e.target.value)}
+          style={{
+            padding: '5px',
+            paddingLeft: '15px',
+            borderRadius: '20px',
+            fontSize: '16px',
+          }}
+        />
+      </Autocomplete>
+      <LocationButton getPosition={getPosition}></LocationButton>
+    </Flex>
   );
 }
