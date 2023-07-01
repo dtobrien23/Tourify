@@ -13,7 +13,6 @@ import org.example.config.*;
 import ai.onnxruntime.*;
 
 
-
 @CrossOrigin
 @Tag(name = "Attraction API", description = "Desc for Attraction API")
 @RestController
@@ -33,7 +32,11 @@ public class AttractionController {
     @PostMapping("/addAttraction")
     @Operation(summary = "adding attractions", description = "adding attractions to the mongoDB database (connecting DB)")
     public Result addAttraction(@RequestBody AttractionDO attraction) {
-        attractionRepository.saveAttraction(attraction);
+        try {
+            attractionRepository.saveAttraction(attraction);
+        }catch (Exception e) {
+            return Result.fail("attraction insertion failure!");
+        }
         return Result.success(attraction);
     }
 
