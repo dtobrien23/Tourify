@@ -3,6 +3,7 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.bean.model.UserDO;
 import org.example.config.BusinessException;
 import org.example.bean.util.ResponseCode;
 import org.example.config.Result;
@@ -32,7 +33,7 @@ public class UserController {
 
     @GetMapping("/test")
     @Operation(summary = "Test. return string", description = "Test. return string")
-    public Result userInfo() {
+    public Result userTesting() {
         return Result.success("Testing Testing");
     }
 
@@ -43,24 +44,41 @@ public class UserController {
             throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_EMPTY);
         }
         // Process the token, authenticate user etc
-        Result result = userService.vaildateToken(idTokenString);
-        return result;
+        UserDO userDO = userService.validateToken(idTokenString);
+        if (userDO == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_NOT_VAILD);
+        }
+        else {
+            return Result.success(userDO);
+        }
     }
 
+    // Receive the User from database using useId
+    @PostMapping("/info")
+    @Operation(summary = "Retrieve user info", description = "Retrieve the User information from database using useId")
+    public Result<UserDO> userInfo(@RequestParam String userId) throws Exception {
+        if (userId == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_ID_EMPTY);
+        }
+        // Process the token, authenticate user etc
+        return Result.success(userService.findUserById(userId));
+    }
 
+    @PostMapping("/register")
+    @Operation(summary = "Register new user", description = "Unprotected endpoint. Use for new user register")
+    public Result userRegister(@RequestParam String idTokenString) throws Exception {
+        if (idTokenString == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_EMPTY);
+        }
+        // insert the user successful
+        if (userService.saveUser(idTokenString) ){
+            return Result.success(idTokenString);
+        }
+        // insert the user failure
+        else {
+            return Result.fail();
+        }
 
-
-//    // Test getting the cde token from Google. Then send the
-//    @GetMapping("/test/signin/info")
-//    @Operation(summary = "user sign in google and return full information", description = "User sign in api - return the user info")
-//    public OAuth2User userInfo(@AuthenticationPrincipal OAuth2User oAuth2User) {
-//        return oAuth2User;
-//    }
-//
-//    @GetMapping("/test/signin")
-//    @Operation(summary = "user sign in google and return name", description = "User sign in api - return the user's name")
-//    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User oAuth2User) {
-//        return Collections.singletonMap("name", oAuth2User.getAttribute("name"));
-//    }
+    }
 
 }

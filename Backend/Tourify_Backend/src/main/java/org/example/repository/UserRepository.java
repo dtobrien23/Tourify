@@ -13,6 +13,13 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserRepository {
+
     UserDO findUserByName(String userName);
+
+    void saveUser(UserDO userDO);
+
+    UserDO findUserById(String userId);
+
+
 
 }

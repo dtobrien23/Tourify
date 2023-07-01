@@ -1,24 +1,20 @@
 package org.example.auth;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 /**
  * 权限验证配置
-
- * The Spring Boot 2.x auto-configuration class for OAuth Client support is OAuth2ClientAutoConfiguration.
- *
- * It performs the following tasks:
- *
- * Registers a ClientRegistrationRepository @Bean composed of ClientRegistration(s) from the configured OAuth Client properties.
- * Registers a SecurityFilterChain @Bean and enables OAuth 2.0 Login through httpSecurity.oauth2Login().
+ * Register the security policy
  *
  * @author lvyongjie
  * @created 26/06/2023
@@ -26,41 +22,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Configuration
 @EnableWebSecurity  // enable Spring Security's web security support.
-public class WebSecurityConfig {
+@RequiredArgsConstructor
+@EnableMethodSecurity
+public class WebSecurityConfig{
 
-    @Autowired private CustomOAuth2UserService oauthUserService;
+    private final JWTAuthenticationFilter jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;
+
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
+        // config the server to be stateless (authenticate every request via a token and do not require a session to keep the user context)
+        http.sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorize -> authorize
                         // Allow public access to swagger
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**").permitAll()
                         // Allow public access to certain endpoint
-                        .requestMatchers("/user/test", "/user/tokensignin/**", "/attraction/**").permitAll()
+                        .requestMatchers("/user/tokensignin/**", "/user/register/**", "/attraction/**").permitAll()
                         // Require authentication for all other requests
-                        .anyRequest().authenticated()
-                )
-                .exceptionHandling(e -> e
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))); // Return unauthorized status when not authenticated
+                        .anyRequest().authenticated())
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        // config CORS and CSRF
         http
-                // disable csrf - Allow POST/PUT/etc request
-                .csrf(csrf -> csrf.disable());
+                .csrf(csrf -> csrf.disable())    // disable csrf - Allow POST/PUT/etc request
+                .cors(cors -> cors.disable());   // disable the CORS integration within Spring Security
         return http.build();
     }
-
-//    // expose all endpoint
-//    @Autowired private CustomOAuth2UserService oauthUserService;
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests(authorize -> authorize
-//                        .anyRequest().permitAll()
-//
-//                );
-//        http
-//                .csrf(csrf -> csrf.disable());
-//        return http.build();
-//    }
-
 
 }
