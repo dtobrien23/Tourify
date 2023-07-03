@@ -26,21 +26,19 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
     <>
       <Drawer isOpen={isOpenFunc} placement="right" onClose={isCloseFunc}>
         <DrawerOverlay />
+       
         
-          <DrawerContent>
-            <DrawerCloseButton />
-            <Flex
-          padding="20px"
-          border="10px"
+          <DrawerContent bg="white"
+          border="5px solid orangered"
           borderRadius="20px"
-          borderColor="orangered"
-          bg="white"
-          w="80%"
-          flexDirection="column"
-        >
+          p="20px"
+          w="80%">
+          
+            <DrawerCloseButton />
+            
             <DrawerHeader>{markerObject.name.name}</DrawerHeader>
 
-            <DrawerBody>
+            <DrawerBody >
               <br />
               Price: ${markerObject.price_dollars.price_dollars}
               <br />
@@ -48,7 +46,7 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
             </DrawerBody>
 
             <DrawerFooter></DrawerFooter>
-            </Flex>
+            
           </DrawerContent>
         
       </Drawer>
