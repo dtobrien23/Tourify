@@ -71,7 +71,7 @@ export default function LocationInput({ map }) {
           }
           const formattedAddress = response.results[0].formatted_address;
           setCurrentLocation(formattedAddress);
-          map.setCenter(latlng);
+          map.panTo(latlng);
           map.setZoom(15);
 
           // eslint-disable-next-line

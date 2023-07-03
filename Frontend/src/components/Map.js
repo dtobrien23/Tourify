@@ -9,6 +9,11 @@ import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
 
 export default function Map() {
+  const [mapCenter, setMapCenter] = useState({
+    lat: 40.755091,
+    lng: -73.978285,
+  });
+
   //receiving filtered attractions from slider
   //pass setSliderList method into slider to receive sliders filtered
   //attractions list, update sliderList state with that list we receive
@@ -43,7 +48,6 @@ export default function Map() {
   const [selectedFilters, setSelectedFilters] = useState(['all']);
 
   const google = window.google;
-  const mapCenter = { lat: 40.755091, lng: -73.978285 };
   const mapZoom = 13;
 
   const attractionTypes = [
@@ -67,6 +71,7 @@ export default function Map() {
 
   useEffect(() => {
     if (map) {
+      map.setCenter({ lat: mapCenter.lat, lng: mapCenter.lng });
       // // clear existing markers from the map for filter
       markers.forEach(marker => {
         marker.setMap(null);
@@ -101,11 +106,8 @@ export default function Map() {
 
       // set the markers state
       setMarkers(newMarkers);
-
-      if (selectedFilters.includes('all')) {
-      }
     }
-  }, [map, markerState, sliderList, selectedFilters]);
+  }, [map, markerState, sliderList, selectedFilters, mapCenter]);
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -118,6 +120,13 @@ export default function Map() {
       mapContainerClassName="map"
       onLoad={map => {
         setMap(map);
+      }}
+      onDragEnd={() => {
+        if (map) {
+          // Get the coordinates of the map center after the drag ends
+          const center = map.getCenter();
+          setMapCenter({ lat: center.lat(), lng: center.lng() });
+        }
       }}
     >
       <Flex
