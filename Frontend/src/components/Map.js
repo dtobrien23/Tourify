@@ -25,6 +25,8 @@ export default function Map() {
       name: marker.name,
       coordinates_lat: marker.position.lat(),
       coordinates_lng: marker.position.lng(),
+      price_dollars: marker.price_dollars,
+      image: marker.image
     };
     setMarkerObject(markerData);
 
@@ -88,7 +90,10 @@ export default function Map() {
             lng: attraction.coordinates_lng,
           },
           map: map,
-          title: attraction.name,
+          price_dollars: {price_dollars: attraction.price_dollars},
+          image: {image: attraction.image}
+        
+
         });
 
         marker.addListener('click', () => handleMarkerClick(marker));
