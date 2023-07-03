@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
-import { Flex, Divider, Drawer } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import '../App.css';
 import SliderBar from './SliderBar';
 import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
+import { Button } from '@chakra-ui/react';
+import Recommender from './Recommender';
 
 export default function Map() {
   const [mapCenter, setMapCenter] = useState({
@@ -41,6 +43,17 @@ export default function Map() {
   // close the drawer when state goes to false
   const handleClose = () => {
     setMarkerState(false);
+  };
+
+  //Recommendation Button
+  const [buttonState, setButtonState] = useState();
+  const handleRecommenderClick = () => {
+    //state opens drawer
+    setButtonState(true);
+  };
+
+  const recommendClose = () => {
+    setButtonState(false);
   };
 
   //console.log(sliderList, 'this came from the slider component to the map!!!!')
@@ -141,6 +154,27 @@ export default function Map() {
         }}
       >
         <SearchBar map={map} style={{ zIndex: 1 }} />
+        
+        {/* Recommendation button */}
+        <Button
+          onClick={handleRecommenderClick}
+          style={{
+            // width: 'fit-content',
+            width: '545px',
+            marginTop: '10px',
+            padding: '5px',
+            paddingRight: '10px',
+            paddingLeft: '10px',
+            border: 'solid 2px orangered',
+            borderRadius: '20px',
+            background: 'orangered',
+
+            color: 'white',
+          }}
+        >
+          Recommend Location!!!
+        </Button>
+
         <Flex
           flexDirection="column"
           style={{
@@ -211,6 +245,10 @@ export default function Map() {
         isOpenFunc={markerState}
         isCloseFunc={handleClose}
         markerObject={markerObject}
+      />
+      <Recommender
+        recommendOpenFunc={buttonState}
+        recommendCloseFunc={recommendClose}
       />
     </GoogleMap>
   );
