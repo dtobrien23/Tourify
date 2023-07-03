@@ -31,7 +31,7 @@ export default function Map() {
       coordinates_lat: marker.position.lat(),
       coordinates_lng: marker.position.lng(),
       price_dollars: marker.price_dollars,
-      image: marker.image
+      image: marker.image,
     };
     setMarkerObject(markerData);
 
@@ -73,7 +73,7 @@ export default function Map() {
 
   useEffect(() => {
     if (map) {
-      map.setCenter({ lat: mapCenter.lat, lng: mapCenter.lng });
+      // map.setCenter({ lat: mapCenter.lat, lng: mapCenter.lng });
       // // clear existing markers from the map for filter
       markers.forEach(marker => {
         marker.setMap(null);
@@ -95,10 +95,8 @@ export default function Map() {
             lng: attraction.coordinates_lng,
           },
           map: map,
-          price_dollars: {price_dollars: attraction.price_dollars},
-          image: {image: attraction.image}
-        
-
+          price_dollars: { price_dollars: attraction.price_dollars },
+          image: { image: attraction.image },
         });
 
         marker.addListener('click', () => handleMarkerClick(marker));
@@ -140,7 +138,6 @@ export default function Map() {
           position: 'absolute',
           top: 10,
           left: 10,
-          height: 'fit-content',
         }}
       >
         <SearchBar map={map} style={{ zIndex: 1 }} />
@@ -148,7 +145,7 @@ export default function Map() {
           flexDirection="column"
           style={{
             zIndex: 0,
-            // height: '38px',
+            height: 0,
           }}
         >
           {attractionTypes.map(attractionType => (
