@@ -73,7 +73,6 @@ export default function Map() {
 
   useEffect(() => {
     if (map) {
-      map.setCenter({ lat: mapCenter.lat, lng: mapCenter.lng });
       // // clear existing markers from the map for filter
       markers.forEach(marker => {
         marker.setMap(null);
@@ -112,7 +111,7 @@ export default function Map() {
       // set the markers state
       setMarkers(newMarkers);
     }
-  }, [map, markerState, sliderList, selectedFilters, mapCenter]);
+  }, [ sliderList, selectedFilters]);
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -148,7 +147,7 @@ export default function Map() {
           flexDirection="column"
           style={{
             zIndex: 0,
-            // height: '38px',
+            height: 0,
           }}
         >
           {attractionTypes.map(attractionType => (
