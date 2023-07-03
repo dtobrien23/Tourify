@@ -126,6 +126,7 @@ export default function Map() {
           position: 'absolute',
           top: 10,
           left: 10,
+          height: 'fit-content',
         }}
       >
         <SearchBar map={map} style={{ zIndex: 1 }} />

@@ -137,13 +137,13 @@
     "coordinates_lng": -73.9655834,
     "type": "park",
     "openingHours": {
-      "Monday": "6:30-20",
-      "Tuesday": "6:30-20",
-      "Wednesday": "6:30-20",
-      "Thursday": "6:30-20",
-      "Friday": "6:30-20",
-      "Saturday": "8-20",
-      "Sunday": "-"
+      "Monday": "06:00-01:00",
+      "Tuesday": "06:00-01:00",
+      "Wednesday": "06:00-01:00",
+      "Thursday": "06:00-01:00",
+      "Friday": "06:00-01:00",
+      "Saturday": "06:00-01:00",
+      "Sunday": "06:00-01:00"
     },
     "full_address": "New York, NY, United States",
     "in_or_out": "out",

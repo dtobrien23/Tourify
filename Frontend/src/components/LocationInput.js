@@ -9,6 +9,7 @@ export default function LocationInput({ map }) {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [buttonClicked, setButtonClicked] = useState(1); // to update input box each time current location button is clicked
   const [inputValue, setInputValue] = useState('');
+  const [locationMarker, setLocationMarker] = useState([]);
 
   useEffect(() => {
     if (autocompleteRef.current && currentLocation !== null) {
@@ -65,6 +66,9 @@ export default function LocationInput({ map }) {
       .geocode({ location: latlng })
       .then(response => {
         if (response.results[0]) {
+          if (locationMarker.length !== 0) {
+            locationMarker[0].setMap(null);
+          }
           const formattedAddress = response.results[0].formatted_address;
           setCurrentLocation(formattedAddress);
           map.setCenter(latlng);
@@ -76,6 +80,7 @@ export default function LocationInput({ map }) {
             map: map,
             icon: '/images/you-are-here.png',
           });
+          setLocationMarker([marker]);
         } else {
           window.alert('No results found');
         }
@@ -98,6 +103,10 @@ export default function LocationInput({ map }) {
         latLng = selectedPlace.geometry.location;
       }
 
+      if (locationMarker.length !== 0) {
+        locationMarker[0].setMap(null);
+      }
+
       map.panTo(latLng);
       map.setZoom(15);
       // eslint-disable-next-line
@@ -107,6 +116,7 @@ export default function LocationInput({ map }) {
         title: selectedPlace.formatted_address,
         icon: '/images/you-are-here.png',
       });
+      setLocationMarker([marker]);
     }
   };
 
