@@ -53,15 +53,20 @@ public class UserController {
         }
     }
 
-    // Receive the User from database using useId
+    // Receive the user from database using useId
     @PostMapping("/info")
     @Operation(summary = "Retrieve user info", description = "Retrieve the User information from database using useId")
-    public Result<UserDO> userInfo(@RequestParam String userId) throws Exception {
-        if (userId == null){
-            throw new BusinessException(ResponseCode.PARAM_USER_ID_EMPTY);
+    public Result<UserDO> userInfo(@RequestParam String idTokenString) throws Exception {
+        if (idTokenString == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_EMPTY);
         }
         // Process the token, authenticate user etc
-        return Result.success(userService.findUserById(userId));
+        UserDO userDO = userService.validateToken(idTokenString);
+        if (userDO == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_NOT_VAILD);
+        }
+        // Process the token, authenticate user etc
+        return Result.success(userService.findUserById(userDO.getUser_id()));
     }
 
     @PostMapping("/register")
@@ -78,7 +83,7 @@ public class UserController {
         else {
             return Result.fail();
         }
-
     }
+
 
 }

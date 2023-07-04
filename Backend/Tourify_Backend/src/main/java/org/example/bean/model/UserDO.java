@@ -33,6 +33,43 @@ public class UserDO implements UserDetails, Serializable {
     private String user_icon;
     private boolean emailVerified;
     private SystemRoleEnum systemRoleEnum;
+    private AttractionStatus attractionStatus;
+
+
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public class AttractionStatus {
+        private Boolean Empire_State_Building = false;
+        private Boolean Statue_of_Liberty = false;
+        private Boolean Brooklyn_Bridge;
+        private Boolean Metropolitan_Museum_of_Art;
+        private Boolean Museum_of_Modern_Art;
+        private Boolean Guggenheim_Museum;
+        private Boolean Central_Park;
+        private Boolean Bryant_Park;
+        private Boolean High_Line;
+        private Boolean Broadway;
+        private Boolean Madame_Tussauds_New_York;
+        private Boolean Lincoln_Center;
+        private Boolean Greenwich_Village;
+        private Boolean Harlem;
+        private Boolean Eataly;
+        private Boolean Grand_Central_Market;
+        private Boolean Whitney_Museum;
+        private Boolean Museum_of_Arts_and_Design;
+        private Boolean New_Museum;
+        private Boolean Morgan_Library_Museum;
+        private Boolean Trinity_Church;
+        private Boolean Fraunces_Tavern;
+        private Boolean One_World_Observatory;
+        private Boolean Top_of_the_Rock;
+        private Boolean Edge_Observation_Deck;
+
+
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -80,5 +117,6 @@ public class UserDO implements UserDetails, Serializable {
                 ", systemRoleEnum=" + systemRoleEnum +
                 '}';
     }
+
 
 }
