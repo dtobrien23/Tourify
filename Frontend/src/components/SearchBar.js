@@ -8,7 +8,7 @@ export default function SearchBar({
   selectedAttraction,
   setSelectedAttraction,
   setSourceCoords,
-  enableRouting,
+  calculateRoute,
 }) {
   return (
     <Flex>
@@ -37,7 +37,7 @@ export default function SearchBar({
         color="white"
         border={'solid 2px orangered'}
         borderRadius={20}
-        onClick={enableRouting}
+        onClick={calculateRoute}
       >
         Tourify Me
       </Button>

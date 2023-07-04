@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   DirectionsRenderer,
+  DirectionsService,
   GoogleMap,
   useLoadScript,
 } from '@react-google-maps/api';
@@ -11,6 +12,7 @@ import '../App.css';
 import SliderBar from './SliderBar';
 import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
+import { ca } from '@mapbox/mapbox-gl-geocoder/lib/exceptions';
 
 export default function Map() {
   const [mapCenter, setMapCenter] = useState({
@@ -54,7 +56,14 @@ export default function Map() {
   const [selectedFilters, setSelectedFilters] = useState(['all']);
   const [sourceCoords, setSourceCoords] = useState(null); // for routing source
   const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
-  const [enableRouting, setEnableRouting] = useState(null);
+
+  // for routing
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [distance, setDistance] = useState('');
+  const [duration, setDuration] = useState('');
+  // const [directionsRenderer, setDirectionsRenderer] = useState(null);
+  const [polylineOptions, setPolylineOptions] = useState(null); // for styling route line
+  const [markerOptions, setMarkerOptions] = useState(null); // for route markers
 
   const google = window.google;
   const mapZoom = 13;
@@ -84,8 +93,7 @@ export default function Map() {
 
   useEffect(() => {
     if (map) {
-      // map.setCenter({ lat: mapCenter.lat, lng: mapCenter.lng });
-      // // clear existing markers from the map for filter
+      // clear existing markers from the map for filter
       markers.forEach(marker => {
         marker.setMap(null);
       });
@@ -126,45 +134,53 @@ export default function Map() {
   /////////////
   // ROUTING //
   /////////////
-  useEffect(() => {
-    if (map) {
-      const directionsService = new google.maps.DirectionsService();
-      const directionsRenderer = new google.maps.DirectionsRenderer();
-      console.log('mapyeow', map);
-      directionsRenderer.setMap(map);
 
-      const calculateRoute = () => {
-        if (sourceCoords && selectedAttraction) {
-          console.log('HEEEEEY');
-          // source
-          const sourceLatLng = sourceCoords;
+  const calculateRoute = () => {
+    const directionsService = new google.maps.DirectionsService();
 
-          // destination
-          const destLat = selectedAttraction.coordinates_lat;
-          const destLng = selectedAttraction.coordinates_lng;
-          const destLatLng = { lat: destLat, lng: destLng };
+    if (sourceCoords && selectedAttraction) {
+      // source
+      const sourceLatLng = sourceCoords;
 
-          const request = {
-            origin: sourceLatLng,
-            destination: destLatLng,
-            travelMode: google.maps.TravelMode.WALKING,
-          };
+      // destination
+      const destLat = selectedAttraction.coordinates_lat;
+      const destLng = selectedAttraction.coordinates_lng;
+      const destLatLng = { lat: destLat, lng: destLng };
 
-          directionsService.route(request, (result, status) => {
-            console.log('route callback', status, result);
-            if (status === google.maps.DirectionsStatus.OK) {
-              const route = result.routes[0];
-              console.log(route);
-              directionsRenderer.setDirections(route);
-            } else {
-              console.error('Error fetching directions:', status);
-            }
-          });
+      directionsService.route(
+        {
+          origin: sourceLatLng,
+          destination: destLatLng,
+          travelMode: google.maps.TravelMode.WALKING,
+        },
+        (results, status) => {
+          if (status === google.maps.DirectionsStatus.OK) {
+            setDirectionsResponse(results);
+            setDistance(results.routes[0].legs[0].distance.text);
+            setDuration(results.routes[0].legs[0].duration.text);
+          } else {
+            console.error('Error fetching directions:', status);
+          }
         }
-      };
-      setEnableRouting(calculateRoute);
+      );
     }
-  }, [map, selectedAttraction]);
+  };
+
+  const clearRoute = () => {
+    setDirectionsResponse(null);
+    setDistance('');
+    setDuration('');
+  };
+
+  useEffect(() => {
+    if (directionsResponse) {
+      setPolylineOptions({
+        strokeColor: 'orangered',
+        strokeOpacity: 0.8,
+        strokeWeight: 4,
+      });
+    }
+  }, [directionsResponse]);
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -186,6 +202,12 @@ export default function Map() {
         }
       }}
     >
+      {directionsResponse && (
+        <DirectionsRenderer
+          directions={directionsResponse}
+          options={{ polylineOptions, suppressMarkers: true }}
+        />
+      )}
       <Flex
         flexDirection="column"
         style={{
@@ -199,7 +221,7 @@ export default function Map() {
           selectedAttraction={selectedAttraction}
           setSelectedAttraction={setSelectedAttraction}
           setSourceCoords={setSourceCoords}
-          enableRouting={enableRouting}
+          calculateRoute={calculateRoute}
           style={{ zIndex: 1 }}
         />
         <Flex
