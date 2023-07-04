@@ -9,12 +9,15 @@ import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
 import { Button } from '@chakra-ui/react';
 import Recommender from './Recommender';
+import { GeolocationProvider } from './GeoContext';
 
 export default function Map() {
   const [mapCenter, setMapCenter] = useState({
     lat: 40.755091,
     lng: -73.978285,
   });
+  //user location from locationInput
+  const [userLocation, setUserLocation] = useState(null);
 
   //receiving filtered attractions from slider
   //pass setSliderList method into slider to receive sliders filtered
@@ -153,8 +156,11 @@ export default function Map() {
           left: 10,
         }}
       >
+        <GeolocationProvider>
+        {/* Seachbar contains location/destination input + locationbutton */}
         <SearchBar map={map} style={{ zIndex: 1 }} />
-        
+        </GeolocationProvider>
+
         {/* Recommendation button */}
         <Button
           onClick={handleRecommenderClick}
@@ -246,10 +252,12 @@ export default function Map() {
         isCloseFunc={handleClose}
         markerObject={markerObject}
       />
-      <Recommender
-        recommendOpenFunc={buttonState}
-        recommendCloseFunc={recommendClose}
-      />
+      <GeolocationProvider>
+        <Recommender
+          recommendOpenFunc={buttonState}
+          recommendCloseFunc={recommendClose}
+        />
+      </GeolocationProvider>
     </GoogleMap>
   );
 }

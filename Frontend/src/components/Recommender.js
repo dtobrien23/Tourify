@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
 import {
   Drawer,
   DrawerBody,
@@ -10,18 +10,29 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import attractions from '../static/attractions.json';
+import { GeolocationProvider, GeolocationContext } from './GeoContext';
 
 export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
- 
-    // change user location if needed 
-const userLocation = { lat: 40.7484405, lng: -73.9856644 };
+
+const { geolocation } = useContext(GeolocationContext);
+ console.log(geolocation,'this is the geo from context')
+// change user location if needed 
+//const userLocation = { lat: 40.7484405, lng: -73.9856644 };
+const userLocation = geolocation ? { lat: geolocation.latitude, lng: geolocation.longitude } : null;
+//console.log(userLocation,'this is from context')
+
+
+
+
+
   
 const [nearestAttractions, setNearestAttractions] = useState([]);
 
   const fetchDistances = () => {
     const origin = new window.google.maps.LatLng(
       userLocation.lat,
-      userLocation.lng
+      userLocation.lng,
+      
     );
     const destinations = attractions.map(
       attraction =>
@@ -30,6 +41,9 @@ const [nearestAttractions, setNearestAttractions] = useState([]);
           attraction.coordinates_lng
         )
     );
+    console.log('Origin:', origin);
+  console.log('Destinations:', destinations);
+
     const service = new window.google.maps.DistanceMatrixService();
 
     service.getDistanceMatrix(
@@ -57,14 +71,21 @@ const [nearestAttractions, setNearestAttractions] = useState([]);
         document.head.appendChild(script);
       };
 
-      loadGoogleMapsAPI();
+      if (!window.google || !window.google.maps) {
+        // Google Maps API script not loaded, so load it
+        loadGoogleMapsAPI();
+      } else {
+        // Google Maps API already loaded, so directly call fetchDistances
+        fetchDistances();
+      }
     }
-  }, [recommendOpenFunc]);
+  }, [recommendOpenFunc, geolocation]);
 
   const callback = (response, status) => {
     // if the respsonse from google is OK store the results 
     if (status === window.google.maps.DistanceMatrixStatus.OK) {
       const results = response.rows[0].elements;
+      console.log(results,'these are the reuslt from google')
      
       // map over attractions array,create new array with distance results added in
       const attractionsWithDistances = attractions.map((attraction, index) => ({

@@ -2,9 +2,12 @@ import React from 'react';
 import { Flex, Divider } from '@chakra-ui/react';
 import DestinationInput from './DestinationInput';
 import LocationInput from './LocationInput';
+import { GeolocationProvider } from './GeoContext';
+
 
 export default function SearchBar({ map }) {
   return (
+    <GeolocationProvider>
     <Flex
       style={{
         width: 'fit-content',
@@ -19,5 +22,6 @@ export default function SearchBar({ map }) {
       <Divider orientation="vertical" />
       <LocationInput map={map} />
     </Flex>
+    </GeolocationProvider>
   );
 }
