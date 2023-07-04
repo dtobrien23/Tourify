@@ -33,9 +33,9 @@ export default function SearchBar({
       </Flex>
       <Button
         ml={2}
-        bg="gold"
+        bg="green.400"
         color="white"
-        border={'solid 2px orangered'}
+        border={'solid 2px white'}
         borderRadius={20}
         onClick={calculateRoute}
       >

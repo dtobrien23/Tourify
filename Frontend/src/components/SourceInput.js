@@ -108,6 +108,7 @@ export default function SourceInput({ map, setSourceCoords }) {
         locationMarker[0].setMap(null);
       }
 
+      setInputValue(selectedPlace.name);
       setSourceCoords(latLng);
       map.panTo(latLng);
       map.setZoom(15);

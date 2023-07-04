@@ -129,7 +129,7 @@ export default function Map() {
       // set the markers state
       setMarkers(newMarkers);
     }
-  }, [map, markerState, sliderList, selectedFilters, mapCenter]);
+  }, [map, markerState, sliderList, selectedFilters]);
 
   /////////////
   // ROUTING //
