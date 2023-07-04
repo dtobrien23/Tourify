@@ -1,5 +1,6 @@
 package org.example.service;
 
+import org.example.bean.model.AttractionStatus;
 import org.example.bean.model.UserDO;
 import org.example.bean.util.SystemRoleEnum;
 import org.example.config.BusinessException;
@@ -60,6 +61,10 @@ public class UserService {
             userDO.setUser_name(name);
             userDO.setEmailVerified(emailVerified);
             userDO.setSystemRoleEnum(SystemRoleEnum.USER);
+            // set the default data
+            AttractionStatus attractionStatus = new AttractionStatus();
+            userDO.setAttractionStatus(attractionStatus);
+
             return userDO;
         }
         else {
