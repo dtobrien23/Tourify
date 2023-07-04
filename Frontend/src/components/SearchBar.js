@@ -1,9 +1,15 @@
 import React from 'react';
 import { Flex, Divider, Button } from '@chakra-ui/react';
 import DestinationInput from './DestinationInput';
-import LocationInput from './LocationInput';
+import SourceInput from './SourceInput';
 
-export default function SearchBar({ map }) {
+export default function SearchBar({
+  map,
+  selectedAttraction,
+  setSelectedAttraction,
+  setSourceCoords,
+  enableRouting,
+}) {
   return (
     <Flex>
       <Flex
@@ -16,9 +22,14 @@ export default function SearchBar({ map }) {
           height: '38px',
         }}
       >
-        <LocationInput map={map} />
+        <SourceInput map={map} setSourceCoords={setSourceCoords} />
         <Divider orientation="vertical" />
-        <DestinationInput map={map} style={{ zIndex: 2 }} />
+        <DestinationInput
+          map={map}
+          selectedAttraction={selectedAttraction}
+          setSelectedAttraction={setSelectedAttraction}
+          style={{ zIndex: 2 }}
+        />
       </Flex>
       <Button
         ml={2}
@@ -26,6 +37,7 @@ export default function SearchBar({ map }) {
         color="white"
         border={'solid 2px orangered'}
         borderRadius={20}
+        onClick={enableRouting}
       >
         Tourify Me
       </Button>

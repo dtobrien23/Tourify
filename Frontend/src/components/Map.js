@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, useLoadScript } from '@react-google-maps/api';
+import {
+  DirectionsRenderer,
+  GoogleMap,
+  useLoadScript,
+} from '@react-google-maps/api';
 import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
 import { Flex, Divider, Drawer } from '@chakra-ui/react';
@@ -48,6 +52,9 @@ export default function Map() {
 
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['all']);
+  const [sourceCoords, setSourceCoords] = useState(null); // for routing source
+  const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
+  const [enableRouting, setEnableRouting] = useState(null);
 
   const google = window.google;
   const mapZoom = 13;
@@ -70,6 +77,10 @@ export default function Map() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     libraries: libraries,
   });
+
+  /////////////
+  // MARKERS //
+  /////////////
 
   useEffect(() => {
     if (map) {
@@ -112,6 +123,49 @@ export default function Map() {
     }
   }, [map, markerState, sliderList, selectedFilters, mapCenter]);
 
+  /////////////
+  // ROUTING //
+  /////////////
+  useEffect(() => {
+    if (map) {
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer();
+      console.log('mapyeow', map);
+      directionsRenderer.setMap(map);
+
+      const calculateRoute = () => {
+        if (sourceCoords && selectedAttraction) {
+          console.log('HEEEEEY');
+          // source
+          const sourceLatLng = sourceCoords;
+
+          // destination
+          const destLat = selectedAttraction.coordinates_lat;
+          const destLng = selectedAttraction.coordinates_lng;
+          const destLatLng = { lat: destLat, lng: destLng };
+
+          const request = {
+            origin: sourceLatLng,
+            destination: destLatLng,
+            travelMode: google.maps.TravelMode.WALKING,
+          };
+
+          directionsService.route(request, (result, status) => {
+            console.log('route callback', status, result);
+            if (status === google.maps.DirectionsStatus.OK) {
+              const route = result.routes[0];
+              console.log(route);
+              directionsRenderer.setDirections(route);
+            } else {
+              console.error('Error fetching directions:', status);
+            }
+          });
+        }
+      };
+      setEnableRouting(calculateRoute);
+    }
+  }, [map, selectedAttraction]);
+
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -140,7 +194,14 @@ export default function Map() {
           left: 10,
         }}
       >
-        <SearchBar map={map} style={{ zIndex: 1 }} />
+        <SearchBar
+          map={map}
+          selectedAttraction={selectedAttraction}
+          setSelectedAttraction={setSelectedAttraction}
+          setSourceCoords={setSourceCoords}
+          enableRouting={enableRouting}
+          style={{ zIndex: 1 }}
+        />
         <Flex
           flexDirection="column"
           style={{
