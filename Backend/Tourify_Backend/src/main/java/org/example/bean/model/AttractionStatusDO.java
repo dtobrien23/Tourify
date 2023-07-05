@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AttractionStatus implements Serializable {
+public class AttractionStatusDO implements Serializable {
     private Boolean Empire_State_Building = false;
     private Boolean Statue_of_Liberty = false;
     private Boolean Brooklyn_Bridge = false;
@@ -36,7 +36,7 @@ public class AttractionStatus implements Serializable {
     private Boolean Top_of_the_Rock = false;
     private Boolean Edge_Observation_Deck = false;
 
-    public void copy(AttractionStatus source) {
+    public void copy(AttractionStatusDO source) {
         this.Empire_State_Building = source.Empire_State_Building;
         this.Statue_of_Liberty = source.Statue_of_Liberty;
         this.Brooklyn_Bridge = source.Brooklyn_Bridge;

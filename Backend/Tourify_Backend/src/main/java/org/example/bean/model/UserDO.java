@@ -33,7 +33,8 @@ public class UserDO implements UserDetails, Serializable {
     private String user_icon;
     private boolean emailVerified;
     private SystemRoleEnum systemRoleEnum;
-    private AttractionStatus attractionStatus;
+    private AttractionStatusDO attractionStatusDO;
+    private BadgeDO badgeDO;
 
 
     @Override

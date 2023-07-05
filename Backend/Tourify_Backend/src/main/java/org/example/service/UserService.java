@@ -2,7 +2,8 @@ package org.example.service;
 
 import org.example.bean.dto.UserUpdateDTO;
 import org.example.bean.model.AttractionDO;
-import org.example.bean.model.AttractionStatus;
+import org.example.bean.model.AttractionStatusDO;
+import org.example.bean.model.BadgeDO;
 import org.example.bean.model.UserDO;
 import org.example.bean.util.SystemRoleEnum;
 import org.example.config.BusinessException;
@@ -67,10 +68,11 @@ public class UserService {
             userDO.setUser_name(name);
             userDO.setEmailVerified(emailVerified);
             userDO.setSystemRoleEnum(SystemRoleEnum.USER);
-            // set the default data
-            AttractionStatus attractionStatus = new AttractionStatus();
-            userDO.setAttractionStatus(attractionStatus);
-
+            // set the default data for the new user
+            AttractionStatusDO attractionStatusDO = new AttractionStatusDO();
+            userDO.setAttractionStatusDO(attractionStatusDO);
+            BadgeDO badgeDO = new BadgeDO();
+            userDO.setBadgeDO(badgeDO);
             return userDO;
         }
         else {
@@ -180,8 +182,12 @@ public class UserService {
                 throw new BusinessException(ResponseCode.PARAM_DISTANCE_TOO_LONG);
             }
             else{
-                UserDO userDONew = findUserById(userDO.getUser_id());
+                // If the resultBoolean is true that means The database have already changed the user's attraction's record
+                // Needs to check and potentially update the badge record.
+                // TODO: check and update the badge
 
+
+                UserDO userDONew = findUserById(userDO.getUser_id());
                 return Result.success(userDONew);
             }
         }
