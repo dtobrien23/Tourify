@@ -10,13 +10,18 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import attractions from '../static/attractions.json';
-import { GeolocationProvider, GeolocationContext } from './GeoContext';
+import { GeolocationContext } from './GeoContext';
 
 export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const { geolocation } = useContext(GeolocationContext);
   console.log(geolocation, 'this is the geo from context');
 
-  const userLocation = { lat: 40.7484405, lng: -73.9856644 }; // hardcoded user location
+  const userLocation = { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location
+  
+  //geolocation
+  //const userLocation = {lat: geolocation.latitude, lng: geolocation.longitude}
+  
+  console.log(userLocation,'this is reformatted userlocation from geolocation')
 
   const [nearestAttractions, setNearestAttractions] = useState([]);
 
@@ -57,7 +62,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
         fetchDistances();
       }
     }
-  }, [recommendOpenFunc, geolocation]);
+  }, [recommendOpenFunc]);
 
   const callback = (response, status) => {
     if (status === window.google.maps.DistanceMatrixStatus.OK) {

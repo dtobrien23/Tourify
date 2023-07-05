@@ -147,7 +147,7 @@ export default function Map() {
           setMapCenter({ lat: center.lat(), lng: center.lng() });
         }
       }}
-    >
+    ><GeolocationProvider>
       <Flex
         flexDirection="column"
         style={{
@@ -156,11 +156,12 @@ export default function Map() {
           left: 10,
         }}
       >
-        <GeolocationProvider>
+        
         {/* Seachbar contains location/destination input + locationbutton */}
         <SearchBar map={map} style={{ zIndex: 1 }} />
-        </GeolocationProvider>
-
+        
+        
+        
         {/* Recommendation button */}
         <Button
           onClick={handleRecommenderClick}
@@ -252,7 +253,7 @@ export default function Map() {
         isCloseFunc={handleClose}
         markerObject={markerObject}
       />
-      <GeolocationProvider>
+      
         <Recommender
           recommendOpenFunc={buttonState}
           recommendCloseFunc={recommendClose}
