@@ -18,14 +18,15 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
   const userLocation = { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location
   
-  //geolocation
-  //const userLocation = {lat: geolocation.latitude, lng: geolocation.longitude}
+  //geolocation, cant be null or error occurs
+ // const userLocation = geolocation ? {lat: geolocation.latitude, lng: geolocation.longitude} :null;
   
   console.log(userLocation,'this is reformatted userlocation from geolocation')
 
   const [nearestAttractions, setNearestAttractions] = useState([]);
 
   const fetchDistances = () => {
+    
     const origin = new window.google.maps.LatLng(userLocation.lat, userLocation.lng);
     const destinations = attractions.map(
       attraction => new window.google.maps.LatLng(attraction.coordinates_lat, attraction.coordinates_lng)
