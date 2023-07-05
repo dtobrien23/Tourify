@@ -36,5 +36,33 @@ public class AttractionStatus implements Serializable {
     private Boolean Top_of_the_Rock = false;
     private Boolean Edge_Observation_Deck = false;
 
+    public void copy(AttractionStatus source) {
+        this.Empire_State_Building = source.Empire_State_Building;
+        this.Statue_of_Liberty = source.Statue_of_Liberty;
+        this.Brooklyn_Bridge = source.Brooklyn_Bridge;
+        this.Metropolitan_Museum_of_Art = source.Metropolitan_Museum_of_Art;
+        this.Museum_of_Modern_Art = source.Museum_of_Modern_Art;
+        this.Guggenheim_Museum = source.Guggenheim_Museum;
+        this.Central_Park = source.Central_Park;
+        this.Bryant_Park = source.Bryant_Park;
+        this.High_Line = source.High_Line;
+        this.Broadway = source.Broadway;
+        this.Madame_Tussauds_New_York = source.Madame_Tussauds_New_York;
+        this.Lincoln_Center = source.Lincoln_Center;
+        this.Greenwich_Village = source.Greenwich_Village;
+        this.Harlem = source.Harlem;
+        this.Eataly = source.Eataly;
+        this.Grand_Central_Market = source.Grand_Central_Market;
+        this.Whitney_Museum = source.Whitney_Museum;
+        this.Museum_of_Arts_and_Design = source.Museum_of_Arts_and_Design;
+        this.New_Museum = source.New_Museum;
+        this.Morgan_Library_Museum = source.Morgan_Library_Museum;
+        this.Trinity_Church = source.Trinity_Church;
+        this.Fraunces_Tavern = source.Fraunces_Tavern;
+        this.One_World_Observatory = source.One_World_Observatory;
+        this.Top_of_the_Rock = source.Top_of_the_Rock;
+        this.Edge_Observation_Deck = source.Edge_Observation_Deck;
+
+    }
 
 }

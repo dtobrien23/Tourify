@@ -20,6 +20,6 @@ public interface UserRepository {
 
     UserDO findUserById(String userId);
 
-
+    Boolean updateUserAttractionStatus(String userId, String attractionName);
 
 }

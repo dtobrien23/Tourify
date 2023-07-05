@@ -1,10 +1,14 @@
 package org.example.service;
 
+import org.example.bean.dto.UserUpdateDTO;
+import org.example.bean.model.AttractionDO;
 import org.example.bean.model.AttractionStatus;
 import org.example.bean.model.UserDO;
 import org.example.bean.util.SystemRoleEnum;
 import org.example.config.BusinessException;
 import org.example.bean.util.ResponseCode;
+import org.example.config.Result;
+import org.example.repository.AttractionRepository;
 import org.example.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +32,8 @@ import java.util.Collections;
 public class UserService {
 
     @Autowired UserRepository userRepository;
+    @Autowired AttractionRepository attractionRepository;
+
 
     @Value("${spring.security.oauth2.client.registration.google.client-id:}")
     private String CLIENT_ID;
@@ -123,5 +129,66 @@ public class UserService {
             return userDO;
         }
     }
+
+    // To calculate the distance between two locations using the Haversine formula
+    private static final int EARTH_RADIUS = 6371; // Approx Earth radius in KM
+    public static double calculateDistanceInMeter(double startLat, double startLong, double endLat, double endLong) {
+
+        double dLat  = Math.toRadians((endLat - startLat));
+        double dLong = Math.toRadians((endLong - startLong));
+
+        startLat = Math.toRadians(startLat);
+        endLat   = Math.toRadians(endLat);
+
+        double a = haversin(dLat) + Math.cos(startLat) * Math.cos(endLat) * haversin(dLong);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return EARTH_RADIUS * c * 1000; // <-- distance in meters
+    }
+    public static double haversin(double val) {
+        return Math.pow(Math.sin(val / 2), 2);
+    }
+
+
+    public Result updateUser(UserUpdateDTO userUpdateDTO) throws Exception {
+        // Process the token, authenticate user etc
+        UserDO userDO = validateToken(userUpdateDTO.getId_token());
+        if (userDO == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_NOT_VAILD);
+        }
+        // get the user info in DB
+        UserDO userDOdb = findUserById(userDO.getUser_id());
+        if (userDOdb == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_NOT_EXIST);
+        }
+        // get the attraction info inDB
+        AttractionDO attractionDOdb = attractionRepository.findAttractionById(userUpdateDTO.getAttraction_id());
+        if (attractionDOdb == null) {
+            throw new BusinessException(ResponseCode.PARAM_ATTRACTION_EMPTY);
+        }
+        // Check whether the user's current address is close to the attraction
+        double distance = calculateDistanceInMeter(userUpdateDTO.getLat(), userUpdateDTO.getLng(), Double.parseDouble(attractionDOdb.getCoordinates_lat()), Double.parseDouble(attractionDOdb.getCoordinates_lng()));
+        // Check if distance is within 50 meters
+        System.out.println( distance + " Meters");
+        if (distance > 50 ){
+            throw new BusinessException(ResponseCode.PARAM_DISTANCE_TOO_LONG);
+        }
+        else {
+            // update the user's attraction record
+            Boolean resultBoolean = userRepository.updateUserAttractionStatus(userDO.getUser_id(),attractionDOdb.getName_alias());
+            if (resultBoolean == false){
+                throw new BusinessException(ResponseCode.PARAM_DISTANCE_TOO_LONG);
+            }
+            else{
+                UserDO userDONew = findUserById(userDO.getUser_id());
+
+                return Result.success(userDONew);
+            }
+        }
+
+    }
+
+
+
 
 }

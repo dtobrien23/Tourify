@@ -3,6 +3,8 @@ package org.example.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.bean.dto.UserUpdateDTO;
+import org.example.bean.model.AttractionDO;
 import org.example.bean.model.UserDO;
 import org.example.config.BusinessException;
 import org.example.bean.util.ResponseCode;
@@ -31,6 +33,7 @@ public class UserController {
     @Autowired UserService userService;
     @Autowired UserRepository userRepository;
 
+
     @GetMapping("/test")
     @Operation(summary = "Test. return string", description = "Test. return string")
     public Result userTesting() {
@@ -55,7 +58,7 @@ public class UserController {
 
     // Receive the user from database using useId
     @PostMapping("/info")
-    @Operation(summary = "Retrieve user info", description = "Retrieve the User information from database using useId")
+    @Operation(summary = "Retrieve user info", description = "Protected endpoint. Retrieve the User information from database using useId")
     public Result<UserDO> userInfo(@RequestParam String idTokenString) throws Exception {
         if (idTokenString == null){
             throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_EMPTY);
@@ -65,6 +68,7 @@ public class UserController {
         if (userDO == null){
             throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_NOT_VAILD);
         }
+        // TODO: Should check whether the AuthFilter's bearer token match with the current input id_token (make sure it's the same user)
         // Process the token, authenticate user etc
         return Result.success(userService.findUserById(userDO.getUser_id()));
     }
@@ -85,5 +89,10 @@ public class UserController {
         }
     }
 
+    @PostMapping("/update")
+    @Operation(summary = "Update user's attraction history info", description = "Protected endpoint. Update user's attraction history info")
+    public Result userUpdate(@RequestBody UserUpdateDTO userUpdateDTO) throws Exception {
+        return userService.updateUser(userUpdateDTO);
+    }
 
 }
