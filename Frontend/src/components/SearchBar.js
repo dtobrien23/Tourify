@@ -9,6 +9,11 @@ export default function SearchBar({
   setSelectedAttraction,
   setSourceCoords,
   calculateRoute,
+  clearRoute,
+  locationMarker,
+  setLocationMarker,
+  setShowSourceErrorComponent,
+  onOpen,
 }) {
   return (
     <Flex>
@@ -22,7 +27,14 @@ export default function SearchBar({
           height: '38px',
         }}
       >
-        <SourceInput map={map} setSourceCoords={setSourceCoords} />
+        <SourceInput
+          map={map}
+          setSourceCoords={setSourceCoords}
+          locationMarker={locationMarker}
+          setLocationMarker={setLocationMarker}
+          setShowSourceErrorComponent={setShowSourceErrorComponent}
+          onOpen={onOpen}
+        />
         <Divider orientation="vertical" />
         <DestinationInput
           map={map}
@@ -40,6 +52,16 @@ export default function SearchBar({
         onClick={calculateRoute}
       >
         Tourify Me
+      </Button>
+      <Button
+        ml={2}
+        bg="red"
+        color="white"
+        border={'solid 2px white'}
+        borderRadius={20}
+        onClick={clearRoute}
+      >
+        X
       </Button>
     </Flex>
   );

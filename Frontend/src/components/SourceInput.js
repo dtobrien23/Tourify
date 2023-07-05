@@ -3,13 +3,18 @@ import { Autocomplete } from '@react-google-maps/api';
 import LocationButton from './LocationButton';
 import { Flex } from '@chakra-ui/react';
 
-export default function SourceInput({ map, setSourceCoords }) {
+export default function SourceInput({
+  map,
+  setSourceCoords,
+  locationMarker,
+  setLocationMarker,
+  setShowSourceErrorComponent,
+}) {
   const google = window.google;
   const autocompleteRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [buttonClicked, setButtonClicked] = useState(1); // to update input box each time current location button is clicked
   const [inputValue, setInputValue] = useState('');
-  const [locationMarker, setLocationMarker] = useState([]);
 
   useEffect(() => {
     if (autocompleteRef.current && currentLocation !== null) {
@@ -95,31 +100,38 @@ export default function SourceInput({ map, setSourceCoords }) {
     const selectedPlace = autocompleteRef.current.getPlace();
     let latLng;
 
-    if (map) {
-      if (
-        selectedPlace &&
-        selectedPlace.geometry &&
-        selectedPlace.geometry.location
-      ) {
-        latLng = selectedPlace.geometry.location;
-      }
+    try {
+      if (map) {
+        if (
+          selectedPlace &&
+          selectedPlace.geometry &&
+          selectedPlace.geometry.location
+        ) {
+          latLng = selectedPlace.geometry.location;
+        }
 
-      if (locationMarker.length !== 0) {
-        locationMarker[0].setMap(null);
-      }
+        if (locationMarker.length !== 0) {
+          locationMarker[0].setMap(null);
+        }
 
-      setInputValue(selectedPlace.name);
-      setSourceCoords(latLng);
-      map.panTo(latLng);
-      map.setZoom(15);
-      // eslint-disable-next-line
-      const marker = new google.maps.Marker({
-        position: latLng,
-        map: map,
-        title: selectedPlace.formatted_address,
-        icon: '/images/you-are-here.png',
-      });
-      setLocationMarker([marker]);
+        setInputValue(selectedPlace.name);
+        setSourceCoords(latLng);
+        map.panTo(latLng);
+        map.setZoom(15);
+        // eslint-disable-next-line
+        const marker = new google.maps.Marker({
+          position: latLng,
+          map: map,
+          title: selectedPlace.formatted_address,
+          icon: '/images/you-are-here.png',
+        });
+        setLocationMarker([marker]);
+      }
+    } catch {
+      alert(
+        'Invalid source location! Please select a location from the dropdown.'
+      );
+      setShowSourceErrorComponent(true);
     }
   };
 

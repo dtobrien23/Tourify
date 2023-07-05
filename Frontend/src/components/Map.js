@@ -64,6 +64,10 @@ export default function Map() {
   // const [directionsRenderer, setDirectionsRenderer] = useState(null);
   const [polylineOptions, setPolylineOptions] = useState(null); // for styling route line
   const [markerOptions, setMarkerOptions] = useState(null); // for route markers
+  const [directionsRenderers, setDirectionsRenderers] = useState([]);
+  const [locationMarker, setLocationMarker] = useState([]); // for current location marker
+  const [showSourceErrorComponent, setShowSourceErrorComponent] =
+    useState(false);
 
   const google = window.google;
   const mapZoom = 13;
@@ -129,16 +133,23 @@ export default function Map() {
       // set the markers state
       setMarkers(newMarkers);
     }
-  }, [map, markerState, sliderList, selectedFilters]);
+  }, [map, sliderList, selectedFilters]);
 
   /////////////
   // ROUTING //
   /////////////
 
-  const calculateRoute = () => {
-    const directionsService = new google.maps.DirectionsService();
-
+  async function calculateRoute() {
     if (sourceCoords && selectedAttraction) {
+      if (directionsRenderers.length !== 0) {
+        directionsRenderers[0].setMap(null);
+        setDirectionsRenderers([]);
+      }
+
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+
       // source
       const sourceLatLng = sourceCoords;
 
@@ -147,7 +158,7 @@ export default function Map() {
       const destLng = selectedAttraction.coordinates_lng;
       const destLatLng = { lat: destLat, lng: destLng };
 
-      directionsService.route(
+      const results = await directionsService.route(
         {
           origin: sourceLatLng,
           destination: destLatLng,
@@ -158,29 +169,46 @@ export default function Map() {
             setDirectionsResponse(results);
             setDistance(results.routes[0].legs[0].distance.text);
             setDuration(results.routes[0].legs[0].duration.text);
+
+            // Set the DirectionsRenderer options within the callback
+            directionsRenderer.setOptions({
+              directions: results,
+              polylineOptions: {
+                strokeColor: 'orangered',
+                strokeOpacity: 0.8,
+                strokeWeight: 4,
+              },
+              suppressMarkers: true,
+            });
           } else {
             console.error('Error fetching directions:', status);
           }
         }
       );
+      setDirectionsRenderers([directionsRenderer]);
+      console.log(results);
     }
-  };
+  }
 
-  const clearRoute = () => {
-    setDirectionsResponse(null);
-    setDistance('');
-    setDuration('');
-  };
-
-  useEffect(() => {
-    if (directionsResponse) {
-      setPolylineOptions({
-        strokeColor: 'orangered',
-        strokeOpacity: 0.8,
-        strokeWeight: 4,
-      });
+  function clearRoute() {
+    if (directionsRenderers.length !== 0) {
+      directionsRenderers[0].setMap(null);
+      setDirectionsRenderers([]);
     }
-  }, [directionsResponse]);
+    if (locationMarker.length !== 0) {
+      locationMarker[0].setMap(null);
+    }
+  }
+
+  // useEffect(() => {
+  //   if (directionsResponse) {
+  //     setPolylineOptions({
+  //       strokeColor: 'orangered',
+  //       strokeOpacity: 0.8,
+  //       strokeWeight: 4,
+  //     });
+  //   }
+  // }, [directionsResponse]);
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -202,12 +230,6 @@ export default function Map() {
         }
       }}
     >
-      {directionsResponse && (
-        <DirectionsRenderer
-          directions={directionsResponse}
-          options={{ polylineOptions, suppressMarkers: true }}
-        />
-      )}
       <Flex
         flexDirection="column"
         style={{
@@ -222,6 +244,10 @@ export default function Map() {
           setSelectedAttraction={setSelectedAttraction}
           setSourceCoords={setSourceCoords}
           calculateRoute={calculateRoute}
+          clearRoute={clearRoute}
+          locationMarker={locationMarker}
+          setLocationMarker={setLocationMarker}
+          setShowSourceErrorComponent={setShowSourceErrorComponent}
           style={{ zIndex: 1 }}
         />
         <Flex
