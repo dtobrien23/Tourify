@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  DirectionsRenderer,
-  DirectionsService,
-  GoogleMap,
-  useLoadScript,
-} from '@react-google-maps/api';
+import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
 import { Flex } from '@chakra-ui/react';
@@ -15,79 +10,38 @@ import SearchBar from './SearchBar';
 import { Button } from '@chakra-ui/react';
 import Recommender from './Recommender';
 import { GeolocationProvider } from './GeoContext';
-import { ca } from '@mapbox/mapbox-gl-geocoder/lib/exceptions';
 
 export default function Map() {
+  ////////////////
+  // USE STATES //
+  ////////////////
+
+  const [map, setMap] = useState(null);
   const [mapCenter, setMapCenter] = useState({
     lat: 40.755091,
     lng: -73.978285,
   });
   //user location from locationInput
   const [userLocation, setUserLocation] = useState(null);
-
   //receiving filtered attractions from slider
   //pass setSliderList method into slider to receive sliders filtered
   //attractions list, update sliderList state with that list we receive
   const [sliderList, setSliderList] = useState(attractions);
-
-  //marker click state to open drawer
-  const [markerState, setMarkerState] = useState(false);
-  // get the marker object info when clicking on a marker
-  const [markerObject, setMarkerObject] = useState(null);
-  //function call on marker click
-  const handleMarkerClick = marker => {
-    // just take desired object info
-    const markerData = {
-      name: marker.name,
-      coordinates_lat: marker.position.lat(),
-      coordinates_lng: marker.position.lng(),
-      price_dollars: marker.price_dollars,
-      image: marker.image,
-    };
-    setMarkerObject(markerData);
-
-    //state opens drawer
-    setMarkerState(true);
-  };
-  // close the drawer when state goes to false
-  const handleClose = () => {
-    setMarkerState(false);
-  };
-
-  //Recommendation Button
-  const [buttonState, setButtonState] = useState();
-  const handleRecommenderClick = () => {
-    //state opens drawer
-    setButtonState(true);
-  };
-
-  const recommendClose = () => {
-    setButtonState(false);
-  };
-
-  //console.log(sliderList, 'this came from the slider component to the map!!!!')
-  const [map, setMap] = useState(null);
-
+  const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
+  const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['all']);
   const [sourceCoords, setSourceCoords] = useState(null); // for routing source
   const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
-
-  // for routing
-  const [directionsResponse, setDirectionsResponse] = useState(null);
-  const [distance, setDistance] = useState('');
-  const [duration, setDuration] = useState('');
-  // const [directionsRenderer, setDirectionsRenderer] = useState(null);
-  const [polylineOptions, setPolylineOptions] = useState(null); // for styling route line
-  const [markerOptions, setMarkerOptions] = useState(null); // for route markers
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
   const [locationMarker, setLocationMarker] = useState([]); // for current location marker
-  const [showSourceErrorComponent, setShowSourceErrorComponent] =
+  const [showSourceErrorComponent, setShowSourceErrorComponent] = // for source location error, not finished
     useState(false);
 
-  const google = window.google;
-  const mapZoom = 13;
+  const google = window.google; // to access Google objects, i.e. markers, directionRenderers
+  const mapZoom = 13; // default map zoom
 
+  // used for filtering attractions markers
   const attractionTypes = [
     { label: 'All', value: 'all' },
     { label: 'Landmarks', value: 'landmark' },
@@ -106,6 +60,42 @@ export default function Map() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     libraries: libraries,
   });
+
+  /////////////////
+  // RECOMMENDER //
+  /////////////////
+
+  //function call on marker click
+  const handleMarkerClick = marker => {
+    // just take desired object info
+    const markerData = {
+      name: marker.name,
+      coordinates_lat: marker.position.lat(),
+      coordinates_lng: marker.position.lng(),
+      price_dollars: marker.price_dollars,
+      image: marker.image,
+    };
+    setMarkerObject(markerData);
+
+    //state opens drawer
+    setMarkerState(true);
+  };
+
+  // close the drawer when state goes to false
+  const handleClose = () => {
+    setMarkerState(false);
+  };
+
+  //Recommendation Button
+  const [buttonState, setButtonState] = useState();
+  const handleRecommenderClick = () => {
+    //state opens drawer
+    setButtonState(true);
+  };
+
+  const recommendClose = () => {
+    setButtonState(false);
+  };
 
   /////////////
   // MARKERS //
@@ -182,11 +172,6 @@ export default function Map() {
         },
         (results, status) => {
           if (status === google.maps.DirectionsStatus.OK) {
-            setDirectionsResponse(results);
-            setDistance(results.routes[0].legs[0].distance.text);
-            setDuration(results.routes[0].legs[0].duration.text);
-
-            // Set the DirectionsRenderer options within the callback
             directionsRenderer.setOptions({
               directions: results,
               polylineOptions: {
@@ -215,16 +200,6 @@ export default function Map() {
       locationMarker[0].setMap(null);
     }
   }
-
-  // useEffect(() => {
-  //   if (directionsResponse) {
-  //     setPolylineOptions({
-  //       strokeColor: 'orangered',
-  //       strokeOpacity: 0.8,
-  //       strokeWeight: 4,
-  //     });
-  //   }
-  // }, [directionsResponse]);
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
