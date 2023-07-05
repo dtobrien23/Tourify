@@ -1,7 +1,7 @@
 import React from 'react';
 import { Flex, Divider, Button } from '@chakra-ui/react';
 import DestinationInput from './DestinationInput';
-import SourceInput from './SourceInput';
+import LocationInput from './LocationInput';
 
 export default function SearchBar({
   map,
@@ -27,7 +27,7 @@ export default function SearchBar({
           height: '38px',
         }}
       >
-        <SourceInput
+        <LocationInput
           map={map}
           setSourceCoords={setSourceCoords}
           locationMarker={locationMarker}
