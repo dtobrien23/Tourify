@@ -16,10 +16,11 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const { geolocation } = useContext(GeolocationContext);
   console.log(geolocation, 'this is the geo from context');
 
-  const userLocation = { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location
   
   //geolocation, cant be null or error occurs
- // const userLocation = geolocation ? {lat: geolocation.latitude, lng: geolocation.longitude} :null;
+ const userLocation = geolocation ? {lat: geolocation.latitude, lng: geolocation.longitude} 
+                                  :{ lat: 40.7484405, lng: -73.9856974 };// hardcoded user location as a fallback if user opts out
+  
   
   console.log(userLocation,'this is reformatted userlocation from geolocation')
 
