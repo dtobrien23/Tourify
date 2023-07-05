@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { GoogleMap, useLoadScript } from '@react-google-maps/api';
+import {
+  DirectionsRenderer,
+  DirectionsService,
+  GoogleMap,
+  useLoadScript,
+} from '@react-google-maps/api';
 import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
 import { Flex } from '@chakra-ui/react';
@@ -10,6 +15,7 @@ import SearchBar from './SearchBar';
 import { Button } from '@chakra-ui/react';
 import Recommender from './Recommender';
 import { GeolocationProvider } from './GeoContext';
+import { ca } from '@mapbox/mapbox-gl-geocoder/lib/exceptions';
 
 export default function Map() {
   const [mapCenter, setMapCenter] = useState({
@@ -64,6 +70,20 @@ export default function Map() {
 
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['all']);
+  const [sourceCoords, setSourceCoords] = useState(null); // for routing source
+  const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
+
+  // for routing
+  const [directionsResponse, setDirectionsResponse] = useState(null);
+  const [distance, setDistance] = useState('');
+  const [duration, setDuration] = useState('');
+  // const [directionsRenderer, setDirectionsRenderer] = useState(null);
+  const [polylineOptions, setPolylineOptions] = useState(null); // for styling route line
+  const [markerOptions, setMarkerOptions] = useState(null); // for route markers
+  const [directionsRenderers, setDirectionsRenderers] = useState([]);
+  const [locationMarker, setLocationMarker] = useState([]); // for current location marker
+  const [showSourceErrorComponent, setShowSourceErrorComponent] =
+    useState(false);
 
   const google = window.google;
   const mapZoom = 13;
@@ -87,10 +107,13 @@ export default function Map() {
     libraries: libraries,
   });
 
+  /////////////
+  // MARKERS //
+  /////////////
+
   useEffect(() => {
     if (map) {
-      // map.setCenter({ lat: mapCenter.lat, lng: mapCenter.lng });
-      // // clear existing markers from the map for filter
+      // clear existing markers from the map for filter
       markers.forEach(marker => {
         marker.setMap(null);
       });
@@ -126,7 +149,82 @@ export default function Map() {
       // set the markers state
       setMarkers(newMarkers);
     }
-  }, [ sliderList, selectedFilters]);
+  }, [map, sliderList, selectedFilters]);
+
+  /////////////
+  // ROUTING //
+  /////////////
+
+  async function calculateRoute() {
+    if (sourceCoords && selectedAttraction) {
+      if (directionsRenderers.length !== 0) {
+        directionsRenderers[0].setMap(null);
+        setDirectionsRenderers([]);
+      }
+
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+
+      // source
+      const sourceLatLng = sourceCoords;
+
+      // destination
+      const destLat = selectedAttraction.coordinates_lat;
+      const destLng = selectedAttraction.coordinates_lng;
+      const destLatLng = { lat: destLat, lng: destLng };
+
+      const results = await directionsService.route(
+        {
+          origin: sourceLatLng,
+          destination: destLatLng,
+          travelMode: google.maps.TravelMode.WALKING,
+        },
+        (results, status) => {
+          if (status === google.maps.DirectionsStatus.OK) {
+            setDirectionsResponse(results);
+            setDistance(results.routes[0].legs[0].distance.text);
+            setDuration(results.routes[0].legs[0].duration.text);
+
+            // Set the DirectionsRenderer options within the callback
+            directionsRenderer.setOptions({
+              directions: results,
+              polylineOptions: {
+                strokeColor: 'orangered',
+                strokeOpacity: 0.8,
+                strokeWeight: 4,
+              },
+              suppressMarkers: true,
+            });
+          } else {
+            console.error('Error fetching directions:', status);
+          }
+        }
+      );
+      setDirectionsRenderers([directionsRenderer]);
+      console.log(results);
+    }
+  }
+
+  function clearRoute() {
+    if (directionsRenderers.length !== 0) {
+      directionsRenderers[0].setMap(null);
+      setDirectionsRenderers([]);
+    }
+    if (locationMarker.length !== 0) {
+      locationMarker[0].setMap(null);
+    }
+  }
+
+  // useEffect(() => {
+  //   if (directionsResponse) {
+  //     setPolylineOptions({
+  //       strokeColor: 'orangered',
+  //       strokeOpacity: 0.8,
+  //       strokeWeight: 4,
+  //     });
+  //   }
+  // }, [directionsResponse]);
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -147,113 +245,120 @@ export default function Map() {
           setMapCenter({ lat: center.lat(), lng: center.lng() });
         }
       }}
-    ><GeolocationProvider>
-      <Flex
-        flexDirection="column"
-        style={{
-          position: 'absolute',
-          top: 10,
-          left: 10,
-        }}
-      >
-        
-        {/* Seachbar contains location/destination input + locationbutton */}
-        <SearchBar map={map} style={{ zIndex: 1 }} />
-        
-        
-        
-        {/* Recommendation button */}
-        <Button
-          onClick={handleRecommenderClick}
-          style={{
-            // width: 'fit-content',
-            width: '545px',
-            marginTop: '10px',
-            padding: '5px',
-            paddingRight: '10px',
-            paddingLeft: '10px',
-            border: 'solid 2px orangered',
-            borderRadius: '20px',
-            background: 'orangered',
-
-            color: 'white',
-          }}
-        >
-          Recommend Location!!!
-        </Button>
-
+    >
+      <GeolocationProvider>
         <Flex
           flexDirection="column"
           style={{
-            zIndex: 0,
-            height: 0,
+            position: 'absolute',
+            top: 10,
+            left: 10,
           }}
         >
-          {attractionTypes.map(attractionType => (
-            <button
-              key={attractionType.value}
-              onClick={() => {
-                if (attractionType.value === 'all') {
-                  if (selectedFilters.includes('all')) {
-                    setSelectedFilters([]); // Unselect all filters
+          {/* Seachbar contains location/destination input + locationbutton */}
+          <SearchBar
+            map={map}
+            selectedAttraction={selectedAttraction}
+            setSelectedAttraction={setSelectedAttraction}
+            setSourceCoords={setSourceCoords}
+            calculateRoute={calculateRoute}
+            clearRoute={clearRoute}
+            locationMarker={locationMarker}
+            setLocationMarker={setLocationMarker}
+            setShowSourceErrorComponent={setShowSourceErrorComponent}
+            style={{ zIndex: 1 }}
+          />
+          {/* Recommendation button */}
+          <Button
+            onClick={handleRecommenderClick}
+            style={{
+              // width: 'fit-content',
+              width: '545px',
+              marginTop: '10px',
+              padding: '5px',
+              paddingRight: '10px',
+              paddingLeft: '10px',
+              border: 'solid 2px orangered',
+              borderRadius: '20px',
+              background: 'orangered',
+
+              color: 'white',
+            }}
+          >
+            Recommend Location!!!
+          </Button>
+          <Flex
+            flexDirection="column"
+            style={{
+              zIndex: 0,
+              height: 0,
+            }}
+          >
+            {attractionTypes.map(attractionType => (
+              <button
+                key={attractionType.value}
+                onClick={() => {
+                  if (attractionType.value === 'all') {
+                    if (selectedFilters.includes('all')) {
+                      setSelectedFilters([]); // Unselect all filters
+                    } else {
+                      setSelectedFilters(['all']); // Select 'All' filter
+                    }
                   } else {
-                    setSelectedFilters(['all']); // Select 'All' filter
+                    if (selectedFilters.includes('all')) {
+                      setSelectedFilters([attractionType.value]); // Select the clicked filter only
+                    } else if (selectedFilters.includes(attractionType.value)) {
+                      setSelectedFilters(
+                        selectedFilters.filter(
+                          filter => filter !== attractionType.value
+                        )
+                      ); // Unselect the clicked filter
+                    } else {
+                      setSelectedFilters([
+                        ...selectedFilters,
+                        attractionType.value,
+                      ]); // Add the clicked filter
+                    }
                   }
-                } else {
-                  if (selectedFilters.includes('all')) {
-                    setSelectedFilters([attractionType.value]); // Select the clicked filter only
-                  } else if (selectedFilters.includes(attractionType.value)) {
-                    setSelectedFilters(
-                      selectedFilters.filter(
-                        filter => filter !== attractionType.value
-                      )
-                    ); // Unselect the clicked filter
-                  } else {
-                    setSelectedFilters([
-                      ...selectedFilters,
-                      attractionType.value,
-                    ]); // Add the clicked filter
-                  }
-                }
-              }}
-              style={{
-                // width: 'fit-content',
-                width: '145px',
-                marginTop: '10px',
-                padding: '5px',
-                paddingRight: '10px',
-                paddingLeft: '10px',
-                border: 'solid 2px orangered',
-                borderRadius: '20px',
-                background: selectedFilters.includes(attractionType.value)
-                  ? 'orangered'
-                  : 'white',
-                color: selectedFilters.includes(attractionType.value)
-                  ? 'white'
-                  : 'black',
-              }}
-            >
-              {attractionType.label}
-            </button>
-          ))}
+                }}
+                style={{
+                  // width: 'fit-content',
+                  width: '145px',
+                  marginTop: '10px',
+                  padding: '5px',
+                  paddingRight: '10px',
+                  paddingLeft: '10px',
+                  border: 'solid 2px orangered',
+                  borderRadius: '20px',
+                  background: selectedFilters.includes(attractionType.value)
+                    ? 'orangered'
+                    : 'white',
+                  color: selectedFilters.includes(attractionType.value)
+                    ? 'white'
+                    : 'black',
+                }}
+              >
+                {attractionType.label}
+              </button>
+            ))}
+          </Flex>
         </Flex>
-      </Flex>
-      {/* passing the setSliderListFunc to the slider from map 
+        {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update
         the sliderList state */}
-      <SliderBar setSliderListFunc={setSliderList} />
+        <SliderBar setSliderListFunc={setSliderList} />
 
-      <MarkerDrawer
-        //marker state true opens drawer
-        //false closes it
-        //have to pass set state method into
-        //drawer so the X button can change state to false and close the drawer
-        // also pass in marker object to render infor in drawer
-        isOpenFunc={markerState}
-        isCloseFunc={handleClose}
-        markerObject={markerObject}
-      />
-      
+        <MarkerDrawer
+          //marker state true opens drawer
+          //false closes it
+          //have to pass set state method into
+          //drawer so the X button can change state to false and close the drawer
+          // also pass in marker object to render infor in drawer
+          isOpenFunc={markerState}
+          isCloseFunc={handleClose}
+          markerObject={markerObject}
+        />
+
         <Recommender
           recommendOpenFunc={buttonState}
           recommendCloseFunc={recommendClose}

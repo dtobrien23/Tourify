@@ -12,9 +12,12 @@ import {
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import attractions from '../static/attractions.json';
 
-export default function DestinationInput({ map }) {
+export default function DestinationInput({
+  map,
+  selectedAttraction,
+  setSelectedAttraction,
+}) {
   const google = window.google;
-  const [selectedAttraction, setSelectedAttraction] = useState(null);
   const [inputColour, setInputColour] = useState('#B5BBC6');
 
   const handleAttractionSelect = attraction => {
