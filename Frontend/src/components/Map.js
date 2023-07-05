@@ -187,6 +187,7 @@ export default function Map() {
         }
       );
       setDirectionsRenderers([directionsRenderer]);
+      locationMarker[0].setMap(map); // in case this is set to null by clearRoute
       console.log(results);
     }
   }
