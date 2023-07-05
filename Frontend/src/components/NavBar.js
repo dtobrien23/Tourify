@@ -12,6 +12,7 @@ import {
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
 
+
 export default function NavBar({
   isLoggedIn,
   handleLogin,

@@ -1,7 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import LocationButton from './LocationButton';
 import { Flex } from '@chakra-ui/react';
+import { GeolocationProvider,GeolocationContext } from './GeoContext';
 
 export default function LocationInput({ map }) {
   const google = window.google;
@@ -10,6 +11,9 @@ export default function LocationInput({ map }) {
   const [buttonClicked, setButtonClicked] = useState(1); // to update input box each time current location button is clicked
   const [inputValue, setInputValue] = useState('');
   const [locationMarker, setLocationMarker] = useState([]);
+
+  //settr for geolocation to be passed to recommender component via context
+  const { setGeolocation } = useContext(GeolocationContext);
 
   useEffect(() => {
     if (autocompleteRef.current && currentLocation !== null) {
@@ -36,6 +40,8 @@ export default function LocationInput({ map }) {
     } else {
       alert('Sorry, Geolocation is not supported by this browser.');
     }
+
+    
   };
 
   const posError = () => {
@@ -71,6 +77,10 @@ export default function LocationInput({ map }) {
           }
           const formattedAddress = response.results[0].formatted_address;
           setCurrentLocation(formattedAddress);
+
+          setGeolocation(latlng); // Update the geolocation value in the context
+          console.log(latlng,'this is lat lang')
+
           map.panTo(latlng);
           map.setZoom(15);
 
@@ -142,7 +152,9 @@ export default function LocationInput({ map }) {
           }}
         />
       </Autocomplete>
+      <GeolocationProvider>
       <LocationButton getPosition={getPosition}></LocationButton>
+      </GeolocationProvider>
     </Flex>
   );
 }
