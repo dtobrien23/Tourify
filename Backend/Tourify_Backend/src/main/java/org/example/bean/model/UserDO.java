@@ -33,6 +33,9 @@ public class UserDO implements UserDetails, Serializable {
     private String user_icon;
     private boolean emailVerified;
     private SystemRoleEnum systemRoleEnum;
+    private AttractionStatusDO attractionStatusDO;
+    private BadgeDO badgeDO;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -80,5 +83,6 @@ public class UserDO implements UserDetails, Serializable {
                 ", systemRoleEnum=" + systemRoleEnum +
                 '}';
     }
-
 }
+
+

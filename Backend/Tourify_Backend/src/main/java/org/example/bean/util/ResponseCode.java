@@ -19,7 +19,9 @@ public enum ResponseCode {
     PARAM_USER_IDTOKEN_NOT_VAILD(10003, "param.user.idtoken.not.valid"),
     PARAM_USER_NOT_EXIST(10004, "param.user.not.exist"),
     PARAM_USER_ID_EMPTY(10005, "param.user.id.empty"),
-    PARAM_USER_ALREADY_EXIST(10006, "param.user.already.exist");
+    PARAM_USER_ALREADY_EXIST(10006, "param.user.already.exist"),
+    PARAM_DISTANCE_TOO_LONG(10050, "param.distance.too.long");
+
 
 
 

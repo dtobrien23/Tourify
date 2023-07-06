@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.example.bean.model.AttractionDO;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.example.config.*;
 import ai.onnxruntime.*;
+import java.time.LocalDateTime;
+
 
 
 @CrossOrigin
@@ -33,6 +37,9 @@ public class AttractionController {
     @Operation(summary = "adding attractions", description = "adding attractions to the mongoDB database (connecting DB)")
     public Result addAttraction(@RequestBody AttractionDO attraction) {
         try {
+            // set the creat time
+            attraction.setCreat_time(LocalDateTime.now());
+            // save the attraction
             attractionRepository.saveAttraction(attraction);
         }catch (Exception e) {
             return Result.fail("attraction insertion failure!");

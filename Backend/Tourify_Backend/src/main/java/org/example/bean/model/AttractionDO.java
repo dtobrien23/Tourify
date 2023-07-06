@@ -5,10 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.bean.util.*;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * Description of the class.
@@ -27,37 +31,43 @@ public class AttractionDO implements Serializable {
     @MongoId     // the primary key in our MongoDB document is specified using the @MongoId annotation. If we don't do this, MongoDB will automatically generate an _id when creating the document.
     private String id;
     private String name;
+    private String name_alias; // alias contains the underscore
     private String coordinates_lat;
     private String coordinates_lng;
     private String full_address;
     private AttractionTypeEnum attractionTypeEnum;
     private AttractionSiteEnum attractionSiteEnum;
-    private Integer price; // shown in dollar
-    private float estimated_hours;
+    private String price; // shown in dollar
+    private String estimated_hours;
     private String link;
-    private OpenHour openHour; // shown in dollar
-
-
+    private OpenHour openHour;
+    private LocalDateTime creat_time;
 }
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class OpenHour {
-    private String mondayOpen;
-    private String mondayClose;
-    private String tuesdayOpen;
-    private String tuesdayClose;
-    private String wednesdayOpen;
-    private String wednesdayClose;
-    private String thursdayOpen;
-    private String thursdayClose;
-    private String fridayOpen;
-    private String fridayClose;
-    private String saturdayOpen;
-    private String saturdayClose;
-    private String sundayOpen;
-    private String sundayClose;
+class OpenHour implements Serializable{
 
+//    前端传参 - example
+//        "openHour":
+//    {
+//        "mondayOpen":"09:00:00", "mondayClose":"23:00:00"
+//    }
+
+    private LocalTime mondayOpen;
+    private LocalTime mondayClose;
+    private LocalTime tuesdayOpen;
+    private LocalTime tuesdayClose;
+    private LocalTime wednesdayOpen;
+    private LocalTime wednesdayClose;
+    private LocalTime thursdayOpen;
+    private LocalTime thursdayClose;
+    private LocalTime fridayOpen;
+    private LocalTime fridayClose;
+    private LocalTime saturdayOpen;
+    private LocalTime saturdayClose;
+    private LocalTime sundayOpen;
+    private LocalTime sundayClose;
 
 }
