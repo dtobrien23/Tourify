@@ -9,6 +9,7 @@ import SearchBar from './SearchBar';
 import { Button } from '@chakra-ui/react';
 import Recommender from './Recommender';
 import { GeolocationProvider } from './GeoContext';
+import attractions from '../static/attractions.json';
 
 export default function Map() {
   ////////////////
@@ -26,7 +27,6 @@ export default function Map() {
   //pass setSliderList method into slider to receive sliders filtered
   //attractions list, update sliderList state with that list we receive
 
-  let dataArray;
   const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
@@ -36,25 +36,46 @@ export default function Map() {
   const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
   const [locationMarker, setLocationMarker] = useState([]); // for current location marker
-  const [showSourceErrorComponent, setShowSourceErrorComponent] = // for source location error, not finished
-    useState(false);
+  const [dataArray, setDataArray] = useState(null);
+  const [showSourceErrorComponent, setShowSourceErrorComponent] =
+    useState(false); // for source location error, not finished
 
   const google = window.google; // to access Google objects, i.e. markers, directionRenderers
   const mapZoom = 13; // default map zoom
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        'http://localhost:8001/api/attraction/getAllAttraction'
+      );
+      const data = await response.json();
+      console.log(data, 'THIS CAME FROM THE BACK END');
+      const dataData = data.data;
+      setDataArray(dataData);
+      console.log(dataArray, 'back end data without wrapper');
+      // setSliderList(dataArray);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // used for filtering attractions markers
   const attractionTypes = [
-    { label: 'All', value: 'all' },
-    { label: 'Landmarks', value: 'landmark' },
-    { label: 'Museums', value: 'museum' },
-    { label: 'Parks', value: 'park' },
-    { label: 'Theatres', value: 'theater' },
-    { label: 'Neighborhoods', value: 'neighborhood' },
-    { label: 'Dining', value: 'dining' },
-    { label: 'Galleries', value: 'gallery' },
-    { label: 'Libraries', value: 'library' },
-    { label: 'Historic Sites', value: 'historic_site' },
-    { label: 'Observatories', value: 'observatory' },
+    { label: 'All', value: 'ALL' },
+    { label: 'Landmarks', value: 'LANDMARK' },
+    { label: 'Museums', value: 'MUSEUM' },
+    { label: 'Parks', value: 'PARK' },
+    { label: 'Theatres', value: 'THEATER' },
+    { label: 'Neighborhoods', value: 'NEIGHBORHOOD' },
+    { label: 'Dining', value: 'DINING' },
+    { label: 'Galleries', value: 'GALLERY' },
+    { label: 'Libraries', value: 'LIBRARY' },
+    { label: 'Historic Sites', value: 'HISTORIC_SITE' },
+    { label: 'Observatories', value: 'OBSERVATORY' },
   ];
 
   const { isLoaded, loadError } = useLoadScript({
@@ -102,63 +123,46 @@ export default function Map() {
   // MARKERS //
   /////////////
 
-  const fetchData = () => {
-    try {
-      const response = fetch(
-        'http://localhost:8001/api/attraction/getAllAttraction'
-      );
-      const data = response.json();
-      console.log(data, 'THIS CAME FROM THE BACK END');
-      dataArray = data.data;
-      console.log(dataArray, 'back end data without wrapper');
-
-      //set the slider list data to the response json object
-      setSliderList(dataArray);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
   useEffect(() => {
-    if (map) {
-      fetchData();
+    if (map && dataArray !== null) {
+      console.log('yup', dataArray);
+      console.log(attractions);
+      // setSliderList(dataArray);
+      // clear existing markers from the map for filter
+      markers.forEach(marker => {
+        marker.setMap(null);
+      });
 
-      if (sliderList !== null) {
-        // clear existing markers from the map for filter
-        markers.forEach(marker => {
-          marker.setMap(null);
+      // filter attractions based on the selected filter value
+      const filteredMarkers = selectedFilters.includes('all')
+        ? dataArray
+        : dataArray.filter(attraction =>
+            selectedFilters.includes(attraction.attractionTypeEnum)
+          );
+
+      // add filtered markers
+      const newMarkers = filteredMarkers.map(attraction => {
+        console.log(attraction);
+        const marker = new google.maps.Marker({
+          name: { name: attraction.name },
+          position: {
+            lat: parseFloat(attraction.coordinates_lat),
+            lng: parseFloat(attraction.coordinates_lng),
+          },
+          map: map,
+          price_dollars: { price_dollars: attraction.price_dollars },
+          image: { image: attraction.image },
         });
 
-        // filter attractions based on the selected filter value
-        const filteredMarkers = selectedFilters.includes('all')
-          ? sliderList
-          : sliderList.filter(attraction =>
-              selectedFilters.includes(attraction.type)
-            );
+        marker.addListener('click', () => handleMarkerClick(marker));
+        console.log(marker, 'markerrrrrr');
+        return marker;
+      });
 
-        // add filtered markers
-        const newMarkers = filteredMarkers.map(attraction => {
-          const marker = new google.maps.Marker({
-            name: { name: attraction.name },
-            position: {
-              lat: attraction.coordinates_lat,
-              lng: attraction.coordinates_lng,
-            },
-            map: map,
-            price_dollars: { price_dollars: attraction.price_dollars },
-            image: { image: attraction.image },
-          });
-
-          marker.addListener('click', () => handleMarkerClick(marker));
-
-          return marker;
-        });
-
-        // set the markers state
-        setMarkers(newMarkers);
-      }
+      // set the markers state
+      setMarkers(newMarkers);
     }
-  }, [map, sliderList, selectedFilters]);
+  }, [map, selectedFilters, dataArray]);
 
   /////////////
   // ROUTING //
@@ -340,7 +344,7 @@ export default function Map() {
         {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update
         the sliderList state */}
-        <SliderBar setSliderListFunc={setSliderList} />
+        {/* <SliderBar setSliderListFunc={setSliderList} /> */}
 
         <MarkerDrawer
           //marker state true opens drawer
