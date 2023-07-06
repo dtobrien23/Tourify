@@ -7,7 +7,15 @@ import '../App.css';
 import SliderBar from './SliderBar';
 import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
-import { Button } from '@chakra-ui/react';
+import {
+  Button,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Box,
+  CloseButton,
+} from '@chakra-ui/react';
 import Recommender from './Recommender';
 import { GeolocationProvider } from './GeoContext';
 
@@ -35,8 +43,7 @@ export default function Map() {
   const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
   const [locationMarker, setLocationMarker] = useState([]); // for current location marker
-  const [showSourceErrorComponent, setShowSourceErrorComponent] = // for source location error, not finished
-    useState(false);
+  const [isSourceAlertOpen, setIsSourceAlertOpen] = useState(false);
 
   const google = window.google; // to access Google objects, i.e. markers, directionRenderers
   const mapZoom = 13; // default map zoom
@@ -222,6 +229,53 @@ export default function Map() {
         }
       }}
     >
+      {/* inert backdrop */}
+      {isSourceAlertOpen && (
+        <div
+          onClick={() => setIsSourceAlertOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 9999,
+          }}
+        />
+      )}
+      {isSourceAlertOpen && (
+        <Alert
+          status="error"
+          position="fixed"
+          top="40%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          w="50vw"
+          h="25vh"
+          zIndex={10000}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="20px"
+        >
+          <AlertIcon boxSize="40px" mr={0} />
+          <Box>
+            <AlertTitle>Source Location Error!</AlertTitle>
+            <AlertDescription>
+              Please select a valid location from the dropdown.
+            </AlertDescription>
+          </Box>
+          <CloseButton
+            alignSelf="flex-start"
+            position="absolute"
+            right={2}
+            top={2}
+            onClick={() => setIsSourceAlertOpen(false)}
+          />
+        </Alert>
+      )}
       <GeolocationProvider>
         <Flex
           flexDirection="column"
@@ -241,7 +295,7 @@ export default function Map() {
             clearRoute={clearRoute}
             locationMarker={locationMarker}
             setLocationMarker={setLocationMarker}
-            setShowSourceErrorComponent={setShowSourceErrorComponent}
+            setIsSourceAlertOpen={setIsSourceAlertOpen}
             style={{ zIndex: 1 }}
           />
           {/* Recommendation button */}

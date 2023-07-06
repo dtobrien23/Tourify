@@ -4,12 +4,12 @@ import LocationButton from './LocationButton';
 import { Flex } from '@chakra-ui/react';
 import { GeolocationProvider, GeolocationContext } from './GeoContext';
 
-export default function SourceInput({
+export default function LocationInput({
   map,
   setSourceCoords,
   locationMarker,
   setLocationMarker,
-  setShowSourceErrorComponent,
+  setIsSourceAlertOpen,
 }) {
   const google = window.google;
   const autocompleteRef = useRef(null);
@@ -136,10 +136,11 @@ export default function SourceInput({
         setLocationMarker([marker]);
       }
     } catch {
-      alert(
-        'Invalid source location! Please select a location from the dropdown.'
-      );
-      setShowSourceErrorComponent(true);
+      // alert(
+      //   'Invalid source location! Please select a location from the dropdown.'
+      // );
+      setIsSourceAlertOpen(true);
+      setInputValue('');
     }
   };
 
@@ -165,9 +166,9 @@ export default function SourceInput({
           }}
         />
       </Autocomplete>
-      <GeolocationProvider>
-        <LocationButton getPosition={getPosition}></LocationButton>
-      </GeolocationProvider>
+      {/* <GeolocationProvider> */}
+      <LocationButton getPosition={getPosition}></LocationButton>
+      {/* </GeolocationProvider> */}
     </Flex>
   );
 }
