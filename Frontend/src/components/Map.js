@@ -22,6 +22,7 @@ export default function Map() {
   //receiving filtered attractions from slider
   //pass setSliderList method into slider to receive sliders filtered
   //attractions list, update sliderList state with that list we receive
+  
   const [sliderList, setSliderList] = useState(attractions);
 
   //marker click state to open drawer
@@ -86,6 +87,29 @@ export default function Map() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
     libraries: libraries,
   });
+
+  // getting attractions from the backend with get request
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://172.20.10.3:8001/api/attraction/getAllAttraction');
+        const data = await response.json();
+        console.log(data, 'THIS CAME FROM THE BACK END');
+        const dataArray = data.data;
+        console.log(dataArray, 'back end data without wrapper');
+
+        //set the slider list data to the response json object
+        //setSliderList(dataArray);
+
+      } catch (error) {
+
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
 
   useEffect(() => {
     if (map) {
