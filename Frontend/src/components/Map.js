@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import { libraries, mapOptions } from '../static/mapConfig.js';
 import { Flex } from '@chakra-ui/react';
@@ -9,8 +9,14 @@ import SearchBar from './SearchBar';
 import { Button } from '@chakra-ui/react';
 import Recommender from './Recommender';
 import { GeolocationProvider } from './GeoContext';
+import { APIContext } from './APIContext';
+
 
 export default function Map() {
+
+  const { apiAttractions } = useContext(APIContext);
+
+
   ////////////////
   // USE STATES //
   ////////////////
@@ -102,28 +108,29 @@ export default function Map() {
   // MARKERS //
   /////////////
 
-  const fetchData = () => {
-    try {
-      const response = fetch(
-        'http://localhost:8001/api/attraction/getAllAttraction'
-      );
-      const data = response.json();
-      console.log(data, 'THIS CAME FROM THE BACK END');
-      dataArray = data.data;
-      console.log(dataArray, 'back end data without wrapper');
+  // const fetchData = () => {
+  //   try {
+  //     const response = fetch(
+  //       'http://localhost:8001/api/attraction/getAllAttraction'
+  //     );
+  //     const data = response.json();
+  //     console.log(data, 'THIS CAME FROM THE BACK END');
+  //     dataArray = data.data;
+  //     console.log(dataArray, 'back end data without wrapper');
 
-      //set the slider list data to the response json object
-      setSliderList(dataArray);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
+  //     //set the slider list data to the response json object
+  //     setSliderList(dataArray);
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //   }
+  // };
 
   useEffect(() => {
     if (map) {
-      fetchData();
+      // fetchData();
 
-      if (sliderList !== null) {
+      if (apiAttractions !== null) {
+        console.log(apiAttractions,'this is the log')
         // clear existing markers from the map for filter
         markers.forEach(marker => {
           marker.setMap(null);
@@ -131,8 +138,8 @@ export default function Map() {
 
         // filter attractions based on the selected filter value
         const filteredMarkers = selectedFilters.includes('all')
-          ? sliderList
-          : sliderList.filter(attraction =>
+          ? apiAttractions
+          : apiAttractions.filter(attraction =>
               selectedFilters.includes(attraction.type)
             );
 
@@ -141,8 +148,8 @@ export default function Map() {
           const marker = new google.maps.Marker({
             name: { name: attraction.name },
             position: {
-              lat: attraction.coordinates_lat,
-              lng: attraction.coordinates_lng,
+              lat: parseFloat(attraction.coordinates_lat),
+              lng: parseFloat(attraction.coordinates_lng),
             },
             map: map,
             price_dollars: { price_dollars: attraction.price_dollars },
@@ -150,6 +157,7 @@ export default function Map() {
           });
 
           marker.addListener('click', () => handleMarkerClick(marker));
+          console.log(marker,'these are the markers man!')
 
           return marker;
         });
@@ -158,7 +166,7 @@ export default function Map() {
         setMarkers(newMarkers);
       }
     }
-  }, [map, sliderList, selectedFilters]);
+  }, [map, apiAttractions, selectedFilters]);
 
   /////////////
   // ROUTING //

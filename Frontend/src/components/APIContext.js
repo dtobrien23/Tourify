@@ -4,6 +4,7 @@ const APIContext = createContext();
 
 const APIContextProvider = ({ children }) => {
   const [apiAttractions, setAPIAttractions] = useState(null);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,16 +17,23 @@ const APIContextProvider = ({ children }) => {
 
         // Set the slider list data to the response json object
         setAPIAttractions(dataArray);
+        setApiLoaded(true);
+
+        console.log(apiLoaded,'youve set it!!')
       } catch (error) {
         console.error('Error fetching data:', error);
+        setApiLoaded(false);
       }
     };
 
     fetchData();
   }, []);
 
+  
+
+
   return (
-    <APIContext.Provider value={{ apiAttractions, setAPIAttractions }}>
+    <APIContext.Provider value={{ apiAttractions, setAPIAttractions, apiLoaded }}>
       {children}
     </APIContext.Provider>
   );
