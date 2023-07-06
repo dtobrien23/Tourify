@@ -21,6 +21,6 @@ public class BadgeDO implements Serializable {
     private Boolean All_Museum_Badge = false;
     private Boolean All_Park_Badge = false;
     private Boolean All_Dining_Badge = false;
-
+    private Boolean Empire_State_Badge = false;
 
 }

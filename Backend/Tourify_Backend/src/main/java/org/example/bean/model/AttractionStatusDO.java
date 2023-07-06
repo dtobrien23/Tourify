@@ -65,4 +65,50 @@ public class AttractionStatusDO implements Serializable {
 
     }
 
+    public boolean areAllFieldsTrue() {
+        return Empire_State_Building &&
+                Statue_of_Liberty &&
+                Brooklyn_Bridge &&
+                Metropolitan_Museum_of_Art &&
+                Museum_of_Modern_Art &&
+                Guggenheim_Museum &&
+                Central_Park &&
+                Bryant_Park &&
+                High_Line &&
+                Broadway &&
+                Madame_Tussauds_New_York &&
+                Lincoln_Center &&
+                Greenwich_Village &&
+                Harlem &&
+                Eataly &&
+                Grand_Central_Market &&
+                Whitney_Museum &&
+                Museum_of_Arts_and_Design &&
+                New_Museum &&
+                Morgan_Library_Museum &&
+                Trinity_Church &&
+                Fraunces_Tavern &&
+                One_World_Observatory &&
+                Top_of_the_Rock &&
+                Edge_Observation_Deck;
+    }
+
+    public boolean areAllMuseumTrue() {
+        return Metropolitan_Museum_of_Art &&
+                Museum_of_Modern_Art &&
+                Guggenheim_Museum &&
+                Madame_Tussauds_New_York;
+    }
+
+    public boolean areAllParkTrue() {
+        return  Central_Park &&
+                Bryant_Park &&
+                High_Line;
+    }
+
+    public boolean areAllDiningTrue() {
+        return Eataly && Grand_Central_Market;
+    }
+
+
 }

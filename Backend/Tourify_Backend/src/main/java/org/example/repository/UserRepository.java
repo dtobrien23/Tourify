@@ -1,5 +1,6 @@
 package org.example.repository;
 
+import org.example.bean.model.BadgeDO;
 import org.example.bean.model.UserDO;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +22,9 @@ public interface UserRepository {
     UserDO findUserById(String userId);
 
     Boolean updateUserAttractionStatus(String userId, String attractionName);
+
+    Boolean updateUserBadge(String userId, BadgeDO badgeDO);
+
+
 
 }
