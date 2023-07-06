@@ -2,6 +2,7 @@ package org.example.repository;
 
 import com.mongodb.client.result.UpdateResult;
 import org.example.bean.model.AttractionDO;
+import org.example.bean.model.BadgeDO;
 import org.example.bean.model.UserDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -52,12 +53,31 @@ public class UserRepositoryImpl implements UserRepository {
         query.addCriteria(Criteria.where("user_id").is(userId));
         Update update = new Update();
         // set the variables needs to be updated
-        update.set("attractionStatus."+attractionName, true);
+        update.set("attractionStatusDO."+attractionName, true);
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, UserDO.class);
         // updateResult.wasAcknowledged() will return true if successful. false if error
         return updateResult.wasAcknowledged();
 
     }
+
+
+    @Override
+    public Boolean updateUserBadge(String userId, BadgeDO badgeDO) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("user_id").is(userId));
+        Update update = new Update();
+        // set the variables needs to be updated
+        update.set("badgeDO.All_Attraction_Badge", badgeDO.getAll_Attraction_Badge());
+        update.set("badgeDO.All_Museum_Badge", badgeDO.getAll_Museum_Badge());
+        update.set("badgeDO.All_Park_Badge", badgeDO.getAll_Park_Badge());
+        update.set("badgeDO.All_Dining_Badge", badgeDO.getAll_Dining_Badge());
+        update.set("badgeDO.Empire_State_Badge", badgeDO.getEmpire_State_Badge());
+        UpdateResult updateResult = mongoTemplate.updateFirst(query, update, UserDO.class);
+        // updateResult.wasAcknowledged() will return true if successful. false if error
+        return updateResult.wasAcknowledged();
+
+    }
+
 
 
 }

@@ -184,9 +184,37 @@ public class UserService {
             else{
                 // If the resultBoolean is true that means The database have already changed the user's attraction's record
                 // Needs to check and potentially update the badge record.
-                // TODO: check and update the badge
 
+                // get the latest user info in DB to check the badge
+                UserDO userDONewBadge = findUserById(userDO.getUser_id());
+                BadgeDO badgeDO = userDONewBadge.getBadgeDO();
+                // Check the All_Attraction_Badge
+                if(userDONewBadge.getAttractionStatusDO().areAllFieldsTrue()){
+                    badgeDO.setAll_Attraction_Badge(true);
+                }
+                // Check the All_Museum_Badge
+                if(userDONewBadge.getAttractionStatusDO().areAllMuseumTrue()){
+                    badgeDO.setAll_Museum_Badge(true);
+                }
+                // Check the All_Park_Badge
+                if(userDONewBadge.getAttractionStatusDO().areAllParkTrue()){
+                    badgeDO.setAll_Park_Badge(true);
+                }
+                // Check the All_Dining_Badge
+                if(userDONewBadge.getAttractionStatusDO().areAllDiningTrue()){
+                    badgeDO.setAll_Dining_Badge(true);
+                }
+                // Check the Empire_State_Badge
+                if(userDONewBadge.getAttractionStatusDO().getEmpire_State_Building()){
+                    badgeDO.setEmpire_State_Badge(true);
+                }
 
+                // update the user badge in DB
+                Boolean resultBooleanBadge = userRepository.updateUserBadge(userDO.getUser_id() , badgeDO);
+                if (!resultBooleanBadge){
+                    throw new BusinessException(ResponseCode.PARAM_UPDATE_BADGE_ERROR);
+                }
+                // get the latest user info in DB to return it
                 UserDO userDONew = findUserById(userDO.getUser_id());
                 return Result.success(userDONew);
             }
