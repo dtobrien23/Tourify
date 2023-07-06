@@ -37,7 +37,7 @@ export default function Map() {
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
-  const [selectedFilters, setSelectedFilters] = useState(['all']);
+  const [selectedFilters, setSelectedFilters] = useState(['ALL']);
   const [sourceCoords, setSourceCoords] = useState(null); // for routing source
   const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
@@ -50,17 +50,17 @@ export default function Map() {
 
   // used for filtering attractions markers
   const attractionTypes = [
-    { label: 'All', value: 'all' },
-    { label: 'Landmarks', value: 'landmark' },
-    { label: 'Museums', value: 'museum' },
-    { label: 'Parks', value: 'park' },
-    { label: 'Theatres', value: 'theater' },
-    { label: 'Neighborhoods', value: 'neighborhood' },
-    { label: 'Dining', value: 'dining' },
-    { label: 'Galleries', value: 'gallery' },
-    { label: 'Libraries', value: 'library' },
-    { label: 'Historic Sites', value: 'historic_site' },
-    { label: 'Observatories', value: 'observatory' },
+    { label: 'All', value: 'ALL' },
+    { label: 'Landmarks', value: 'LANDMARK' },
+    { label: 'Museums', value: 'MUSEUM' },
+    { label: 'Parks', value: 'PARK' },
+    { label: 'Theatres', value: 'THEATRE' },
+    { label: 'Neighborhoods', value: 'NEIGHBORHOOD' },
+    { label: 'Dining', value: 'DINING' },
+    { label: 'Galleries', value: 'GALLERY' },
+    { label: 'Libraries', value: 'LIBRARY' },
+    { label: 'Historic Sites', value: 'HISTORIC_SITE' },
+    { label: 'Observatories', value: 'OBSERVATORY' },
   ];
 
   const { isLoaded, loadError } = useLoadScript({
@@ -108,23 +108,6 @@ export default function Map() {
   // MARKERS //
   /////////////
 
-  // const fetchData = () => {
-  //   try {
-  //     const response = fetch(
-  //       'http://localhost:8001/api/attraction/getAllAttraction'
-  //     );
-  //     const data = response.json();
-  //     console.log(data, 'THIS CAME FROM THE BACK END');
-  //     dataArray = data.data;
-  //     console.log(dataArray, 'back end data without wrapper');
-
-  //     //set the slider list data to the response json object
-  //     setSliderList(dataArray);
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //   }
-  // };
-
   useEffect(() => {
     if (map) {
       // fetchData();
@@ -137,10 +120,10 @@ export default function Map() {
         });
 
         // filter attractions based on the selected filter value
-        const filteredMarkers = selectedFilters.includes('all')
+        const filteredMarkers = selectedFilters.includes('ALL')
           ? apiAttractions
           : apiAttractions.filter(attraction =>
-              selectedFilters.includes(attraction.type)
+              selectedFilters.includes(attraction.attractionTypeEnum)
             );
 
         // add filtered markers
@@ -300,14 +283,14 @@ export default function Map() {
               <button
                 key={attractionType.value}
                 onClick={() => {
-                  if (attractionType.value === 'all') {
-                    if (selectedFilters.includes('all')) {
+                  if (attractionType.value === 'ALL') {
+                    if (selectedFilters.includes('ALL')) {
                       setSelectedFilters([]); // Unselect all filters
                     } else {
-                      setSelectedFilters(['all']); // Select 'All' filter
+                      setSelectedFilters(['ALL']); // Select 'All' filter
                     }
                   } else {
-                    if (selectedFilters.includes('all')) {
+                    if (selectedFilters.includes('ALL')) {
                       setSelectedFilters([attractionType.value]); // Select the clicked filter only
                     } else if (selectedFilters.includes(attractionType.value)) {
                       setSelectedFilters(
