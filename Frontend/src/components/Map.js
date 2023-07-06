@@ -31,7 +31,7 @@ export default function Map() {
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
-  const [selectedFilters, setSelectedFilters] = useState(['all']);
+  const [selectedFilters, setSelectedFilters] = useState(['ALL']);
   const [sourceCoords, setSourceCoords] = useState(null); // for routing source
   const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
@@ -134,7 +134,7 @@ export default function Map() {
       });
 
       // filter attractions based on the selected filter value
-      const filteredMarkers = selectedFilters.includes('all')
+      const filteredMarkers = selectedFilters.includes('ALL')
         ? dataArray
         : dataArray.filter(attraction =>
             selectedFilters.includes(attraction.attractionTypeEnum)
@@ -296,14 +296,14 @@ export default function Map() {
               <button
                 key={attractionType.value}
                 onClick={() => {
-                  if (attractionType.value === 'all') {
-                    if (selectedFilters.includes('all')) {
+                  if (attractionType.value === 'ALL') {
+                    if (selectedFilters.includes('ALL')) {
                       setSelectedFilters([]); // Unselect all filters
                     } else {
-                      setSelectedFilters(['all']); // Select 'All' filter
+                      setSelectedFilters(['ALL']); // Select 'All' filter
                     }
                   } else {
-                    if (selectedFilters.includes('all')) {
+                    if (selectedFilters.includes('ALL')) {
                       setSelectedFilters([attractionType.value]); // Select the clicked filter only
                     } else if (selectedFilters.includes(attractionType.value)) {
                       setSelectedFilters(
