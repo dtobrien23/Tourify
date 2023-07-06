@@ -2,15 +2,20 @@ import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import LocationButton from './LocationButton';
 import { Flex } from '@chakra-ui/react';
-import { GeolocationProvider,GeolocationContext } from './GeoContext';
+import { GeolocationProvider, GeolocationContext } from './GeoContext';
 
-export default function LocationInput({ map }) {
+export default function SourceInput({
+  map,
+  setSourceCoords,
+  locationMarker,
+  setLocationMarker,
+  setShowSourceErrorComponent,
+}) {
   const google = window.google;
   const autocompleteRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [buttonClicked, setButtonClicked] = useState(1); // to update input box each time current location button is clicked
   const [inputValue, setInputValue] = useState('');
-  const [locationMarker, setLocationMarker] = useState([]);
 
   //settr for geolocation to be passed to recommender component via context
   const { setGeolocation } = useContext(GeolocationContext);
@@ -40,8 +45,6 @@ export default function LocationInput({ map }) {
     } else {
       alert('Sorry, Geolocation is not supported by this browser.');
     }
-
-    
   };
 
   const posError = () => {
@@ -79,8 +82,9 @@ export default function LocationInput({ map }) {
           setCurrentLocation(formattedAddress);
 
           setGeolocation(latlng); // Update the geolocation value in the context
-          console.log(latlng,'this is lat lang')
+          console.log(latlng, 'this is lat lang');
 
+          setSourceCoords(latlng);
           map.panTo(latlng);
           map.setZoom(15);
 
@@ -104,29 +108,38 @@ export default function LocationInput({ map }) {
     const selectedPlace = autocompleteRef.current.getPlace();
     let latLng;
 
-    if (map) {
-      if (
-        selectedPlace &&
-        selectedPlace.geometry &&
-        selectedPlace.geometry.location
-      ) {
-        latLng = selectedPlace.geometry.location;
-      }
+    try {
+      if (map) {
+        if (
+          selectedPlace &&
+          selectedPlace.geometry &&
+          selectedPlace.geometry.location
+        ) {
+          latLng = selectedPlace.geometry.location;
+        }
 
-      if (locationMarker.length !== 0) {
-        locationMarker[0].setMap(null);
-      }
+        if (locationMarker.length !== 0) {
+          locationMarker[0].setMap(null);
+        }
 
-      map.panTo(latLng);
-      map.setZoom(15);
-      // eslint-disable-next-line
-      const marker = new google.maps.Marker({
-        position: latLng,
-        map: map,
-        title: selectedPlace.formatted_address,
-        icon: '/images/you-are-here.png',
-      });
-      setLocationMarker([marker]);
+        setInputValue(selectedPlace.name);
+        setSourceCoords(latLng);
+        map.panTo(latLng);
+        map.setZoom(15);
+        // eslint-disable-next-line
+        const marker = new google.maps.Marker({
+          position: latLng,
+          map: map,
+          title: selectedPlace.formatted_address,
+          icon: '/images/you-are-here.png',
+        });
+        setLocationMarker([marker]);
+      }
+    } catch {
+      alert(
+        'Invalid source location! Please select a location from the dropdown.'
+      );
+      setShowSourceErrorComponent(true);
     }
   };
 
@@ -153,7 +166,7 @@ export default function LocationInput({ map }) {
         />
       </Autocomplete>
       <GeolocationProvider>
-      <LocationButton getPosition={getPosition}></LocationButton>
+        <LocationButton getPosition={getPosition}></LocationButton>
       </GeolocationProvider>
     </Flex>
   );
