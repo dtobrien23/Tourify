@@ -165,9 +165,7 @@ export default function SourceInput({
           }}
         />
       </Autocomplete>
-      <GeolocationProvider>
         <LocationButton getPosition={getPosition}></LocationButton>
-      </GeolocationProvider>
     </Flex>
   );
 }

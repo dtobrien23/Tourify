@@ -2,7 +2,6 @@ import React from 'react';
 import { Flex, Divider, Button } from '@chakra-ui/react';
 import DestinationInput from './DestinationInput';
 import LocationInput from './LocationInput';
-import { GeolocationProvider } from './GeoContext';
 
 export default function SearchBar({
   map,
@@ -17,7 +16,6 @@ export default function SearchBar({
   onOpen,
 }) {
   return (
-    <GeolocationProvider>
       <Flex>
         <Flex
           style={{
@@ -66,6 +64,5 @@ export default function SearchBar({
           X
         </Button>
       </Flex>
-    </GeolocationProvider>
   );
 }

@@ -12,7 +12,6 @@ import {
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
 
-
 export default function NavBar({
   isLoggedIn,
   handleLogin,
@@ -35,7 +34,7 @@ export default function NavBar({
     <Flex align="center" justify="space-between" h="75px" mt="10px" px="4">
       <Box>
         <img
-          style={{ cursor: 'pointer' }}// cursor change on hover
+          style={{ cursor: 'pointer' }} // cursor change on hover
           onClick={handleLogoClick}
           src="logo.png"
           alt="Tourify Logo"
@@ -48,8 +47,12 @@ export default function NavBar({
       >
         <TabList>
           <Tab color="orangered">Map</Tab>
-          <Tab color="orangered">Attractions</Tab>
-          <Tab color="orangered">Badges</Tab>
+          <Tab isDisabled={false} color="orangered">
+            Attractions
+          </Tab>
+          <Tab isDisabled={false} color="orangered">
+            Badges
+          </Tab>
         </TabList>
       </Flex>
       {isMobile && (
