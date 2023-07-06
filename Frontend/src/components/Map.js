@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
-import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
 import { Flex } from '@chakra-ui/react';
 import '../App.css';
@@ -26,8 +25,9 @@ export default function Map() {
   //receiving filtered attractions from slider
   //pass setSliderList method into slider to receive sliders filtered
   //attractions list, update sliderList state with that list we receive
-  
-  const [sliderList, setSliderList] = useState(attractions);
+
+  let dataArray;
+  const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
@@ -102,66 +102,61 @@ export default function Map() {
   // MARKERS //
   /////////////
 
-  // getting attractions from the backend with get request
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://172.20.10.3:8001/api/attraction/getAllAttraction');
-        const data = await response.json();
-        console.log(data, 'THIS CAME FROM THE BACK END');
-        const dataArray = data.data;
-        console.log(dataArray, 'back end data without wrapper');
+  const fetchData = () => {
+    try {
+      const response = fetch(
+        'http://localhost:8001/api/attraction/getAllAttraction'
+      );
+      const data = response.json();
+      console.log(data, 'THIS CAME FROM THE BACK END');
+      dataArray = data.data;
+      console.log(dataArray, 'back end data without wrapper');
 
-        //set the slider list data to the response json object
-        //setSliderList(dataArray);
-
-      } catch (error) {
-
-        console.error('Error fetching data:', error);
-      }
-    };
-  
-    fetchData();
-  }, []);
-  
+      //set the slider list data to the response json object
+      setSliderList(dataArray);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
     if (map) {
-      // clear existing markers from the map for filter
-      markers.forEach(marker => {
-        marker.setMap(null);
-      });
+      fetchData();
 
-      // filter attractions based on the selected filter value
-      const filteredMarkers = selectedFilters.includes('all')
-        ? sliderList
-        : sliderList.filter(attraction =>
-            selectedFilters.includes(attraction.type)
-          );
-
-      // add filtered markers
-      const newMarkers = filteredMarkers.map(attraction => {
-        const marker = new google.maps.Marker({
-          name: { name: attraction.name },
-          position: {
-            lat: attraction.coordinates_lat,
-            lng: attraction.coordinates_lng,
-          },
-          map: map,
-          price_dollars: { price_dollars: attraction.price_dollars },
-          image: { image: attraction.image },
+      if (sliderList !== null) {
+        // clear existing markers from the map for filter
+        markers.forEach(marker => {
+          marker.setMap(null);
         });
 
-        marker.addListener('click', () => handleMarkerClick(marker));
-        // map.setZoom(8);
-        // map.setCenter(marker.getPosition());
-        console.log(marker, 'markerinfo here');
+        // filter attractions based on the selected filter value
+        const filteredMarkers = selectedFilters.includes('all')
+          ? sliderList
+          : sliderList.filter(attraction =>
+              selectedFilters.includes(attraction.type)
+            );
 
-        return marker;
-      });
+        // add filtered markers
+        const newMarkers = filteredMarkers.map(attraction => {
+          const marker = new google.maps.Marker({
+            name: { name: attraction.name },
+            position: {
+              lat: attraction.coordinates_lat,
+              lng: attraction.coordinates_lng,
+            },
+            map: map,
+            price_dollars: { price_dollars: attraction.price_dollars },
+            image: { image: attraction.image },
+          });
 
-      // set the markers state
-      setMarkers(newMarkers);
+          marker.addListener('click', () => handleMarkerClick(marker));
+
+          return marker;
+        });
+
+        // set the markers state
+        setMarkers(newMarkers);
+      }
     }
   }, [map, sliderList, selectedFilters]);
 
@@ -212,7 +207,6 @@ export default function Map() {
       );
       setDirectionsRenderers([directionsRenderer]);
       locationMarker[0].setMap(map); // in case this is set to null by clearRoute
-      console.log(results);
     }
   }
 
