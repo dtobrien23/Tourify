@@ -16,16 +16,26 @@ export default function SearchBar({
   handleRecommenderClick,
 }) {
   return (
-    <Flex>
+    <Flex
+      mb={3}
+      style={{
+        width: 'fit-content',
+        // border: 'solid 2px white',
+        borderRadius: '20px',
+        backgroundColor: 'white',
+        boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
+        zIndex: 1,
+      }}
+    >
       <Flex
         style={{
           width: 'fit-content',
-          border: 'solid 1px orangered',
+          border: 'solid 2px orangered',
           borderRadius: '20px',
+          // boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.2)',
           backgroundColor: 'white',
-          boxShadow: '5px 5px 10px 2px rgba(0,0,0,.6)',
           zIndex: 1,
-          height: '38px',
+          height: '40px',
         }}
       >
         <LocationInput
@@ -34,6 +44,12 @@ export default function SearchBar({
           locationMarker={locationMarker}
           setLocationMarker={setLocationMarker}
           setIsSourceAlertOpen={setIsSourceAlertOpen}
+          style={{
+            // width: 'fit-content',
+            border: 'solid 1px orangered',
+            borderRadius: '20px',
+            backgroundColor: 'white',
+          }}
         />
         <Divider orientation="vertical" />
         <DestinationInput
@@ -41,26 +57,31 @@ export default function SearchBar({
           selectedAttraction={selectedAttraction}
           setSelectedAttraction={setSelectedAttraction}
           handleRecommenderClick={handleRecommenderClick}
-          style={{ zIndex: 2 }}
+          style={{
+            zIndex: 2,
+          }}
         />
       </Flex>
       <Button
-        ml={2}
+        ml={1}
+        w={50}
         bg="green.400"
         color="white"
         border={'solid 2px white'}
-        borderRadius={20}
+        borderRadius={30}
         onClick={calculateRoute}
       >
-        Tourify Me
+        <img src="/images/go-icon.png" alt="Go" />
       </Button>
       <Button
-        ml={2}
+        ml={1}
+        w={50}
         bg="red"
         color="white"
         border={'solid 2px white'}
         borderRadius={20}
         onClick={clearRoute}
+        fontWeight="bold"
       >
         X
       </Button>

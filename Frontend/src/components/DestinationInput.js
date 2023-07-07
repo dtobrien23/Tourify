@@ -39,7 +39,7 @@ export default function DestinationInput({
           w={'100%'}
           m={0}
           p={0}
-          paddingLeft={'15px'}
+          paddingLeft={'10px'}
           color={inputColour}
           fontFamily={'Roboto'}
           fontWeight={'Normal'}
@@ -62,6 +62,25 @@ export default function DestinationInput({
           maxHeight="200px"
           overflowY="auto"
         >
+          <MenuItem
+            onClick={handleRecommenderClick}
+            style={{
+              height: '32px',
+              fontSize: '14px',
+              background: 'gold',
+              color: 'white',
+            }}
+          >
+            <Image
+              boxSize="1.5rem"
+              borderRadius="full"
+              src="/images/recommender-icon.png"
+              alt="Recommender Icon"
+              mr="12px"
+            />
+            <span>Recommend Location!</span>
+          </MenuItem>
+          <MenuDivider m={0} p={0} />
           {attractions.map(attraction => {
             return (
               <>

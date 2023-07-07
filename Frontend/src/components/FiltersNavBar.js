@@ -12,6 +12,7 @@ export default function FiltersNavBar({
     overflow: 'auto',
     // overflowX: 'auto',
     pl: 1,
+    mb: 7,
     style: {
       zIndex: 0,
       width: '70px',
@@ -56,6 +57,8 @@ export default function FiltersNavBar({
   useEffect(() => {
     if (isMobile) {
       setFlexProps(mobileFilters);
+    } else {
+      setFlexProps(desktopFilters);
     }
   }, [isMobile]);
 

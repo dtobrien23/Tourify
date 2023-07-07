@@ -316,7 +316,7 @@ export default function Map({ isMobile }) {
             style={{ zIndex: 1 }}
           />
           {/* Recommendation button */}
-          <Button
+          {/* <Button
             onClick={handleRecommenderClick}
             style={{
               // width: 'fit-content',
@@ -333,7 +333,7 @@ export default function Map({ isMobile }) {
             }}
           >
             Recommend Location!!!
-          </Button>
+          </Button> */}
           <FiltersNavBar
             isMobile={isMobile}
             selectedFilters={selectedFilters}
@@ -343,7 +343,7 @@ export default function Map({ isMobile }) {
         {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update
         the sliderList state */}
-        {/* <SliderBar setSliderListFunc={setSliderList} /> */}
+        <SliderBar setSliderListFunc={setSliderList} />
 
         <MarkerDrawer
           //marker state true opens drawer

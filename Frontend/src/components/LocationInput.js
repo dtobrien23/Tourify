@@ -142,7 +142,7 @@ export default function LocationInput({
   };
 
   return (
-    <Flex w={'270px'}>
+    <Flex w={'270px'} ml={1} alignItems="center" justifyContent="space-between">
       <Autocomplete
         onLoad={autocomplete => {
           autocompleteRef.current = autocomplete;
@@ -156,8 +156,8 @@ export default function LocationInput({
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
           style={{
-            padding: '5px',
-            paddingLeft: '15px',
+            // padding: '3px',
+            paddingLeft: '8px',
             borderRadius: '20px',
             fontSize: '16px',
           }}
