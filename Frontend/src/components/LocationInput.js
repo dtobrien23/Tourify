@@ -136,12 +136,6 @@ export default function LocationInput({
         setLocationMarker([marker]);
       }
     } catch {
-<<<<<<< HEAD
-      // alert(
-      //   'Invalid source location! Please select a location from the dropdown.'
-      // );
-=======
->>>>>>> dean-frontend
       setIsSourceAlertOpen(true);
       setInputValue('');
     }
@@ -169,13 +163,7 @@ export default function LocationInput({
           }}
         />
       </Autocomplete>
-<<<<<<< HEAD
-      {/* <GeolocationProvider> */}
       <LocationButton getPosition={getPosition}></LocationButton>
-      {/* </GeolocationProvider> */}
-=======
-      <LocationButton getPosition={getPosition}></LocationButton>
->>>>>>> dean-frontend
     </Flex>
   );
 }

@@ -6,10 +6,7 @@ import SliderBar from './SliderBar';
 import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
 import {
-<<<<<<< HEAD
-=======
   Flex,
->>>>>>> dean-frontend
   Button,
   Alert,
   AlertIcon,
@@ -17,10 +14,7 @@ import {
   AlertDescription,
   Box,
   CloseButton,
-<<<<<<< HEAD
-=======
   Tooltip,
->>>>>>> dean-frontend
 } from '@chakra-ui/react';
 import Recommender from './Recommender';
 import { GeolocationProvider } from './GeoContext';
@@ -55,10 +49,7 @@ export default function Map({ isMobile }) {
   const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
   const [locationMarker, setLocationMarker] = useState([]); // for current location marker
-<<<<<<< HEAD
-=======
   const [dataArray, setDataArray] = useState(null);
->>>>>>> dean-frontend
   const [isSourceAlertOpen, setIsSourceAlertOpen] = useState(false);
 
   const google = window.google; // to access Google objects, i.e. markers, directionRenderers
@@ -321,10 +312,7 @@ export default function Map({ isMobile }) {
             locationMarker={locationMarker}
             setLocationMarker={setLocationMarker}
             setIsSourceAlertOpen={setIsSourceAlertOpen}
-<<<<<<< HEAD
-=======
             handleRecommenderClick={handleRecommenderClick}
->>>>>>> dean-frontend
             style={{ zIndex: 1 }}
           />
           {/* Recommendation button */}
