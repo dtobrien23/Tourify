@@ -12,6 +12,8 @@ import {
   Heading,
 } from '@chakra-ui/react';
 
+
+
 function Attraction({
   name,
   full_address,

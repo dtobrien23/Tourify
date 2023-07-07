@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   RangeSlider,
   RangeSliderTrack,
@@ -6,24 +6,33 @@ import {
   RangeSliderThumb,
 } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
-import attractions from '../static/attractions.json';
+//import attractions from '../static/attractions.json';
+import { APIContext } from './APIContext';
+
 
 export default function SliderBar({ setSliderListFunc }) {
+  const { apiAttractions, apiLoaded, setA } = useContext(APIContext);
+
+  
   const [sliderValue, setSliderValue] = useState([0, 100]);
-  const [filteredAttractions, setFilteredAttractions] = useState(attractions);
+  const [filteredAttractions, setFilteredAttractions] = useState(apiAttractions);
+
+
 
   const handleSliderChange = value => {
     setSliderValue(value);
   };
 
+
   useEffect(() => {
-    const filtered = attractions.filter(
+    if(apiLoaded){
+    const filtered = apiAttractions.filter(
       attraction =>
         attraction.busyness_score >= sliderValue[0] &&
         attraction.busyness_score <= sliderValue[1]
     );
     setFilteredAttractions(filtered);
-  }, [sliderValue]);
+}}, [sliderValue]);
 
   useEffect(() => {
     setSliderListFunc(filteredAttractions);
