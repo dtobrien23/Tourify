@@ -11,7 +11,7 @@ import { APIContext } from './APIContext';
 
 
 export default function SliderBar({ setSliderListFunc }) {
-  const { apiAttractions, apiLoaded, setA } = useContext(APIContext);
+  const { apiAttractions, apiLoaded} = useContext(APIContext);
 
   
   const [sliderValue, setSliderValue] = useState([0, 100]);
