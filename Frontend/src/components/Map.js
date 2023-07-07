@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import { libraries, mapOptions } from '../static/mapConfig.js';
 import '../App.css';
@@ -20,8 +20,11 @@ import Recommender from './Recommender';
 import { GeolocationProvider } from './GeoContext';
 import attractions from '../static/attractions.json';
 import FiltersNavBar from './FiltersNavBar.js';
+import { APIContext } from './APIContext';
 
 export default function Map({ isMobile }) {
+  const { apiAttractions } = useContext(APIContext);
+
   ////////////////
   // USE STATES //
   ////////////////
@@ -52,25 +55,25 @@ export default function Map({ isMobile }) {
   const google = window.google; // to access Google objects, i.e. markers, directionRenderers
   const mapZoom = 13; // default map zoom
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch(
-        'http://localhost:8001/api/attraction/getAllAttraction'
-      );
-      const data = await response.json();
-      console.log(data, 'THIS CAME FROM THE BACK END');
-      const dataData = data.data;
-      setDataArray(dataData);
-      console.log(dataArray, 'back end data without wrapper');
-      // setSliderList(dataArray);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       'http://localhost:8001/api/attraction/getAllAttraction'
+  //     );
+  //     const data = await response.json();
+  //     console.log(data, 'THIS CAME FROM THE BACK END');
+  //     const dataData = data.data;
+  //     setDataArray(dataData);
+  //     console.log(dataArray, 'back end data without wrapper');
+  //     // setSliderList(dataArray);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
@@ -118,45 +121,47 @@ export default function Map({ isMobile }) {
   /////////////
 
   useEffect(() => {
-    if (map && dataArray !== null) {
-      console.log('yup', dataArray);
-      console.log(attractions);
-      // setSliderList(dataArray);
-      // clear existing markers from the map for filter
-      markers.forEach(marker => {
-        marker.setMap(null);
-      });
+    if (map) {
+      // fetchData();
 
-      // filter attractions based on the selected filter value
-      const filteredMarkers = selectedFilters.includes('ALL')
-        ? dataArray
-        : dataArray.filter(attraction =>
-            selectedFilters.includes(attraction.attractionTypeEnum)
-          );
-
-      // add filtered markers
-      const newMarkers = filteredMarkers.map(attraction => {
-        console.log(attraction);
-        const marker = new google.maps.Marker({
-          name: { name: attraction.name },
-          position: {
-            lat: parseFloat(attraction.coordinates_lat),
-            lng: parseFloat(attraction.coordinates_lng),
-          },
-          map: map,
-          price_dollars: { price_dollars: attraction.price_dollars },
-          image: { image: attraction.image },
+      if (apiAttractions !== null) {
+        console.log(apiAttractions, 'this is the log');
+        // clear existing markers from the map for filter
+        markers.forEach(marker => {
+          marker.setMap(null);
         });
 
-        marker.addListener('click', () => handleMarkerClick(marker));
-        console.log(marker, 'markerrrrrr');
-        return marker;
-      });
+        // filter attractions based on the selected filter value
+        const filteredMarkers = selectedFilters.includes('ALL')
+          ? apiAttractions
+          : apiAttractions.filter(attraction =>
+              selectedFilters.includes(attraction.attractionTypeEnum)
+            );
 
-      // set the markers state
-      setMarkers(newMarkers);
+        // add filtered markers
+        const newMarkers = filteredMarkers.map(attraction => {
+          const marker = new google.maps.Marker({
+            name: { name: attraction.name },
+            position: {
+              lat: parseFloat(attraction.coordinates_lat),
+              lng: parseFloat(attraction.coordinates_lng),
+            },
+            map: map,
+            price_dollars: { price_dollars: attraction.price_dollars },
+            image: { image: attraction.image },
+          });
+
+          marker.addListener('click', () => handleMarkerClick(marker));
+          console.log(marker, 'these are the markers man!');
+
+          return marker;
+        });
+
+        // set the markers state
+        setMarkers(newMarkers);
+      }
     }
-  }, [map, selectedFilters, dataArray]);
+  }, [map, apiAttractions, selectedFilters]);
 
   /////////////
   // ROUTING //
