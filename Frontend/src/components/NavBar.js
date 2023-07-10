@@ -13,17 +13,11 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
 
 export default function NavBar({ isMobile, setIsMobile }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-    // isDisabled(true);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    // isDisabled(false);
-  };
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    // Retrieve the logged-in status from the cache (e.g., localStorage)
+    const cachedStatus = localStorage.getItem('loggedInfo');
+    return cachedStatus === 'true'; // Convert to boolean
+  });
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -96,6 +90,7 @@ export default function NavBar({ isMobile, setIsMobile }) {
               </TabList>
               <Flex>
                 <SignUpForm
+                  isLoggedIn={isLoggedIn}
                   setIsLoggedIn={setIsLoggedIn}
                 />
               </Flex>
@@ -105,7 +100,11 @@ export default function NavBar({ isMobile, setIsMobile }) {
       )}
       {!isMobile && (
         <Flex>
-          <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
+          <SignUpForm
+            setIsLoggedIn={setIsLoggedIn}
+            isLoggedIn={isLoggedIn}
+            align="center"
+          />
         </Flex>
       )}
     </Flex>

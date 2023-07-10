@@ -9,13 +9,13 @@ import {
 import axios from 'axios';
 import { Avatar, AvatarBadge } from '@chakra-ui/react';
 
-export default function SignUpForm({ setIsLoggedIn }) {
+export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
 
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
-    setLoggedIn(loggedInfo === 'true');
+    setUserLoggedIn(loggedInfo === 'true');
     setLoading(false);
   }, []);
 
@@ -34,11 +34,13 @@ export default function SignUpForm({ setIsLoggedIn }) {
           );
 
           if (response.status === 200) {
-            setLoggedIn(true);
+            setUserLoggedIn(true);
             setIsLoggedIn(true);
             localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
           } else {
-            setLoggedIn(false);
+            setUserLoggedIn(false);
+            setIsLoggedIn(false);
+            localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
           }
         })
         .catch(error => console.log(error));
@@ -64,7 +66,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   };
 
   const handleLogout = () => {
-    setLoggedIn(false);
+    setUserLoggedIn(false);
     setIsLoggedIn(false);
     localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
   };
@@ -72,10 +74,10 @@ export default function SignUpForm({ setIsLoggedIn }) {
   if (loading) {
     return <p>Loading...</p>;
   }
-
+console.log(isLoggedIn,'this is the state!!!!!!!!!!!!!!!!!!!!!')
   return (
     <VStack spacing={4} align="start">
-      {isLoggedIn ? (
+      {userLoggedIn? (
         <Button onClick={handleLogout}>Logout</Button>
       ) : (
         <>
