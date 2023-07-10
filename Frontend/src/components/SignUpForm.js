@@ -9,7 +9,29 @@ import {
 import axios from 'axios';
 import { Avatar, AvatarBadge } from '@chakra-ui/react';
 
-export default function SignUpForm({isLoggedIn,setIsLoggedIn}) {
+export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
+  useEffect(() => {
+    const loggedInfo = getCookie('loggedInfo');
+    setIsLoggedIn(loggedInfo === 'true');
+  }, []);
+
+  const setCookie = (name, value, days) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = name + '=' + value + ';expires=' + expires.toUTCString();
+  };
+
+  const getCookie = name => {
+    const cookieArr = document.cookie.split(';');
+    for (let i = 0; i < cookieArr.length; i++) {
+      const cookiePair = cookieArr[i].split('=');
+      if (name === cookiePair[0].trim()) {
+        return cookiePair[1];
+      }
+    }
+    return null;
+  };
+
   const backendLogin = credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
@@ -24,72 +46,59 @@ export default function SignUpForm({isLoggedIn,setIsLoggedIn}) {
             'this is from the backend login for returning user'
           );
 
-          if (response.status == 200) {
+          if (response.status === 200) {
             setIsLoggedIn(true);
-            // setUserSignedIn(true);
-            localStorage.setItem('loggedInfo', 'true');
+            setCookie('loggedInfo', 'true', 7); // Set cookie for 7 days
           } else {
             setIsLoggedIn(false);
           }
         })
         .catch(error => console.log(error));
-    }}
+    }
+  };
 
-    const backendSignUp = credentialResponse => {
-      console.log(credentialResponse, 'THIS IS THE CRED');
-      const { credential } = credentialResponse;
-      if (credential) {
-        axios
-          .post(
-            `http://localhost:8001/api/user/register?idTokenString=${credential}`
+  const backendSignUp = credentialResponse => {
+    console.log(credentialResponse, 'THIS IS THE CRED');
+    const { credential } = credentialResponse;
+    if (credential) {
+      axios
+        .post(
+          `http://localhost:8001/api/user/register?idTokenString=${credential}`
+        )
+        .then(response =>
+          console.log(
+            response.data,
+            'this is from the backend login for sign up'
           )
-          .then(response =>
-            console.log(
-              response.data,
-              'this is from the backend login for sign up'
-            )
-          )
-          .catch(error => console.log(error));
-      }
-    };
-    // const[loggedInfo,setLoggedInfo]=useState(
-    //   localStorage.getItem('loggedInfo') === 'true' // Retrieve login status from local storage
-    //   );
-    
+        )
+        .catch(error => console.log(error));
+    }
+  };
 
-    // const [userSignedIn, setUserSignedIn]=useState(false);
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setCookie('loggedInfo', 'false', 7); // Set cookie for 7 days
+  };
 
-
-    const handleLogout = () => {
-      // Perform the logout action here (e.g., clear session, remove token, etc.)
-      // setUserSignedIn(false);
-      setIsLoggedIn(false);
-      localStorage.setItem('loggedInfo', 'false');
-    };
-
-    // useEffect(() => {
-    //   const loginStatus = localStorage.getItem('loggedInfo') === 'true';
-    //   setUserSignedIn(loginStatus);
-    // }, []);
-    
-    // useEffect (() => {
-
-    // },[isLoggedIn]);
- 
-
-    return (
-      <VStack spacing={4} align="start">
-      {isLoggedIn? (
+  return (
+    <VStack spacing={4} align="start">
+      {isLoggedIn ? (
         <Button onClick={handleLogout}>Logout</Button>
       ) : (
-        <div>
+        <>
           <Button>
             <GoogleLogin
               clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
               onSuccess={backendLogin}
-              onFailure={error => console.log('Google login failed:', error)}
+              onFailure={error =>
+                console.log('Google login failed:', error)
+              }
               cookiePolicy="single_host_origin"
-              style={{ marginLeft: '1.5em', marginTop: '1em' }}
+              style={{
+                marginLeft: '1.5em',
+                marginTop: '1em',
+                display: isLoggedIn ? 'none' : 'inline-block',
+              }}
               color="black"
               bg="white"
               border="1px"
@@ -102,9 +111,15 @@ export default function SignUpForm({isLoggedIn,setIsLoggedIn}) {
             <GoogleLogin
               clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
               onSuccess={backendSignUp}
-              onFailure={error => console.log('Google login failed:', error)}
+              onFailure={error =>
+                console.log('Google login failed:', error)
+              }
               cookiePolicy="single_host_origin"
-              style={{ marginLeft: '1.5em', marginTop: '1em' }}
+              style={{
+                marginLeft: '1.5em',
+                marginTop: '1em',
+                display: isLoggedIn ? 'none' : 'inline-block',
+              }}
               color="black"
               bg="white"
               border="1px"
@@ -113,9 +128,8 @@ export default function SignUpForm({isLoggedIn,setIsLoggedIn}) {
             />
             SIGN UP BUTTON
           </Button>
-        </div>
+        </>
       )}
     </VStack>
-    );
-  };
-
+  );
+}
