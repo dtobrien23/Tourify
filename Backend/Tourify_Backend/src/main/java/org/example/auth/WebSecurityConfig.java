@@ -10,6 +10,13 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 
 /**
@@ -33,7 +40,12 @@ public class WebSecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
         // config the server to be stateless (authenticate every request via a token and do not require a session to keep the user context)
-        http.sessionManagement(session -> session
+        http
+                // config CORS and CSRF
+                .cors(withDefaults())
+                .csrf(csrf -> csrf.disable())     // disable csrf - Allow POST/PUT/etc request
+
+                .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorize -> authorize
                         // Allow public access to swagger
@@ -44,11 +56,19 @@ public class WebSecurityConfig{
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        // config CORS and CSRF
-        http
-                .csrf(csrf -> csrf.disable())    // disable csrf - Allow POST/PUT/etc request
-                .cors(cors -> cors.disable());   // disable the CORS integration within Spring Security
+
         return http.build();
     }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 
 }
