@@ -9,7 +9,7 @@ export default function SourceInput({
   setSourceCoords,
   locationMarker,
   setLocationMarker,
-  setShowSourceErrorComponent,
+  setIsSourceAlertOpen,
 }) {
   const google = window.google;
   const autocompleteRef = useRef(null);
@@ -136,10 +136,8 @@ export default function SourceInput({
         setLocationMarker([marker]);
       }
     } catch {
-      alert(
-        'Invalid source location! Please select a location from the dropdown.'
-      );
-      setShowSourceErrorComponent(true);
+      setIsSourceAlertOpen(true);
+      setInputValue('');
     }
   };
 
@@ -165,7 +163,7 @@ export default function SourceInput({
           }}
         />
       </Autocomplete>
-        <LocationButton getPosition={getPosition}></LocationButton>
+      <LocationButton getPosition={getPosition}></LocationButton>
     </Flex>
   );
 }

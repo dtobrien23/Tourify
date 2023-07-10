@@ -1,21 +1,29 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
 import { libraries, mapOptions } from '../static/mapConfig.js';
-import { Flex } from '@chakra-ui/react';
 import '../App.css';
 import SliderBar from './SliderBar';
 import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
-import { Button } from '@chakra-ui/react';
+import {
+  Flex,
+  Button,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Box,
+  CloseButton,
+  Tooltip,
+} from '@chakra-ui/react';
 import Recommender from './Recommender';
 import { GeolocationProvider } from './GeoContext';
+import attractions from '../static/attractions.json';
+import FiltersNavBar from './FiltersNavBar.js';
 import { APIContext } from './APIContext';
 
-
-export default function Map() {
-
+export default function Map({ isMobile }) {
   const { apiAttractions } = useContext(APIContext);
-
 
   ////////////////
   // USE STATES //
@@ -32,7 +40,6 @@ export default function Map() {
   //pass setSliderList method into slider to receive sliders filtered
   //attractions list, update sliderList state with that list we receive
 
-  let dataArray;
   const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
@@ -42,26 +49,31 @@ export default function Map() {
   const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
   const [locationMarker, setLocationMarker] = useState([]); // for current location marker
-  const [showSourceErrorComponent, setShowSourceErrorComponent] = // for source location error, not finished
-    useState(false);
+  const [dataArray, setDataArray] = useState(null);
+  const [isSourceAlertOpen, setIsSourceAlertOpen] = useState(false);
 
   const google = window.google; // to access Google objects, i.e. markers, directionRenderers
   const mapZoom = 13; // default map zoom
 
-  // used for filtering attractions markers
-  const attractionTypes = [
-    { label: 'All', value: 'ALL' },
-    { label: 'Landmarks', value: 'LANDMARK' },
-    { label: 'Museums', value: 'MUSEUM' },
-    { label: 'Parks', value: 'PARK' },
-    { label: 'Theatres', value: 'THEATRE' },
-    { label: 'Neighborhoods', value: 'NEIGHBORHOOD' },
-    { label: 'Dining', value: 'DINING' },
-    { label: 'Galleries', value: 'GALLERY' },
-    { label: 'Libraries', value: 'LIBRARY' },
-    { label: 'Historic Sites', value: 'HISTORIC_SITE' },
-    { label: 'Observatories', value: 'OBSERVATORY' },
-  ];
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       'http://localhost:8001/api/attraction/getAllAttraction'
+  //     );
+  //     const data = await response.json();
+  //     console.log(data, 'THIS CAME FROM THE BACK END');
+  //     const dataData = data.data;
+  //     setDataArray(dataData);
+  //     console.log(dataArray, 'back end data without wrapper');
+  //     // setSliderList(dataArray);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
@@ -113,7 +125,7 @@ export default function Map() {
       // fetchData();
 
       if (apiAttractions !== null) {
-        console.log(apiAttractions,'this is the log')
+        console.log(apiAttractions, 'this is the log');
         // clear existing markers from the map for filter
         markers.forEach(marker => {
           marker.setMap(null);
@@ -140,7 +152,7 @@ export default function Map() {
           });
 
           marker.addListener('click', () => handleMarkerClick(marker));
-          console.log(marker,'these are the markers man!')
+          console.log(marker, 'these are the markers man!');
 
           return marker;
         });
@@ -231,6 +243,53 @@ export default function Map() {
         }
       }}
     >
+      {/* inert backdrop */}
+      {isSourceAlertOpen && (
+        <div
+          onClick={() => setIsSourceAlertOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 9999,
+          }}
+        />
+      )}
+      {isSourceAlertOpen && (
+        <Alert
+          status="error"
+          position="fixed"
+          top="40%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          w="50vw"
+          h="25vh"
+          zIndex={10000}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="20px"
+        >
+          <AlertIcon boxSize="40px" mr={0} />
+          <Box>
+            <AlertTitle>Source Location Error!</AlertTitle>
+            <AlertDescription>
+              Please select a valid location from the dropdown.
+            </AlertDescription>
+          </Box>
+          <CloseButton
+            alignSelf="flex-start"
+            position="absolute"
+            right={2}
+            top={2}
+            onClick={() => setIsSourceAlertOpen(false)}
+          />
+        </Alert>
+      )}
       <GeolocationProvider>
         <Flex
           flexDirection="column"
@@ -238,6 +297,8 @@ export default function Map() {
             position: 'absolute',
             top: 10,
             left: 10,
+            height: 'calc(100% - 20px)',
+            // width: 'calc(100% - 20px)', // Adjust the height as needed
           }}
         >
           {/* Seachbar contains location/destination input + locationbutton */}
@@ -250,7 +311,8 @@ export default function Map() {
             clearRoute={clearRoute}
             locationMarker={locationMarker}
             setLocationMarker={setLocationMarker}
-            setShowSourceErrorComponent={setShowSourceErrorComponent}
+            setIsSourceAlertOpen={setIsSourceAlertOpen}
+            handleRecommenderClick={handleRecommenderClick}
             style={{ zIndex: 1 }}
           />
           {/* Recommendation button */}
@@ -272,66 +334,16 @@ export default function Map() {
           >
             Recommend Location!!!
           </Button>
-          <Flex
-            flexDirection="column"
-            style={{
-              zIndex: 0,
-              height: 0,
-            }}
-          >
-            {attractionTypes.map(attractionType => (
-              <button
-                key={attractionType.value}
-                onClick={() => {
-                  if (attractionType.value === 'ALL') {
-                    if (selectedFilters.includes('ALL')) {
-                      setSelectedFilters([]); // Unselect all filters
-                    } else {
-                      setSelectedFilters(['ALL']); // Select 'All' filter
-                    }
-                  } else {
-                    if (selectedFilters.includes('ALL')) {
-                      setSelectedFilters([attractionType.value]); // Select the clicked filter only
-                    } else if (selectedFilters.includes(attractionType.value)) {
-                      setSelectedFilters(
-                        selectedFilters.filter(
-                          filter => filter !== attractionType.value
-                        )
-                      ); // Unselect the clicked filter
-                    } else {
-                      setSelectedFilters([
-                        ...selectedFilters,
-                        attractionType.value,
-                      ]); // Add the clicked filter
-                    }
-                  }
-                }}
-                style={{
-                  // width: 'fit-content',
-                  width: '145px',
-                  marginTop: '10px',
-                  padding: '5px',
-                  paddingRight: '10px',
-                  paddingLeft: '10px',
-                  border: 'solid 2px orangered',
-                  borderRadius: '20px',
-                  background: selectedFilters.includes(attractionType.value)
-                    ? 'orangered'
-                    : 'white',
-                  color: selectedFilters.includes(attractionType.value)
-                    ? 'white'
-                    : 'black',
-                }}
-              >
-                {attractionType.label}
-              </button>
-            ))}
-          </Flex>
+          <FiltersNavBar
+            isMobile={isMobile}
+            selectedFilters={selectedFilters}
+            setSelectedFilters={setSelectedFilters}
+          />
         </Flex>
         {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update
         the sliderList state */}
-        <SliderBar setSliderListFunc={setSliderList} />
+        {/* <SliderBar setSliderListFunc={setSliderList} /> */}
 
         <MarkerDrawer
           //marker state true opens drawer

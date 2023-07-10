@@ -16,6 +16,7 @@ export default function DestinationInput({
   map,
   selectedAttraction,
   setSelectedAttraction,
+  handleRecommenderClick,
 }) {
   const google = window.google;
   const [inputColour, setInputColour] = useState('#B5BBC6');

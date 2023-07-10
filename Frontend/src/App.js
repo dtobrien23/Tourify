@@ -49,7 +49,7 @@ function App() {
           <NavBar isMobile={isMobile} />
           <TabPanels>
             <TabPanel>
-              <Map/>
+              <Map isMobile={isMobile} />
             </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
