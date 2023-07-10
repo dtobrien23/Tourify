@@ -22,6 +22,7 @@ export default function NavBar({ isMobile, setIsMobile }) {
     const cachedStatus = localStorage.getItem('loggedInfo');
     return cachedStatus === 'true'; // Convert to boolean
   });
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const {
@@ -76,7 +77,7 @@ export default function NavBar({ isMobile, setIsMobile }) {
           Recommender
         </Button>
         <Button
-          isDisabled={isLoggedIn}
+          isDisabled={!isLoggedIn}
           onClick={() => {
             setIsAttractionsDrawerOpen(true);
           }}
