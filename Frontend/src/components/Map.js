@@ -298,7 +298,7 @@ export default function Map({ isMobile }) {
             top: 10,
             left: 10,
             height: 'calc(100% - 20px)',
-            // width: 'calc(100% - 20px)', // Adjust the height as needed
+            // width: 0,
           }}
         >
           {/* Seachbar contains location/destination input + locationbutton */}
