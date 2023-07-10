@@ -7,30 +7,17 @@ import {
   useGoogleOneTapLogin,
 } from '@react-oauth/google';
 import axios from 'axios';
-import { Avatar, AvatarBadge } from '@chakra-ui/react';
+import { Avatar, AvatarBadge, Flex } from '@chakra-ui/react';
 
-export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
+export default function SignUpForm({ setIsLoggedIn }) {
+  const [loading, setLoading] = useState(true);
+  const [userLoggedIn, setUserLoggedIn] = useState(false);
+
   useEffect(() => {
-    const loggedInfo = getCookie('loggedInfo');
-    setIsLoggedIn(loggedInfo === 'true');
+    const loggedInfo = localStorage.getItem('loggedInfo');
+    setUserLoggedIn(loggedInfo === 'true');
+    setLoading(false);
   }, []);
-
-  const setCookie = (name, value, days) => {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-    document.cookie = name + '=' + value + ';expires=' + expires.toUTCString();
-  };
-
-  const getCookie = name => {
-    const cookieArr = document.cookie.split(';');
-    for (let i = 0; i < cookieArr.length; i++) {
-      const cookiePair = cookieArr[i].split('=');
-      if (name === cookiePair[0].trim()) {
-        return cookiePair[1];
-      }
-    }
-    return null;
-  };
 
   const backendLogin = credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
@@ -45,10 +32,13 @@ export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
           );
 
           if (response.status === 200) {
+            setUserLoggedIn(true);
             setIsLoggedIn(true);
-            setCookie('loggedInfo', 'true', 7); // Set cookie for 7 days
+            localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
           } else {
+            setUserLoggedIn(false);
             setIsLoggedIn(false);
+            localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
           }
         })
         .catch(error => console.log(error));
@@ -74,17 +64,33 @@ export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
   };
 
   const handleLogout = () => {
+    setUserLoggedIn(false);
     setIsLoggedIn(false);
-    setCookie('loggedInfo', 'false', 7); // Set cookie for 7 days
+    localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
   };
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
   return (
-    <VStack spacing={4} align="start">
-      {isLoggedIn ? (
+    <Flex>
+      {userLoggedIn ? (
         <Button onClick={handleLogout}>Logout</Button>
       ) : (
-        <>
-          <Button>
+        <Flex
+          style={{
+            border: 'solid 2px white',
+            borderRadius: '25px',
+            boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
+            direction: 'row',
+            borderColor: 'orangered',
+            paddingTop: '5px',
+            paddingRight: '5px',
+            paddingLeft: '5px',
+            paddingBottom: '5px',
+          }}
+        >
+          <Flex mr={2}>
             <GoogleLogin
               clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
               onSuccess={backendLogin}
@@ -93,17 +99,18 @@ export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
               style={{
                 marginLeft: '1.5em',
                 marginTop: '1em',
-                display: isLoggedIn ? 'none' : 'inline-block',
               }}
               color="black"
               bg="white"
               border="1px"
               borderRadius="10px"
               borderColor="orangered"
+              type="icon"
+              shape="circle"
             />
-            USER LOGIN BUTTON
-          </Button>
-          <Button>
+            Login
+          </Flex>
+          <Flex>
             <GoogleLogin
               clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
               onSuccess={backendSignUp}
@@ -112,18 +119,19 @@ export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
               style={{
                 marginLeft: '1.5em',
                 marginTop: '1em',
-                display: isLoggedIn ? 'none' : 'inline-block',
               }}
               color="black"
               bg="white"
               border="1px"
               borderRadius="10px"
               borderColor="orangered"
+              type="icon"
+              shape="circle"
             />
-            SIGN UP BUTTON
-          </Button>
-        </>
+            Sign Up
+          </Flex>
+        </Flex>
       )}
-    </VStack>
+    </Flex>
   );
 }

@@ -25,7 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @created 26/06/2023
  */
 
-@CrossOrigin
+
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @Tag(name = "User API", description = "User API requires login")
 @RestController
 @RequestMapping("/user")
@@ -35,6 +36,7 @@ public class UserController {
 
 
     @GetMapping("/test")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @Operation(summary = "Test. return string", description = "Test. return string")
     public Result userTesting() {
         return Result.success("Testing Testing");
@@ -58,6 +60,7 @@ public class UserController {
 
     // Receive the user from database using useId
     @PostMapping("/info")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     @Operation(summary = "Retrieve user info", description = "Protected endpoint. Retrieve the User information from database using useId")
     public Result<UserDO> userInfo(@RequestParam String idTokenString) throws Exception {
         if (idTokenString == null){

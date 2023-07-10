@@ -16,9 +16,14 @@ import LocationInput from './LocationInput';
 import SearchBar from './SearchBar';
 import { MapContext } from './MapContext';
 
-export default function NavBar({ isMobile }) {
+export default function NavBar({ isMobile, setIsMobile }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    // Retrieve the logged-in status from the cache
+    const cachedStatus = localStorage.getItem('loggedInfo');
+    return cachedStatus === 'true'; // Convert to boolean
+  });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const {
     handleRecommenderClick,
     setIsAttractionsDrawerOpen,
@@ -88,10 +93,10 @@ export default function NavBar({ isMobile }) {
         </Button>
         {/* <TabList>
           <Tab color="orangered">Map</Tab>
-          <Tab isDisabled={false} color="orangered">
+          <Tab isDisabled={!isLoggedIn} color="orangered">
             Attractions
           </Tab>
-          <Tab isDisabled={false} color="orangered">
+          <Tab isDisabled={!isLoggedIn} color="orangered">
             Badges
           </Tab>
         </TabList> */}
@@ -117,12 +122,14 @@ export default function NavBar({ isMobile }) {
                 <Tab
                   _selected={{ color: 'white', bg: '#ff4500' }}
                   onClick={handleMenuToggle}
+                  isDisabled={!isLoggedIn}
                 >
                   Attractions
                 </Tab>
                 <Tab
                   _selected={{ color: 'white', bg: '#ff4500' }}
                   onClick={handleMenuToggle}
+                  isDisabled={!isLoggedIn}
                 >
                   Badges
                 </Tab>
