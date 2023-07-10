@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Flex,
   Menu,
@@ -8,18 +8,41 @@ import {
   MenuDivider,
   Button,
   Image,
+  useConst,
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
+import { MapContext } from './MapContext';
 import attractions from '../static/attractions.json';
 
-export default function DestinationInput({
-  map,
-  selectedAttraction,
-  setSelectedAttraction,
-  handleRecommenderClick,
-}) {
-  const google = window.google;
+export default function DestinationInput(
+  {
+    // map,
+    // selectedAttraction,
+    // setSelectedAttraction,
+    // handleRecommenderClick,
+  }
+) {
+  // const google = window.google;
   const [inputColour, setInputColour] = useState('#B5BBC6');
+  const {
+    map,
+    setMap,
+    selectedAttraction,
+    setSelectedAttraction,
+    setSourceCoords,
+    locationMarker,
+    setLocationMarker,
+    isSourceAlertOpen,
+    setIsSourceAlertOpen,
+    buttonState,
+    setButtonState,
+    handleRecommenderClick,
+    clearRoute,
+    calculateRoute,
+    geolocation,
+    setGeolocation,
+    google,
+  } = useContext(MapContext);
 
   const handleAttractionSelect = attraction => {
     setSelectedAttraction(attraction);

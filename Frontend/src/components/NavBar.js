@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Box,
   Flex,
@@ -8,9 +8,13 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  Button,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
+import LocationInput from './LocationInput';
+import SearchBar from './SearchBar';
+import { MapContext } from './MapContext';
 
 export default function NavBar({ isMobile, setIsMobile }) {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -20,6 +24,22 @@ export default function NavBar({ isMobile, setIsMobile }) {
   });
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const {
+    handleRecommenderClick,
+    setIsAttractionsDrawerOpen,
+    setIsBadgesDrawerOpen,
+  } = useContext(MapContext);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    // isDisabled(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    // isDisabled(false);
+  };
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -31,7 +51,14 @@ export default function NavBar({ isMobile, setIsMobile }) {
   };
 
   return (
-    <Flex align="center" justify="space-between" h="75px" mt="10px" px="4">
+    <Flex
+      align="center"
+      justify="space-between"
+      h="75px"
+      mt="10px"
+      px="4"
+      style={{ borderBottom: 'solid 1px orangered' }}
+    >
       <Box>
         <img
           style={{ cursor: 'pointer' }} // cursor change on hover
@@ -45,7 +72,27 @@ export default function NavBar({ isMobile, setIsMobile }) {
         justifyContent="center"
         display={{ base: 'none', md: 'flex' }}
       >
-        <TabList>
+        <SearchBar />
+        <Button isDisabled={!isLoggedIn} onClick={handleRecommenderClick}>
+          Recommender
+        </Button>
+        <Button
+          isDisabled={!isLoggedIn}
+          onClick={() => {
+            setIsAttractionsDrawerOpen(true);
+          }}
+        >
+          My Attractions
+        </Button>
+        <Button
+          isDisabled={!isLoggedIn}
+          onClick={() => {
+            setIsBadgesDrawerOpen(true);
+          }}
+        >
+          My Badges
+        </Button>
+        {/* <TabList>
           <Tab color="orangered">Map</Tab>
           <Tab isDisabled={!isLoggedIn} color="orangered">
             Attractions
@@ -53,7 +100,7 @@ export default function NavBar({ isMobile, setIsMobile }) {
           <Tab isDisabled={!isLoggedIn} color="orangered">
             Badges
           </Tab>
-        </TabList>
+        </TabList> */}
       </Flex>
       {isMobile && (
         <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
@@ -66,7 +113,7 @@ export default function NavBar({ isMobile, setIsMobile }) {
               l={1}
             />
             <MenuList>
-              <TabList flexDirection="column">
+              {/* <TabList flexDirection="column">
                 <Tab
                   _selected={{ color: 'white', bg: '#ff4500' }}
                   onClick={handleMenuToggle}
@@ -87,11 +134,9 @@ export default function NavBar({ isMobile, setIsMobile }) {
                 >
                   Badges
                 </Tab>
-              </TabList>
+              </TabList> */}
               <Flex>
-                <SignUpForm
-                  setIsLoggedIn={setIsLoggedIn}
-                />
+                <SignUpForm setIsLoggedIn={setIsLoggedIn} />
               </Flex>
             </MenuList>
           </Menu>
@@ -99,10 +144,7 @@ export default function NavBar({ isMobile, setIsMobile }) {
       )}
       {!isMobile && (
         <Flex>
-          <SignUpForm
-            setIsLoggedIn={setIsLoggedIn}
-            align="center"
-          />
+          <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
         </Flex>
       )}
     </Flex>

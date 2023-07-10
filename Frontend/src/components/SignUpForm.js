@@ -24,9 +24,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     const { credential } = credentialResponse;
     if (credential) {
       axios
-        .post(
-          `http://localhost:8001/api/user/info?idTokenString=${credential}`
-        )
+        .post(`http://localhost:8001/api/user/info?idTokenString=${credential}`)
         .then(response => {
           console.log(
             response.data,
@@ -76,35 +74,31 @@ export default function SignUpForm({ setIsLoggedIn }) {
   }
   return (
     <Flex>
-            {userLoggedIn? (
+      {userLoggedIn ? (
         <Button onClick={handleLogout}>Logout</Button>
       ) : (
-        <Flex 
-        style={{
-          border: 'solid 2px white',
-          borderRadius: '25px',
-          boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
-          direction: "row",
-          borderColor: 'orangered',
-          paddingTop: '5px',
-          paddingRight: '5px',
-          paddingLeft: '5px',
-          paddingBottom:'5px'
-        }}
-        
-       
+        <Flex
+          style={{
+            border: 'solid 2px white',
+            borderRadius: '25px',
+            boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
+            direction: 'row',
+            borderColor: 'orangered',
+            paddingTop: '5px',
+            paddingRight: '5px',
+            paddingLeft: '5px',
+            paddingBottom: '5px',
+          }}
         >
           <Flex mr={2}>
             <GoogleLogin
               clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
               onSuccess={backendLogin}
-              onFailure={error =>
-                console.log('Google login failed:', error)}
+              onFailure={error => console.log('Google login failed:', error)}
               cookiePolicy="single_host_origin"
               style={{
                 marginLeft: '1.5em',
                 marginTop: '1em',
-            
               }}
               color="black"
               bg="white"
@@ -134,9 +128,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
             <GoogleLogin
               clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
               onSuccess={backendSignUp}
-              onFailure={error =>
-                console.log('Google login failed:', error)
-              }
+              onFailure={error => console.log('Google login failed:', error)}
               cookiePolicy="single_host_origin"
               style={{
                 marginLeft: '1.5em',

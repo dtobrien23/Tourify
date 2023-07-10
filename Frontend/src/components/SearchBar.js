@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Flex, Divider, Button } from '@chakra-ui/react';
 import DestinationInput from './DestinationInput';
 import LocationInput from './LocationInput';
+import { MapContext } from './MapContext';
 
-export default function SearchBar({
-  map,
-  selectedAttraction,
-  setSelectedAttraction,
-  setSourceCoords,
-  calculateRoute,
-  clearRoute,
-  locationMarker,
-  setLocationMarker,
-  setIsSourceAlertOpen,
-  handleRecommenderClick,
-}) {
+export default function SearchBar() {
+  const {
+    map,
+    selectedAttraction,
+    setSelectedAttraction,
+    setSourceCoords,
+    calculateRoute,
+    clearRoute,
+    locationMarker,
+    setLocationMarker,
+    setShowSourceErrorComponent,
+    onOpen,
+  } = useContext(MapContext);
+
   return (
     <Flex
       mb={3}
@@ -39,11 +42,6 @@ export default function SearchBar({
         }}
       >
         <LocationInput
-          map={map}
-          setSourceCoords={setSourceCoords}
-          locationMarker={locationMarker}
-          setLocationMarker={setLocationMarker}
-          setIsSourceAlertOpen={setIsSourceAlertOpen}
           style={{
             // width: 'fit-content',
             border: 'solid 1px orangered',
@@ -53,10 +51,6 @@ export default function SearchBar({
         />
         <Divider orientation="vertical" />
         <DestinationInput
-          map={map}
-          selectedAttraction={selectedAttraction}
-          setSelectedAttraction={setSelectedAttraction}
-          handleRecommenderClick={handleRecommenderClick}
           style={{
             zIndex: 2,
           }}

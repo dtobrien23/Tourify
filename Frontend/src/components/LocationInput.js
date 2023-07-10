@@ -3,22 +3,44 @@ import { Autocomplete } from '@react-google-maps/api';
 import LocationButton from './LocationButton';
 import { Flex } from '@chakra-ui/react';
 import { GeolocationProvider, GeolocationContext } from './GeoContext';
+import { MapContext } from './MapContext';
 
-export default function LocationInput({
-  map,
-  setSourceCoords,
-  locationMarker,
-  setLocationMarker,
-  setIsSourceAlertOpen,
-}) {
-  const google = window.google;
+export default function LocationInput(
+  {
+    // map,
+    // setSourceCoords,
+    // locationMarker,
+    // setLocationMarker,
+    // setIsSourceAlertOpen,
+  }
+) {
+  // const google = window.google;
   const autocompleteRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [buttonClicked, setButtonClicked] = useState(1); // to update input box each time current location button is clicked
   const [inputValue, setInputValue] = useState('');
 
+  const {
+    map,
+    setMap,
+    selectedAttraction,
+    setSelectedAttraction,
+    setSourceCoords,
+    locationMarker,
+    isSourceAlertOpen,
+    setLocationMarker,
+    setIsSourceAlertOpen,
+    buttonState,
+    setButtonState,
+    handleRecommenderClick,
+    clearRoute,
+    calculateRoute,
+    setGeolocation,
+    google,
+  } = useContext(MapContext);
+
   //settr for geolocation to be passed to recommender component via context
-  const { setGeolocation } = useContext(GeolocationContext);
+  // const { setGeolocation } = useContext(GeolocationContext);
 
   useEffect(() => {
     if (autocompleteRef.current && currentLocation !== null) {
@@ -143,27 +165,31 @@ export default function LocationInput({
 
   return (
     <Flex w={'270px'} ml={1} alignItems="center" justifyContent="space-between">
-      <Autocomplete
-        onLoad={autocomplete => {
-          autocompleteRef.current = autocomplete;
-        }}
-        onPlaceChanged={handlePlaceSelect}
-        options={autocompleteOptions}
-      >
-        <input
-          type="text"
-          placeholder="I am currently at..."
-          value={inputValue}
-          onChange={e => setInputValue(e.target.value)}
-          style={{
-            // padding: '3px',
-            paddingLeft: '8px',
-            borderRadius: '20px',
-            fontSize: '16px',
-          }}
-        />
-      </Autocomplete>
-      <LocationButton getPosition={getPosition}></LocationButton>
+      {google && (
+        <>
+          <Autocomplete
+            onLoad={autocomplete => {
+              autocompleteRef.current = autocomplete;
+            }}
+            onPlaceChanged={handlePlaceSelect}
+            options={autocompleteOptions}
+          >
+            <input
+              type="text"
+              placeholder="I am currently at..."
+              value={inputValue}
+              onChange={e => setInputValue(e.target.value)}
+              style={{
+                // padding: '3px',
+                paddingLeft: '8px',
+                borderRadius: '20px',
+                fontSize: '16px',
+              }}
+            />
+          </Autocomplete>
+          <LocationButton getPosition={getPosition}></LocationButton>
+        </>
+      )}
     </Flex>
   );
 }

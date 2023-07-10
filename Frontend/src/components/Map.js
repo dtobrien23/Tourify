@@ -21,15 +21,37 @@ import { GeolocationProvider } from './GeoContext';
 import attractions from '../static/attractions.json';
 import FiltersNavBar from './FiltersNavBar.js';
 import { APIContext } from './APIContext';
+import { MapContext } from './MapContext';
+import AttractionsDrawer from './AttractionsDrawer.js';
+import BadgesDrawer from './BadgesDrawer.js';
 
 export default function Map({ isMobile }) {
   const { apiAttractions } = useContext(APIContext);
+  const {
+    map,
+    setMap,
+    selectedAttraction,
+    setSelectedAttraction,
+    setSourceCoords,
+    locationMarker,
+    isSourceAlertOpen,
+    setLocationMarker,
+    setIsSourceAlertOpen,
+    buttonState,
+    setButtonState,
+    handleRecommenderClick,
+    clearRoute,
+    calculateRoute,
+    google,
+    isAttractionsDrawerOpen,
+    setIsAttractionsDrawerOpen,
+  } = useContext(MapContext);
 
   ////////////////
   // USE STATES //
   ////////////////
 
-  const [map, setMap] = useState(null);
+  // const [map, setMap] = useState(null);
   const [mapCenter, setMapCenter] = useState({
     lat: 40.755091,
     lng: -73.978285,
@@ -45,14 +67,14 @@ export default function Map({ isMobile }) {
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['ALL']);
-  const [sourceCoords, setSourceCoords] = useState(null); // for routing source
-  const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
+  // const [sourceCoords, setSourceCoords] = useState(null); // for routing source
+  // const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
-  const [locationMarker, setLocationMarker] = useState([]); // for current location marker
+  // const [locationMarker, setLocationMarker] = useState([]); // for current location marker
   const [dataArray, setDataArray] = useState(null);
-  const [isSourceAlertOpen, setIsSourceAlertOpen] = useState(false);
+  // const [isSourceAlertOpen, setIsSourceAlertOpen] = useState(false);
 
-  const google = window.google; // to access Google objects, i.e. markers, directionRenderers
+  // const google = window.google; // to access Google objects, i.e. markers, directionRenderers
   const mapZoom = 13; // default map zoom
 
   // useEffect(() => {
@@ -105,12 +127,12 @@ export default function Map({ isMobile }) {
     setMarkerState(false);
   };
 
-  //Recommendation Button
-  const [buttonState, setButtonState] = useState();
-  const handleRecommenderClick = () => {
-    //state opens drawer
-    setButtonState(true);
-  };
+  // Recommendation Button
+  // const [buttonState, setButtonState] = useState();
+  // const handleRecommenderClick = () => {
+  //   //state opens drawer
+  //   setButtonState(true);
+  // };
 
   const recommendClose = () => {
     setButtonState(false);
@@ -167,61 +189,61 @@ export default function Map({ isMobile }) {
   // ROUTING //
   /////////////
 
-  async function calculateRoute() {
-    if (sourceCoords && selectedAttraction) {
-      if (directionsRenderers.length !== 0) {
-        directionsRenderers[0].setMap(null);
-        setDirectionsRenderers([]);
-      }
+  // async function calculateRoute() {
+  //   if (sourceCoords && selectedAttraction) {
+  //     if (directionsRenderers.length !== 0) {
+  //       directionsRenderers[0].setMap(null);
+  //       setDirectionsRenderers([]);
+  //     }
 
-      const directionsService = new google.maps.DirectionsService();
-      const directionsRenderer = new google.maps.DirectionsRenderer();
-      directionsRenderer.setMap(map);
+  //     const directionsService = new google.maps.DirectionsService();
+  //     const directionsRenderer = new google.maps.DirectionsRenderer();
+  //     directionsRenderer.setMap(map);
 
-      // source
-      const sourceLatLng = sourceCoords;
+  //     // source
+  //     const sourceLatLng = sourceCoords;
 
-      // destination
-      const destLat = selectedAttraction.coordinates_lat;
-      const destLng = selectedAttraction.coordinates_lng;
-      const destLatLng = { lat: destLat, lng: destLng };
+  //     // destination
+  //     const destLat = selectedAttraction.coordinates_lat;
+  //     const destLng = selectedAttraction.coordinates_lng;
+  //     const destLatLng = { lat: destLat, lng: destLng };
 
-      const results = await directionsService.route(
-        {
-          origin: sourceLatLng,
-          destination: destLatLng,
-          travelMode: google.maps.TravelMode.WALKING,
-        },
-        (results, status) => {
-          if (status === google.maps.DirectionsStatus.OK) {
-            directionsRenderer.setOptions({
-              directions: results,
-              polylineOptions: {
-                strokeColor: 'orangered',
-                strokeOpacity: 0.8,
-                strokeWeight: 4,
-              },
-              suppressMarkers: true,
-            });
-          } else {
-            console.error('Error fetching directions:', status);
-          }
-        }
-      );
-      setDirectionsRenderers([directionsRenderer]);
-      locationMarker[0].setMap(map); // in case this is set to null by clearRoute
-    }
-  }
+  //     const results = await directionsService.route(
+  //       {
+  //         origin: sourceLatLng,
+  //         destination: destLatLng,
+  //         travelMode: google.maps.TravelMode.WALKING,
+  //       },
+  //       (results, status) => {
+  //         if (status === google.maps.DirectionsStatus.OK) {
+  //           directionsRenderer.setOptions({
+  //             directions: results,
+  //             polylineOptions: {
+  //               strokeColor: 'orangered',
+  //               strokeOpacity: 0.8,
+  //               strokeWeight: 4,
+  //             },
+  //             suppressMarkers: true,
+  //           });
+  //         } else {
+  //           console.error('Error fetching directions:', status);
+  //         }
+  //       }
+  //     );
+  //     setDirectionsRenderers([directionsRenderer]);
+  //     locationMarker[0].setMap(map); // in case this is set to null by clearRoute
+  //   }
+  // }
 
-  function clearRoute() {
-    if (directionsRenderers.length !== 0) {
-      directionsRenderers[0].setMap(null);
-      setDirectionsRenderers([]);
-    }
-    if (locationMarker.length !== 0) {
-      locationMarker[0].setMap(null);
-    }
-  }
+  // function clearRoute() {
+  //   if (directionsRenderers.length !== 0) {
+  //     directionsRenderers[0].setMap(null);
+  //     setDirectionsRenderers([]);
+  //   }
+  //   if (locationMarker.length !== 0) {
+  //     locationMarker[0].setMap(null);
+  //   }
+  // }
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -302,7 +324,7 @@ export default function Map({ isMobile }) {
           }}
         >
           {/* Seachbar contains location/destination input + locationbutton */}
-          <SearchBar
+          {/* <SearchBar
             map={map}
             selectedAttraction={selectedAttraction}
             setSelectedAttraction={setSelectedAttraction}
@@ -314,7 +336,7 @@ export default function Map({ isMobile }) {
             setIsSourceAlertOpen={setIsSourceAlertOpen}
             handleRecommenderClick={handleRecommenderClick}
             style={{ zIndex: 1 }}
-          />
+          /> */}
           {/* Recommendation button */}
           {/* <Button
             onClick={handleRecommenderClick}
@@ -355,7 +377,8 @@ export default function Map({ isMobile }) {
           isCloseFunc={handleClose}
           markerObject={markerObject}
         />
-
+        <AttractionsDrawer style={{ height: 'calc(100vh - 64px)' }} />
+        <BadgesDrawer />
         <Recommender
           recommendOpenFunc={buttonState}
           recommendCloseFunc={recommendClose}
