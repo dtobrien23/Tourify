@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import {APIContextProvider} from './components/APIContext';
 
 
 const container = document.getElementById('root');
@@ -14,7 +15,9 @@ root.render(
   <GoogleOAuthProvider clientId = "568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com" >
   <StrictMode>
     <ColorModeScript />
+    <APIContextProvider>
     <App />
+    </APIContextProvider>
   </StrictMode>
   </GoogleOAuthProvider>
 );

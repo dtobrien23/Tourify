@@ -1,17 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { GoogleMap, useLoadScript } from '@react-google-maps/api';
-import attractions from '../static/attractions.json';
 import { libraries, mapOptions } from '../static/mapConfig.js';
-import { Flex } from '@chakra-ui/react';
 import '../App.css';
 import SliderBar from './SliderBar';
 import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
-import { Button } from '@chakra-ui/react';
+import {
+  Flex,
+  Button,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Box,
+  CloseButton,
+  Tooltip,
+} from '@chakra-ui/react';
 import Recommender from './Recommender';
 import { GeolocationProvider } from './GeoContext';
+import attractions from '../static/attractions.json';
+import FiltersNavBar from './FiltersNavBar.js';
+import { APIContext } from './APIContext';
 
-export default function Map() {
+export default function Map({ isMobile }) {
+  const { apiAttractions } = useContext(APIContext);
+
   ////////////////
   // USE STATES //
   ////////////////
@@ -26,36 +39,41 @@ export default function Map() {
   //receiving filtered attractions from slider
   //pass setSliderList method into slider to receive sliders filtered
   //attractions list, update sliderList state with that list we receive
-  
-  const [sliderList, setSliderList] = useState(attractions);
+
+  const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
-  const [selectedFilters, setSelectedFilters] = useState(['all']);
+  const [selectedFilters, setSelectedFilters] = useState(['ALL']);
   const [sourceCoords, setSourceCoords] = useState(null); // for routing source
   const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
   const [locationMarker, setLocationMarker] = useState([]); // for current location marker
-  const [showSourceErrorComponent, setShowSourceErrorComponent] = // for source location error, not finished
-    useState(false);
+  const [dataArray, setDataArray] = useState(null);
+  const [isSourceAlertOpen, setIsSourceAlertOpen] = useState(false);
 
   const google = window.google; // to access Google objects, i.e. markers, directionRenderers
   const mapZoom = 13; // default map zoom
 
-  // used for filtering attractions markers
-  const attractionTypes = [
-    { label: 'All', value: 'all' },
-    { label: 'Landmarks', value: 'landmark' },
-    { label: 'Museums', value: 'museum' },
-    { label: 'Parks', value: 'park' },
-    { label: 'Theatres', value: 'theater' },
-    { label: 'Neighborhoods', value: 'neighborhood' },
-    { label: 'Dining', value: 'dining' },
-    { label: 'Galleries', value: 'gallery' },
-    { label: 'Libraries', value: 'library' },
-    { label: 'Historic Sites', value: 'historic_site' },
-    { label: 'Observatories', value: 'observatory' },
-  ];
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       'http://localhost:8001/api/attraction/getAllAttraction'
+  //     );
+  //     const data = await response.json();
+  //     console.log(data, 'THIS CAME FROM THE BACK END');
+  //     const dataData = data.data;
+  //     setDataArray(dataData);
+  //     console.log(dataArray, 'back end data without wrapper');
+  //     // setSliderList(dataArray);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
@@ -102,68 +120,48 @@ export default function Map() {
   // MARKERS //
   /////////////
 
-  // getting attractions from the backend with get request
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://172.20.10.3:8001/api/attraction/getAllAttraction');
-        const data = await response.json();
-        console.log(data, 'THIS CAME FROM THE BACK END');
-        const dataArray = data.data;
-        console.log(dataArray, 'back end data without wrapper');
-
-        //set the slider list data to the response json object
-        //setSliderList(dataArray);
-
-      } catch (error) {
-
-        console.error('Error fetching data:', error);
-      }
-    };
-  
-    fetchData();
-  }, []);
-  
-
   useEffect(() => {
     if (map) {
-      // clear existing markers from the map for filter
-      markers.forEach(marker => {
-        marker.setMap(null);
-      });
+      // fetchData();
 
-      // filter attractions based on the selected filter value
-      const filteredMarkers = selectedFilters.includes('all')
-        ? sliderList
-        : sliderList.filter(attraction =>
-            selectedFilters.includes(attraction.type)
-          );
-
-      // add filtered markers
-      const newMarkers = filteredMarkers.map(attraction => {
-        const marker = new google.maps.Marker({
-          name: { name: attraction.name },
-          position: {
-            lat: attraction.coordinates_lat,
-            lng: attraction.coordinates_lng,
-          },
-          map: map,
-          price_dollars: { price_dollars: attraction.price_dollars },
-          image: { image: attraction.image },
+      if (apiAttractions !== null) {
+        console.log(apiAttractions, 'this is the log');
+        // clear existing markers from the map for filter
+        markers.forEach(marker => {
+          marker.setMap(null);
         });
 
-        marker.addListener('click', () => handleMarkerClick(marker));
-        // map.setZoom(8);
-        // map.setCenter(marker.getPosition());
-        console.log(marker, 'markerinfo here');
+        // filter attractions based on the selected filter value
+        const filteredMarkers = selectedFilters.includes('ALL')
+          ? apiAttractions
+          : apiAttractions.filter(attraction =>
+              selectedFilters.includes(attraction.attractionTypeEnum)
+            );
 
-        return marker;
-      });
+        // add filtered markers
+        const newMarkers = filteredMarkers.map(attraction => {
+          const marker = new google.maps.Marker({
+            name: { name: attraction.name },
+            position: {
+              lat: parseFloat(attraction.coordinates_lat),
+              lng: parseFloat(attraction.coordinates_lng),
+            },
+            map: map,
+            price_dollars: { price_dollars: attraction.price_dollars },
+            image: { image: attraction.image },
+          });
 
-      // set the markers state
-      setMarkers(newMarkers);
+          marker.addListener('click', () => handleMarkerClick(marker));
+          console.log(marker, 'these are the markers man!');
+
+          return marker;
+        });
+
+        // set the markers state
+        setMarkers(newMarkers);
+      }
     }
-  }, [map, sliderList, selectedFilters]);
+  }, [map, apiAttractions, selectedFilters]);
 
   /////////////
   // ROUTING //
@@ -211,7 +209,7 @@ export default function Map() {
         }
       );
       setDirectionsRenderers([directionsRenderer]);
-      console.log(results);
+      locationMarker[0].setMap(map); // in case this is set to null by clearRoute
     }
   }
 
@@ -245,6 +243,53 @@ export default function Map() {
         }
       }}
     >
+      {/* inert backdrop */}
+      {isSourceAlertOpen && (
+        <div
+          onClick={() => setIsSourceAlertOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 9999,
+          }}
+        />
+      )}
+      {isSourceAlertOpen && (
+        <Alert
+          status="error"
+          position="fixed"
+          top="40%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          w="50vw"
+          h="25vh"
+          zIndex={10000}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          borderRadius="20px"
+        >
+          <AlertIcon boxSize="40px" mr={0} />
+          <Box>
+            <AlertTitle>Source Location Error!</AlertTitle>
+            <AlertDescription>
+              Please select a valid location from the dropdown.
+            </AlertDescription>
+          </Box>
+          <CloseButton
+            alignSelf="flex-start"
+            position="absolute"
+            right={2}
+            top={2}
+            onClick={() => setIsSourceAlertOpen(false)}
+          />
+        </Alert>
+      )}
       <GeolocationProvider>
         <Flex
           flexDirection="column"
@@ -252,6 +297,8 @@ export default function Map() {
             position: 'absolute',
             top: 10,
             left: 10,
+            height: 'calc(100% - 20px)',
+            // width: 0,
           }}
         >
           {/* Seachbar contains location/destination input + locationbutton */}
@@ -264,11 +311,12 @@ export default function Map() {
             clearRoute={clearRoute}
             locationMarker={locationMarker}
             setLocationMarker={setLocationMarker}
-            setShowSourceErrorComponent={setShowSourceErrorComponent}
+            setIsSourceAlertOpen={setIsSourceAlertOpen}
+            handleRecommenderClick={handleRecommenderClick}
             style={{ zIndex: 1 }}
           />
           {/* Recommendation button */}
-          <Button
+          {/* <Button
             onClick={handleRecommenderClick}
             style={{
               // width: 'fit-content',
@@ -285,62 +333,12 @@ export default function Map() {
             }}
           >
             Recommend Location!!!
-          </Button>
-          <Flex
-            flexDirection="column"
-            style={{
-              zIndex: 0,
-              height: 0,
-            }}
-          >
-            {attractionTypes.map(attractionType => (
-              <button
-                key={attractionType.value}
-                onClick={() => {
-                  if (attractionType.value === 'all') {
-                    if (selectedFilters.includes('all')) {
-                      setSelectedFilters([]); // Unselect all filters
-                    } else {
-                      setSelectedFilters(['all']); // Select 'All' filter
-                    }
-                  } else {
-                    if (selectedFilters.includes('all')) {
-                      setSelectedFilters([attractionType.value]); // Select the clicked filter only
-                    } else if (selectedFilters.includes(attractionType.value)) {
-                      setSelectedFilters(
-                        selectedFilters.filter(
-                          filter => filter !== attractionType.value
-                        )
-                      ); // Unselect the clicked filter
-                    } else {
-                      setSelectedFilters([
-                        ...selectedFilters,
-                        attractionType.value,
-                      ]); // Add the clicked filter
-                    }
-                  }
-                }}
-                style={{
-                  // width: 'fit-content',
-                  width: '145px',
-                  marginTop: '10px',
-                  padding: '5px',
-                  paddingRight: '10px',
-                  paddingLeft: '10px',
-                  border: 'solid 2px orangered',
-                  borderRadius: '20px',
-                  background: selectedFilters.includes(attractionType.value)
-                    ? 'orangered'
-                    : 'white',
-                  color: selectedFilters.includes(attractionType.value)
-                    ? 'white'
-                    : 'black',
-                }}
-              >
-                {attractionType.label}
-              </button>
-            ))}
-          </Flex>
+          </Button> */}
+          <FiltersNavBar
+            isMobile={isMobile}
+            selectedFilters={selectedFilters}
+            setSelectedFilters={setSelectedFilters}
+          />
         </Flex>
         {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update

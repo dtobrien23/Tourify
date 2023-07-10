@@ -13,3 +13,11 @@ input:focus {
   outline: none;
   box-shadow: none;
 }
+
+.content::-webkit-scrollbar {
+  display: none;
+}
+
+.content {
+  overflow: visible;
+}

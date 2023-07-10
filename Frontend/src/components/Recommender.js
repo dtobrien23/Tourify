@@ -16,21 +16,29 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const { geolocation } = useContext(GeolocationContext);
   console.log(geolocation, 'this is the geo from context');
 
-  
   //geolocation, cant be null or error occurs
- const userLocation = geolocation ? {lat: geolocation.latitude, lng: geolocation.longitude} 
-                                  :{ lat: 40.7484405, lng: -73.9856974 };// hardcoded user location as a fallback if user opts out
-  
-  
-  console.log(userLocation,'this is reformatted userlocation from geolocation')
+  const userLocation = geolocation
+    ? { lat: geolocation.latitude, lng: geolocation.longitude }
+    : { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location as a fallback if user opts out
+
+  console.log(
+    userLocation,
+    'this is reformatted userlocation from geolocation'
+  );
 
   const [nearestAttractions, setNearestAttractions] = useState([]);
 
   const fetchDistances = () => {
-    
-    const origin = new window.google.maps.LatLng(userLocation.lat, userLocation.lng);
+    const origin = new window.google.maps.LatLng(
+      userLocation.lat,
+      userLocation.lng
+    );
     const destinations = attractions.map(
-      attraction => new window.google.maps.LatLng(attraction.coordinates_lat, attraction.coordinates_lng)
+      attraction =>
+        new window.google.maps.LatLng(
+          attraction.coordinates_lat,
+          attraction.coordinates_lng
+        )
     );
     console.log('Origin:', origin);
     console.log('Destinations:', destinations);
@@ -106,9 +114,19 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   console.log(topFiveNearestAttractions, 'TOP 5 NEAREST');
 
   return (
-    <Drawer isOpen={recommendOpenFunc} placement="right" onClose={recommendCloseFunc}>
+    <Drawer
+      isOpen={recommendOpenFunc}
+      placement="right"
+      onClose={recommendCloseFunc}
+    >
       <DrawerOverlay />
-      <DrawerContent bg="white" border="5px solid orangered" borderRadius="20px" p="20px" w="80%">
+      <DrawerContent
+        bg="white"
+        border="5px solid orangered"
+        borderRadius="20px"
+        p="20px"
+        w="80%"
+      >
         <DrawerCloseButton />
         <DrawerHeader>Nearest Attractions</DrawerHeader>
         <DrawerBody>
