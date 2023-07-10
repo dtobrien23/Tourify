@@ -14,27 +14,10 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const [isLoggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    const loggedInfo = getCookie('loggedInfo');
+    const loggedInfo = localStorage.getItem('loggedInfo');
     setLoggedIn(loggedInfo === 'true');
     setLoading(false);
   }, []);
-
-  const setCookie = (name, value, days) => {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()}`;
-  };
-
-  const getCookie = name => {
-    const cookieArr = document.cookie.split(';');
-    for (let i = 0; i < cookieArr.length; i++) {
-      const cookiePair = cookieArr[i].split('=');
-      if (name === cookiePair[0].trim()) {
-        return cookiePair[1];
-      }
-    }
-    return null;
-  };
 
   const backendLogin = credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
@@ -53,7 +36,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
           if (response.status === 200) {
             setLoggedIn(true);
             setIsLoggedIn(true);
-            setCookie('loggedInfo', 'true', 7); // Set cookie for 7 days
+            localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
           } else {
             setLoggedIn(false);
           }
@@ -83,8 +66,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const handleLogout = () => {
     setLoggedIn(false);
     setIsLoggedIn(false);
-
-    setCookie('loggedInfo', 'false', 7); // Set cookie for 7 days
+    localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
   };
 
   if (loading) {
