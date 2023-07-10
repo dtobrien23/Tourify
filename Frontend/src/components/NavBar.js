@@ -8,6 +8,7 @@ import {
   Menu,
   MenuButton,
   MenuList,
+  Button,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
@@ -48,7 +49,10 @@ export default function NavBar({
         display={{ base: 'none', md: 'flex' }}
       >
         <SearchBar />
-        <TabList>
+        <Button>RECOMMENDER</Button>
+        <Button>ATTRACTIONS</Button>
+        <Button>BADGES</Button>
+        {/* <TabList>
           <Tab color="orangered">Map</Tab>
           <Tab isDisabled={false} color="orangered">
             Attractions
@@ -56,7 +60,7 @@ export default function NavBar({
           <Tab isDisabled={false} color="orangered">
             Badges
           </Tab>
-        </TabList>
+        </TabList> */}
       </Flex>
       {isMobile && (
         <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
@@ -69,7 +73,7 @@ export default function NavBar({
               l={1}
             />
             <MenuList>
-              <TabList flexDirection="column">
+              {/* <TabList flexDirection="column">
                 <Tab
                   _selected={{ color: 'white', bg: '#ff4500' }}
                   onClick={handleMenuToggle}
@@ -88,7 +92,7 @@ export default function NavBar({
                 >
                   Badges
                 </Tab>
-              </TabList>
+              </TabList> */}
               <Flex>
                 <SignUpForm />
               </Flex>

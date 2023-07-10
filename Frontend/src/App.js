@@ -13,11 +13,10 @@ import {
 import BadgePanel from './components/BadgePanel';
 import './App.css';
 import { MapContext } from './components/MapContext';
-import { SearchBar } from './components/SearchBar';
 
 function App() {
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+  // const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const { map, setMap } = useContext(MapContext);
   // const [map, setMap] = useState(null);
 
@@ -34,27 +33,27 @@ function App() {
     };
   }, []);
 
-  const handleTabSelect = index => {
-    setSelectedTabIndex(index);
-  };
+  // const handleTabSelect = index => {
+  //   setSelectedTabIndex(index);
+  // };
 
-  const tabVariant = isMobile ? 'solid-rounded' : 'line';
+  // const tabVariant = isMobile ? 'solid-rounded' : 'line';
 
   return (
     <ChakraProvider theme={theme}>
       <Box>
-        <Tabs
+        {/* <Tabs
           align="center"
           flexDirection="column"
           variant={tabVariant}
           onChange={handleTabSelect}
           selectedIndex={selectedTabIndex}
-        >
-          <NavBar isMobile={isMobile} map={map} />
-          <TabPanels>
-            <TabPanel>
-              <Map isMobile={isMobile} map={map} setMap={setMap} />
-            </TabPanel>
+        > */}
+        <NavBar isMobile={isMobile} map={map} />
+        {/* <TabPanels>
+            <TabPanel> */}
+        <Map isMobile={isMobile} map={map} setMap={setMap} />
+        {/* </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
             </TabPanel>
@@ -62,7 +61,7 @@ function App() {
               <BadgePanel />
             </TabPanel>
           </TabPanels>
-        </Tabs>
+        </Tabs> */}
       </Box>
     </ChakraProvider>
   );

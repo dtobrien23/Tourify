@@ -320,7 +320,7 @@ export default function Map({ isMobile }) {
           }}
         >
           {/* Seachbar contains location/destination input + locationbutton */}
-          <SearchBar
+          {/* <SearchBar
             map={map}
             selectedAttraction={selectedAttraction}
             setSelectedAttraction={setSelectedAttraction}
@@ -332,7 +332,7 @@ export default function Map({ isMobile }) {
             setIsSourceAlertOpen={setIsSourceAlertOpen}
             handleRecommenderClick={handleRecommenderClick}
             style={{ zIndex: 1 }}
-          />
+          /> */}
           {/* Recommendation button */}
           {/* <Button
             onClick={handleRecommenderClick}
