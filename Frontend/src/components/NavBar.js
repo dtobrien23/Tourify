@@ -14,7 +14,7 @@ import SignUpForm from './SignUpForm';
 
 export default function NavBar({ isMobile, setIsMobile }) {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    // Retrieve the logged-in status from the cache (e.g., localStorage)
+    // Retrieve the logged-in status from the cache
     const cachedStatus = localStorage.getItem('loggedInfo');
     return cachedStatus === 'true'; // Convert to boolean
   });
@@ -90,7 +90,6 @@ export default function NavBar({ isMobile, setIsMobile }) {
               </TabList>
               <Flex>
                 <SignUpForm
-                  isLoggedIn={isLoggedIn}
                   setIsLoggedIn={setIsLoggedIn}
                 />
               </Flex>
@@ -102,7 +101,6 @@ export default function NavBar({ isMobile, setIsMobile }) {
         <Flex>
           <SignUpForm
             setIsLoggedIn={setIsLoggedIn}
-            isLoggedIn={isLoggedIn}
             align="center"
           />
         </Flex>

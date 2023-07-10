@@ -7,9 +7,9 @@ import {
   useGoogleOneTapLogin,
 } from '@react-oauth/google';
 import axios from 'axios';
-import { Avatar, AvatarBadge } from '@chakra-ui/react';
+import { Avatar, AvatarBadge, Flex } from '@chakra-ui/react';
 
-export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
+export default function SignUpForm({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(true);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
 
@@ -74,34 +74,49 @@ export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
   if (loading) {
     return <p>Loading...</p>;
   }
-console.log(isLoggedIn,'this is the state!!!!!!!!!!!!!!!!!!!!!')
   return (
-    <VStack spacing={4} align="start">
-      {userLoggedIn? (
+    <Flex>
+            {userLoggedIn? (
         <Button onClick={handleLogout}>Logout</Button>
       ) : (
-        <>
-          <Button>
+        <Flex 
+        style={{
+          border: 'solid 2px white',
+          borderRadius: '25px',
+          boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
+          direction: "row",
+          borderColor: 'orangered',
+          paddingTop: '5px',
+          paddingRight: '5px',
+          paddingLeft: '5px',
+          paddingBottom:'5px'
+        }}
+        
+       
+        >
+          <Flex mr={2}>
             <GoogleLogin
               clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
               onSuccess={backendLogin}
               onFailure={error =>
-                console.log('Google login failed:', error)
-              }
+                console.log('Google login failed:', error)}
               cookiePolicy="single_host_origin"
               style={{
                 marginLeft: '1.5em',
                 marginTop: '1em',
+            
               }}
               color="black"
               bg="white"
               border="1px"
               borderRadius="10px"
               borderColor="orangered"
+              type="icon"
+              shape="circle"
             />
-            USER LOGIN BUTTON
-          </Button>
-          <Button>
+            Login
+          </Flex>
+          <Flex>
             <GoogleLogin
               clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
               onSuccess={backendSignUp}
@@ -118,11 +133,13 @@ console.log(isLoggedIn,'this is the state!!!!!!!!!!!!!!!!!!!!!')
               border="1px"
               borderRadius="10px"
               borderColor="orangered"
+              type="icon"
+              shape="circle"
             />
-            SIGN UP BUTTON
-          </Button>
-        </>
+            Sign Up
+          </Flex>
+        </Flex>
       )}
-    </VStack>
+    </Flex>
   );
 }
