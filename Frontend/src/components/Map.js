@@ -22,6 +22,8 @@ import attractions from '../static/attractions.json';
 import FiltersNavBar from './FiltersNavBar.js';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
+import AttractionsDrawer from './AttractionsDrawer.js';
+import BadgesDrawer from './BadgesDrawer.js';
 
 export default function Map({ isMobile }) {
   const { apiAttractions } = useContext(APIContext);
@@ -41,6 +43,8 @@ export default function Map({ isMobile }) {
     clearRoute,
     calculateRoute,
     google,
+    isAttractionsDrawerOpen,
+    setIsAttractionsDrawerOpen,
   } = useContext(MapContext);
 
   ////////////////
@@ -373,7 +377,8 @@ export default function Map({ isMobile }) {
           isCloseFunc={handleClose}
           markerObject={markerObject}
         />
-
+        <AttractionsDrawer style={{ height: 'calc(100vh - 64px)' }} />
+        <BadgesDrawer />
         <Recommender
           recommendOpenFunc={buttonState}
           recommendCloseFunc={recommendClose}

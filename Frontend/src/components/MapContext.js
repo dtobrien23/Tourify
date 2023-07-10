@@ -17,6 +17,8 @@ const MapProvider = ({ children }) => {
   const [isSourceAlertOpen, setIsSourceAlertOpen] = useState(false);
   const [geolocation, setGeolocation] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAttractionsDrawerOpen, setIsAttractionsDrawerOpen] = useState(false); // for My Attractions drawer
+  const [isBadgesDrawerOpen, setIsBadgesDrawerOpen] = useState(false); // for My Badges drawer
 
   const google = window.google;
 
@@ -102,6 +104,10 @@ const MapProvider = ({ children }) => {
         geolocation,
         setGeolocation,
         google,
+        isAttractionsDrawerOpen,
+        setIsAttractionsDrawerOpen,
+        isBadgesDrawerOpen,
+        setIsBadgesDrawerOpen,
       }}
     >
       {children}

@@ -19,7 +19,11 @@ import { MapContext } from './MapContext';
 export default function NavBar({ isMobile }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { handleRecommenderClick } = useContext(MapContext);
+  const {
+    handleRecommenderClick,
+    setIsAttractionsDrawerOpen,
+    setIsBadgesDrawerOpen,
+  } = useContext(MapContext);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -41,7 +45,14 @@ export default function NavBar({ isMobile }) {
   };
 
   return (
-    <Flex align="center" justify="space-between" h="75px" mt="10px" px="4">
+    <Flex
+      align="center"
+      justify="space-between"
+      h="75px"
+      mt="10px"
+      px="4"
+      style={{ borderBottom: 'solid 1px orangered' }}
+    >
       <Box>
         <img
           style={{ cursor: 'pointer' }} // cursor change on hover
@@ -56,11 +67,25 @@ export default function NavBar({ isMobile }) {
         display={{ base: 'none', md: 'flex' }}
       >
         <SearchBar />
-        <Button isDisabled={isLoggedIn} onClick={handleRecommenderClick}>
-          RECOMMENDER
+        <Button isDisabled={!isLoggedIn} onClick={handleRecommenderClick}>
+          Recommender
         </Button>
-        <Button isDisabled={!isLoggedIn}>ATTRACTIONS</Button>
-        <Button isDisabled={!isLoggedIn}>BADGES</Button>
+        <Button
+          isDisabled={isLoggedIn}
+          onClick={() => {
+            setIsAttractionsDrawerOpen(true);
+          }}
+        >
+          My Attractions
+        </Button>
+        <Button
+          isDisabled={!isLoggedIn}
+          onClick={() => {
+            setIsBadgesDrawerOpen(true);
+          }}
+        >
+          My Badges
+        </Button>
         {/* <TabList>
           <Tab color="orangered">Map</Tab>
           <Tab isDisabled={false} color="orangered">

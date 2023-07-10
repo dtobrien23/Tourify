@@ -33,12 +33,6 @@ function App() {
     };
   }, []);
 
-  // const handleTabSelect = index => {
-  //   setSelectedTabIndex(index);
-  // };
-
-  // const tabVariant = isMobile ? 'solid-rounded' : 'line';
-
   return (
     <ChakraProvider theme={theme}>
       <Box>
