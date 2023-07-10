@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Box,
   Flex,
@@ -14,15 +14,22 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
 import LocationInput from './LocationInput';
 import SearchBar from './SearchBar';
+import { MapContext } from './MapContext';
 
-export default function NavBar({
-  isLoggedIn,
-  handleLogin,
-  isMobile,
-  setIsMobile,
-  handleLogout,
-}) {
+export default function NavBar({ isMobile }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { handleRecommenderClick } = useContext(MapContext);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    // isDisabled(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    // isDisabled(false);
+  };
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -49,9 +56,11 @@ export default function NavBar({
         display={{ base: 'none', md: 'flex' }}
       >
         <SearchBar />
-        <Button>RECOMMENDER</Button>
-        <Button>ATTRACTIONS</Button>
-        <Button>BADGES</Button>
+        <Button isDisabled={isLoggedIn} onClick={handleRecommenderClick}>
+          RECOMMENDER
+        </Button>
+        <Button isDisabled={!isLoggedIn}>ATTRACTIONS</Button>
+        <Button isDisabled={!isLoggedIn}>BADGES</Button>
         {/* <TabList>
           <Tab color="orangered">Map</Tab>
           <Tab isDisabled={false} color="orangered">
@@ -94,7 +103,7 @@ export default function NavBar({
                 </Tab>
               </TabList> */}
               <Flex>
-                <SignUpForm />
+                <SignUpForm setIsLoggedIn={setIsLoggedIn} />
               </Flex>
             </MenuList>
           </Menu>
@@ -102,7 +111,7 @@ export default function NavBar({
       )}
       {!isMobile && (
         <Flex>
-          <SignUpForm align="center" />
+          <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
         </Flex>
       )}
     </Flex>
