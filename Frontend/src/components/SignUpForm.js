@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Button, VStack, Badge } from '@chakra-ui/react';
+import { Button, VStack, Badge, Flex } from '@chakra-ui/react';
 import {
   googleLogout,
   useGoogleLogin,
@@ -53,32 +53,51 @@ function SignUpForm() {
   //   setUser(null);
   // };
 
-  const backendLogin = (credentialResponse) => {
+  const backendLogin = credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
     if (credential) {
       axios
-        .post(`http://localhost:8001/api/user/tokensignin?idTokenString=${credential}`)
-        .then((response) => console.log(response.data, 'this is from the backend login for returning user'))
-        .catch((error) => console.log(error));
+        .post(
+          `http://localhost:8001/api/user/tokensignin?idTokenString=${credential}`
+        )
+        .then(response =>
+          console.log(
+            response.data,
+            'this is from the backend login for returning user'
+          )
+        )
+        .catch(error => console.log(error));
     }
   };
 
-
-  const backendSignUp = (credentialResponse) => {
+  const backendSignUp = credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
     if (credential) {
       axios
-        .post(`http://localhost:8001/api/user/register?idTokenString=${credential}`)
-        .then((response) => console.log(response.data, 'this is from the backend login for sign up'))
-        .catch((error) => console.log(error));
+        .post(
+          `http://localhost:8001/api/user/register?idTokenString=${credential}`
+        )
+        .then(response =>
+          console.log(
+            response.data,
+            'this is from the backend login for sign up'
+          )
+        )
+        .catch(error => console.log(error));
     }
   };
   return (
-    <VStack spacing={4} align="start">
-      <div>
-        {/* {profile ? (
+    <Flex
+      spacing={4}
+      align="start"
+      flexDirection="row"
+      width="250px"
+      overflow="hidden"
+    >
+      {/* <div> */}
+      {/* {profile ? (
           <div>
             <Avatar
               size={'md'}
@@ -121,46 +140,40 @@ function SignUpForm() {
           >
             Sign in with Google{' '}
           </Button> */
-        /* )} */}
-        <Button>
+      /* )} */}
+      <Button>
         <GoogleLogin
           clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
           onSuccess={backendLogin}
           onFailure={error => console.log('Google login failed:', error)}
           cookiePolicy="single_host_origin"
-
           style={{ marginLeft: '1.5em', marginTop: '1em' }}
-            color="black"
-            bg="white"
-            border="1px"
-            borderRadius="10px"
-            borderColor="orangered"
-        >
-        </GoogleLogin>
+          color="black"
+          bg="white"
+          border="1px"
+          borderRadius="10px"
+          borderColor="orangered"
+        ></GoogleLogin>
         USER LOGIN BUTTON
+      </Button>
 
-        </Button>
-
-        <Button>
+      <Button>
         <GoogleLogin
           clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
           onSuccess={backendSignUp}
           onFailure={error => console.log('Google login failed:', error)}
           cookiePolicy="single_host_origin"
-
           style={{ marginLeft: '1.5em', marginTop: '1em' }}
-            color="black"
-            bg="white"
-            border="1px"
-            borderRadius="10px"
-            borderColor="orangered"
-        >
-        </GoogleLogin>
+          color="black"
+          bg="white"
+          border="1px"
+          borderRadius="10px"
+          borderColor="orangered"
+        ></GoogleLogin>
         SIGN UP BUTTON
-
-        </Button>
-      </div>
-    </VStack>
+      </Button>
+      {/* </div> */}
+    </Flex>
   );
 }
 

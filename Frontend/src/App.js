@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Map from './components/Map';
 import AttractionsList from './components/AttractionsList';
 import NavBar from './components/NavBar';
@@ -12,10 +12,14 @@ import {
 } from '@chakra-ui/react';
 import BadgePanel from './components/BadgePanel';
 import './App.css';
+import { MapContext } from './components/MapContext';
+import { SearchBar } from './components/SearchBar';
 
 function App() {
   const [isMobile, setIsMobile] = useState(false);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+  const { map, setMap } = useContext(MapContext);
+  // const [map, setMap] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,10 +50,10 @@ function App() {
           onChange={handleTabSelect}
           selectedIndex={selectedTabIndex}
         >
-          <NavBar isMobile={isMobile} />
+          <NavBar isMobile={isMobile} map={map} />
           <TabPanels>
             <TabPanel>
-              <Map isMobile={isMobile} />
+              <Map isMobile={isMobile} map={map} setMap={setMap} />
             </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />

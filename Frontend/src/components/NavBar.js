@@ -11,6 +11,8 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
+import LocationInput from './LocationInput';
+import SearchBar from './SearchBar';
 
 export default function NavBar({
   isLoggedIn,
@@ -45,6 +47,7 @@ export default function NavBar({
         justifyContent="center"
         display={{ base: 'none', md: 'flex' }}
       >
+        <SearchBar />
         <TabList>
           <Tab color="orangered">Map</Tab>
           <Tab isDisabled={false} color="orangered">

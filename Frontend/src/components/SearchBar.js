@@ -12,30 +12,19 @@ export default function SearchBar({
   clearRoute,
   locationMarker,
   setLocationMarker,
-  setIsSourceAlertOpen,
-  handleRecommenderClick,
+  setShowSourceErrorComponent,
+  onOpen,
 }) {
   return (
-    <Flex
-      mb={3}
-      style={{
-        width: 'fit-content',
-        // border: 'solid 2px white',
-        borderRadius: '20px',
-        backgroundColor: 'white',
-        boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
-        zIndex: 1,
-      }}
-    >
+    <Flex>
       <Flex
         style={{
           width: 'fit-content',
           border: 'solid 2px orangered',
           borderRadius: '20px',
-          // boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.2)',
           backgroundColor: 'white',
           zIndex: 1,
-          height: '40px',
+          height: '38px',
         }}
       >
         <LocationInput
@@ -43,45 +32,34 @@ export default function SearchBar({
           setSourceCoords={setSourceCoords}
           locationMarker={locationMarker}
           setLocationMarker={setLocationMarker}
-          setIsSourceAlertOpen={setIsSourceAlertOpen}
-          style={{
-            // width: 'fit-content',
-            border: 'solid 1px orangered',
-            borderRadius: '20px',
-            backgroundColor: 'white',
-          }}
+          setShowSourceErrorComponent={setShowSourceErrorComponent}
+          onOpen={onOpen}
         />
         <Divider orientation="vertical" />
         <DestinationInput
           map={map}
           selectedAttraction={selectedAttraction}
           setSelectedAttraction={setSelectedAttraction}
-          handleRecommenderClick={handleRecommenderClick}
-          style={{
-            zIndex: 2,
-          }}
+          style={{ zIndex: 2 }}
         />
       </Flex>
       <Button
-        ml={1}
-        w={50}
+        ml={2}
         bg="green.400"
         color="white"
         border={'solid 2px white'}
-        borderRadius={30}
+        borderRadius={20}
         onClick={calculateRoute}
       >
-        <img src="/images/go-icon.png" alt="Go" />
+        Tourify Me
       </Button>
       <Button
-        ml={1}
-        w={50}
+        ml={2}
         bg="red"
         color="white"
         border={'solid 2px white'}
         borderRadius={20}
         onClick={clearRoute}
-        fontWeight="bold"
       >
         X
       </Button>
