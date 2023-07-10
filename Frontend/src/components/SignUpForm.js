@@ -111,8 +111,22 @@ export default function SignUpForm({ setIsLoggedIn }) {
               border="1px"
               borderRadius="10px"
               borderColor="orangered"
-              type="icon"
-              shape="circle"
+              
+              shape="pill"
+              text='Login'
+              render={(renderProps) => (
+                <>
+                  <input
+                    type="text"
+                    name="dummy2"
+                    autoComplete="new-password"
+                    style={{ display: 'none' }}
+                  />
+                  <div onClick={renderProps.onClick}>
+                    <div>Sign Up</div>
+                  </div>
+                </>
+              )}
             />
             Login
           </Flex>
@@ -133,8 +147,22 @@ export default function SignUpForm({ setIsLoggedIn }) {
               border="1px"
               borderRadius="10px"
               borderColor="orangered"
-              type="icon"
-              shape="circle"
+              
+              shape="pill"
+              text='Sign Up'
+              render={(renderProps) => (
+                <>
+                  <input
+                    type="text"
+                    name="dummy2"
+                    autoComplete="new-password"
+                    style={{ display: 'none' }}
+                  />
+                  <div onClick={renderProps.onClick}>
+                    <div>Sign Up</div>
+                  </div>
+                </>
+              )}
             />
             Sign Up
           </Flex>
