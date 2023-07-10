@@ -12,13 +12,19 @@ import {
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
 
-export default function NavBar({
-  isLoggedIn,
-  handleLogin,
-  isMobile,
-  setIsMobile,
-  handleLogout,
-}) {
+export default function NavBar({ isMobile, setIsMobile }) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    // isDisabled(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    // isDisabled(false);
+  };
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleMenuToggle = () => {
@@ -47,10 +53,10 @@ export default function NavBar({
       >
         <TabList>
           <Tab color="orangered">Map</Tab>
-          <Tab isDisabled={false} color="orangered">
+          <Tab isDisabled={!isLoggedIn} color="orangered">
             Attractions
           </Tab>
-          <Tab isDisabled={false} color="orangered">
+          <Tab isDisabled={!isLoggedIn} color="orangered">
             Badges
           </Tab>
         </TabList>
@@ -76,18 +82,22 @@ export default function NavBar({
                 <Tab
                   _selected={{ color: 'white', bg: '#ff4500' }}
                   onClick={handleMenuToggle}
+                  isDisabled={!isLoggedIn}
                 >
                   Attractions
                 </Tab>
                 <Tab
                   _selected={{ color: 'white', bg: '#ff4500' }}
                   onClick={handleMenuToggle}
+                  isDisabled={!isLoggedIn}
                 >
                   Badges
                 </Tab>
               </TabList>
               <Flex>
-                <SignUpForm />
+                <SignUpForm
+                  setIsLoggedIn={setIsLoggedIn}
+                />
               </Flex>
             </MenuList>
           </Menu>
@@ -95,7 +105,7 @@ export default function NavBar({
       )}
       {!isMobile && (
         <Flex>
-          <SignUpForm align="center" />
+          <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
         </Flex>
       )}
     </Flex>
