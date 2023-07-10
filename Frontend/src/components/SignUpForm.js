@@ -9,7 +9,7 @@ import {
 import axios from 'axios';
 import { Avatar, AvatarBadge } from '@chakra-ui/react';
 
-export default function SignUpForm({setIsLoggedIn}) {
+export default function SignUpForm({isLoggedIn,setIsLoggedIn}) {
   const backendLogin = credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
@@ -26,6 +26,8 @@ export default function SignUpForm({setIsLoggedIn}) {
 
           if (response.status == 200) {
             setIsLoggedIn(true);
+            // setUserSignedIn(true);
+            localStorage.setItem('loggedInfo', 'true');
           } else {
             setIsLoggedIn(false);
           }
@@ -50,17 +52,36 @@ export default function SignUpForm({setIsLoggedIn}) {
           .catch(error => console.log(error));
       }
     };
-    const [loggedOut, setIsLoggedOut]=useState(false);
+    // const[loggedInfo,setLoggedInfo]=useState(
+    //   localStorage.getItem('loggedInfo') === 'true' // Retrieve login status from local storage
+    //   );
+    
+
+    // const [userSignedIn, setUserSignedIn]=useState(false);
 
 
     const handleLogout = () => {
       // Perform the logout action here (e.g., clear session, remove token, etc.)
-      setIsLoggedOut(true);
+      // setUserSignedIn(false);
+      setIsLoggedIn(false);
+      localStorage.setItem('loggedInfo', 'false');
     };
+
+    // useEffect(() => {
+    //   const loginStatus = localStorage.getItem('loggedInfo') === 'true';
+    //   setUserSignedIn(loginStatus);
+    // }, []);
+    
+    // useEffect (() => {
+
+    // },[isLoggedIn]);
+ 
 
     return (
       <VStack spacing={4} align="start">
-      {!loggedOut ? (
+      {isLoggedIn? (
+        <Button onClick={handleLogout}>Logout</Button>
+      ) : (
         <div>
           <Button>
             <GoogleLogin
@@ -93,8 +114,6 @@ export default function SignUpForm({setIsLoggedIn}) {
             SIGN UP BUTTON
           </Button>
         </div>
-      ) : (
-        <Button onClick={handleLogout}>Logout</Button>
       )}
     </VStack>
     );
