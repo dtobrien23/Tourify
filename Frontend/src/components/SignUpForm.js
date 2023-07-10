@@ -9,16 +9,20 @@ import {
 import axios from 'axios';
 import { Avatar, AvatarBadge } from '@chakra-ui/react';
 
-export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
+export default function SignUpForm({ setIsLoggedIn }) {
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
   useEffect(() => {
     const loggedInfo = getCookie('loggedInfo');
-    setIsLoggedIn(loggedInfo === 'true');
+    setLoggedIn(loggedInfo === 'true');
+    setLoading(false);
   }, []);
 
   const setCookie = (name, value, days) => {
     const expires = new Date();
     expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-    document.cookie = name + '=' + value + ';expires=' + expires.toUTCString();
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()}`;
   };
 
   const getCookie = name => {
@@ -47,10 +51,11 @@ export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
           );
 
           if (response.status === 200) {
+            setLoggedIn(true);
             setIsLoggedIn(true);
             setCookie('loggedInfo', 'true', 7); // Set cookie for 7 days
           } else {
-            setIsLoggedIn(false);
+            setLoggedIn(false);
           }
         })
         .catch(error => console.log(error));
@@ -76,9 +81,15 @@ export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
   };
 
   const handleLogout = () => {
+    setLoggedIn(false);
     setIsLoggedIn(false);
+
     setCookie('loggedInfo', 'false', 7); // Set cookie for 7 days
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <VStack spacing={4} align="start">
@@ -97,7 +108,6 @@ export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
               style={{
                 marginLeft: '1.5em',
                 marginTop: '1em',
-                display: isLoggedIn ? 'none' : 'inline-block',
               }}
               color="black"
               bg="white"
@@ -118,7 +128,6 @@ export default function SignUpForm({ isLoggedIn, setIsLoggedIn }) {
               style={{
                 marginLeft: '1.5em',
                 marginTop: '1em',
-                display: isLoggedIn ? 'none' : 'inline-block',
               }}
               color="black"
               bg="white"
