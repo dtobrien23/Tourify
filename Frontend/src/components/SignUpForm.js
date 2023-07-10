@@ -16,7 +16,7 @@ export default function SignUpForm({setIsLoggedIn}) {
     if (credential) {
       axios
         .post(
-          `http://localhost:8001/api/user/tokensignin?idTokenString=${credential}`
+          `http://localhost:8001/api/user/info?idTokenString=${credential}`
         )
         .then(response => {
           console.log(
@@ -50,9 +50,17 @@ export default function SignUpForm({setIsLoggedIn}) {
           .catch(error => console.log(error));
       }
     };
+    const [loggedOut, setIsLoggedOut]=useState(false);
+
+
+    const handleLogout = () => {
+      // Perform the logout action here (e.g., clear session, remove token, etc.)
+      setIsLoggedOut(true);
+    };
 
     return (
       <VStack spacing={4} align="start">
+      {!loggedOut ? (
         <div>
           <Button>
             <GoogleLogin
@@ -66,10 +74,9 @@ export default function SignUpForm({setIsLoggedIn}) {
               border="1px"
               borderRadius="10px"
               borderColor="orangered"
-            ></GoogleLogin>
+            />
             USER LOGIN BUTTON
           </Button>
-
           <Button>
             <GoogleLogin
               clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
@@ -82,11 +89,14 @@ export default function SignUpForm({setIsLoggedIn}) {
               border="1px"
               borderRadius="10px"
               borderColor="orangered"
-            ></GoogleLogin>
+            />
             SIGN UP BUTTON
           </Button>
         </div>
-      </VStack>
+      ) : (
+        <Button onClick={handleLogout}>Logout</Button>
+      )}
+    </VStack>
     );
   };
 
