@@ -29,6 +29,10 @@ export default function NavBar({ isMobile, setIsMobile }) {
     handleRecommenderClick,
     setIsAttractionsDrawerOpen,
     setIsBadgesDrawerOpen,
+    activeDrawer,
+    setActiveDrawer,
+    isDrawerOpen,
+    setIsDrawerOpen,
   } = useContext(MapContext);
 
   const handleLogin = () => {
@@ -73,13 +77,24 @@ export default function NavBar({ isMobile, setIsMobile }) {
         display={{ base: 'none', md: 'flex' }}
       >
         <SearchBar />
-        <Button isDisabled={!isLoggedIn} onClick={handleRecommenderClick}>
+        <Button
+          isDisabled={!isLoggedIn}
+          onClick={() => {
+            setActiveDrawer('recommender');
+            {
+              !isDrawerOpen && setIsDrawerOpen(true);
+            }
+          }}
+        >
           Recommender
         </Button>
         <Button
           isDisabled={!isLoggedIn}
           onClick={() => {
-            setIsAttractionsDrawerOpen(true);
+            setActiveDrawer('attractions');
+            {
+              !isDrawerOpen && setIsDrawerOpen(true);
+            }
           }}
         >
           My Attractions
@@ -87,7 +102,10 @@ export default function NavBar({ isMobile, setIsMobile }) {
         <Button
           isDisabled={!isLoggedIn}
           onClick={() => {
-            setIsBadgesDrawerOpen(true);
+            setActiveDrawer('badges');
+            {
+              !isDrawerOpen && setIsDrawerOpen(true);
+            }
           }}
         >
           My Badges

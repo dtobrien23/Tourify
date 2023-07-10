@@ -11,10 +11,14 @@ import {
 } from '@chakra-ui/react';
 import attractions from '../static/attractions.json';
 import { GeolocationContext } from './GeoContext';
+import { MapContext } from './MapContext';
 
 export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const { geolocation } = useContext(GeolocationContext);
   console.log(geolocation, 'this is the geo from context');
+
+  const { activeDrawer, isDrawerOpen, setIsDrawerOpen } =
+    useContext(MapContext);
 
   //geolocation, cant be null or error occurs
   const userLocation = geolocation
@@ -57,7 +61,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   };
 
   useEffect(() => {
-    if (recommendOpenFunc) {
+    if (activeDrawer === 'recommender') {
       const loadGoogleMapsAPI = () => {
         const script = document.createElement('script');
         script.src =
@@ -72,7 +76,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
         fetchDistances();
       }
     }
-  }, [recommendOpenFunc]);
+  }, []);
 
   const callback = (response, status) => {
     if (status === window.google.maps.DistanceMatrixStatus.OK) {
@@ -114,39 +118,21 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   console.log(topFiveNearestAttractions, 'TOP 5 NEAREST');
 
   return (
-    <Drawer
-      isOpen={recommendOpenFunc}
-      placement="right"
-      onClose={recommendCloseFunc}
-    >
-      <DrawerOverlay />
-      <DrawerContent
-        bg="white"
-        border="5px solid orangered"
-        borderRadius="20px"
-        p="20px"
-        w="80%"
-      >
-        <DrawerCloseButton />
-        <DrawerHeader>Nearest Attractions</DrawerHeader>
-        <DrawerBody>
-          {topFiveNearestAttractions.map(attraction => (
-            <Flex key={attraction.id} mb={4}>
-              <img
-                src={attraction.image}
-                alt={attraction.name}
-                style={{ width: '100px', height: '100px', marginRight: '10px' }}
-              />
-              <div>
-                <h3>{attraction.name}</h3>
-                <p>Busyness Score: {attraction.busyness_score}</p>
-                <p>Distance: {attraction.distance}</p>
-              </div>
-            </Flex>
-          ))}
-        </DrawerBody>
-        <DrawerFooter></DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+    <>
+      {topFiveNearestAttractions.map(attraction => (
+        <Flex key={attraction.id} mb={4}>
+          <img
+            src={attraction.image}
+            alt={attraction.name}
+            style={{ width: '100px', height: '100px', marginRight: '10px' }}
+          />
+          <div>
+            <h3>{attraction.name}</h3>
+            <p>Busyness Score: {attraction.busyness_score}</p>
+            <p>Distance: {attraction.distance}</p>
+          </div>
+        </Flex>
+      ))}
+    </>
   );
 }

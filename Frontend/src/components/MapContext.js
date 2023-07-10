@@ -17,6 +17,8 @@ const MapProvider = ({ children }) => {
   const [isSourceAlertOpen, setIsSourceAlertOpen] = useState(false);
   const [geolocation, setGeolocation] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [activeDrawer, setActiveDrawer] = useState(null);
   const [isAttractionsDrawerOpen, setIsAttractionsDrawerOpen] = useState(false); // for My Attractions drawer
   const [isBadgesDrawerOpen, setIsBadgesDrawerOpen] = useState(false); // for My Badges drawer
 
@@ -108,6 +110,10 @@ const MapProvider = ({ children }) => {
         setIsAttractionsDrawerOpen,
         isBadgesDrawerOpen,
         setIsBadgesDrawerOpen,
+        isDrawerOpen,
+        setIsDrawerOpen,
+        activeDrawer,
+        setActiveDrawer,
       }}
     >
       {children}
