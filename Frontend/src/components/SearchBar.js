@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Flex, Divider, Button } from '@chakra-ui/react';
+import { Flex, Divider, Button, Box } from '@chakra-ui/react';
 import DestinationInput from './DestinationInput';
 import LocationInput from './LocationInput';
 import { MapContext } from './MapContext';
@@ -19,21 +19,20 @@ export default function SearchBar() {
   } = useContext(MapContext);
 
   return (
-    <Flex mr="15px">
+    <Flex mr="0px">
       <Flex
         style={{
           width: 'fit-content',
           border: 'solid 1px orangered',
           borderRadius: '20px',
-          // boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.2)',
           backgroundColor: 'white',
           zIndex: 1,
           height: '41px',
+          overflow: 'hidden',
         }}
       >
         <LocationInput
           style={{
-            // width: 'fit-content',
             border: 'solid 1px orangered',
             borderRadius: '20px',
             backgroundColor: 'white',
@@ -45,19 +44,24 @@ export default function SearchBar() {
             zIndex: 2,
           }}
         />
-        <Button
-          ml={1}
-          w={50}
-          bg="orangered"
-          color="white"
-          // border={'solid 2px white'}
-          borderRadius={18}
-          _hover={{ bg: 'orangered' }}
-          onClick={calculateRoute}
-        >
-          GO
-        </Button>
+        <Box ml="5px" display="flex" alignItems="center">
+          <Button
+            bg="#ff914d"
+            color="white"
+            border="solid 1px orangered"
+            borderRight="0px"
+            borderRadius="19px"
+            _hover={{ bg: 'orangered' }}
+            onClick={calculateRoute}
+            px="1em"
+            height="calc(100% + 2px)"
+            padding="10px"
+          >
+            GO
+          </Button>
+        </Box>
       </Flex>
+
       {/* <Button
         ml={1}
         w={50}
@@ -78,7 +82,6 @@ export default function SearchBar() {
         w="1px"
         bg="white"
         color="lightgrey"
-        // border={'solid 2px white'}
         borderRadius={20}
         _hover={{ bg: 'white', color: 'orangered' }}
         onClick={clearRoute}

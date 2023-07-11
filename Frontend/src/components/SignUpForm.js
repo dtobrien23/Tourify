@@ -7,7 +7,15 @@ import {
   useGoogleOneTapLogin,
 } from '@react-oauth/google';
 import axios from 'axios';
-import { Avatar, AvatarBadge, Flex } from '@chakra-ui/react';
+import {
+  Flex,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverArrow,
+  PopoverCloseButton,
+} from '@chakra-ui/react';
 
 export default function SignUpForm({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(true);
@@ -19,7 +27,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     setLoading(false);
   }, []);
 
-  const backendLogin = credentialResponse => {
+  const backendLogin = async credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
     if (credential) {
@@ -75,90 +83,107 @@ export default function SignUpForm({ setIsLoggedIn }) {
   return (
     <Flex>
       {userLoggedIn ? (
-        <Button onClick={handleLogout}>Logout</Button>
-      ) : (
-        <Flex
-          style={{
-            border: 'solid 2px white',
-            borderRadius: '25px',
-            boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
-            direction: 'row',
-            borderColor: 'orangered',
-            paddingTop: '5px',
-            paddingRight: '5px',
-            paddingLeft: '5px',
-            paddingBottom: '5px',
-          }}
+        <Button
+          bg="#ff914d"
+          color="white"
+          border="solid 1px orangered"
+          borderRadius="25px"
+          _hover={{ bg: 'orangered', color: 'white' }}
+          onClick={handleLogout}
         >
-          <Flex mr={2}>
-            <GoogleLogin
-              clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
-              onSuccess={backendLogin}
-              onFailure={error => console.log('Google login failed:', error)}
-              cookiePolicy="single_host_origin"
-              style={{
-                marginLeft: '1.5em',
-                marginTop: '1em',
-              }}
-              color="black"
-              bg="white"
-              border="1px"
-              borderRadius="10px"
-              borderColor="orangered"
-              
-              shape="pill"
-              text='Login'
-              render={(renderProps) => (
-                <>
-                  <input
-                    type="text"
-                    name="dummy2"
-                    autoComplete="new-password"
-                    style={{ display: 'none' }}
-                  />
-                  <div onClick={renderProps.onClick}>
-                    <div>Sign Up</div>
-                  </div>
-                </>
-              )}
-            />
-            Login
+          Log Out
+        </Button>
+      ) : (
+        <>
+          <Flex mr={1}>
+            <Popover>
+              <PopoverTrigger>
+                <Button
+                  bg="white"
+                  border="solid 1px orangered"
+                  borderRadius="25px"
+                >
+                  Log In
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverBody>
+                  <GoogleLogin
+                    clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
+                    onSuccess={backendLogin}
+                    onFailure={error =>
+                      console.log('Google login failed:', error)
+                    }
+                    cookiePolicy="single_host_origin"
+                    icon="false"
+                    style={{
+                      marginLeft: '1.5em',
+                      marginTop: '1em',
+                    }}
+                    color="black"
+                    bg="white"
+                    border="1px"
+                    borderRadius="0px"
+                    borderColor="orangered"
+                    shape="pill"
+                    buttonText="Login"
+                  />{' '}
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </Flex>
           <Flex>
-            <GoogleLogin
-              clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
-              onSuccess={backendSignUp}
-              onFailure={error => console.log('Google login failed:', error)}
-              cookiePolicy="single_host_origin"
-              style={{
-                marginLeft: '1.5em',
-                marginTop: '1em',
-              }}
-              color="black"
-              bg="white"
-              border="1px"
-              borderRadius="10px"
-              borderColor="orangered"
-              
-              shape="pill"
-              text='Sign Up'
-              render={(renderProps) => (
-                <>
-                  <input
-                    type="text"
-                    name="dummy2"
-                    autoComplete="new-password"
-                    style={{ display: 'none' }}
+            <Popover>
+              <PopoverTrigger>
+                <Button
+                  bg="#ff914d"
+                  color="white"
+                  border="solid 1px orangered"
+                  borderRadius="25px"
+                  _hover={{ bg: 'orangered', color: 'white' }}
+                >
+                  Sign Up
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverCloseButton />
+                <PopoverBody>
+                  <GoogleLogin
+                    clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
+                    render={renderProps => (
+                      <Button
+                        onClick={renderProps.onClick}
+                        disabled={renderProps.disabled}
+                      >
+                        Sign Up
+                      </Button>
+                    )}
+                    onSuccess={backendSignUp}
+                    onFailure={error =>
+                      console.log('Google login failed:', error)
+                    }
+                    cookiePolicy="single_host_origin"
+                    style={{
+                      marginLeft: '1.5em',
+                      marginTop: '1em',
+                    }}
+                    color="black"
+                    bg="white"
+                    border="1px"
+                    borderRadius="10px"
+                    borderColor="orangered"
+                    buttonText="Sign Up"
+                    shape="pill"
+                    text="Sign Up"
                   />
-                  <div onClick={renderProps.onClick}>
-                    <div>Sign Up</div>
-                  </div>
-                </>
-              )}
-            />
-            Sign Up
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
           </Flex>
-        </Flex>
+        </>
       )}
     </Flex>
   );

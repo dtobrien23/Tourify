@@ -54,12 +54,14 @@ export default function NavBar({ isMobile, setIsMobile }) {
       justify="space-between"
       h="75px"
       // mt="10px"
-      px="4"
+      px="4px"
+      pr="10px"
       style={{ borderBottom: 'solid 1px orangered' }}
     >
-      <Box>
+      <Box flexShrink={0}>
         <img
-          style={{ cursor: 'pointer', height: '50px' }} // cursor change on hover
+          ml={0}
+          style={{ cursor: 'pointer', overflow: 'visible' }} // cursor change on hover
           onClick={handleLogoClick}
           src="logo.svg"
           alt="Tourify Logo"
