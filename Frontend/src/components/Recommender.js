@@ -7,7 +7,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Flex,
+  Flex,Tab,Tabs,TabList,TabPanel,TabPanels
 } from '@chakra-ui/react';
 import attractions from '../static/attractions.json';
 import { GeolocationContext } from './GeoContext';
@@ -119,7 +119,16 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
   return (
     <>
-      {topFiveNearestAttractions.map(attraction => (
+      <Tabs>
+        <TabList>
+          <Tab>Nearest Attractions</Tab>
+          <Tab>Quietest Attractions</Tab>
+          <Tab>Nearest + Quietest</Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+          {topFiveNearestAttractions.map(attraction => (
         <Flex key={attraction.id} mb={4}>
           <img
             src={attraction.image}
@@ -133,6 +142,16 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
           </div>
         </Flex>
       ))}
+          </TabPanel>
+          <TabPanel>
+            <p>Quietest ones Here!</p>
+          </TabPanel>
+          <TabPanel>
+            <p>Nearest + Quietest Here!</p>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+     
     </>
   );
 }

@@ -16,6 +16,11 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  Tab,
+  Tabs,
+  TabList,
+  TabPanel,
+  TabPanels,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
@@ -58,15 +63,21 @@ export default function ContentDrawer() {
             {' '}
             <DrawerHeader>{`My Attractions`}</DrawerHeader>
             <DrawerBody>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Consequat nisl vel pretium lectus quam id. Semper quis lectus
-                nulla at volutpat diam ut venenatis. Dolor morbi non arcu risus
-                quis varius quam quisque. Massa ultricies mi quis hendrerit
-                dolor magna eget est lorem. Erat imperdiet sed euismod nisi
-                porta. Lectus vestibulum mattis ullamcorper velit.
-              </p>
+              <Tabs>
+                <TabList>
+                  <Tab>My Visited Attractions</Tab>
+                  <Tab>Attractions to Visit</Tab>
+                </TabList>
+
+                <TabPanels>
+                  <TabPanel>
+                    <p>one!</p>
+                  </TabPanel>
+                  <TabPanel>
+                    <p>two!</p>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </DrawerBody>
           </>
         )}
@@ -75,15 +86,21 @@ export default function ContentDrawer() {
             {' '}
             <DrawerHeader>{`My Badges`}</DrawerHeader>
             <DrawerBody>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Consequat nisl vel pretium lectus quam id. Semper quis lectus
-                nulla at volutpat diam ut venenatis. Dolor morbi non arcu risus
-                quis varius quam quisque. Massa ultricies mi quis hendrerit
-                dolor magna eget est lorem. Erat imperdiet sed euismod nisi
-                porta. Lectus vestibulum mattis ullamcorper velit.
-              </p>
+              <Tabs>
+                <TabList>
+                  <Tab>My Badges</Tab>
+                  <Tab>Badges to Collect</Tab>
+                </TabList>
+
+                <TabPanels>
+                  <TabPanel>
+                    <p>one!</p>
+                  </TabPanel>
+                  <TabPanel>
+                    <p>two!</p>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </DrawerBody>
           </>
         )}
