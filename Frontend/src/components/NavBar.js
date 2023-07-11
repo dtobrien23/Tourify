@@ -9,6 +9,7 @@ import {
   MenuButton,
   MenuList,
   Button,
+  Text,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
@@ -25,15 +26,8 @@ export default function NavBar({ isMobile, setIsMobile }) {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const {
-    handleRecommenderClick,
-    setIsAttractionsDrawerOpen,
-    setIsBadgesDrawerOpen,
-    activeDrawer,
-    setActiveDrawer,
-    isDrawerOpen,
-    setIsDrawerOpen,
-  } = useContext(MapContext);
+  const { setActiveDrawer, isDrawerOpen, setIsDrawerOpen } =
+    useContext(MapContext);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -78,6 +72,11 @@ export default function NavBar({ isMobile, setIsMobile }) {
       >
         <SearchBar />
         <Button
+          display="flex"
+          flexDirection="column"
+          bg="white"
+          h="fit-content"
+          w="fit-content"
           isDisabled={!isLoggedIn}
           onClick={() => {
             setActiveDrawer('recommender');
@@ -86,9 +85,21 @@ export default function NavBar({ isMobile, setIsMobile }) {
             }
           }}
         >
-          Recommender
+          <img
+            src="/images/navbar-icons/recommender-icon.png"
+            alt="Recommender"
+            style={{ paddingTop: '8px' }}
+          />
+          <Text fontWeight="normal" fontSize="11px" pb="6px" m="0">
+            Recommender
+          </Text>
         </Button>
         <Button
+          display="flex"
+          flexDirection="column"
+          bg="white"
+          h="fit-content"
+          w="fit-content"
           isDisabled={!isLoggedIn}
           onClick={() => {
             setActiveDrawer('attractions');
@@ -97,9 +108,21 @@ export default function NavBar({ isMobile, setIsMobile }) {
             }
           }}
         >
-          My Attractions
+          <img
+            src="/images/navbar-icons/attractions-icon.png"
+            alt="Attractions"
+            style={{ paddingTop: '8px' }}
+          />
+          <Text fontWeight="normal" fontSize="11px" pb="6px" m="0">
+            Attractions
+          </Text>
         </Button>
         <Button
+          display="flex"
+          flexDirection="column"
+          bg="white"
+          h="fit-content"
+          w="fit-content"
           isDisabled={!isLoggedIn}
           onClick={() => {
             setActiveDrawer('badges');
@@ -108,7 +131,14 @@ export default function NavBar({ isMobile, setIsMobile }) {
             }
           }}
         >
-          My Badges
+          <img
+            src="/images/navbar-icons/badges-icon.png"
+            alt="Badges"
+            style={{ paddingTop: '8px' }}
+          />
+          <Text fontWeight="normal" fontSize="11px" pb="6px" m="0">
+            Badges
+          </Text>
         </Button>
         {/* <TabList>
           <Tab color="orangered">Map</Tab>
