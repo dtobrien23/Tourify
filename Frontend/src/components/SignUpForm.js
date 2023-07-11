@@ -15,13 +15,22 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(true);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const { globalUserInfo, setGlobalUserInfo} = useContext(APIContext)
+  const [userInfoFetched, setUserInfoFetched] = useState(false);
 
 
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
     setUserLoggedIn(loggedInfo === 'true');
     setLoading(false);
+  
+    // Check if user info is cached
+    const cachedUserInfo = localStorage.getItem('userInfo');
+    if (loggedInfo === 'true' && cachedUserInfo) {
+      setGlobalUserInfo(JSON.parse(cachedUserInfo));
+      setUserInfoFetched(true);
+    } 
   }, []);
+  
 
   const backendLogin = credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
@@ -40,10 +49,14 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
           if (response.status === 200) {
             setGlobalUserInfo(response.data)
-            console.log(globalUserInfo,' USER INFO VIA CONTEXT FORM BACKEND')
             setUserLoggedIn(true);
             setIsLoggedIn(true);
             localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
+
+            // Cache the user info
+            localStorage.setItem('userInfo', JSON.stringify(response.data));
+
+            setUserInfoFetched(true);
           } else {
             setUserLoggedIn(false);
             setIsLoggedIn(false);
