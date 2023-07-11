@@ -9,6 +9,7 @@ import {
 import axios from 'axios';
 import { Avatar, AvatarBadge, Flex } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
+import { MapContext } from './MapContext';
 
 
 export default function SignUpForm({ setIsLoggedIn }) {
@@ -16,6 +17,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const { globalUserInfo, setGlobalUserInfo} = useContext(APIContext)
   const [userInfoFetched, setUserInfoFetched] = useState(false);
+  const { setIsDrawerOpen} = useContext(MapContext);
 
 
   useEffect(() => {
@@ -90,6 +92,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     setIsLoggedIn(false);
     localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
     localStorage.removeItem('userInfo');
+    setIsDrawerOpen(false);
   };
 
   if (loading) {
