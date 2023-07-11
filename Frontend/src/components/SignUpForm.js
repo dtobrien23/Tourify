@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, VStack, Badge } from '@chakra-ui/react';
 import {
   googleLogout,
@@ -16,16 +16,30 @@ import {
   PopoverArrow,
   PopoverCloseButton,
 } from '@chakra-ui/react';
+import { MapContext } from './MapContext';
 
 export default function SignUpForm({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(true);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const [buttonsDirection, setButtonsDirection] = useState('row');
+
+  const { isMobile } = useContext(MapContext);
 
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
     setUserLoggedIn(loggedInfo === 'true');
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    console.log(isMobile);
+    if (isMobile) {
+      setButtonsDirection('column');
+      console.log('buttonssssss', buttonsDirection);
+    } else {
+      setButtonsDirection('row');
+    }
+  }, [isMobile]);
 
   const backendLogin = async credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
@@ -81,7 +95,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     return <p>Loading...</p>;
   }
   return (
-    <Flex>
+    <Flex flexDirection={buttonsDirection}>
       {userLoggedIn ? (
         <Button
           bg="#ff914d"

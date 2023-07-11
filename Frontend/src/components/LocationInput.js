@@ -37,16 +37,26 @@ export default function LocationInput(
     calculateRoute,
     setGeolocation,
     google,
+    isMobile,
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
   // const { setGeolocation } = useContext(GeolocationContext);
+  const [inputWidth, setInputWidth] = useState('270px');
 
   useEffect(() => {
     if (autocompleteRef.current && currentLocation !== null) {
       setInputValue(currentLocation);
     }
   }, [currentLocation, buttonClicked]);
+
+  useEffect(() => {
+    if (isMobile) {
+      setInputWidth('100%');
+    } else {
+      setInputWidth('270px');
+    }
+  }, [isMobile]);
 
   const autocompleteOptions = {
     bounds: {
@@ -164,7 +174,12 @@ export default function LocationInput(
   };
 
   return (
-    <Flex w={'270px'} ml={1} alignItems="center" justifyContent="space-between">
+    <Flex
+      w={inputWidth}
+      ml={1}
+      alignItems="center"
+      justifyContent="space-between"
+    >
       {google && (
         <>
           <Autocomplete

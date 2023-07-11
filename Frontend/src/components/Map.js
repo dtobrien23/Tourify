@@ -23,9 +23,8 @@ import FiltersNavBar from './FiltersNavBar.js';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 import ContentDrawer from './ContentDrawer.js';
-import BadgesDrawer from './BadgesDrawer.js';
 
-export default function Map({ isMobile }) {
+export default function Map() {
   const { apiAttractions } = useContext(APIContext);
   const {
     map,
@@ -45,6 +44,7 @@ export default function Map({ isMobile }) {
     google,
     isAttractionsDrawerOpen,
     setIsAttractionsDrawerOpen,
+    isMobile,
   } = useContext(MapContext);
 
   ////////////////
@@ -313,59 +313,49 @@ export default function Map({ isMobile }) {
         </Alert>
       )}
       <GeolocationProvider>
-        <Flex
-          flexDirection="column"
-          style={{
-            position: 'absolute',
-            top: 10,
-            left: 10,
-            height: 'calc(100% - 20px)',
-            // width: 0,
-          }}
-        >
-          {/* Seachbar contains location/destination input + locationbutton */}
-          {/* <SearchBar
-            map={map}
-            selectedAttraction={selectedAttraction}
-            setSelectedAttraction={setSelectedAttraction}
-            setSourceCoords={setSourceCoords}
-            calculateRoute={calculateRoute}
-            clearRoute={clearRoute}
-            locationMarker={locationMarker}
-            setLocationMarker={setLocationMarker}
-            setIsSourceAlertOpen={setIsSourceAlertOpen}
-            handleRecommenderClick={handleRecommenderClick}
-            style={{ zIndex: 1 }}
-          /> */}
-          {/* Recommendation button */}
-          {/* <Button
-            onClick={handleRecommenderClick}
+        {isMobile ? (
+          <Flex justifyContent="center" alignItems="center" mt="5px">
+            <SearchBar />
+            <Flex
+              flexDirection="column"
+              style={{
+                position: 'absolute',
+                top: 50,
+                left: 10,
+                height: 'fit-content',
+                width: 'calc(100% - 20px)',
+              }}
+            >
+              <FiltersNavBar
+                isMobile={isMobile}
+                selectedFilters={selectedFilters}
+                setSelectedFilters={setSelectedFilters}
+              />
+            </Flex>
+          </Flex>
+        ) : (
+          <Flex
+            flexDirection="column"
             style={{
-              // width: 'fit-content',
-              width: '545px',
-              marginTop: '10px',
-              padding: '5px',
-              paddingRight: '10px',
-              paddingLeft: '10px',
-              border: 'solid 2px orangered',
-              borderRadius: '20px',
-              background: 'orangered',
-
-              color: 'white',
+              position: 'absolute',
+              top: 10,
+              left: 10,
+              height: 'calc(100% - 20px)',
+              // width: 0,
             }}
           >
-            Recommend Location!!!
-          </Button> */}
-          <FiltersNavBar
-            isMobile={isMobile}
-            selectedFilters={selectedFilters}
-            setSelectedFilters={setSelectedFilters}
-          />
-        </Flex>
+            <FiltersNavBar
+              isMobile={isMobile}
+              selectedFilters={selectedFilters}
+              setSelectedFilters={setSelectedFilters}
+            />
+          </Flex>
+        )}
         {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update
         the sliderList state */}
-        <SliderBar setSliderListFunc={setSliderList} />
+
+        {!isMobile && <SliderBar setSliderListFunc={setSliderList} />}
 
         <MarkerDrawer
           //marker state true opens drawer
@@ -379,10 +369,10 @@ export default function Map({ isMobile }) {
         />
         <ContentDrawer />
         {/* <BadgesDrawer /> */}
-        <Recommender
+        {/* <Recommender
           recommendOpenFunc={buttonState}
           recommendCloseFunc={recommendClose}
-        />
+        /> */}
       </GeolocationProvider>
     </GoogleMap>
   );

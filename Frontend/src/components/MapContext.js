@@ -3,6 +3,7 @@ import React, { createContext, useState, useEffect } from 'react';
 const MapContext = createContext();
 
 const MapProvider = ({ children }) => {
+  const [isMobile, setIsMobile] = useState(false);
   const [map, setMap] = useState(null);
   const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
@@ -114,6 +115,8 @@ const MapProvider = ({ children }) => {
         setIsDrawerOpen,
         activeDrawer,
         setActiveDrawer,
+        isMobile,
+        setIsMobile,
       }}
     >
       {children}

@@ -10,6 +10,7 @@ import {
   MenuList,
   Button,
   Text,
+  MenuItem,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
@@ -17,7 +18,7 @@ import LocationInput from './LocationInput';
 import SearchBar from './SearchBar';
 import { MapContext } from './MapContext';
 
-export default function NavBar({ isMobile, setIsMobile }) {
+export default function NavBar() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     // Retrieve the logged-in status from the cache
     const cachedStatus = localStorage.getItem('loggedInfo');
@@ -26,7 +27,7 @@ export default function NavBar({ isMobile, setIsMobile }) {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const { setActiveDrawer, isDrawerOpen, setIsDrawerOpen } =
+  const { setActiveDrawer, isDrawerOpen, setIsDrawerOpen, isMobile } =
     useContext(MapContext);
 
   const handleLogin = () => {
@@ -156,7 +157,11 @@ export default function NavBar({ isMobile, setIsMobile }) {
       </Flex>
       {isMobile && (
         <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
-          <Menu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)}>
+          <Menu
+            isOpen={isMenuOpen}
+            onClose={() => setIsMenuOpen(false)}
+            style={{ width: '100px' }}
+          >
             <MenuButton
               as={IconButton}
               icon={<HamburgerIcon />}
@@ -164,32 +169,10 @@ export default function NavBar({ isMobile, setIsMobile }) {
               onClick={handleMenuToggle}
               l={1}
             />
-            <MenuList>
-              {/* <TabList flexDirection="column">
-                <Tab
-                  _selected={{ color: 'white', bg: '#ff4500' }}
-                  onClick={handleMenuToggle}
-                >
-                  Map
-                </Tab>
-                <Tab
-                  _selected={{ color: 'white', bg: '#ff4500' }}
-                  onClick={handleMenuToggle}
-                  isDisabled={!isLoggedIn}
-                >
-                  Attractions
-                </Tab>
-                <Tab
-                  _selected={{ color: 'white', bg: '#ff4500' }}
-                  onClick={handleMenuToggle}
-                  isDisabled={!isLoggedIn}
-                >
-                  Badges
-                </Tab>
-              </TabList> */}
-              <Flex>
+            <MenuList minW="0" w="fit-content">
+              <MenuItem style={{ width: '100px' }}>
                 <SignUpForm setIsLoggedIn={setIsLoggedIn} />
-              </Flex>
+              </MenuItem>
             </MenuList>
           </Menu>
         </Box>

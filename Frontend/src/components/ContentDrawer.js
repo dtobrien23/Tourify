@@ -41,7 +41,7 @@ export default function ContentDrawer() {
       <DrawerContent
         pointerEvents="all"
         containerProps={{ pointerEvents: 'none', height: '100%' }}
-        style={{ position: 'absolute', top: '1', height: 'calc(100% - 85px)' }}
+        style={{ position: 'absolute', top: '1', height: 'calc(100% - 75px)' }}
       >
         <DrawerCloseButton />
         {activeDrawer === 'recommender' && (

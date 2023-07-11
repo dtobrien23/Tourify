@@ -15,9 +15,8 @@ import './App.css';
 import { MapContext } from './components/MapContext';
 
 function App() {
-  const [isMobile, setIsMobile] = useState(false);
   // const [selectedTabIndex, setSelectedTabIndex] = useState(0);
-  const { map, setMap } = useContext(MapContext);
+  const { map, setMap, setIsMobile } = useContext(MapContext);
   // const [map, setMap] = useState(null);
 
   useEffect(() => {
@@ -43,10 +42,10 @@ function App() {
           onChange={handleTabSelect}
           selectedIndex={selectedTabIndex}
         > */}
-        <NavBar isMobile={isMobile} map={map} />
+        <NavBar map={map} />
         {/* <TabPanels>
             <TabPanel> */}
-        <Map isMobile={isMobile} map={map} setMap={setMap} />
+        <Map map={map} setMap={setMap} />
         {/* </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
