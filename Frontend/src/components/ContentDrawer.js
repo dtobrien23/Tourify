@@ -27,8 +27,8 @@ import Recommender from './Recommender';
 import { APIContext } from './APIContext';
 
 export default function ContentDrawer() {
-  const { globalUserInfo } = useContext(APIContext);
-  console.log(globalUserInfo, 'THis is in the context drawer!!');
+  const { globalUserInfo, apiAttractions } = useContext(APIContext);
+  console.log(globalUserInfo, 'this is in the drawer!!!');
 
   const {
     isAttractionsDrawerOpen,
@@ -37,6 +37,24 @@ export default function ContentDrawer() {
     isDrawerOpen,
     setIsDrawerOpen,
   } = useContext(MapContext);
+
+  const kebabToCamelCase = str => {
+    return str.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
+  };
+
+  const capitalizeFirstLetter = str => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  const getAttractionInfo = attractionName => {
+    const formattedAttractionName = capitalizeFirstLetter(
+      kebabToCamelCase(attractionName)
+    );
+    const attraction = apiAttractions.find(
+      attraction => attraction.name_alias === formattedAttractionName
+    );
+    return attraction || {};
+  };
 
   return (
     <Drawer
@@ -75,34 +93,87 @@ export default function ContentDrawer() {
 
                 <TabPanels>
                   <TabPanel>
-                    <Flex>
-                      <div>
-                        <h3>Attractions</h3>
-                        {Object.entries(
-                          globalUserInfo.data.attractionStatusDO
-                        ).map(([attraction, status]) => {
-                          if (status) {
-                            return <p key={attraction}>{attraction}</p>;
+                    {globalUserInfo &&
+                    globalUserInfo.data &&
+                    globalUserInfo.data.attractionStatusDO ? (
+                      Object.entries(
+                        globalUserInfo.data.attractionStatusDO
+                      ).map(([attraction, status]) => {
+                        if (status) {
+                          const attractionInfo = getAttractionInfo(attraction);
+                          if (attractionInfo) {
+                            return (
+                              <div key={attraction}>
+                                <h3>{attractionInfo.name}</h3>
+                                {attractionInfo.openHour && (
+                                  <div>
+                                    <p>Opening Hours:</p>
+                                    <p>
+                                      Monday:{' '}
+                                      {attractionInfo.openHour.mondayOpen} -{' '}
+                                      {attractionInfo.openHour.mondayClose}
+                                    </p>
+                                    <p>
+                                      Tuesday:{' '}
+                                      {attractionInfo.openHour.tuesdayOpen} -{' '}
+                                      {attractionInfo.openHour.tuesdayClose}
+                                    </p>
+                                    {/* Repeat for other days */}
+                                  </div>
+                                )}
+                                <p>Price: {attractionInfo.price}</p>
+                              </div>
+                            );
                           }
-                          return null;
-                        })}
-                      </div>
-                    </Flex>
+                        }
+                        return null;
+                      })
+                    ) : (
+                      <p>Loading attractions to visit...</p>
+                    )}
                   </TabPanel>
+
                   <TabPanel>
-                    <Flex>
-                      <div>
-                        <h3>Attractions</h3>
-                        {Object.entries(
-                          globalUserInfo.data.attractionStatusDO
-                        ).map(([attraction, status]) => {
-                          if (!status) {
-                            return <p key={attraction}>{attraction}</p>;
+                    
+                    {globalUserInfo &&
+                    globalUserInfo.data &&
+                    globalUserInfo.data.attractionStatusDO ? (
+                      Object.entries(
+                        globalUserInfo.data.attractionStatusDO
+                      ).map(([attraction, status]) => {
+                        if (!status) {
+                          const attractionInfo = getAttractionInfo(attraction);
+                          if (attractionInfo) {
+                            return (
+                              <div key={attraction}>
+                                <h3>{attractionInfo.name}</h3>
+                                {attractionInfo.openHour && (
+                                  <div>
+                                    <p>Opening Hours:</p>
+                                    <p>
+                                      Monday:{' '}
+                                      {attractionInfo.openHour.mondayOpen} -{' '}
+                                      {attractionInfo.openHour.mondayClose}
+                                    </p>
+                                    <p>
+                                      Tuesday:{' '}
+                                      {attractionInfo.openHour.tuesdayOpen} -{' '}
+                                      {attractionInfo.openHour.tuesdayClose}
+                                    </p>
+                                    {/* Repeat for other days */}
+                                  </div>
+                                )}
+                                <p>Price: {attractionInfo.price}</p>
+                              </div>
+                            );
                           }
-                          return null;
-                        })}
-                      </div>
-                    </Flex>
+                        }
+                        return null;
+                      })
+                    ) : (
+                      <p>Loading attractions to visit...</p>
+                    )}
+                    
                   </TabPanel>
                 </TabPanels>
               </Tabs>
