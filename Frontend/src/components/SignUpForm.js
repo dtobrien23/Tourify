@@ -89,6 +89,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     setUserLoggedIn(false);
     setIsLoggedIn(false);
     localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
+    localStorage.removeItem('userInfo');
   };
 
   if (loading) {
