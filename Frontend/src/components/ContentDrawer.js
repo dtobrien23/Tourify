@@ -24,8 +24,12 @@ import {
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
+import { APIContext } from './APIContext';
 
 export default function ContentDrawer() {
+  const { globalUserInfo } = useContext(APIContext);
+  console.log(globalUserInfo, 'THis is in the context drawer!!');
+
   const {
     isAttractionsDrawerOpen,
     setIsAttractionsDrawerOpen,
@@ -71,10 +75,34 @@ export default function ContentDrawer() {
 
                 <TabPanels>
                   <TabPanel>
-                    <p>one!</p>
+                    <Flex>
+                      <div>
+                        <h3>Attractions</h3>
+                        {Object.entries(
+                          globalUserInfo.data.attractionStatusDO
+                        ).map(([attraction, status]) => {
+                          if (status) {
+                            return <p key={attraction}>{attraction}</p>;
+                          }
+                          return null;
+                        })}
+                      </div>
+                    </Flex>
                   </TabPanel>
                   <TabPanel>
-                    <p>two!</p>
+                    <Flex>
+                      <div>
+                        <h3>Attractions</h3>
+                        {Object.entries(
+                          globalUserInfo.data.attractionStatusDO
+                        ).map(([attraction, status]) => {
+                          if (!status) {
+                            return <p key={attraction}>{attraction}</p>;
+                          }
+                          return null;
+                        })}
+                      </div>
+                    </Flex>
                   </TabPanel>
                 </TabPanels>
               </Tabs>
@@ -94,10 +122,34 @@ export default function ContentDrawer() {
 
                 <TabPanels>
                   <TabPanel>
-                    <p>one!</p>
+                    <Flex>
+                      <div>
+                        <h3>Badges</h3>
+                        {Object.entries(globalUserInfo.data.badgeDO).map(
+                          ([badge, status]) => {
+                            if (status) {
+                              return <p key={badge}>{badge}</p>;
+                            }
+                            return null;
+                          }
+                        )}
+                      </div>
+                    </Flex>
                   </TabPanel>
                   <TabPanel>
-                    <p>two!</p>
+                    <Flex>
+                      <div>
+                        <h3>Badges</h3>
+                        {Object.entries(globalUserInfo.data.badgeDO).map(
+                          ([badge, status]) => {
+                            if (!status) {
+                              return <p key={badge}>{badge}</p>;
+                            }
+                            return null;
+                          }
+                        )}
+                      </div>
+                    </Flex>
                   </TabPanel>
                 </TabPanels>
               </Tabs>

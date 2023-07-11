@@ -5,6 +5,7 @@ const APIContext = createContext();
 const APIContextProvider = ({ children }) => {
   const [apiAttractions, setAPIAttractions] = useState(null);
   const [apiLoaded, setApiLoaded] = useState(false);
+  const [globalUserInfo, setGlobalUserInfo] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,7 +34,7 @@ const APIContextProvider = ({ children }) => {
 
 
   return (
-    <APIContext.Provider value={{ apiAttractions, setAPIAttractions, apiLoaded }}>
+    <APIContext.Provider value={{ apiAttractions, setAPIAttractions, apiLoaded, globalUserInfo, setGlobalUserInfo}}>
       {children}
     </APIContext.Provider>
   );

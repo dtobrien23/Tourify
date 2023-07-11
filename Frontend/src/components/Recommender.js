@@ -7,14 +7,19 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Flex,Tab,Tabs,TabList,TabPanel,TabPanels
+  Flex,Tab,Tabs,TabList,TabPanel,TabPanels, useForceUpdate
 } from '@chakra-ui/react';
-import attractions from '../static/attractions.json';
+//import attractions from '../static/attractions.json';
 import { GeolocationContext } from './GeoContext';
 import { MapContext } from './MapContext';
+import { APIContext } from './APIContext';
+
+
 
 export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const { geolocation } = useContext(GeolocationContext);
+  const { apiAttractions } = useContext(APIContext);
+
   console.log(geolocation, 'this is the geo from context');
 
   const { activeDrawer, isDrawerOpen, setIsDrawerOpen } =
@@ -31,13 +36,15 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   );
 
   const [nearestAttractions, setNearestAttractions] = useState([]);
+  const [quietestAttractions, setQuietestAttractions] = useState([]);
+  const [combinedAttractions, setCombinedAttractions] = useState([]);
 
   const fetchDistances = () => {
     const origin = new window.google.maps.LatLng(
       userLocation.lat,
       userLocation.lng
     );
-    const destinations = attractions.map(
+    const destinations = apiAttractions.map(
       attraction =>
         new window.google.maps.LatLng(
           attraction.coordinates_lat,
@@ -82,7 +89,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
     if (status === window.google.maps.DistanceMatrixStatus.OK) {
       const results = response.rows[0].elements;
 
-      const attractionsWithDistances = attractions.map((attraction, index) => {
+      const attractionsWithDistances = apiAttractions.map((attraction, index) => {
         const distance = results[index].distance.text;
         const convertedDistance = convertToKilometers(distance);
         return {
@@ -98,10 +105,12 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
       });
 
       setNearestAttractions(sortedAttractions);
+
     } else {
       console.error('Error fetching distances:', status);
     }
-  };
+  }; 
+
 
   const convertToKilometers = distance => {
     const isDistanceInKilometers = distance.includes('km');
@@ -117,6 +126,33 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const topFiveNearestAttractions = nearestAttractions.slice(0, 5);
   console.log(topFiveNearestAttractions, 'TOP 5 NEAREST');
 
+  // const topFiveQuietestAttractions = quietestAttractions.slice(0,5);
+
+  useEffect(() => {
+  const leastBusyAttractions = nearestAttractions.sort((a, b) => {
+    const busynessA = parseFloat(a.busyness_score);
+    const busynessB = parseFloat(b.busyness_score);
+    return busynessA - busynessB;
+  });
+
+  setQuietestAttractions(leastBusyAttractions);},[]);
+
+
+  // const quietestAttractionsScore = quietestAttractions;
+  //const nearestAttractionsSCore = nearestAttractions[0].comboScore = 0;
+  // console.log(quietestAttractionsScore, 'edited JSON !!!')
+
+
+
+  // useEffect(() => {
+    
+    
+
+  //   setCombinedAttractions(combinedList)
+
+
+  // },[combinedAttractions]);
+
   return (
     <>
       <Tabs>
@@ -128,7 +164,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
         <TabPanels>
           <TabPanel>
-          {topFiveNearestAttractions.map(attraction => (
+          {nearestAttractions.map(attraction => (
         <Flex key={attraction.id} mb={4}>
           <img
             src={attraction.image}
@@ -144,7 +180,21 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
       ))}
           </TabPanel>
           <TabPanel>
-            <p>Quietest ones Here!</p>
+
+            {quietestAttractions.map(attraction => (
+        <Flex key={attraction.id} mb={4}>
+          <img
+            src={attraction.image}
+            alt={attraction.name}
+            style={{ width: '100px', height: '100px', marginRight: '10px' }}
+          />
+          <div>
+            <h3>{attraction.name}</h3>
+            <p>Busyness Score: {attraction.busyness_score}</p>
+            <p>Distance: {attraction.distance}</p>
+          </div>
+        </Flex>
+      ))}
           </TabPanel>
           <TabPanel>
             <p>Nearest + Quietest Here!</p>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, VStack, Badge } from '@chakra-ui/react';
 import {
   googleLogout,
@@ -8,10 +8,14 @@ import {
 } from '@react-oauth/google';
 import axios from 'axios';
 import { Avatar, AvatarBadge, Flex } from '@chakra-ui/react';
+import { APIContext } from './APIContext';
+
 
 export default function SignUpForm({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(true);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
+  const { globalUserInfo, setGlobalUserInfo} = useContext(APIContext)
+
 
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
@@ -26,12 +30,17 @@ export default function SignUpForm({ setIsLoggedIn }) {
       axios
         .post(`http://localhost:8001/api/user/info?idTokenString=${credential}`)
         .then(response => {
+          
           console.log(
             response.data,
             'this is from the backend login for returning user'
           );
+          setGlobalUserInfo(response.data)
+
 
           if (response.status === 200) {
+            setGlobalUserInfo(response.data)
+            console.log(globalUserInfo,' USER INFO VIA CONTEXT FORM BACKEND')
             setUserLoggedIn(true);
             setIsLoggedIn(true);
             localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage

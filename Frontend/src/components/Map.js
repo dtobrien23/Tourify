@@ -18,12 +18,10 @@ import {
 } from '@chakra-ui/react';
 import Recommender from './Recommender';
 import { GeolocationProvider } from './GeoContext';
-import attractions from '../static/attractions.json';
 import FiltersNavBar from './FiltersNavBar.js';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 import ContentDrawer from './ContentDrawer.js';
-import BadgesDrawer from './BadgesDrawer.js';
 
 export default function Map({ isMobile }) {
   const { apiAttractions } = useContext(APIContext);
