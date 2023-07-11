@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @created 26/06/2023
  */
 
-@CrossOrigin
 @Tag(name = "User API", description = "User API requires login")
 @RestController
 @RequestMapping("/user")

@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 
 
 
-@CrossOrigin
 @Tag(name = "Attraction API", description = "Desc for Attraction API")
 @RestController
 @RequestMapping("/attraction")

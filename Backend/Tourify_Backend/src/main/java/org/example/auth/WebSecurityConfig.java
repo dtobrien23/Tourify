@@ -15,7 +15,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-
 import static org.springframework.security.config.Customizer.withDefaults;
 
 
@@ -39,14 +38,17 @@ public class WebSecurityConfig{
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
-        // config the server to be stateless (authenticate every request via a token and do not require a session to keep the user context)
+
         http
                 // config CORS and CSRF
-                .cors(withDefaults())
+                .cors(withDefaults())             // by default uses a Bean by the name of corsConfigurationSource
                 .csrf(csrf -> csrf.disable())     // disable csrf - Allow POST/PUT/etc request
 
+                // config the server to be stateless (authenticate every request via a token and do not require a session to keep the user context)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // config the security policy for API
                 .authorizeRequests(authorize -> authorize
                         // Allow public access to swagger
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**").permitAll()
@@ -56,19 +58,17 @@ public class WebSecurityConfig{
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
+
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000/"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-
 }
