@@ -19,26 +19,16 @@ export default function SearchBar() {
   } = useContext(MapContext);
 
   return (
-    <Flex
-      mb={3}
-      style={{
-        width: 'fit-content',
-        // border: 'solid 2px white',
-        borderRadius: '20px',
-        backgroundColor: 'white',
-        boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
-        zIndex: 1,
-      }}
-    >
+    <Flex mr="15px">
       <Flex
         style={{
           width: 'fit-content',
-          border: 'solid 2px orangered',
+          border: 'solid 1px orangered',
           borderRadius: '20px',
           // boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.2)',
           backgroundColor: 'white',
           zIndex: 1,
-          height: '40px',
+          height: '41px',
         }}
       >
         <LocationInput
@@ -55,27 +45,47 @@ export default function SearchBar() {
             zIndex: 2,
           }}
         />
+        <Button
+          ml={1}
+          w={50}
+          bg="orangered"
+          color="white"
+          // border={'solid 2px white'}
+          borderRadius={18}
+          _hover={{ bg: 'orangered' }}
+          onClick={calculateRoute}
+        >
+          GO
+        </Button>
       </Flex>
-      <Button
+      {/* <Button
         ml={1}
         w={50}
-        bg="green.400"
+        bg="orangered"
         color="white"
-        border={'solid 2px white'}
+        // border={'solid 2px white'}
         borderRadius={30}
         onClick={calculateRoute}
       >
-        <img src="/images/go-icon.png" alt="Go" />
-      </Button>
+        <img
+          src="/images/navbar-icons/go-icon.png"
+          alt="Go"
+          style={{ fontSize: '30px' }}
+        />
+        GO
+      </Button> */}
       <Button
-        ml={1}
-        w={50}
-        bg="red"
-        color="white"
-        border={'solid 2px white'}
+        w="1px"
+        bg="white"
+        color="lightgrey"
+        // border={'solid 2px white'}
         borderRadius={20}
+        _hover={{ bg: 'white', color: 'orangered' }}
         onClick={clearRoute}
         fontWeight="bold"
+        fontSize="lg"
+        p={0}
+        m={0}
       >
         X
       </Button>

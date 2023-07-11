@@ -53,21 +53,23 @@ export default function NavBar({ isMobile, setIsMobile }) {
       align="center"
       justify="space-between"
       h="75px"
-      mt="10px"
+      // mt="10px"
       px="4"
       style={{ borderBottom: 'solid 1px orangered' }}
     >
       <Box>
         <img
-          style={{ cursor: 'pointer' }} // cursor change on hover
+          style={{ cursor: 'pointer', height: '50px' }} // cursor change on hover
           onClick={handleLogoClick}
-          src="logo.png"
+          src="logo.svg"
           alt="Tourify Logo"
         />
       </Box>
       <Flex
         flex="1"
-        justifyContent="center"
+        // justifyContent="center"
+        ml="50px"
+        alignItems="center"
         display={{ base: 'none', md: 'flex' }}
       >
         <SearchBar />
@@ -86,9 +88,9 @@ export default function NavBar({ isMobile, setIsMobile }) {
           }}
         >
           <img
-            src="/images/navbar-icons/recommender-icon.png"
+            src="/images/navbar-icons/recommender-icon.svg"
             alt="Recommender"
-            style={{ paddingTop: '8px' }}
+            style={{ paddingTop: '8px', width: '40px', height: '40px' }}
           />
           <Text fontWeight="normal" fontSize="11px" pb="6px" m="0">
             Recommender
@@ -109,9 +111,9 @@ export default function NavBar({ isMobile, setIsMobile }) {
           }}
         >
           <img
-            src="/images/navbar-icons/attractions-icon.png"
+            src="/images/navbar-icons/attractions-icon.svg"
             alt="Attractions"
-            style={{ paddingTop: '8px' }}
+            style={{ paddingTop: '8px', width: '40px', height: '40px' }}
           />
           <Text fontWeight="normal" fontSize="11px" pb="6px" m="0">
             Attractions
@@ -132,9 +134,9 @@ export default function NavBar({ isMobile, setIsMobile }) {
           }}
         >
           <img
-            src="/images/navbar-icons/badges-icon.png"
+            src="/images/navbar-icons/badges-icon.svg"
             alt="Badges"
-            style={{ paddingTop: '8px' }}
+            style={{ paddingTop: '8px', width: '40px', height: '40px' }}
           />
           <Text fontWeight="normal" fontSize="11px" pb="6px" m="0">
             Badges
