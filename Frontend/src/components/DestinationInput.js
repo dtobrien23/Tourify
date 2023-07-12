@@ -26,7 +26,6 @@ export default function DestinationInput(
 ) {
   // const google = window.google;
   const { apiAttractions, apiLoaded } = useContext(APIContext);
-  console.log(apiAttractions,'THIS IS IN THE DEST INPUT!!')
 
   const [inputColour, setInputColour] = useState('#B5BBC6');
   const {

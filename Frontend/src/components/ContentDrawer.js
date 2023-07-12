@@ -29,7 +29,6 @@ import { APIContext } from './APIContext';
 
 export default function ContentDrawer() {
   const { globalUserInfo, apiAttractions } = useContext(APIContext);
-  console.log(globalUserInfo, 'this is in the drawer!!!');
 
   const {
     isAttractionsDrawerOpen,
