@@ -16,11 +16,20 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  Tab,
+  Tabs,
+  TabList,
+  TabPanel,
+  TabPanels,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
+import { APIContext } from './APIContext';
 
 export default function ContentDrawer() {
+  const { globalUserInfo, apiAttractions } = useContext(APIContext);
+  console.log(globalUserInfo, 'this is in the drawer!!!');
+
   const {
     isAttractionsDrawerOpen,
     setIsAttractionsDrawerOpen,
@@ -28,6 +37,24 @@ export default function ContentDrawer() {
     isDrawerOpen,
     setIsDrawerOpen,
   } = useContext(MapContext);
+
+  const kebabToCamelCase = str => {
+    return str.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
+  };
+
+  const capitalizeFirstLetter = str => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  const getAttractionInfo = attractionName => {
+    const formattedAttractionName = capitalizeFirstLetter(
+      kebabToCamelCase(attractionName)
+    );
+    const attraction = apiAttractions.find(
+      attraction => attraction.name_alias === formattedAttractionName
+    );
+    return attraction || {};
+  };
 
   return (
     <Drawer
@@ -58,15 +85,110 @@ export default function ContentDrawer() {
             {' '}
             <DrawerHeader>{`My Attractions`}</DrawerHeader>
             <DrawerBody>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Consequat nisl vel pretium lectus quam id. Semper quis lectus
-                nulla at volutpat diam ut venenatis. Dolor morbi non arcu risus
-                quis varius quam quisque. Massa ultricies mi quis hendrerit
-                dolor magna eget est lorem. Erat imperdiet sed euismod nisi
-                porta. Lectus vestibulum mattis ullamcorper velit.
-              </p>
+              <Tabs>
+                <TabList>
+                  <Tab>My Visited Attractions</Tab>
+                  <Tab>Attractions to Visit</Tab>
+                </TabList>
+
+                <TabPanels>
+                  <TabPanel>
+                    {globalUserInfo &&
+                    globalUserInfo.data &&
+                    globalUserInfo.data.attractionStatusDO ? (
+                      Object.entries(
+                        globalUserInfo.data.attractionStatusDO
+                      ).map(([attraction, status]) => {
+                        if (status) {
+                          const attractionInfo = getAttractionInfo(attraction);
+                          if (attractionInfo) {
+                            return (
+                              <div key={attraction}>
+                                <h3>{attractionInfo.name}</h3>
+                                {attractionInfo.openHour && (
+                                  <div>
+                                    <p>Opening Hours:</p>
+                                    <p>
+                                      Monday:{' '}
+                                      {attractionInfo.openHour.mondayOpen} -{' '}
+                                      {attractionInfo.openHour.mondayClose}
+                                    </p>
+                                    <p>
+                                      Tuesday:{' '}
+                                      {attractionInfo.openHour.tuesdayOpen} -{' '}
+                                      {attractionInfo.openHour.tuesdayClose}
+                                    </p>
+                                    {/* Repeat for other days */}
+                                    <p>
+                                      Image:{' '}
+                                      <img
+                                        src={`ManhattanJourney/Frontend/public/images/${attractionInfo.name_alias}.jpg`}
+                                        alt={attractionInfo.name_alias}
+                                      />
+                                    </p>
+                                  </div>
+                                )}
+                                <p>Price: {attractionInfo.price}</p>
+                              </div>
+                            );
+                          }
+                        }
+                        return null;
+                      })
+                    ) : (
+                      <p>Loading attractions to visit...</p>
+                    )}
+                  </TabPanel>
+
+                  <TabPanel>
+                    {globalUserInfo &&
+                    globalUserInfo.data &&
+                    globalUserInfo.data.attractionStatusDO ? (
+                      Object.entries(
+                        globalUserInfo.data.attractionStatusDO
+                      ).map(([attraction, status]) => {
+                        if (!status) {
+                          const attractionInfo = getAttractionInfo(attraction);
+                          if (attractionInfo) {
+                            return (
+                              <div key={attraction}>
+                                <h3>{attractionInfo.name}</h3>
+                                {attractionInfo.openHour && (
+                                  <div>
+                                    <p>Opening Hours:</p>
+                                    <p>
+                                      Monday:{' '}
+                                      {attractionInfo.openHour.mondayOpen} -{' '}
+                                      {attractionInfo.openHour.mondayClose}
+                                    </p>
+                                    <p>
+                                      Tuesday:{' '}
+                                      {attractionInfo.openHour.tuesdayOpen} -{' '}
+                                      {attractionInfo.openHour.tuesdayClose}
+                                    </p>
+                                    {/* Repeat for other days */}
+                                  </div>
+                                )}
+                                <p>Price: {attractionInfo.price}</p>
+                                <p>
+                                      Image:{' '}
+                                      <img
+                                        src={`ManhattanJourney/Frontend/public/images/${attractionInfo.name_alias}.jpg`}
+                                        alt={attractionInfo.name_alias}
+                                      />
+                                    </p>
+                              </div>
+                            );
+                          }
+                        }
+                        return null;
+                      })
+                    ) : (
+                      <p>Loading attractions to visit...</p>
+                    )}
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </DrawerBody>
           </>
         )}
@@ -75,15 +197,45 @@ export default function ContentDrawer() {
             {' '}
             <DrawerHeader>{`My Badges`}</DrawerHeader>
             <DrawerBody>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                Consequat nisl vel pretium lectus quam id. Semper quis lectus
-                nulla at volutpat diam ut venenatis. Dolor morbi non arcu risus
-                quis varius quam quisque. Massa ultricies mi quis hendrerit
-                dolor magna eget est lorem. Erat imperdiet sed euismod nisi
-                porta. Lectus vestibulum mattis ullamcorper velit.
-              </p>
+              <Tabs>
+                <TabList>
+                  <Tab>My Badges</Tab>
+                  <Tab>Badges to Collect</Tab>
+                </TabList>
+
+                <TabPanels>
+                  <TabPanel>
+                    <Flex>
+                      <div>
+                        <h3>Badges</h3>
+                        {Object.entries(globalUserInfo.data.badgeDO).map(
+                          ([badge, status]) => {
+                            if (status) {
+                              return <p key={badge}>{badge}</p>;
+                            }
+                            return null;
+                          }
+                        )}
+                      </div>
+                    </Flex>
+                  </TabPanel>
+                  <TabPanel>
+                    <Flex>
+                      <div>
+                        <h3>Badges</h3>
+                        {Object.entries(globalUserInfo.data.badgeDO).map(
+                          ([badge, status]) => {
+                            if (!status) {
+                              return <p key={badge}>{badge}</p>;
+                            }
+                            return null;
+                          }
+                        )}
+                      </div>
+                    </Flex>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
             </DrawerBody>
           </>
         )}

@@ -15,20 +15,34 @@ import {
   PopoverBody,
   PopoverArrow,
   PopoverCloseButton,
+  Avatar,
+  AvatarBadge,
+  Flex,
 } from '@chakra-ui/react';
+import { MapContext } from './MapContext';
+import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 
 export default function SignUpForm({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(true);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [buttonsDirection, setButtonsDirection] = useState('row');
-
   const { isMobile } = useContext(MapContext);
+  const { globalUserInfo, setGlobalUserInfo } = useContext(APIContext);
+  const [userInfoFetched, setUserInfoFetched] = useState(false);
+  const { setIsDrawerOpen } = useContext(MapContext);
 
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
     setUserLoggedIn(loggedInfo === 'true');
     setLoading(false);
+
+    // Check if user info is cached
+    const cachedUserInfo = localStorage.getItem('userInfo');
+    if (loggedInfo === 'true' && cachedUserInfo) {
+      setGlobalUserInfo(JSON.parse(cachedUserInfo));
+      setUserInfoFetched(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -52,11 +66,18 @@ export default function SignUpForm({ setIsLoggedIn }) {
             response.data,
             'this is from the backend login for returning user'
           );
+          setGlobalUserInfo(response.data);
 
           if (response.status === 200) {
+            setGlobalUserInfo(response.data);
             setUserLoggedIn(true);
             setIsLoggedIn(true);
             localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
+
+            // Cache the user info
+            localStorage.setItem('userInfo', JSON.stringify(response.data));
+
+            setUserInfoFetched(true);
           } else {
             setUserLoggedIn(false);
             setIsLoggedIn(false);
@@ -89,6 +110,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     setUserLoggedIn(false);
     setIsLoggedIn(false);
     localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
+    localStorage.removeItem('userInfo');
+    setIsDrawerOpen(false);
   };
 
   if (loading) {
