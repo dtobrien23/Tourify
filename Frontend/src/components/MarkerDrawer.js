@@ -37,26 +37,35 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
         >
           <DrawerCloseButton />
 
-          <DrawerHeader>{markerObject.name.name}</DrawerHeader>
+          <DrawerHeader fontWeight="bold">
+            {markerObject.name.name}
+          </DrawerHeader>
 
           <DrawerBody>
-            <br />
-            Price: ${markerObject.price_dollars.price_dollars}
-            <br />
             <img
               src={`/images/${markerObject.name.name.replaceAll(' ', '_')}.jpg`}
               alt={markerObject.name.name}
             />
-          </DrawerBody>
-
-          <DrawerFooter>
+            <br></br>
             {apiAttractions.map(attraction => {
-              if (
-                attraction.name === markerObject.name.name
-              ) {
+              if (attraction.name === markerObject.name.name) {
                 return (
                   <div>
-                    <p>Opening Hours:</p>
+                    <p fontWeight="bold">Address</p>
+                    <p>{attraction.full_address}</p>
+                    <br></br>
+                    <p>
+                      Website:{' '}
+                      <a
+                        href={attraction.link}
+                        target="_blank"
+                        style={{ color: 'blue' }}
+                      >
+                        {attraction.link}
+                      </a>
+                    </p>
+                    <br></br>
+                    <p fontWeight="bold">Opening Hours:</p>
                     <p>
                       Monday: {attraction.openHour.mondayOpen} -{' '}
                       {attraction.openHour.mondayClose}
@@ -85,12 +94,17 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                       Sunday: {attraction.openHour.sundaydayOpen} -{' '}
                       {attraction.openHour.sundaydayClose}
                     </p>
+                    <br />
+                    Price: $ {attraction.price}
+                    <br />
                   </div>
                 );
               }
               return null;
             })}
-          </DrawerFooter>
+          </DrawerBody>
+
+          <DrawerFooter></DrawerFooter>
         </DrawerContent>
       </Drawer>
     </>
