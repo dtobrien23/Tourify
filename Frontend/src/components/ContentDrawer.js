@@ -122,7 +122,7 @@ export default function ContentDrawer() {
                                     <p>
                                       Image:{' '}
                                       <img
-                                        src={`ManhattanJourney/Frontend/public/images/${attractionInfo.name_alias}.jpg`}
+                                        src={`/images/${attractionInfo.name_alias}.jpg`}
                                         alt={attractionInfo.name_alias}
                                       />
                                     </p>
@@ -173,7 +173,7 @@ export default function ContentDrawer() {
                                 <p>
                                       Image:{' '}
                                       <img
-                                        src={`ManhattanJourney/Frontend/public/images/${attractionInfo.name_alias}.jpg`}
+                                        src={`/images/${attractionInfo.name_alias}.jpg`}
                                         alt={attractionInfo.name_alias}
                                       />
                                     </p>

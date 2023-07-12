@@ -168,7 +168,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                 <p>
                   Image:{' '}
                   <img
-                    src={`ManhattanJourney/Frontend/public/images/${attraction.name_alias}.jpg`}
+                    src={`/images/${attraction.name_alias}.jpg`}
                     alt={attraction.name_alias}
                     style={{
                       width: '100px',
@@ -192,7 +192,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                 <p>
                   Image:{' '}
                   <img
-                    src={`ManhattanJourney/Frontend/public/images/${attraction.name_alias}.jpg`}
+                    src={`/images/${attraction.name_alias}.jpg`}
                     alt={attraction.name_alias}
                     style={{
                       width: '100px',
