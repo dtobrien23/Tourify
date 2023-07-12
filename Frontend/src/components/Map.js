@@ -113,7 +113,9 @@ export default function Map() {
       coordinates_lat: marker.position.lat(),
       coordinates_lng: marker.position.lng(),
       price_dollars: marker.price_dollars,
-      image: marker.image,
+      //image: `/images/${marker.name}.jpg`
+      
+    
     };
     setMarkerObject(markerData);
 

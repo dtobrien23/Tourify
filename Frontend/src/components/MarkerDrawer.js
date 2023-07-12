@@ -10,7 +10,7 @@ import {
   Button,
   useState,
   Input,
-  Flex
+  Flex,
 } from '@chakra-ui/react';
 
 //passing it marker state and method to change state so the X button can close the drawer
@@ -26,29 +26,30 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
     <>
       <Drawer isOpen={isOpenFunc} placement="right" onClose={isCloseFunc}>
         <DrawerOverlay />
-       
-        
-          <DrawerContent bg="white"
+
+        <DrawerContent
+          bg="white"
           border="5px solid orangered"
           borderRadius="20px"
           p="20px"
-          w="80%">
-          
-            <DrawerCloseButton />
-            
-            <DrawerHeader>{markerObject.name.name}</DrawerHeader>
+          w="80%"
+        >
+          <DrawerCloseButton />
 
-            <DrawerBody >
-              <br />
-              Price: ${markerObject.price_dollars.price_dollars}
-              <br />
-              <img src={markerObject.image.image} />
-            </DrawerBody>
+          <DrawerHeader>{markerObject.name.name}</DrawerHeader>
 
-            <DrawerFooter></DrawerFooter>
-            
-          </DrawerContent>
-        
+          <DrawerBody>
+            <br />
+            Price: ${markerObject.price_dollars.price_dollars}
+            <br />
+            <img
+              src={`/images/${markerObject.name.name.replaceAll(' ','_')}.jpg`}
+              alt={markerObject.name.name}
+            />
+          </DrawerBody>
+
+          <DrawerFooter></DrawerFooter>
+        </DrawerContent>
       </Drawer>
     </>
   );

@@ -21,6 +21,7 @@ import {
   TabList,
   TabPanel,
   TabPanels,
+  SimpleGrid,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
@@ -103,33 +104,69 @@ export default function ContentDrawer() {
                           const attractionInfo = getAttractionInfo(attraction);
                           if (attractionInfo) {
                             return (
-                              <div key={attraction}>
-                                <h3>{attractionInfo.name}</h3>
-                                {attractionInfo.openHour && (
-                                  <div>
-                                    <p>Opening Hours:</p>
-                                    <p>
-                                      Monday:{' '}
-                                      {attractionInfo.openHour.mondayOpen} -{' '}
-                                      {attractionInfo.openHour.mondayClose}
-                                    </p>
-                                    <p>
-                                      Tuesday:{' '}
-                                      {attractionInfo.openHour.tuesdayOpen} -{' '}
-                                      {attractionInfo.openHour.tuesdayClose}
-                                    </p>
-                                    {/* Repeat for other days */}
-                                    <p>
-                                      Image:{' '}
-                                      <img
-                                        src={`/images/${attractionInfo.name_alias}.jpg`}
-                                        alt={attractionInfo.name_alias}
-                                      />
-                                    </p>
-                                  </div>
-                                )}
-                                <p>Price: {attractionInfo.price}</p>
-                              </div>
+                              <SimpleGrid
+                                alignItems="center"
+                                justifyItems="center"
+                                border="1px solid orangered"
+                                borderRadius='20px'
+
+                                spacing={8}
+                              >
+                                <div key={attraction}>
+                                  <h3>{attractionInfo.name}</h3>
+                                  {attractionInfo.openHour && (
+                                    <div>
+                                      <p>Opening Hours:</p>
+                                      <p>
+                                        Monday:{' '}
+                                        {attractionInfo.openHour.mondayOpen} -{' '}
+                                        {attractionInfo.openHour.mondayClose}
+                                      </p>
+                                      <p>
+                                        Tuesday:{' '}
+                                        {attractionInfo.openHour.tuesdayOpen} -{' '}
+                                        {attractionInfo.openHour.tuesdayClose}
+                                      </p>
+                                      <p>
+                                        Wednsday:{' '}
+                                        {attractionInfo.openHour.wednesdayOpen}{' '}
+                                        -{' '}
+                                        {attractionInfo.openHour.wednesdayClose}
+                                      </p>
+                                      <p>
+                                        Thursday:{' '}
+                                        {attractionInfo.openHour.thursdayOpen} -{' '}
+                                        {attractionInfo.openHour.thursdayClose}
+                                      </p>
+                                      <p>
+                                        Friday:{' '}
+                                        {attractionInfo.openHour.fridayOpen} -{' '}
+                                        {attractionInfo.openHour.fridayClose}
+                                      </p>
+                                      <p>
+                                        Saturday:{' '}
+                                        {attractionInfo.openHour.saturdayOpen} -{' '}
+                                        {attractionInfo.openHour.saturdayClose}
+                                      </p>
+                                      <p>
+                                        Sunday:{' '}
+                                        {attractionInfo.openHour.sundaydayOpen}{' '}
+                                        -{' '}
+                                        {attractionInfo.openHour.sundaydayClose}
+                                      </p>
+                                      <p>
+                                        {' '}
+                                        <img
+                                          src={`/images/${attractionInfo.name_alias}.jpg`}
+                                          alt={attractionInfo.name_alias}
+                                        />
+                                      </p>
+                                    </div>
+                                  )}
+                                  <p>Price: {attractionInfo.price}</p>
+                                </div>
+                             </SimpleGrid>
+                             
                             );
                           }
                         }
@@ -151,6 +188,14 @@ export default function ContentDrawer() {
                           const attractionInfo = getAttractionInfo(attraction);
                           if (attractionInfo) {
                             return (
+                              <SimpleGrid
+                              alignItems="center"
+                              justifyItems="center"
+                              border="1px solid orangered"
+                              borderRadius='20px'
+
+                              spacing={8}
+                            >
                               <div key={attraction}>
                                 <h3>{attractionInfo.name}</h3>
                                 {attractionInfo.openHour && (
@@ -166,18 +211,44 @@ export default function ContentDrawer() {
                                       {attractionInfo.openHour.tuesdayOpen} -{' '}
                                       {attractionInfo.openHour.tuesdayClose}
                                     </p>
-                                    {/* Repeat for other days */}
-                                  </div>
-                                )}
-                                <p>Price: {attractionInfo.price}</p>
-                                <p>
-                                      Image:{' '}
+                                    <p>
+                                      Wednsday:{' '}
+                                      {attractionInfo.openHour.wednesdayOpen} -{' '}
+                                      {attractionInfo.openHour.wednesdayClose}
+                                    </p>
+                                    <p>
+                                      Thursday:{' '}
+                                      {attractionInfo.openHour.thursdayOpen} -{' '}
+                                      {attractionInfo.openHour.thursdayClose}
+                                    </p>
+                                    <p>
+                                      Friday:{' '}
+                                      {attractionInfo.openHour.fridayOpen} -{' '}
+                                      {attractionInfo.openHour.fridayClose}
+                                    </p>
+                                    <p>
+                                      Saturday:{' '}
+                                      {attractionInfo.openHour.saturdayOpen} -{' '}
+                                      {attractionInfo.openHour.saturdayClose}
+                                    </p>
+                                    <p>
+                                      Sunday:{' '}
+                                      {attractionInfo.openHour.sundaydayOpen} -{' '}
+                                      {attractionInfo.openHour.sundaydayClose}
+                                    </p>
+                                    <p>
+                                      {' '}
                                       <img
                                         src={`/images/${attractionInfo.name_alias}.jpg`}
                                         alt={attractionInfo.name_alias}
                                       />
                                     </p>
+                                  </div>
+                                )}
+                                <p>Price: {attractionInfo.price}</p>
                               </div>
+                              </SimpleGrid>
+
                             );
                           }
                         }
@@ -211,6 +282,7 @@ export default function ContentDrawer() {
                         {Object.entries(globalUserInfo.data.badgeDO).map(
                           ([badge, status]) => {
                             if (status) {
+                              
                               return <p key={badge}>{badge}</p>;
                             }
                             return null;

@@ -14,6 +14,7 @@ import {
   TabPanel,
   TabPanels,
   useForceUpdate,
+  SimpleGrid,
 } from '@chakra-ui/react';
 //import attractions from '../static/attractions.json';
 import { GeolocationContext } from './GeoContext';
@@ -164,33 +165,41 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
         <TabPanels>
           <TabPanel>
             {nearestAttractions.map(attraction => (
-              <Flex key={attraction.id} mb={4}>
-                <p>
-                  Image:{' '}
-                  <img
-                    src={`/images/${attraction.name_alias}.jpg`}
-                    alt={attraction.name_alias}
-                    style={{
-                      width: '100px',
-                      height: '100px',
-                      marginRight: '10px',
-                    }}
-                  />
-                </p>
+              <SimpleGrid
+                alignItems="center"
+                justifyItems="center"
+                border="1px solid orangered"
+                borderRadius="20px"
+                spacing={8}
+              >
+                <Flex key={attraction.id} mb={4}>
+                  <p>
+                    {' '}
+                    <img
+                      src={`/images/${attraction.name_alias}.jpg`}
+                      alt={attraction.name_alias}
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                        marginRight: '10px',
+                      }}
+                    />
+                  </p>
 
-                <div>
-                  <h3>{attraction.name}</h3>
-                  <p>Busyness Score: {attraction.busyness_score}</p>
-                  <p>Distance: {attraction.distance}</p>
-                </div>
-              </Flex>
+                  <div>
+                    <h3>{attraction.name}</h3>
+                    <p>Busyness Score: {attraction.busyness_score}</p>
+                    <p>Distance: {attraction.distance}</p>
+                  </div>
+                </Flex>
+              </SimpleGrid>
             ))}
           </TabPanel>
           <TabPanel>
             {quietestAttractions.map(attraction => (
               <Flex key={attraction.id} mb={4}>
                 <p>
-                  Image:{' '}
+                  {' '}
                   <img
                     src={`/images/${attraction.name_alias}.jpg`}
                     alt={attraction.name_alias}
