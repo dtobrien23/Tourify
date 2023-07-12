@@ -7,14 +7,18 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Flex,Tab,Tabs,TabList,TabPanel,TabPanels, useForceUpdate
+  Flex,
+  Tab,
+  Tabs,
+  TabList,
+  TabPanel,
+  TabPanels,
+  useForceUpdate,
 } from '@chakra-ui/react';
 //import attractions from '../static/attractions.json';
 import { GeolocationContext } from './GeoContext';
 import { MapContext } from './MapContext';
 import { APIContext } from './APIContext';
-
-
 
 export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const { geolocation } = useContext(GeolocationContext);
@@ -89,14 +93,16 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
     if (status === window.google.maps.DistanceMatrixStatus.OK) {
       const results = response.rows[0].elements;
 
-      const attractionsWithDistances = apiAttractions.map((attraction, index) => {
-        const distance = results[index].distance.text;
-        const convertedDistance = convertToKilometers(distance);
-        return {
-          ...attraction,
-          distance: convertedDistance,
-        };
-      });
+      const attractionsWithDistances = apiAttractions.map(
+        (attraction, index) => {
+          const distance = results[index].distance.text;
+          const convertedDistance = convertToKilometers(distance);
+          return {
+            ...attraction,
+            distance: convertedDistance,
+          };
+        }
+      );
 
       const sortedAttractions = attractionsWithDistances.sort((a, b) => {
         const distanceA = parseFloat(a.distance);
@@ -105,12 +111,10 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
       });
 
       setNearestAttractions(sortedAttractions);
-
     } else {
       console.error('Error fetching distances:', status);
     }
-  }; 
-
+  };
 
   const convertToKilometers = distance => {
     const isDistanceInKilometers = distance.includes('km');
@@ -129,27 +133,22 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   // const topFiveQuietestAttractions = quietestAttractions.slice(0,5);
 
   useEffect(() => {
-  const leastBusyAttractions = nearestAttractions.sort((a, b) => {
-    const busynessA = parseFloat(a.busyness_score);
-    const busynessB = parseFloat(b.busyness_score);
-    return busynessA - busynessB;
-  });
+    const leastBusyAttractions = nearestAttractions.sort((a, b) => {
+      const busynessA = parseFloat(a.busyness_score);
+      const busynessB = parseFloat(b.busyness_score);
+      return busynessA - busynessB;
+    });
 
-  setQuietestAttractions(leastBusyAttractions);},[]);
-
+    setQuietestAttractions(leastBusyAttractions);
+  }, []);
 
   // const quietestAttractionsScore = quietestAttractions;
   //const nearestAttractionsSCore = nearestAttractions[0].comboScore = 0;
   // console.log(quietestAttractionsScore, 'edited JSON !!!')
 
-
-
   // useEffect(() => {
-    
-    
 
   //   setCombinedAttractions(combinedList)
-
 
   // },[combinedAttractions]);
 
@@ -164,44 +163,57 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
         <TabPanels>
           <TabPanel>
-          {nearestAttractions.map(attraction => (
-        <Flex key={attraction.id} mb={4}>
-          <img
-            src={attraction.image}
-            alt={attraction.name}
-            style={{ width: '100px', height: '100px', marginRight: '10px' }}
-          />
-          <div>
-            <h3>{attraction.name}</h3>
-            <p>Busyness Score: {attraction.busyness_score}</p>
-            <p>Distance: {attraction.distance}</p>
-          </div>
-        </Flex>
-      ))}
+            {nearestAttractions.map(attraction => (
+              <Flex key={attraction.id} mb={4}>
+                <p>
+                  Image:{' '}
+                  <img
+                    src={`ManhattanJourney/Frontend/public/images/${attraction.name_alias}.jpg`}
+                    alt={attraction.name_alias}
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      marginRight: '10px',
+                    }}
+                  />
+                </p>
+
+                <div>
+                  <h3>{attraction.name}</h3>
+                  <p>Busyness Score: {attraction.busyness_score}</p>
+                  <p>Distance: {attraction.distance}</p>
+                </div>
+              </Flex>
+            ))}
           </TabPanel>
           <TabPanel>
-
             {quietestAttractions.map(attraction => (
-        <Flex key={attraction.id} mb={4}>
-          <img
-            src={attraction.image}
-            alt={attraction.name}
-            style={{ width: '100px', height: '100px', marginRight: '10px' }}
-          />
-          <div>
-            <h3>{attraction.name}</h3>
-            <p>Busyness Score: {attraction.busyness_score}</p>
-            <p>Distance: {attraction.distance}</p>
-          </div>
-        </Flex>
-      ))}
+              <Flex key={attraction.id} mb={4}>
+                <p>
+                  Image:{' '}
+                  <img
+                    src={`ManhattanJourney/Frontend/public/images/${attraction.name_alias}.jpg`}
+                    alt={attraction.name_alias}
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      marginRight: '10px',
+                    }}
+                  />
+                </p>
+                <div>
+                  <h3>{attraction.name}</h3>
+                  <p>Busyness Score: {attraction.busyness_score}</p>
+                  <p>Distance: {attraction.distance}</p>
+                </div>
+              </Flex>
+            ))}
           </TabPanel>
           <TabPanel>
             <p>Nearest + Quietest Here!</p>
           </TabPanel>
         </TabPanels>
       </Tabs>
-     
     </>
   );
 }

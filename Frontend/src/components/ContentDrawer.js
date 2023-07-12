@@ -119,6 +119,13 @@ export default function ContentDrawer() {
                                       {attractionInfo.openHour.tuesdayClose}
                                     </p>
                                     {/* Repeat for other days */}
+                                    <p>
+                                      Image:{' '}
+                                      <img
+                                        src={`ManhattanJourney/Frontend/public/images/${attractionInfo.name_alias}.jpg`}
+                                        alt={attractionInfo.name_alias}
+                                      />
+                                    </p>
                                   </div>
                                 )}
                                 <p>Price: {attractionInfo.price}</p>
@@ -134,7 +141,6 @@ export default function ContentDrawer() {
                   </TabPanel>
 
                   <TabPanel>
-                    
                     {globalUserInfo &&
                     globalUserInfo.data &&
                     globalUserInfo.data.attractionStatusDO ? (
@@ -164,6 +170,13 @@ export default function ContentDrawer() {
                                   </div>
                                 )}
                                 <p>Price: {attractionInfo.price}</p>
+                                <p>
+                                      Image:{' '}
+                                      <img
+                                        src={`ManhattanJourney/Frontend/public/images/${attractionInfo.name_alias}.jpg`}
+                                        alt={attractionInfo.name_alias}
+                                      />
+                                    </p>
                               </div>
                             );
                           }
@@ -173,7 +186,6 @@ export default function ContentDrawer() {
                     ) : (
                       <p>Loading attractions to visit...</p>
                     )}
-                    
                   </TabPanel>
                 </TabPanels>
               </Tabs>
