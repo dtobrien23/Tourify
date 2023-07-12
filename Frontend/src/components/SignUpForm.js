@@ -17,9 +17,7 @@ import {
   PopoverCloseButton,
   Avatar,
   AvatarBadge,
-  Flex,
 } from '@chakra-ui/react';
-import { MapContext } from './MapContext';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 
