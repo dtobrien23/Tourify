@@ -94,7 +94,7 @@ export default function FiltersNavBar({
             }}
             overflow="visible"
             style={{
-              width: 'fit-content',
+              width: '50px',
               marginTop: '4px',
               marginBottom: '6px',
               marginRight: '10px',
@@ -115,7 +115,7 @@ export default function FiltersNavBar({
                 src={
                   '/images/attractions-icons/active/' +
                   attractionType.value +
-                  '.png'
+                  '.svg'
                 }
                 alt={attractionType.label}
               />
@@ -124,7 +124,7 @@ export default function FiltersNavBar({
                 src={
                   '/images/attractions-icons/inactive/' +
                   attractionType.value +
-                  '.png'
+                  '.svg'
                 }
                 alt={attractionType.label}
               />
