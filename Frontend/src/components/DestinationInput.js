@@ -13,6 +13,8 @@ import {
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { MapContext } from './MapContext';
 import attractions from '../static/attractions.json';
+import { APIContext } from './APIContext';
+
 
 export default function DestinationInput(
   {
@@ -23,6 +25,9 @@ export default function DestinationInput(
   }
 ) {
   // const google = window.google;
+  const { apiAttractions, apiLoaded } = useContext(APIContext);
+  console.log(apiAttractions,'THIS IS IN THE DEST INPUT!!')
+
   const [inputColour, setInputColour] = useState('#B5BBC6');
   const {
     map,
@@ -48,7 +53,10 @@ export default function DestinationInput(
     setSelectedAttraction(attraction);
     setInputColour('black');
   };
-
+ // Wait for apiAttractions to be available
+ if (!apiLoaded) {
+  return <p>Loading attractions...</p>;
+}
   return (
     <Flex w={'270px'}>
       <Menu>
@@ -85,7 +93,7 @@ export default function DestinationInput(
           maxHeight="200px"
           overflowY="auto"
         >
-          {attractions.map(attraction => {
+          {apiAttractions.map(attraction => {
             return (
               <>
                 <MenuItem
@@ -96,8 +104,8 @@ export default function DestinationInput(
                   <Image
                     boxSize="1.5rem"
                     borderRadius="full"
-                    src={attraction.image}
-                    alt={attraction.name}
+                    src={`/images/${attraction.name_alias}.jpg`}
+                    alt={attraction.name_alias}
                     mr="12px"
                   />
                   <span>{attraction.name}</span>
