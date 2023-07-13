@@ -17,6 +17,7 @@ import {
   PopoverCloseButton,
   Avatar,
   AvatarBadge,
+  useToast
 } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
@@ -29,6 +30,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const { globalUserInfo, setGlobalUserInfo } = useContext(APIContext);
   const [userInfoFetched, setUserInfoFetched] = useState(false);
   const { setIsDrawerOpen } = useContext(MapContext);
+  const toastLogin = useToast()
+  const toastSignup = useToast()
+  const toastLogout = useToast()
+  const toastSignupError = useToast()
+  const toastLoginError = useToast()
 
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
@@ -56,6 +62,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const backendLogin = async credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
+
     if (credential) {
       axios
         .post(`http://localhost:8001/api/user/info?idTokenString=${credential}`)
@@ -75,12 +82,26 @@ export default function SignUpForm({ setIsLoggedIn }) {
             // Cache the user info
             localStorage.setItem('userInfo', JSON.stringify(response.data));
 
+            toastLogin({
+              title: 'Login Successful.',
+              description: "You've Logged in Successfully.",
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            })
+
             setUserInfoFetched(true);
           } else {
             setUserLoggedIn(false);
             setIsLoggedIn(false);
             localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
-          }
+            toastLoginError({
+              title: 'Login Error.',
+              description: "Error with login, please try again.",
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            })}
         })
         .catch(error => console.log(error));
     }
@@ -89,17 +110,48 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const backendSignUp = credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
+    
     if (credential) {
       axios
         .post(
           `http://localhost:8001/api/user/register?idTokenString=${credential}`
         )
-        .then(response =>
+        .then(response =>{
           console.log(
             response.data,
-            'this is from the backend login for sign up'
-          )
-        )
+            'this is from the backend login for sign up');
+
+            if (response.data.code !==10006) {
+              console.log(response.data.code,'this is the code!!!!')
+              setGlobalUserInfo(response.data);
+              setUserLoggedIn(true);
+              setIsLoggedIn(true);
+              localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
+  
+              // Cache the user info
+              localStorage.setItem('userInfo', JSON.stringify(response.data));
+  
+              setUserInfoFetched(true);
+
+              toastSignup({
+                title: 'Account created.',
+                description: "We've created your account for you.",
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+              })
+            } else {
+              setUserLoggedIn(false);
+              setIsLoggedIn(false);
+              localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
+              toastSignupError({
+                title: 'Account Present.',
+                description: "You already have an account.",
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            })
+          }})
         .catch(error => console.log(error));
     }
   };
@@ -110,6 +162,13 @@ export default function SignUpForm({ setIsLoggedIn }) {
     localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
     localStorage.removeItem('userInfo');
     setIsDrawerOpen(false);
+    toastLogout({
+      title: 'Logout.',
+      description: "You've logged out successfully.",
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    })
   };
 
   if (loading) {
@@ -200,7 +259,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
                     onFailure={error =>
                       console.log('Google login failed:', error)
                     }
-                    cookiePolicy="single_host_origin"
                     style={{
                       marginLeft: '1.5em',
                       marginTop: '1em',
