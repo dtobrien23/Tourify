@@ -158,7 +158,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
               <SimpleGrid
                 alignItems="left"
                 justifyItems="left"
-                border="1px solid orangered"
+                border="3px solid orangered"
                 borderRadius="20px"
                 marginTop='5px'
                 marginLeft='10px'
@@ -177,6 +177,8 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                         width: '100px',
                         height: '100px',
                         marginRight: '10px',
+                        border:"3px solid orangered",
+                        borderRadius:"5px"
                       }}
                     />
                   </p>
@@ -201,6 +203,8 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                       width: '100px',
                       height: '100px',
                       marginRight: '10px',
+                      border:"3px solid orangered",
+                      borderRadius:"5px"
                     }}
                   />
                 </p>

@@ -107,35 +107,33 @@ export default function ContentDrawer() {
                               <SimpleGrid
                                 alignItems="left"
                                 justifyItems="left"
-                                border="1px solid orangered"
+                                border="3px solid orangered"
                                 borderRadius="20px"
                                 marginTop="5px"
                                 marginLeft="10px"
                                 overflow="hidden"
                                 spacing={8}
                                 p="10px"
+                                width='425px'
                               >
-                                <Flex key={attraction} mb={4}>
+                                <Flex key={attraction} mb={4} width='100%'>
                                   <p>
                                     {' '}
                                     <img
                                       src={`/images/${attractionInfo.name_alias}.jpg`}
                                       alt={attractionInfo.name_alias}
                                       style={{
-                                        width: '100px',
+                                        maxWidth: '100px',
                                         height: '100px',
-                                        marginRight: '50px',
+                                        marginRight: '10px',
+                                        border:"2px solid orangered",
+                                        borderRadius:"5px"
                                       }}
                                     />
                                   </p>
                                   <div>
-                                    <Heading size="md">
-                                      {attractionInfo.name}
-                                    </Heading>
-                                    <p marginLeft="10px">
-                                      {' '}
-                                      Address: {attractionInfo.full_address}
-                                    </p>
+                                    <Heading size="md">{attractionInfo.name}</Heading>
+                                    <p >Address: {attractionInfo.full_address}</p>
                                   </div>
                                 </Flex>
                               </SimpleGrid>
@@ -163,35 +161,33 @@ export default function ContentDrawer() {
                               <SimpleGrid
                                 alignItems="left"
                                 justifyItems="left"
-                                border="1px solid orangered"
+                                border="3px solid orangered"
                                 borderRadius="20px"
                                 marginTop="5px"
                                 marginLeft="10px"
                                 overflow="hidden"
                                 spacing={8}
                                 p="10px"
+                                width='425px'
                               >
-                                <Flex key={attraction} mb={4}>
+                                <Flex key={attraction} mb={4} width='100%'>
                                   <p>
                                     {' '}
                                     <img
                                       src={`/images/${attractionInfo.name_alias}.jpg`}
                                       alt={attractionInfo.name_alias}
                                       style={{
-                                        width: '100px',
+                                        maxWidth: '100px',
                                         height: '100px',
-                                        marginRight: '50px',
+                                        marginRight: '10px',
+                                        border:"2px solid orangered",
+                                        borderRadius:"5px"
                                       }}
                                     />
                                   </p>
                                   <div>
-                                    <Heading size="md">
-                                      {attractionInfo.name}
-                                    </Heading>
-                                    <p marginLeft="10px">
-                                      {' '}
-                                      Address: {attractionInfo.full_address}
-                                    </p>
+                                    <Heading size="md">{attractionInfo.name}</Heading>
+                                    <p> Address: {attractionInfo.full_address}</p>
                                   </div>
                                 </Flex>
                               </SimpleGrid>
