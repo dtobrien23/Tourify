@@ -100,6 +100,7 @@ export default function SearchBar() {
           <PopoverTrigger>
             <Flex
               style={{
+                marginTop: '10px',
                 width: '90vw',
                 border: 'solid 1px orangered',
                 borderRadius: '20px',

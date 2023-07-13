@@ -14,7 +14,6 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
-import LocationInput from './LocationInput';
 import SearchBar from './SearchBar';
 import { MapContext } from './MapContext';
 
@@ -59,23 +58,26 @@ export default function NavBar() {
       pr="10px"
       style={{ borderBottom: 'solid 1px orangered' }}
     >
-      <Box flexShrink={0}>
-        <img
-          ml={0}
-          style={{ cursor: 'pointer', overflow: 'visible' }} // cursor change on hover
-          onClick={handleLogoClick}
-          src="logo.svg"
-          alt="Tourify Logo"
-        />
-      </Box>
+      {!isMobile && (
+        <Box flexShrink={0}>
+          <img
+            ml={0}
+            style={{ cursor: 'pointer', overflow: 'visible' }} // cursor change on hover
+            onClick={handleLogoClick}
+            src="logo.svg"
+            alt="Tourify Logo"
+          />
+        </Box>
+      )}
       <Flex
         flex="1"
+        flexShrink={isMobile ? 0 : 1}
         // justifyContent="center"
         ml="50px"
         alignItems="center"
-        display={{ base: 'none', md: 'flex' }}
+        // display={{ base: 'none', md: 'flex' }}
       >
-        <SearchBar />
+        {!isMobile && <SearchBar />}
         <Button
           display="flex"
           flexDirection="column"
@@ -145,17 +147,8 @@ export default function NavBar() {
             Badges
           </Text>
         </Button>
-        {/* <TabList>
-          <Tab color="orangered">Map</Tab>
-          <Tab isDisabled={!isLoggedIn} color="orangered">
-            Attractions
-          </Tab>
-          <Tab isDisabled={!isLoggedIn} color="orangered">
-            Badges
-          </Tab>
-        </TabList> */}
       </Flex>
-      {isMobile && (
+      {isMobile ? (
         <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
           <Menu
             isOpen={isMenuOpen}
@@ -176,8 +169,7 @@ export default function NavBar() {
             </MenuList>
           </Menu>
         </Box>
-      )}
-      {!isMobile && (
+      ) : (
         <Flex>
           <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
         </Flex>

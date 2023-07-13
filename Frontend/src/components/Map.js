@@ -313,24 +313,33 @@ export default function Map() {
       )}
       <GeolocationProvider>
         {isMobile ? (
-          <Flex justifyContent="center" alignItems="center" mt="5px">
-            <SearchBar />
-            {/* <Flex
+          <Flex
+            height="100%"
+            flexDirection="column"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Flex justifyContent="center" alignItems="center" mt="5px">
+              <SearchBar />
+            </Flex>
+            <Flex
+              justifyContent="flex-end"
               flexDirection="column"
               style={{
-                position: 'absolute',
-                top: 50,
-                right: 1,
+                // position: 'absolute',
                 height: 'fit-content',
-                width: 'fit-content',
+                // width: 'calc(100% - 20px)',
+
+                width: '295px',
+                marginBottom: '10px',
               }}
-            > */}
-            <FiltersNavBar
-              isMobile={isMobile}
-              selectedFilters={selectedFilters}
-              setSelectedFilters={setSelectedFilters}
-            />
-            {/* </Flex> */}
+            >
+              <FiltersNavBar
+                isMobile={isMobile}
+                selectedFilters={selectedFilters}
+                setSelectedFilters={setSelectedFilters}
+              />
+            </Flex>
           </Flex>
         ) : (
           <Flex

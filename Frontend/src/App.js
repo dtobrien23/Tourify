@@ -16,7 +16,7 @@ import { MapContext } from './components/MapContext';
 
 function App() {
   // const [selectedTabIndex, setSelectedTabIndex] = useState(0);
-  const { map, setMap, setIsMobile } = useContext(MapContext);
+  const { map, setMap, isMobile, setIsMobile } = useContext(MapContext);
   // const [map, setMap] = useState(null);
 
   useEffect(() => {
@@ -34,28 +34,17 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      {/* <Box>
-        {/* <Tabs
-          align="center"
-          flexDirection="column"
-          variant={tabVariant}
-          onChange={handleTabSelect}
-          selectedIndex={selectedTabIndex}
-        > */}{' '}
-      <NavBar map={map} />
-      {/* <TabPanels>
-            <TabPanel> */}
-      <Map map={map} setMap={setMap} />
-      {/* </TabPanel>
-            <TabPanel>
-              <AttractionsList isMobile={isMobile} />
-            </TabPanel>
-            <TabPanel>
-              <BadgePanel />
-            </TabPanel>
-          </TabPanels>
-        </Tabs> */}
-      {/* </Box> */}
+      {!isMobile ? (
+        <>
+          <NavBar map={map} />
+          <Map map={map} setMap={setMap} />
+        </>
+      ) : (
+        <>
+          <Map map={map} setMap={setMap} />
+          <NavBar map={map} />
+        </>
+      )}
     </ChakraProvider>
   );
 }

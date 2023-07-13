@@ -112,97 +112,99 @@ export default function FiltersNavBar({
   }, [isMobile]);
 
   return (
-    <>
-      <Flex ref={filtersContainerRef} onScroll={handleScroll} {...flexProps}>
-        <button
-          onClick={scrollLeft}
-          style={{
-            display: isAtStart ? 'none' : 'inline-block',
-            background: 'white',
-            borderRadius: '50%',
-            width: 'fit-content',
-            padding: '5px',
-            marginLeft: 0,
-            boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
-            position: 'absolute',
-            top: '33%',
-            left: '-15px',
-            transform: 'translateY(-50%)',
-            overflow: 'visible',
-          }}
-        >
-          <AiOutlineLeft size="20" color="orangered" />
-        </button>
-        {attractionTypes.map(attractionType => (
-          <Tooltip label={attractionType.label} placement="bottom">
-            <button
-              key={attractionType.value}
-              onClick={() => {
-                if (attractionType.value === 'ALL') {
-                  if (selectedFilters.includes('ALL')) {
-                    setSelectedFilters([]); // Unselect all filters
-                  } else {
-                    setSelectedFilters(['ALL']); // Select 'All' filter
-                  }
+    <Flex
+      ref={filtersContainerRef}
+      onScroll={handleScroll}
+      {...flexProps}
+      alignItems="center"
+    >
+      <button
+        onClick={scrollLeft}
+        style={{
+          display: isAtStart ? 'none' : 'inline-block',
+          background: 'white',
+          borderRadius: '50%',
+          width: 'fit-content',
+          padding: '5px',
+          marginLeft: 0,
+          boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
+          position: 'absolute',
+          left: '-15px',
+          overflow: 'visible',
+        }}
+      >
+        <AiOutlineLeft size="20" color="orangered" />
+      </button>
+      {attractionTypes.map(attractionType => (
+        <Tooltip label={attractionType.label} placement="bottom">
+          <button
+            key={attractionType.value}
+            onClick={() => {
+              if (attractionType.value === 'ALL') {
+                if (selectedFilters.includes('ALL')) {
+                  setSelectedFilters([]); // Unselect all filters
                 } else {
-                  if (selectedFilters.includes('ALL')) {
-                    setSelectedFilters([attractionType.value]); // Select the clicked filter only
-                  } else if (selectedFilters.includes(attractionType.value)) {
-                    setSelectedFilters(
-                      selectedFilters.filter(
-                        filter => filter !== attractionType.value
-                      )
-                    ); // Unselect the clicked filter
-                  } else {
-                    setSelectedFilters([
-                      ...selectedFilters,
-                      attractionType.value,
-                    ]); // Add the clicked filter
-                  }
+                  setSelectedFilters(['ALL']); // Select 'All' filter
                 }
-              }}
-              overflow="visible"
-              style={{
-                width: '50px',
-                flexShrink: 0,
-                marginTop: '4px',
-                marginBottom: '6px',
-                marginRight: '10px',
-                padding: '7px',
-                boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
-                border: 'solid 2px white',
-                borderRadius: '50%',
-                background: selectedFilters.includes(attractionType.value)
-                  ? 'orangered'
-                  : 'white',
-                color: selectedFilters.includes(attractionType.value)
-                  ? 'white'
-                  : 'black',
-              }}
-            >
-              {selectedFilters.includes(attractionType.value) ? (
-                <img
-                  src={
-                    '/images/attractions-icons/active/' +
-                    attractionType.value +
-                    '.svg'
-                  }
-                  alt={attractionType.label}
-                />
-              ) : (
-                <img
-                  src={
-                    '/images/attractions-icons/inactive/' +
-                    attractionType.value +
-                    '.svg'
-                  }
-                  alt={attractionType.label}
-                />
-              )}
-            </button>
-          </Tooltip>
-        ))}
-      </Flex>
+              } else {
+                if (selectedFilters.includes('ALL')) {
+                  setSelectedFilters([attractionType.value]); // Select the clicked filter only
+                } else if (selectedFilters.includes(attractionType.value)) {
+                  setSelectedFilters(
+                    selectedFilters.filter(
+                      filter => filter !== attractionType.value
+                    )
+                  ); // Unselect the clicked filter
+                } else {
+                  setSelectedFilters([
+                    ...selectedFilters,
+                    attractionType.value,
+                  ]); // Add the clicked filter
+                }
+              }
+            }}
+            overflow="visible"
+            style={{
+              width: '50px',
+              flexShrink: 0,
+              marginTop: '4px',
+              marginBottom: '6px',
+              marginRight: '10px',
+              padding: '7px',
+              boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
+              border: 'solid 2px white',
+              borderRadius: '50%',
+              background: selectedFilters.includes(attractionType.value)
+                ? 'orangered'
+                : 'white',
+              color: selectedFilters.includes(attractionType.value)
+                ? 'white'
+                : 'black',
+            }}
+          >
+            {selectedFilters.includes(attractionType.value) ? (
+              <img
+                src={
+                  '/images/attractions-icons/active/' +
+                  attractionType.value +
+                  '.svg'
+                }
+                alt={attractionType.label}
+              />
+            ) : (
+              <img
+                src={
+                  '/images/attractions-icons/inactive/' +
+                  attractionType.value +
+                  '.svg'
+                }
+                alt={attractionType.label}
+              />
+            )}
+          </button>
+        </Tooltip>
+      ))}
+
       <button
         onClick={scrollRight}
         style={{
@@ -213,13 +215,11 @@ export default function FiltersNavBar({
           padding: '5px',
           boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
           position: 'absolute',
-          left: '275px',
-          top: '30%',
-          transform: 'translateY(-50%)',
+          right: '-15px',
         }}
       >
         <AiOutlineRight size="20" color="orangered" />
       </button>
-    </>
+    </Flex>
   );
 }
