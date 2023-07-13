@@ -34,19 +34,19 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      <Box>
+      {/* <Box>
         {/* <Tabs
           align="center"
           flexDirection="column"
           variant={tabVariant}
           onChange={handleTabSelect}
           selectedIndex={selectedTabIndex}
-        > */}
-        <NavBar map={map} />
-        {/* <TabPanels>
+        > */}{' '}
+      <NavBar map={map} />
+      {/* <TabPanels>
             <TabPanel> */}
-        <Map map={map} setMap={setMap} />
-        {/* </TabPanel>
+      <Map map={map} setMap={setMap} />
+      {/* </TabPanel>
             <TabPanel>
               <AttractionsList isMobile={isMobile} />
             </TabPanel>
@@ -55,7 +55,7 @@ function App() {
             </TabPanel>
           </TabPanels>
         </Tabs> */}
-      </Box>
+      {/* </Box> */}
     </ChakraProvider>
   );
 }

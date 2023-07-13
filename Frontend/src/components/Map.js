@@ -315,22 +315,22 @@ export default function Map() {
         {isMobile ? (
           <Flex justifyContent="center" alignItems="center" mt="5px">
             <SearchBar />
-            <Flex
+            {/* <Flex
               flexDirection="column"
               style={{
                 position: 'absolute',
                 top: 50,
-                left: 10,
+                right: 1,
                 height: 'fit-content',
-                width: 'calc(100% - 20px)',
+                width: 'fit-content',
               }}
-            >
-              <FiltersNavBar
-                isMobile={isMobile}
-                selectedFilters={selectedFilters}
-                setSelectedFilters={setSelectedFilters}
-              />
-            </Flex>
+            > */}
+            <FiltersNavBar
+              isMobile={isMobile}
+              selectedFilters={selectedFilters}
+              setSelectedFilters={setSelectedFilters}
+            />
+            {/* </Flex> */}
           </Flex>
         ) : (
           <Flex
@@ -338,9 +338,10 @@ export default function Map() {
             style={{
               position: 'absolute',
               top: 10,
-              left: 10,
-              height: 'calc(100% - 20px)',
-              // width: 0,
+              right: 120,
+              height: 'fit-content',
+              // width: 'calc(100% - 20px)',
+              width: '295px',
             }}
           >
             <FiltersNavBar

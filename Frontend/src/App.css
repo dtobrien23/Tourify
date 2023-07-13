@@ -4,9 +4,8 @@
 }
 
 .map {
-  height: 86vh;
+  height: calc(100vh - 79px);
   width: 100%;
-  border-radius: 20px;
 }
 
 input:focus {
