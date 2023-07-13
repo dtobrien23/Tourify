@@ -56,6 +56,7 @@ export default function DestinationInput(
  if (!apiLoaded) {
   return <p>Loading attractions...</p>;
 }
+else{
   return (
     <Flex w={'270px'}>
       <Menu>
@@ -117,4 +118,4 @@ export default function DestinationInput(
       </Menu>
     </Flex>
   );
-}
+}}
