@@ -7,14 +7,9 @@ import { MapContext } from './MapContext';
 
 export default function LocationInput(
   {
-    // map,
-    // setSourceCoords,
-    // locationMarker,
-    // setLocationMarker,
-    // setIsSourceAlertOpen,
+    
   }
 ) {
-  // const google = window.google;
   const autocompleteRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [buttonClicked, setButtonClicked] = useState(1); // to update input box each time current location button is clicked
@@ -41,7 +36,6 @@ export default function LocationInput(
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
-  // const { setGeolocation } = useContext(GeolocationContext);
   const [inputWidth, setInputWidth] = useState('270px');
 
   useEffect(() => {

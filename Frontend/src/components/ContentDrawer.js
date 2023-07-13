@@ -167,7 +167,7 @@ export default function ContentDrawer() {
                               p='10px'
                             >
                               <div key={attraction}>
-                                <h3>{attractionInfo.name}</h3>
+                                <h3 fontWeight='bold'>{attractionInfo.name}</h3>
                                 
                                   <div>
                                     

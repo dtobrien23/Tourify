@@ -50,51 +50,24 @@ export default function Map() {
   // USE STATES //
   ////////////////
 
-  // const [map, setMap] = useState(null);
   const [mapCenter, setMapCenter] = useState({
     lat: 40.755091,
     lng: -73.978285,
   });
   //user location from locationInput
   const [userLocation, setUserLocation] = useState(null);
-  //receiving filtered attractions from slider
-  //pass setSliderList method into slider to receive sliders filtered
-  //attractions list, update sliderList state with that list we receive
+  
 
   const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['ALL']);
-  // const [sourceCoords, setSourceCoords] = useState(null); // for routing source
-  // const [selectedAttraction, setSelectedAttraction] = useState(null); // for routing destination
+  
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
-  // const [locationMarker, setLocationMarker] = useState([]); // for current location marker
   const [dataArray, setDataArray] = useState(null);
-  // const [isSourceAlertOpen, setIsSourceAlertOpen] = useState(false);
 
-  // const google = window.google; // to access Google objects, i.e. markers, directionRenderers
   const mapZoom = 13; // default map zoom
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       'http://localhost:8001/api/attraction/getAllAttraction'
-  //     );
-  //     const data = await response.json();
-  //     console.log(data, 'THIS CAME FROM THE BACK END');
-  //     const dataData = data.data;
-  //     setDataArray(dataData);
-  //     console.log(dataArray, 'back end data without wrapper');
-  //     // setSliderList(dataArray);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
@@ -127,13 +100,6 @@ export default function Map() {
   const handleClose = () => {
     setMarkerState(false);
   };
-
-  // Recommendation Button
-  // const [buttonState, setButtonState] = useState();
-  // const handleRecommenderClick = () => {
-  //   //state opens drawer
-  //   setButtonState(true);
-  // };
 
   const recommendClose = () => {
     setButtonState(false);
@@ -186,65 +152,7 @@ export default function Map() {
     }
   }, [map, apiAttractions, selectedFilters]);
 
-  /////////////
-  // ROUTING //
-  /////////////
 
-  // async function calculateRoute() {
-  //   if (sourceCoords && selectedAttraction) {
-  //     if (directionsRenderers.length !== 0) {
-  //       directionsRenderers[0].setMap(null);
-  //       setDirectionsRenderers([]);
-  //     }
-
-  //     const directionsService = new google.maps.DirectionsService();
-  //     const directionsRenderer = new google.maps.DirectionsRenderer();
-  //     directionsRenderer.setMap(map);
-
-  //     // source
-  //     const sourceLatLng = sourceCoords;
-
-  //     // destination
-  //     const destLat = selectedAttraction.coordinates_lat;
-  //     const destLng = selectedAttraction.coordinates_lng;
-  //     const destLatLng = { lat: destLat, lng: destLng };
-
-  //     const results = await directionsService.route(
-  //       {
-  //         origin: sourceLatLng,
-  //         destination: destLatLng,
-  //         travelMode: google.maps.TravelMode.WALKING,
-  //       },
-  //       (results, status) => {
-  //         if (status === google.maps.DirectionsStatus.OK) {
-  //           directionsRenderer.setOptions({
-  //             directions: results,
-  //             polylineOptions: {
-  //               strokeColor: 'orangered',
-  //               strokeOpacity: 0.8,
-  //               strokeWeight: 4,
-  //             },
-  //             suppressMarkers: true,
-  //           });
-  //         } else {
-  //           console.error('Error fetching directions:', status);
-  //         }
-  //       }
-  //     );
-  //     setDirectionsRenderers([directionsRenderer]);
-  //     locationMarker[0].setMap(map); // in case this is set to null by clearRoute
-  //   }
-  // }
-
-  // function clearRoute() {
-  //   if (directionsRenderers.length !== 0) {
-  //     directionsRenderers[0].setMap(null);
-  //     setDirectionsRenderers([]);
-  //   }
-  //   if (locationMarker.length !== 0) {
-  //     locationMarker[0].setMap(null);
-  //   }
-  // }
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -369,11 +277,7 @@ export default function Map() {
           markerObject={markerObject}
         />
         <ContentDrawer />
-        {/* <BadgesDrawer /> */}
-        {/* <Recommender
-          recommendOpenFunc={buttonState}
-          recommendCloseFunc={recommendClose}
-        /> */}
+        
       </GeolocationProvider>
     </GoogleMap>
   );

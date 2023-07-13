@@ -145,15 +145,6 @@ export default function NavBar() {
             Badges
           </Text>
         </Button>
-        {/* <TabList>
-          <Tab color="orangered">Map</Tab>
-          <Tab isDisabled={!isLoggedIn} color="orangered">
-            Attractions
-          </Tab>
-          <Tab isDisabled={!isLoggedIn} color="orangered">
-            Badges
-          </Tab>
-        </TabList> */}
       </Flex>
       {isMobile && (
         <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>

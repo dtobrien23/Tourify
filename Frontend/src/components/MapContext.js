@@ -25,6 +25,10 @@ const MapProvider = ({ children }) => {
 
   const google = window.google;
 
+  ///////////////
+  // ROUTING //
+  /////////////
+
   async function calculateRoute() {
 
     if (sourceCoords && selectedAttraction) {

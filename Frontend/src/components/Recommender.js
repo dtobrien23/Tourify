@@ -131,7 +131,6 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const topFiveNearestAttractions = nearestAttractions.slice(0, 5);
   console.log(topFiveNearestAttractions, 'TOP 5 NEAREST');
 
-  // const topFiveQuietestAttractions = quietestAttractions.slice(0,5);
 
   useEffect(() => {
     const leastBusyAttractions = nearestAttractions.sort((a, b) => {
@@ -142,16 +141,6 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
     setQuietestAttractions(leastBusyAttractions);
   }, []);
-
-  // const quietestAttractionsScore = quietestAttractions;
-  //const nearestAttractionsSCore = nearestAttractions[0].comboScore = 0;
-  // console.log(quietestAttractionsScore, 'edited JSON !!!')
-
-  // useEffect(() => {
-
-  //   setCombinedAttractions(combinedList)
-
-  // },[combinedAttractions]);
 
   return (
     <>

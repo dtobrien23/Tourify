@@ -18,10 +18,7 @@ import { APIContext } from './APIContext';
 
 export default function DestinationInput(
   {
-    // map,
-    // selectedAttraction,
-    // setSelectedAttraction,
-    // handleRecommenderClick,
+  
   }
 ) {
   // const google = window.google;

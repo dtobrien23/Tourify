@@ -94,7 +94,6 @@ export default function SearchBar() {
           </Button>
         </Flex>
       ) : (
-        // <Flex mr="0px">
 
         <Popover>
           <PopoverTrigger>

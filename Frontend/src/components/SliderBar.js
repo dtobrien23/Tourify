@@ -6,7 +6,6 @@ import {
   RangeSliderThumb,
 } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
-//import attractions from '../static/attractions.json';
 import { APIContext } from './APIContext';
 
 export default function SliderBar({ setSliderListFunc }) {
