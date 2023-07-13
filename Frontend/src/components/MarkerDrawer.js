@@ -29,11 +29,15 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
         <DrawerOverlay />
 
         <DrawerContent
-          bg="white"
-          border="5px solid orangered"
+          alignItems="left"
+          justifyItems="left"
+          border="1px solid orangered"
           borderRadius="20px"
-          p="20px"
-          w="80%"
+          marginTop='5px'
+          marginLeft='10px'
+          overflow='hidden'
+          spacing={8}
+          p='10px'
         >
           <DrawerCloseButton />
 

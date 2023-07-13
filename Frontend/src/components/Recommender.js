@@ -166,11 +166,16 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
           <TabPanel>
             {nearestAttractions.map(attraction => (
               <SimpleGrid
-                alignItems="center"
-                justifyItems="center"
+                alignItems="left"
+                justifyItems="left"
                 border="1px solid orangered"
                 borderRadius="20px"
+                marginTop='5px'
+                marginLeft='10px'
+                overflow='hidden'
                 spacing={8}
+                p='10px'
+              
               >
                 <Flex key={attraction.id} mb={4}>
                   <p>
