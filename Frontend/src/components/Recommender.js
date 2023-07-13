@@ -15,6 +15,7 @@ import {
   TabPanels,
   useForceUpdate,
   SimpleGrid,
+  Heading
 } from '@chakra-ui/react';
 //import attractions from '../static/attractions.json';
 import { GeolocationContext } from './GeoContext';
@@ -181,8 +182,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                   </p>
 
                   <div>
-                    <h3>{attraction.name}</h3>
-                    <p>Busyness Score: {attraction.busyness_score}</p>
+                  <Heading size='md'>{attraction.name}</Heading>                    <p>Busyness Score: {attraction.busyness_score}</p>
                     <p>Distance: {attraction.distance}</p>
                   </div>
                 </Flex>
@@ -205,8 +205,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                   />
                 </p>
                 <div>
-                  <h3>{attraction.name}</h3>
-                  <p>Busyness Score: {attraction.busyness_score}</p>
+                <Heading size='md'>{attraction.name}</Heading>                  <p>Busyness Score: {attraction.busyness_score}</p>
                   <p>Distance: {attraction.distance}</p>
                 </div>
               </Flex>

@@ -22,6 +22,7 @@ import {
   TabPanel,
   TabPanels,
   SimpleGrid,
+  Heading,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
@@ -104,36 +105,40 @@ export default function ContentDrawer() {
                           if (attractionInfo) {
                             return (
                               <SimpleGrid
-                              alignItems="left"
-                              justifyItems="left"
-                              border="1px solid orangered"
-                              borderRadius="20px"
-                              marginTop='5px'
-                              marginLeft='10px'
-                              overflow='hidden'
-                              spacing={8}
-                              p='10px'
-
-                                
+                                alignItems="left"
+                                justifyItems="left"
+                                border="1px solid orangered"
+                                borderRadius="20px"
+                                marginTop="5px"
+                                marginLeft="10px"
+                                overflow="hidden"
+                                spacing={8}
+                                p="10px"
                               >
-                                <div key={attraction}>
-                                  <h3 fontWeight="bold">{attractionInfo.name}</h3>
-                                  {attractionInfo.openHour && (
-                                    <div>
-                                      
-                                      <p>
-                                        {' '}
-                                        <img
-                                          src={`/images/${attractionInfo.name_alias}.jpg`}
-                                          alt={attractionInfo.name_alias}
-                                        />
-                                      </p>
-                                    </div>
-                                  )}
-                                  <p>Address: {attractionInfo.full_address}</p>
-                                </div>
-                             </SimpleGrid>
-                             
+                                <Flex key={attraction} mb={4}>
+                                  <p>
+                                    {' '}
+                                    <img
+                                      src={`/images/${attractionInfo.name_alias}.jpg`}
+                                      alt={attractionInfo.name_alias}
+                                      style={{
+                                        width: '100px',
+                                        height: '100px',
+                                        marginRight: '50px',
+                                      }}
+                                    />
+                                  </p>
+                                  <div>
+                                    <Heading size="md">
+                                      {attractionInfo.name}
+                                    </Heading>
+                                    <p marginLeft="10px">
+                                      {' '}
+                                      Address: {attractionInfo.full_address}
+                                    </p>
+                                  </div>
+                                </Flex>
+                              </SimpleGrid>
                             );
                           }
                         }
@@ -156,34 +161,40 @@ export default function ContentDrawer() {
                           if (attractionInfo) {
                             return (
                               <SimpleGrid
-                              alignItems="left"
-                              justifyItems="left"
-                              border="1px solid orangered"
-                              borderRadius="20px"
-                              marginTop='5px'
-                              marginLeft='10px'
-                              overflow='hidden'
-                              spacing={8}
-                              p='10px'
-                            >
-                              <div key={attraction}>
-                                <h3 fontWeight='bold'>{attractionInfo.name}</h3>
-                                
+                                alignItems="left"
+                                justifyItems="left"
+                                border="1px solid orangered"
+                                borderRadius="20px"
+                                marginTop="5px"
+                                marginLeft="10px"
+                                overflow="hidden"
+                                spacing={8}
+                                p="10px"
+                              >
+                                <Flex key={attraction} mb={4}>
+                                  <p>
+                                    {' '}
+                                    <img
+                                      src={`/images/${attractionInfo.name_alias}.jpg`}
+                                      alt={attractionInfo.name_alias}
+                                      style={{
+                                        width: '100px',
+                                        height: '100px',
+                                        marginRight: '50px',
+                                      }}
+                                    />
+                                  </p>
                                   <div>
-                                    
-                                    <p>
+                                    <Heading size="md">
+                                      {attractionInfo.name}
+                                    </Heading>
+                                    <p marginLeft="10px">
                                       {' '}
-                                      <img
-                                        src={`/images/${attractionInfo.name_alias}.jpg`}
-                                        alt={attractionInfo.name_alias}
-                                      />
+                                      Address: {attractionInfo.full_address}
                                     </p>
                                   </div>
-                                
-                                <p>Address: {attractionInfo.full_address}</p>
-                              </div>
+                                </Flex>
                               </SimpleGrid>
-
                             );
                           }
                         }
@@ -217,7 +228,6 @@ export default function ContentDrawer() {
                         {Object.entries(globalUserInfo.data.badgeDO).map(
                           ([badge, status]) => {
                             if (status) {
-                              
                               return <p key={badge}>{badge}</p>;
                             }
                             return null;
