@@ -26,6 +26,7 @@ const MapProvider = ({ children }) => {
   const google = window.google;
 
   async function calculateRoute() {
+
     if (sourceCoords && selectedAttraction) {
       if (directionsRenderers.length !== 0) {
         directionsRenderers[0].setMap(null);
@@ -40,8 +41,8 @@ const MapProvider = ({ children }) => {
       const sourceLatLng = sourceCoords;
 
       // destination
-      const destLat = selectedAttraction.coordinates_lat;
-      const destLng = selectedAttraction.coordinates_lng;
+      const destLat = parseFloat(selectedAttraction.coordinates_lat);
+      const destLng = parseFloat(selectedAttraction.coordinates_lng);
       const destLatLng = { lat: destLat, lng: destLng };
 
       const results = await directionsService.route(
