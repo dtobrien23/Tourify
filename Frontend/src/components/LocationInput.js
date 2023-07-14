@@ -38,6 +38,7 @@ export default function LocationInput(
     setGeolocation,
     google,
     isMobile,
+    hasTouchScreen,
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
@@ -51,12 +52,12 @@ export default function LocationInput(
   }, [currentLocation, buttonClicked]);
 
   useEffect(() => {
-    if (isMobile) {
+    if (hasTouchScreen) {
       setInputWidth('100%');
     } else {
-      setInputWidth('270px');
+      setInputWidth('50%');
     }
-  }, [isMobile]);
+  }, [hasTouchScreen]);
 
   const autocompleteOptions = {
     bounds: {
@@ -188,6 +189,7 @@ export default function LocationInput(
             }}
             onPlaceChanged={handlePlaceSelect}
             options={autocompleteOptions}
+            style={{ width: '100%' }}
           >
             <input
               type="text"
@@ -199,6 +201,7 @@ export default function LocationInput(
                 paddingLeft: '8px',
                 borderRadius: '20px',
                 fontSize: '16px',
+                width: 'fit-space',
               }}
             />
           </Autocomplete>

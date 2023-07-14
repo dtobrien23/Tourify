@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, Flex, Tooltip } from '@chakra-ui/react';
+import { Flex, Tooltip } from '@chakra-ui/react';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import '../App.css';
 
@@ -7,20 +7,21 @@ export default function FiltersNavBar({
   isMobile,
   selectedFilters,
   setSelectedFilters,
-  // filtersContainerRef,
-  // scrollLeft,
-  // scrollRight,
+  hasTouchScreen,
 }) {
   const desktopFilters = {
     flexDirection: 'row',
-    // justifyContent: 'center',
-    // alignItems: 'center',
     pl: 1,
     mb: 7,
     style: {
-      overflowX: 'auto',
+      overflowX: 'hidden',
       overflowY: 'hidden',
       scrollbarWidth: 'none',
+      '-ms-overflow-style': 'none' /* Hide scrollbar on Edge */,
+      'scrollbar-width': 'none' /* Hide scrollbar on Firefox */,
+      '::-webkit-scrollbar': {
+        display: 'none' /* Hide scrollbar on Chrome and Safari */,
+      },
       WebkitOverflowScrolling: 'touch',
       msOverflowStyle: 'none',
       scrollBehavior: 'smooth',
@@ -43,8 +44,6 @@ export default function FiltersNavBar({
 
   const [flexProps, setFlexProps] = useState(desktopFilters);
   const filtersContainerRef = useRef(null);
-  // const [leftButtonVisibile, setLeftButtonVisible] = useState('visible');
-  // const [rightButtonVisibile, setRightButtonVisible] = useState('visible');
   const [isAtStart, setIsAtStart] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
 
@@ -63,20 +62,21 @@ export default function FiltersNavBar({
     { label: 'Observatories', value: 'OBSERVATORY' },
   ];
 
-  // Scroll the filters container to the left
+  // for left arrow button
   const scrollLeft = () => {
     if (filtersContainerRef.current) {
       filtersContainerRef.current.scrollLeft -= 200;
     }
   };
 
-  // Scroll the filters container to the right
+  // for right arrow button
   const scrollRight = () => {
     if (filtersContainerRef.current) {
       filtersContainerRef.current.scrollLeft += 200;
     }
   };
 
+  // for smooth scroll
   const handleScroll = () => {
     if (filtersContainerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } =
@@ -86,30 +86,13 @@ export default function FiltersNavBar({
     }
   };
 
-  // useEffect(() => {
-  //   if (filtersContainerRef.current.scrollRight === 0) {
-  //     setLeftButtonVisible('hidden');
-  //   } else {
-  //     setLeftButtonVisible('visible');
-  //   }
-
-  //   if (filtersContainerRef.current.scrollLeft === 0) {
-  //     setRightButtonVisible('hidden');
-  //   } else {
-  //     setRightButtonVisible('visible');
-  //   }
-  // }, [
-  //   filtersContainerRef.current.scrollRight,
-  //   filtersContainerRef.current.scrollLeft,
-  // ]);
-
   useEffect(() => {
-    if (isMobile) {
+    if (hasTouchScreen) {
       setFlexProps(mobileFilters);
     } else {
       setFlexProps(desktopFilters);
     }
-  }, [isMobile]);
+  }, [hasTouchScreen]);
 
   return (
     <Flex
@@ -204,7 +187,6 @@ export default function FiltersNavBar({
           </button>
         </Tooltip>
       ))}
-
       <button
         onClick={scrollRight}
         style={{

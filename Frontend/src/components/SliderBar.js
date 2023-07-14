@@ -92,12 +92,12 @@ export default function SliderBar({ setSliderListFunc }) {
           <RangeSliderThumb
             index={0}
             backgroundColor={'orange'}
-            border="solid 1px orangered"
+            border="solid 1px white"
           />
           <RangeSliderThumb
             index={1}
             backgroundColor={'orange'}
-            border="solid 1px orangered"
+            border="solid 1px white"
           />
         </RangeSlider>
         <img

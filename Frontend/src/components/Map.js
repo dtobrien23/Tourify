@@ -44,6 +44,7 @@ export default function Map() {
     isAttractionsDrawerOpen,
     setIsAttractionsDrawerOpen,
     isMobile,
+    hasTouchScreen,
   } = useContext(MapContext);
 
   ////////////////
@@ -312,7 +313,7 @@ export default function Map() {
         </Alert>
       )}
       <GeolocationProvider>
-        {isMobile ? (
+        {hasTouchScreen ? (
           <Flex
             height="100%"
             flexDirection="column"
@@ -332,6 +333,11 @@ export default function Map() {
 
                 width: '295px',
                 marginBottom: '10px',
+                '-ms-overflow-style': 'none' /* Hide scrollbar on Edge */,
+                'scrollbar-width': 'none' /* Hide scrollbar on Firefox */,
+                '::-webkit-scrollbar': {
+                  display: 'none' /* Hide scrollbar on Chrome and Safari */,
+                },
               }}
             >
               <FiltersNavBar
@@ -363,9 +369,7 @@ export default function Map() {
         {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update
         the sliderList state */}
-
-        {!isMobile && <SliderBar setSliderListFunc={setSliderList} />}
-
+        {!hasTouchScreen && <SliderBar setSliderListFunc={setSliderList} />}
         <MarkerDrawer
           //marker state true opens drawer
           //false closes it

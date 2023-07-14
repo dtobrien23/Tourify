@@ -26,8 +26,13 @@ export default function NavBar() {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const { setActiveDrawer, isDrawerOpen, setIsDrawerOpen, isMobile } =
-    useContext(MapContext);
+  const {
+    setActiveDrawer,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isMobile,
+    hasTouchScreen,
+  } = useContext(MapContext);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -58,7 +63,7 @@ export default function NavBar() {
       pr="10px"
       style={{ borderBottom: 'solid 1px orangered' }}
     >
-      {!isMobile && (
+      {!hasTouchScreen && (
         <Box flexShrink={0}>
           <img
             ml={0}
@@ -69,15 +74,8 @@ export default function NavBar() {
           />
         </Box>
       )}
-      <Flex
-        flex="1"
-        flexShrink={isMobile ? 0 : 1}
-        // justifyContent="center"
-        ml="50px"
-        alignItems="center"
-        // display={{ base: 'none', md: 'flex' }}
-      >
-        {!isMobile && <SearchBar />}
+      <Flex flex="1" flexShrink={hasTouchScreen ? 0 : 1} alignItems="center">
+        {!hasTouchScreen && <SearchBar />}
         <Button
           display="flex"
           flexDirection="column"
@@ -148,7 +146,7 @@ export default function NavBar() {
           </Text>
         </Button>
       </Flex>
-      {isMobile ? (
+      {hasTouchScreen ? (
         <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
           <Menu
             isOpen={isMenuOpen}

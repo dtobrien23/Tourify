@@ -17,29 +17,17 @@ import LocationInput from './LocationInput';
 import { MapContext } from './MapContext';
 
 export default function SearchBar() {
-  const {
-    map,
-    selectedAttraction,
-    setSelectedAttraction,
-    setSourceCoords,
-    calculateRoute,
-    clearRoute,
-    locationMarker,
-    setLocationMarker,
-    setShowSourceErrorComponent,
-    onOpen,
-    isMobile,
-  } = useContext(MapContext);
+  const { calculateRoute, clearRoute, hasTouchScreen } = useContext(MapContext);
 
   const { isOpen, onToggle, onClose } = useDisclosure();
 
   return (
     <>
-      {!isMobile ? (
-        <Flex mr="0px">
+      {!hasTouchScreen ? (
+        <Flex width="60%" minWidth="450px" maxWidth="800px" mr="0px">
           <Flex
             style={{
-              width: 'fit-content',
+              width: '100%',
               border: 'solid 1px orangered',
               borderRadius: '20px',
               backgroundColor: 'white',
@@ -56,27 +44,35 @@ export default function SearchBar() {
               }}
             />
             <Divider orientation="vertical" />
-            <DestinationInput
-              style={{
-                zIndex: 2,
-              }}
-            />
-            <Box ml="5px" display="flex" alignItems="center">
-              <Button
-                bg="#ff914d"
-                color="white"
-                border="solid 1px orangered"
-                borderRight="0px"
-                borderRadius="19px"
-                _hover={{ bg: 'orangered' }}
-                onClick={calculateRoute}
-                px="1em"
-                height="calc(100% + 2px)"
-                padding="10px"
+            <Flex w="50%">
+              <DestinationInput
+                style={{
+                  zIndex: 2,
+                }}
+              />
+              <Box
+                flexShrink="0"
+                ml="5px"
+                display="flex"
+                alignItems="center"
+                minWidth="40px"
               >
-                GO
-              </Button>
-            </Box>
+                <Button
+                  bg="#ff914d"
+                  color="white"
+                  border="solid 1px orangered"
+                  borderRight="0px"
+                  borderRadius="19px"
+                  _hover={{ bg: 'orangered' }}
+                  onClick={calculateRoute}
+                  px="1em"
+                  height="calc(100% + 2px)"
+                  padding="10px"
+                >
+                  GO
+                </Button>
+              </Box>
+            </Flex>
           </Flex>
           <Button
             w="1px"
@@ -94,8 +90,6 @@ export default function SearchBar() {
           </Button>
         </Flex>
       ) : (
-        // <Flex mr="0px">
-
         <Popover>
           <PopoverTrigger>
             <Flex

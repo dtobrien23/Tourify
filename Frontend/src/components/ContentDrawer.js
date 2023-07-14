@@ -36,6 +36,7 @@ export default function ContentDrawer() {
     activeDrawer,
     isDrawerOpen,
     setIsDrawerOpen,
+    hasTouchScreen,
   } = useContext(MapContext);
 
   const kebabToCamelCase = str => {
@@ -63,7 +64,7 @@ export default function ContentDrawer() {
       }}
       isOpen={isDrawerOpen}
       placement="left"
-      size="md"
+      size={hasTouchScreen ? 'md' : 'sm'}
     >
       <DrawerContent
         pointerEvents="all"
@@ -171,12 +172,12 @@ export default function ContentDrawer() {
                                 )}
                                 <p>Price: {attractionInfo.price}</p>
                                 <p>
-                                      Image:{' '}
-                                      <img
-                                        src={`/images/${attractionInfo.name_alias}.jpg`}
-                                        alt={attractionInfo.name_alias}
-                                      />
-                                    </p>
+                                  Image:{' '}
+                                  <img
+                                    src={`/images/${attractionInfo.name_alias}.jpg`}
+                                    alt={attractionInfo.name_alias}
+                                  />
+                                </p>
                               </div>
                             );
                           }

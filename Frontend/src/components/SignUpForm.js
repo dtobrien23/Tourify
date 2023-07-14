@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, VStack, Badge } from '@chakra-ui/react';
+import { Button, VStack, Badge, useDisclosure } from '@chakra-ui/react';
 import {
   googleLogout,
   useGoogleLogin,
@@ -17,6 +17,13 @@ import {
   PopoverCloseButton,
   Avatar,
   AvatarBadge,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
@@ -25,10 +32,17 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const [loading, setLoading] = useState(true);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [buttonsDirection, setButtonsDirection] = useState('row');
-  const { isMobile } = useContext(MapContext);
+  const { isMobile, hasTouchScreen } = useContext(MapContext);
   const { globalUserInfo, setGlobalUserInfo } = useContext(APIContext);
   const [userInfoFetched, setUserInfoFetched] = useState(false);
   const { setIsDrawerOpen } = useContext(MapContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [modalContent, setModalContent] = useState('signUp');
+
+  const handleButtonClick = content => {
+    setModalContent(content);
+    onOpen();
+  };
 
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
@@ -44,14 +58,14 @@ export default function SignUpForm({ setIsLoggedIn }) {
   }, []);
 
   useEffect(() => {
-    console.log(isMobile);
-    if (isMobile) {
+    console.log(hasTouchScreen);
+    if (hasTouchScreen) {
       setButtonsDirection('column');
       console.log('buttonssssss', buttonsDirection);
     } else {
       setButtonsDirection('row');
     }
-  }, [isMobile]);
+  }, [hasTouchScreen]);
 
   const backendLogin = async credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
@@ -116,7 +130,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
     return <p>Loading...</p>;
   }
   return (
-    <Flex flexDirection={buttonsDirection}>
+    <Flex
+      flexDirection={buttonsDirection}
+      minWidth="190px"
+      justifyContent="flex-end"
+    >
       {userLoggedIn ? (
         <Button
           bg="#ff914d"
@@ -130,21 +148,40 @@ export default function SignUpForm({ setIsLoggedIn }) {
         </Button>
       ) : (
         <>
-          <Flex mr={1}>
-            <Popover>
-              <PopoverTrigger>
-                <Button
-                  bg="white"
-                  border="solid 1px orangered"
-                  borderRadius="25px"
-                >
-                  Log In
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverBody>
+          <Flex mr={3}>
+            <Button
+              bg="white"
+              border="solid 1px orangered"
+              borderRadius="25px"
+              onClick={() => {
+                handleButtonClick('logIn');
+              }}
+            >
+              Log In
+            </Button>
+          </Flex>
+          <Flex>
+            <Button
+              bg="#ff914d"
+              color="white"
+              border="solid 1px orangered"
+              borderRadius="25px"
+              _hover={{ bg: 'orangered', color: 'white' }}
+              onClick={() => handleButtonClick('signUp')}
+            >
+              Sign Up
+            </Button>
+          </Flex>
+
+          <Modal isOpen={isOpen} onClose={onClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>
+                {modalContent === 'logIn' ? 'Welcome back!' : 'Welcome!'}
+              </ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                {modalContent === 'logIn' ? (
                   <GoogleLogin
                     clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
                     onSuccess={backendLogin}
@@ -164,38 +201,10 @@ export default function SignUpForm({ setIsLoggedIn }) {
                     borderColor="orangered"
                     shape="pill"
                     buttonText="Login"
-                  />{' '}
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
-          </Flex>
-          <Flex>
-            <Popover>
-              <PopoverTrigger>
-                <Button
-                  bg="#ff914d"
-                  color="white"
-                  border="solid 1px orangered"
-                  borderRadius="25px"
-                  _hover={{ bg: 'orangered', color: 'white' }}
-                >
-                  Sign Up
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverCloseButton />
-                <PopoverBody>
+                  />
+                ) : (
                   <GoogleLogin
                     clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
-                    render={renderProps => (
-                      <Button
-                        onClick={renderProps.onClick}
-                        disabled={renderProps.disabled}
-                      >
-                        Sign Up
-                      </Button>
-                    )}
                     onSuccess={backendSignUp}
                     onFailure={error =>
                       console.log('Google login failed:', error)
@@ -214,10 +223,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
                     shape="pill"
                     text="Sign Up"
                   />
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
-          </Flex>
+                )}
+              </ModalBody>
+              <ModalFooter />
+            </ModalContent>
+          </Modal>
         </>
       )}
     </Flex>

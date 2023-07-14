@@ -24,25 +24,7 @@ export default function DestinationInput(
 ) {
   // const google = window.google;
   const [inputColour, setInputColour] = useState('#B5BBC6');
-  const {
-    map,
-    setMap,
-    selectedAttraction,
-    setSelectedAttraction,
-    setSourceCoords,
-    locationMarker,
-    setLocationMarker,
-    isSourceAlertOpen,
-    setIsSourceAlertOpen,
-    buttonState,
-    setButtonState,
-    handleRecommenderClick,
-    clearRoute,
-    calculateRoute,
-    geolocation,
-    setGeolocation,
-    google,
-  } = useContext(MapContext);
+  const { selectedAttraction, setSelectedAttraction } = useContext(MapContext);
 
   const handleAttractionSelect = attraction => {
     setSelectedAttraction(attraction);
@@ -50,7 +32,7 @@ export default function DestinationInput(
   };
 
   return (
-    <Flex w={'270px'}>
+    <Flex w="100%">
       <Menu>
         <MenuButton
           as={Button}
