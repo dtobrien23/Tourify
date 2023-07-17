@@ -37,7 +37,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const { globalUserInfo, setGlobalUserInfo } = useContext(APIContext);
   const [userInfoFetched, setUserInfoFetched] = useState(false);
   const { setIsDrawerOpen } = useContext(MapContext);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const [modalContent, setModalContent] = useState('signUp');
 
   const handleButtonClick = content => {
@@ -159,6 +159,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
           } else {
             setUserLoggedIn(false);
             setIsLoggedIn(false);
+            onToggle(false);
             localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
             toastSignupError({
               title: 'Account Present.',
@@ -179,6 +180,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
     localStorage.removeItem('userInfo');
     setIsDrawerOpen(false);
+    onToggle(false);
     toastLogout({
       title: 'Logout.',
       description: "You've logged out successfully.",
