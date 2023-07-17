@@ -21,6 +21,8 @@ import {
   TabList,
   TabPanel,
   TabPanels,
+  SimpleGrid,
+  Heading,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
@@ -28,7 +30,6 @@ import { APIContext } from './APIContext';
 
 export default function ContentDrawer() {
   const { globalUserInfo, apiAttractions } = useContext(APIContext);
-  console.log(globalUserInfo, 'this is in the drawer!!!');
 
   const {
     isAttractionsDrawerOpen,
@@ -104,33 +105,43 @@ export default function ContentDrawer() {
                           const attractionInfo = getAttractionInfo(attraction);
                           if (attractionInfo) {
                             return (
-                              <div key={attraction}>
-                                <h3>{attractionInfo.name}</h3>
-                                {attractionInfo.openHour && (
+                              <SimpleGrid
+                                alignItems="left"
+                                justifyItems="left"
+                                border="3px solid orangered"
+                                borderRadius="20px"
+                                marginTop="5px"
+                                marginLeft="10px"
+                                overflow="hidden"
+                                spacing={8}
+                                p="10px"
+                                width="425px"
+                              >
+                                <Flex key={attraction} mb={4} width="100%">
+                                  <p>
+                                    {' '}
+                                    <img
+                                      src={`/images/${attractionInfo.name_alias}.jpg`}
+                                      alt={attractionInfo.name_alias}
+                                      style={{
+                                        maxWidth: '100px',
+                                        height: '100px',
+                                        marginRight: '10px',
+                                        border: '2px solid orangered',
+                                        borderRadius: '5px',
+                                      }}
+                                    />
+                                  </p>
                                   <div>
-                                    <p>Opening Hours:</p>
+                                    <Heading size="md">
+                                      {attractionInfo.name}
+                                    </Heading>
                                     <p>
-                                      Monday:{' '}
-                                      {attractionInfo.openHour.mondayOpen} -{' '}
-                                      {attractionInfo.openHour.mondayClose}
-                                    </p>
-                                    <p>
-                                      Tuesday:{' '}
-                                      {attractionInfo.openHour.tuesdayOpen} -{' '}
-                                      {attractionInfo.openHour.tuesdayClose}
-                                    </p>
-                                    {/* Repeat for other days */}
-                                    <p>
-                                      Image:{' '}
-                                      <img
-                                        src={`/images/${attractionInfo.name_alias}.jpg`}
-                                        alt={attractionInfo.name_alias}
-                                      />
+                                      Address: {attractionInfo.full_address}
                                     </p>
                                   </div>
-                                )}
-                                <p>Price: {attractionInfo.price}</p>
-                              </div>
+                                </Flex>
+                              </SimpleGrid>
                             );
                           }
                         }
@@ -152,33 +163,44 @@ export default function ContentDrawer() {
                           const attractionInfo = getAttractionInfo(attraction);
                           if (attractionInfo) {
                             return (
-                              <div key={attraction}>
-                                <h3>{attractionInfo.name}</h3>
-                                {attractionInfo.openHour && (
+                              <SimpleGrid
+                                alignItems="left"
+                                justifyItems="left"
+                                border="3px solid orangered"
+                                borderRadius="20px"
+                                marginTop="5px"
+                                marginLeft="10px"
+                                overflow="hidden"
+                                spacing={8}
+                                p="10px"
+                                width="425px"
+                              >
+                                <Flex key={attraction} mb={4} width="100%">
+                                  <p>
+                                    {' '}
+                                    <img
+                                      src={`/images/${attractionInfo.name_alias}.jpg`}
+                                      alt={attractionInfo.name_alias}
+                                      style={{
+                                        maxWidth: '100px',
+                                        height: '100px',
+                                        marginRight: '10px',
+                                        border: '2px solid orangered',
+                                        borderRadius: '5px',
+                                      }}
+                                    />
+                                  </p>
                                   <div>
-                                    <p>Opening Hours:</p>
+                                    <Heading size="md">
+                                      {attractionInfo.name}
+                                    </Heading>
                                     <p>
-                                      Monday:{' '}
-                                      {attractionInfo.openHour.mondayOpen} -{' '}
-                                      {attractionInfo.openHour.mondayClose}
+                                      {' '}
+                                      Address: {attractionInfo.full_address}
                                     </p>
-                                    <p>
-                                      Tuesday:{' '}
-                                      {attractionInfo.openHour.tuesdayOpen} -{' '}
-                                      {attractionInfo.openHour.tuesdayClose}
-                                    </p>
-                                    {/* Repeat for other days */}
                                   </div>
-                                )}
-                                <p>Price: {attractionInfo.price}</p>
-                                <p>
-                                  Image:{' '}
-                                  <img
-                                    src={`/images/${attractionInfo.name_alias}.jpg`}
-                                    alt={attractionInfo.name_alias}
-                                  />
-                                </p>
-                              </div>
+                                </Flex>
+                              </SimpleGrid>
                             );
                           }
                         }

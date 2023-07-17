@@ -16,7 +16,6 @@ const APIContextProvider = ({ children }) => {
         const dataArray = data.data;
         console.log(dataArray, 'back end data without wrapper');
 
-        // Set the slider list data to the response json object
         setAPIAttractions(dataArray);
         setApiLoaded(true);
 

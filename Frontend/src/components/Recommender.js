@@ -14,6 +14,8 @@ import {
   TabPanel,
   TabPanels,
   useForceUpdate,
+  SimpleGrid,
+  Heading
 } from '@chakra-ui/react';
 //import attractions from '../static/attractions.json';
 import { GeolocationContext } from './GeoContext';
@@ -130,7 +132,6 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const topFiveNearestAttractions = nearestAttractions.slice(0, 5);
   console.log(topFiveNearestAttractions, 'TOP 5 NEAREST');
 
-  // const topFiveQuietestAttractions = quietestAttractions.slice(0,5);
 
   useEffect(() => {
     const leastBusyAttractions = nearestAttractions.sort((a, b) => {
@@ -141,16 +142,6 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
     setQuietestAttractions(leastBusyAttractions);
   }, []);
-
-  // const quietestAttractionsScore = quietestAttractions;
-  //const nearestAttractionsSCore = nearestAttractions[0].comboScore = 0;
-  // console.log(quietestAttractionsScore, 'edited JSON !!!')
-
-  // useEffect(() => {
-
-  //   setCombinedAttractions(combinedList)
-
-  // },[combinedAttractions]);
 
   return (
     <>
@@ -164,33 +155,47 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
         <TabPanels>
           <TabPanel>
             {nearestAttractions.map(attraction => (
-              <Flex key={attraction.id} mb={4}>
-                <p>
-                  Image:{' '}
-                  <img
-                    src={`/images/${attraction.name_alias}.jpg`}
-                    alt={attraction.name_alias}
-                    style={{
-                      width: '100px',
-                      height: '100px',
-                      marginRight: '10px',
-                    }}
-                  />
-                </p>
+              <SimpleGrid
+                alignItems="left"
+                justifyItems="left"
+                border="3px solid orangered"
+                borderRadius="20px"
+                marginTop='5px'
+                marginLeft='10px'
+                overflow='hidden'
+                spacing={8}
+                p='10px'
+              
+              >
+                <Flex key={attraction.id} mb={4}>
+                  <p>
+                    {' '}
+                    <img
+                      src={`/images/${attraction.name_alias}.jpg`}
+                      alt={attraction.name_alias}
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                        marginRight: '10px',
+                        border:"3px solid orangered",
+                        borderRadius:"5px"
+                      }}
+                    />
+                  </p>
 
-                <div>
-                  <h3>{attraction.name}</h3>
-                  <p>Busyness Score: {attraction.busyness_score}</p>
-                  <p>Distance: {attraction.distance}</p>
-                </div>
-              </Flex>
+                  <div>
+                  <Heading size='md'>{attraction.name}</Heading>                    <p>Busyness Score: {attraction.busyness_score}</p>
+                    <p>Distance: {attraction.distance}</p>
+                  </div>
+                </Flex>
+              </SimpleGrid>
             ))}
           </TabPanel>
           <TabPanel>
             {quietestAttractions.map(attraction => (
               <Flex key={attraction.id} mb={4}>
                 <p>
-                  Image:{' '}
+                  {' '}
                   <img
                     src={`/images/${attraction.name_alias}.jpg`}
                     alt={attraction.name_alias}
@@ -198,12 +203,13 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                       width: '100px',
                       height: '100px',
                       marginRight: '10px',
+                      border:"3px solid orangered",
+                      borderRadius:"5px"
                     }}
                   />
                 </p>
                 <div>
-                  <h3>{attraction.name}</h3>
-                  <p>Busyness Score: {attraction.busyness_score}</p>
+                <Heading size='md'>{attraction.name}</Heading>                  <p>Busyness Score: {attraction.busyness_score}</p>
                   <p>Distance: {attraction.distance}</p>
                 </div>
               </Flex>
