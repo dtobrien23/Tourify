@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
 
-//passing it marker state and method to change state so the X button can close the drawer
+// passing it marker state and method to change state so the X button can close the drawer
 // also passing in marker object to render info in drawer
 function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
   const { apiAttractions } = useContext(APIContext);

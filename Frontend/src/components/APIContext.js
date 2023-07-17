@@ -11,7 +11,7 @@ const APIContextProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:8001/api/attraction/getAllAttraction');
-        const data = await response.json();
+        const data = await response.json(); //long/lat data
         console.log(data, 'THIS CAME FROM THE BACK END');
         const dataArray = data.data;
         console.log(dataArray, 'back end data without wrapper');

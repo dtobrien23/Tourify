@@ -75,11 +75,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
   const backendLogin = async credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
-    const { credential } = credentialResponse;
+    const { credential } = credentialResponse; 
 
     if (credential) {
       axios
-        .post(`http://localhost:8001/api/user/info?idTokenString=${credential}`)
+        .post(`http://localhost:8001/api/user/info?idTokenString=${credential}`) //user info, json w/ true false
         .then(response => {
           console.log(
             response.data,

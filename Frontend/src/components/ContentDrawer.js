@@ -23,13 +23,17 @@ import {
   TabPanels,
   SimpleGrid,
   Heading,
+  Stack,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
 import { APIContext } from './APIContext';
+import { getUserGeolocation } from './GeoContext';
 
 export default function ContentDrawer() {
   const { globalUserInfo, apiAttractions } = useContext(APIContext);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
 
   const {
     isAttractionsDrawerOpen,
@@ -57,6 +61,47 @@ export default function ContentDrawer() {
     );
     return attraction || {};
   };
+
+  const handleCheckIn = async () => {
+
+    try {
+      const { latitude, longitude } = await getUserGeolocation();
+      setLatitude(latitude);
+      setLongitude(longitude);
+      
+      // Make your API call here using latitude and longitude
+      // console.log('Latitude:', latitude);
+      // console.log('Longitude:', longitude);
+      // Your API call goes here...
+
+      const apiEndpoint = 'http://localhost:8001/api/user/update';
+
+      const idToken = 'your_id_token'; // get this from credential in signupform
+      const attractionId = attractionName; // Replace 'your_attraction_id' with the actual attraction ID
+      
+      const requestBody = {
+        id_token: idToken,
+        attraction_id: attractionId,
+        lat: latitude,
+        lng: longitude,
+      };
+
+      axios
+        .post(apiEndpoint, requestBody)
+        .then(response => {
+          console.log('API call successful:', response.data);
+          // Handle the response data here
+          // if (response.status === 200) {
+          //   // set logic that your market has been ticked off
+          // } else {
+          //   // set logic that user wasn't close enough to marker
+          // }
+        })
+        .catch(error => {
+          console.error('Error in API call:', error);
+          // Handle errors here
+        });
+
 
   return (
     <Drawer
@@ -159,7 +204,7 @@ export default function ContentDrawer() {
                       Object.entries(
                         globalUserInfo.data.attractionStatusDO
                       ).map(([attraction, status]) => {
-                        if (!status) {
+                        if (!status) { //button should be on the false ones
                           const attractionInfo = getAttractionInfo(attraction);
                           if (attractionInfo) {
                             return (
@@ -189,6 +234,22 @@ export default function ContentDrawer() {
                                         borderRadius: '5px',
                                       }}
                                     />
+                                  <Stack spacing={10}>
+                                <Button
+                                  colorScheme="blue"
+                                  style={{
+                                    backgroundColor: 'green',
+                                    color: 'white',
+                                    borderRadius: '8px',
+                                    marginTop: '5px',
+                                    padding: '10px 20px',
+                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+                                  }}
+                                  onClick={handleCheckIn}
+                                >
+                                  Check In!
+                                </Button>                                  
+                                </Stack>
                                   </p>
                                   <div>
                                     <Heading size="md">
