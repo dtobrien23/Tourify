@@ -58,6 +58,7 @@ export default function NavBar() {
       align="center"
       justify="space-between"
       h="75px"
+      maxWidth="100%"
       // mt="10px"
       px="4px"
       pr="10px"

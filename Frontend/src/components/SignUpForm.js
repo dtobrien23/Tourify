@@ -148,7 +148,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
         </Button>
       ) : (
         <>
-          <Flex mr={3}>
+          <Flex mr={2}>
             <Button
               bg="white"
               border="solid 1px orangered"
