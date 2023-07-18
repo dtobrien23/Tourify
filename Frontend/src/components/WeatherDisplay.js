@@ -127,7 +127,7 @@ export default function WeatherDisplay({
           <PopoverArrow />
           <PopoverBody>
             <h2 style={{ fontWeight: 'bold' }}> Update Current Busyness</h2>
-            Last updated: {now.toLocaleTimeString()}
+            Last updated at {now.toLocaleTimeString()}
           </PopoverBody>
         </PopoverContent>
       </Popover>
