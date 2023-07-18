@@ -1,4 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
+
+import { getGlobalCredential } from './auth'; //REMOVE
+
 import {
   Flex,
   Button,
@@ -62,47 +66,45 @@ export default function ContentDrawer() {
     return attraction || {};
   };
 
-  const handleCheckIn = async () => {
+  const handleCheckIn = async (attractionID) => {
 
-    try {
-      const { latitude, longitude } = await getUserGeolocation();
-      setLatitude(latitude);
-      setLongitude(longitude);
-      
-      // Make your API call here using latitude and longitude
-      // console.log('Latitude:', latitude);
-      // console.log('Longitude:', longitude);
-      // Your API call goes here...
+    const { latitude, longitude } = await getUserGeolocation();
+    setLatitude(latitude);
+    setLongitude(longitude);
+    
+    // Make your API call here using latitude and longitude
+    // console.log('Latitude:', latitude);
+    // console.log('Longitude:', longitude);
+    // Your API call goes here...
 
-      const apiEndpoint = 'http://localhost:8001/api/user/update';
+    const apiEndpoint = 'http://localhost:8001/api/user/update';
 
-      const idToken = 'your_id_token'; // get this from credential in signupform
-      const attractionId = attractionName; // Replace 'your_attraction_id' with the actual attraction ID
-      
-      const requestBody = {
-        id_token: idToken,
-        attraction_id: attractionId,
-        lat: latitude,
-        lng: longitude,
-      };
+    const idToken = getGlobalCredential(); // get this from credential in signupform
+    
+    const requestBody = {
+      id_token: idToken,
+      attraction_id: attractionID,
+      lat: latitude,
+      lng: longitude,
+    };
 
-      axios
-        .post(apiEndpoint, requestBody)
-        .then(response => {
-          console.log('API call successful:', response.data);
-          // Handle the response data here
-          // if (response.status === 200) {
-          //   // set logic that your market has been ticked off
-          // } else {
-          //   // set logic that user wasn't close enough to marker
-          // }
-        })
-        .catch(error => {
-          console.error('Error in API call:', error);
-          // Handle errors here
-        });
-
-
+    axios
+      .post(apiEndpoint, requestBody)
+      .then(response => {
+        console.log('API call successful:', response.data);
+        // Handle the response data here
+        // if (response.status === 200) {
+        //   // set logic that your market has been ticked off
+        // } else {
+        //   // set logic that distance too long
+        // }
+      })
+      .catch(error => {
+        console.error('Error in API call:', error);
+        // Handle errors here
+      })
+    }
+    
   return (
     <Drawer
       onClose={() => {
@@ -204,7 +206,7 @@ export default function ContentDrawer() {
                       Object.entries(
                         globalUserInfo.data.attractionStatusDO
                       ).map(([attraction, status]) => {
-                        if (!status) { //button should be on the false ones
+                        if (!status) { 
                           const attractionInfo = getAttractionInfo(attraction);
                           if (attractionInfo) {
                             return (
@@ -245,7 +247,7 @@ export default function ContentDrawer() {
                                     padding: '10px 20px',
                                     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
                                   }}
-                                  onClick={handleCheckIn}
+                                  onClick={() => handleCheckIn(attractionInfo.id)} 
                                 >
                                   Check In!
                                 </Button>                                  

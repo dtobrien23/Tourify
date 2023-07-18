@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, VStack, Badge, useDisclosure } from '@chakra-ui/react';
+
+import { setGlobalCredential } from './auth'; //REMOVE
+
 import {
   googleLogout,
   useGoogleLogin,
@@ -76,6 +79,9 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const backendLogin = async credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse; 
+    
+    setGlobalCredential(credential); // Set the credential as a global variable
+
 
     if (credential) {
       axios
@@ -126,7 +132,9 @@ export default function SignUpForm({ setIsLoggedIn }) {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
 
+
     if (credential) {
+      console.log(credential)
       axios
         .post(
           `http://localhost:8001/api/user/register?idTokenString=${credential}`
