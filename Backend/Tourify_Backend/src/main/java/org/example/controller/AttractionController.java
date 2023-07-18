@@ -4,11 +4,18 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import org.example.bean.dto.AttractionOnePredictionDTO;
+import org.example.bean.dto.AttractionPredictionDTO;
 import org.example.bean.model.AttractionDO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.bean.util.ResponseCode;
+import org.example.bean.vo.AttractionOnePredictionVO;
+import org.example.bean.vo.AttractionPredictionVO;
 import org.example.repository.AttractionRepository;
+import org.example.service.AttractionService;
+import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.example.config.*;
@@ -23,6 +30,7 @@ import java.time.LocalDateTime;
 public class AttractionController {
 
     @Autowired AttractionRepository attractionRepository;
+    @Autowired AttractionService attractionService;
 
     //getMapping注解用于将/greeting的http请求定向到greeting方法上
     //@PostMapping, @RequestMapping等
@@ -68,42 +76,31 @@ public class AttractionController {
         }
     }
 
-    @GetMapping("/getPrediction")
-    @Operation(summary = "get the attraction prediction", description = "get the attraction prediction using ONNX file (connecting ONNX)")
-    public Result getPredictAttraction() {
-                try (OrtEnvironment env = OrtEnvironment.getEnvironment();
-                     OrtSession.SessionOptions options = new OrtSession.SessionOptions()) {
-                    // load the model
-                    String currentWorkingDir = System.getProperty("user.dir");
-                    String modelPath = currentWorkingDir + "/Tourify_Backend/src/main/resources/model.onnx";
-                    try (OrtSession session = env.createSession(modelPath, options)) {
-                        // create the input
-                        long[][] longArray = new long[1][9];
-                        longArray[0][0] = 1L;
-                        longArray[0][1] = 2L;
-                        longArray[0][2] = 3L;
-                        longArray[0][3] = 4L;
-                        longArray[0][4] = 5L;
-                        longArray[0][5] = 6L;
-                        longArray[0][6] = 7L;
-                        longArray[0][7] = 7L;
-                        longArray[0][8] = 12L;
-                        OnnxTensor tensor = OnnxTensor.createTensor(env, longArray);
-                        // Create a map to hold the input tensor
-                        HashMap<String, OnnxTensor> inputs = new HashMap<>();
-                        inputs.put("integer_input", tensor); // Replace "input_name" with the actual name of your model's input
-                        // run the model
-                        try (OrtSession.Result results = session.run(inputs)) {
-                            // get the output
-                            float[][] output = (float[][]) ((OnnxTensor)results.get(0)).getValue();
-                            System.out.println("Predicted: " + output[0][0]);  // modify this to suit your output shape
-                        }
-                    }
-                } catch (OrtException e) {
-                    e.printStackTrace();
-                }
-    return Result.success();
+
+    @GetMapping("/getAllPrediction")
+    @Operation(summary = "get the ML attraction prediction", description = "get the ML attraction prediction for the current time")
+    public Result<List<AttractionPredictionVO>> getAllPredictAttraction(AttractionPredictionDTO attractionPredictionDTO) {
+
+        try {
+            return Result.success(attractionService.getPrediction(attractionPredictionDTO));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return Result.fail("Prediction error!");
+        }
     }
 
+    @GetMapping("/getOnePrediction")
+    @Operation(summary = "get the single attraction prediction", description = "get the single attraction prediction in future 24 hour")
+    public Result<AttractionOnePredictionVO> getOnePredictAttraction(AttractionOnePredictionDTO attractionOnePredictionDTO) {
+
+        try {
+            return Result.success(attractionService.getOnePrediction(attractionOnePredictionDTO));
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return Result.fail("ML Prediction error!");
+        }
+    }
 
 }
