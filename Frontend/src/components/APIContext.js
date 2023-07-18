@@ -8,11 +8,15 @@ const APIContextProvider = ({ children }) => {
   const [globalUserInfo, setGlobalUserInfo] = useState();
   const [globalCredential, setGlobalCredential] = useState();
   const [checkinState, setCheckinState] = useState(false);
+  const [badgeState, setBadgeState] = useState(null);
+  const [newBadgeState, setNewBadgeState] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8001/api/attraction/getAllAttraction');
+        const response = await fetch(
+          'http://localhost:8001/api/attraction/getAllAttraction'
+        );
         const data = await response.json(); //long/lat data
         console.log(data, 'THIS CAME FROM THE BACK END');
         const dataArray = data.data;
@@ -21,7 +25,7 @@ const APIContextProvider = ({ children }) => {
         setAPIAttractions(dataArray);
         setApiLoaded(true);
 
-        console.log(apiLoaded,'youve set it!!')
+        console.log(apiLoaded, 'youve set it!!');
       } catch (error) {
         console.error('Error fetching data:', error);
         setApiLoaded(false);
@@ -31,11 +35,24 @@ const APIContextProvider = ({ children }) => {
     fetchData();
   }, []);
 
-  
-
-
   return (
-    <APIContext.Provider value={{ apiAttractions, setAPIAttractions, apiLoaded, globalUserInfo, setGlobalUserInfo, setGlobalCredential, globalCredential,setCheckinState,checkinState}}>
+    <APIContext.Provider
+      value={{
+        apiAttractions,
+        setAPIAttractions,
+        apiLoaded,
+        globalUserInfo,
+        setGlobalUserInfo,
+        setGlobalCredential,
+        globalCredential,
+        setCheckinState,
+        checkinState,
+        badgeState,
+        setBadgeState,
+        newBadgeState,
+        setNewBadgeState
+      }}
+    >
       {children}
     </APIContext.Provider>
   );

@@ -42,7 +42,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
     setGlobalUserInfo,
     setGlobalCredential,
     checkinState,
-    setCheckinState,globalCredential
+    setCheckinState,
+    globalCredential,
+    badgeState,
+    setBadgeState,
+    newBadgeState,setNewBadgeState
   } = useContext(APIContext);
   const [userInfoFetched, setUserInfoFetched] = useState(false);
   const { setIsDrawerOpen } = useContext(MapContext);
@@ -58,6 +62,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const toastLogout = useToast();
   const toastSignupError = useToast();
   const toastLoginError = useToast();
+  const toastBadge = useToast();
 
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
@@ -86,63 +91,89 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (checkinState) {
       // Call the userInfoUpdate function to trigger the API call
       userInfoUpdate();
+    }
+  }, [checkinState]);
 
-    }}, [checkinState]);
+  useEffect(() =>{
+    if (newBadgeState){
+    badgeChecker(badgeState, newBadgeState)};
+  },[checkinState]);
 
-      const userInfoUpdate = async credentialResponse => {
-        //console.log(credentialResponse, 'THIS IS THE CRED for checkin');
-        // const { checkinCredential } = credentialResponse;
-
-        //setGlobalCredential(credentialResponse.credential); // Set the credential as a global variable
-        const cachedUserCredential = localStorage.getItem('userCredential');
-        if (cachedUserCredential){
-          axios
-            .post(
-              `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
-            ) //user info, json w/ true false
-            .then(response => {
-              console.log(response.data, 'updated user info');
-              setGlobalUserInfo(response.data);
-
-              if (response.status === 200) {
-                setGlobalUserInfo(response.data);
-                setUserLoggedIn(true);
-                setIsLoggedIn(true);
-
-                // Cache the user info
-                localStorage.setItem('userInfo', JSON.stringify(response.data));
-
-                // Cache the user credential
-                //localStorage.setItem('userCredential', globalCredential);
-                //reset checkinstate to false
-                setCheckinState(false);
-
-                toastLogin({
-                  title: 'Attractions Updated.',
-                  description: 'Your Attractions Have Been Updated.',
-                  status: 'success',
-                  duration: 3000,
-                  isClosable: true,
-                });
-
-                setUserInfoFetched(true);
-              } else {
-                //setUserLoggedIn(false);
-                //setIsLoggedIn(false);
-                toastLoginError({
-                  title: 'Update Error.',
-                  description: 'Error with update, please please refresh page.',
-                  status: 'error',
-                  duration: 3000,
-                  isClosable: true,
-                });
-              }
-            })
-            .catch(error => console.log(error));
-        
-      };}
+  const badgeChecker = (badgeState, newBadgeState) =>{
     
+      // Compare each badge property in the objects
+      for (const badge in newBadgeState.badgeDO) {
+        const oldBadgeValue = badgeState.badgeDO[badge];
+        const newBadgeValue = newBadgeState.badgeDO[badge];
   
+        // Check if the badge value has changed from false to true
+        if (oldBadgeValue === false && newBadgeValue === true) {
+          // Show a toast with the badge name
+          const badgeName = badge.replace(/_/g, ' '); // Replace underscores with spaces
+          toastBadge({
+            title: 'Congratulations!',
+            description: `You've acquired the badge "${badgeName}".`,
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      }
+    };
+
+  const userInfoUpdate = async credentialResponse => {
+    //console.log(credentialResponse, 'THIS IS THE CRED for checkin');
+    // const { checkinCredential } = credentialResponse;
+
+    //setGlobalCredential(credentialResponse.credential); // Set the credential as a global variable
+    const cachedUserCredential = localStorage.getItem('userCredential');
+    if (cachedUserCredential) {
+      axios
+        .post(
+          `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
+        ) //user info, json w/ true false
+        .then(response => {
+          console.log(response.data, 'updated user info');
+          setGlobalUserInfo(response.data);
+
+          if (response.status === 200) {
+            setGlobalUserInfo(response.data);
+            setNewBadgeState(response.data);
+            setUserLoggedIn(true);
+            setIsLoggedIn(true);
+
+            // Cache the user info
+            localStorage.setItem('userInfo', JSON.stringify(response.data));
+
+            // Cache the user credential
+            //localStorage.setItem('userCredential', globalCredential);
+            //reset checkinstate to false
+            setCheckinState(false);
+
+            toastLogin({
+              title: 'Attractions Updated.',
+              description: 'Your Attractions Have Been Updated.',
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
+
+            setUserInfoFetched(true);
+          } else {
+            //setUserLoggedIn(false);
+            //setIsLoggedIn(false);
+            toastLoginError({
+              title: 'Update Error.',
+              description: 'Error with update, please please refresh page.',
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        })
+        .catch(error => console.log(error));
+    }
+  };
 
   const backendLogin = async credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
@@ -156,6 +187,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
         .then(response => {
           console.log(response.data, 'user info');
           setGlobalUserInfo(response.data);
+          setBadgeState(response.data);
 
           if (response.status === 200) {
             setGlobalUserInfo(response.data);
