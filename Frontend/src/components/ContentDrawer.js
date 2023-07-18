@@ -27,7 +27,7 @@ import {
   TabPanels,
   SimpleGrid,
   Heading,
-  Stack,
+  Stack,useToast
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
@@ -47,6 +47,9 @@ export default function ContentDrawer() {
     setIsDrawerOpen,
     hasTouchScreen,
   } = useContext(MapContext);
+
+  const toastCheckIn = useToast();
+  const toastNotCheckIn = useToast();
 
   const kebabToCamelCase = str => {
     return str.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
@@ -92,12 +95,28 @@ export default function ContentDrawer() {
       .post(apiEndpoint, requestBody)
       .then(response => {
         console.log('API call successful:', response.data);
+        console.log(response,'this is response data')
         // Handle the response data here
-        // if (response.status === 200) {
+        if (response.data.code === 0) {
         //   // set logic that your market has been ticked off
-        // } else {
+
+        toastCheckIn({
+          title: 'Check in Successful.',
+          description: "You've Checked in Successfully.",
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
         //   // set logic that distance too long
-        // }
+        toastNotCheckIn({
+          title: 'Check in Unsuccessful.',
+          description: "You're too far away.",
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        }
       })
       .catch(error => {
         console.error('Error in API call:', error);
