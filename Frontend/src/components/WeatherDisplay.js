@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, Text, Button, Tooltip } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
 import '../App.css';
 
@@ -53,35 +53,60 @@ export default function WeatherDisplay({
   }, [apiWeather]);
 
   return (
-    <Flex
-      bg="white"
-      w="fit-content"
-      h="fit-content"
-      top="5"
-      left="5"
-      position="absolute"
-      flexDirection="column"
-      borderRadius="20px"
-      boxShadow="1px 1px 5px 1px rgba(0, 0, 0, 0.6)"
-      justifyContent="center"
-      alignItems="center"
-    >
-      {apiWeather && (
-        <>
-          <img
-            src={weatherIcon}
-            style={{
-              height: '60px',
-              width: '60px',
-              margin: '10px',
-              marginBottom: '2px',
-            }}
-          />
-          <Text fontSize="22px">{`${Math.floor(
-            apiWeather.main.temp - 273.15
-          )}\u00B0`}</Text>
-        </>
-      )}
+    <Flex top="5" left="5" position="absolute">
+      <Flex
+        bg="white"
+        w="fit-content"
+        h="fit-content"
+        flexDirection="column"
+        borderRadius="20px"
+        boxShadow="1px 1px 5px 1px rgba(0, 0, 0, 0.6)"
+        justifyContent="center"
+        alignItems="center"
+      >
+        {apiWeather && (
+          <>
+            <h2
+              style={{
+                fontWeight: 'bold',
+                margin: '10px',
+                marginTop: '5px',
+                marginBottom: '5px',
+              }}
+            >
+              Manhattan
+            </h2>
+            <img
+              src={weatherIcon}
+              style={{
+                height: '60px',
+                width: '60px',
+                marginBottom: '3px',
+              }}
+            />
+            <Text fontSize="20px">{`${Math.floor(
+              apiWeather.main.temp - 273.15
+            )}\u00B0`}</Text>
+          </>
+        )}
+      </Flex>
+      <Tooltip label="Update Current Busyness" placement="right">
+        <Button
+          bg="white"
+          _hover={{ bg: 'white' }}
+          boxShadow="1px 1px 5px 1px rgba(0, 0, 0, 0.6)"
+          ml="15px"
+          borderRadius="50%"
+          w="50px"
+          h="50px"
+          p="10px"
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          <img src="/images/refresh.svg" />
+        </Button>
+      </Tooltip>
     </Flex>
   );
 }
