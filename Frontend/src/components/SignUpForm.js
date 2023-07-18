@@ -113,7 +113,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
                 localStorage.setItem('userInfo', JSON.stringify(response.data));
 
                 // Cache the user credential
-                localStorage.setItem('userCredential', credential);
+                localStorage.setItem('userCredential', globalCredential);
                 //reset checkinstate to false
                 setCheckinState(false);
 

@@ -7,6 +7,7 @@ const APIContextProvider = ({ children }) => {
   const [apiLoaded, setApiLoaded] = useState(false);
   const [globalUserInfo, setGlobalUserInfo] = useState();
   const [globalCredential, setGlobalCredential] = useState();
+  const [checkinState, setCheckinState] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +35,7 @@ const APIContextProvider = ({ children }) => {
 
 
   return (
-    <APIContext.Provider value={{ apiAttractions, setAPIAttractions, apiLoaded, globalUserInfo, setGlobalUserInfo, setGlobalCredential, globalCredential}}>
+    <APIContext.Provider value={{ apiAttractions, setAPIAttractions, apiLoaded, globalUserInfo, setGlobalUserInfo, setGlobalCredential, globalCredential,setCheckinState,checkinState}}>
       {children}
     </APIContext.Provider>
   );
