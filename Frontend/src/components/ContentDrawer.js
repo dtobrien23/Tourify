@@ -69,8 +69,8 @@ export default function ContentDrawer() {
   const handleCheckIn = async (attractionID) => {
 
     const { latitude, longitude } = await getUserGeolocation();
-    setLatitude(latitude);
-    setLongitude(longitude);
+    setLatitude("40.7484405");
+    setLongitude("-73.9856644");
     
     // Make your API call here using latitude and longitude
     // console.log('Latitude:', latitude);
@@ -85,8 +85,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: latitude,
-      lng: longitude,
+      lat: "40.7484405",
+      lng: "-73.9856644",
     };
 
     axios
