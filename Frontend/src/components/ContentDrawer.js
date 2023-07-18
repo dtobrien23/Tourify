@@ -1,8 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-
-import { getGlobalCredential } from './auth'; //REMOVE
-
 import {
   Flex,
   Button,
@@ -35,7 +32,7 @@ import { APIContext } from './APIContext';
 import { getUserGeolocation } from './GeoContext';
 
 export default function ContentDrawer() {
-  const { globalUserInfo, apiAttractions } = useContext(APIContext);
+  const { globalUserInfo, apiAttractions, globalCredential } = useContext(APIContext);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
 
@@ -82,7 +79,8 @@ export default function ContentDrawer() {
 
     const apiEndpoint = 'http://localhost:8001/api/user/update';
 
-    const idToken = getGlobalCredential(); // get this from credential in signupform
+    const idToken = globalCredential; // get this from credential in signupform
+    console.log(globalCredential,'this is the global credential')
     
     const requestBody = {
       id_token: idToken,

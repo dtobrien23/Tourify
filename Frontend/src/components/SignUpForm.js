@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, VStack, Badge, useDisclosure } from '@chakra-ui/react';
 
-import { setGlobalCredential } from './auth'; //REMOVE
+// import { setGlobalCredential } from './auth'; //REMOVE
 
 import {
   googleLogout,
@@ -37,7 +37,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [buttonsDirection, setButtonsDirection] = useState('row');
   const { isMobile, hasTouchScreen } = useContext(MapContext);
-  const { globalUserInfo, setGlobalUserInfo } = useContext(APIContext);
+  const { globalUserInfo, setGlobalUserInfo, setGlobalCredential } = useContext(APIContext);
   const [userInfoFetched, setUserInfoFetched] = useState(false);
   const { setIsDrawerOpen } = useContext(MapContext);
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
@@ -78,9 +78,9 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
   const backendLogin = async credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
-    const { credential } = credentialResponse; 
+    const { credential } = credentialResponse;
     
-    setGlobalCredential(credential); // Set the credential as a global variable
+    setGlobalCredential(credentialResponse.credential); // Set the credential as a global variable
 
 
     if (credential) {
@@ -101,6 +101,9 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
             // Cache the user info
             localStorage.setItem('userInfo', JSON.stringify(response.data));
+
+            // Cache the user credential
+            localStorage.setItem('userCredential', credential);
 
             toastLogin({
               title: 'Login Successful.',
@@ -187,6 +190,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     setIsLoggedIn(false);
     localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
     localStorage.removeItem('userInfo');
+    localStorage.removeItem('userCredential')
     setIsDrawerOpen(false);
     onToggle(false);
     toastLogout({
