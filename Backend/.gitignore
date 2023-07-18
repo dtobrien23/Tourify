@@ -9,3 +9,5 @@
 
 ### IntelliJ IDEA ###
 .idea/
+
+Backend/Tourify_Backend/src/main/resources/Tourify_model_v2.onnx
