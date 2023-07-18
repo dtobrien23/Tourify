@@ -94,11 +94,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
         // const { checkinCredential } = credentialResponse;
 
         //setGlobalCredential(credentialResponse.credential); // Set the credential as a global variable
-
-        if (globalCredential){
+        const cachedUserCredential = localStorage.getItem('userCredential');
+        if (cachedUserCredential){
           axios
             .post(
-              `http://localhost:8001/api/user/info?idTokenString=${globalCredential}`
+              `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
             ) //user info, json w/ true false
             .then(response => {
               console.log(response.data, 'updated user info');
@@ -113,7 +113,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
                 localStorage.setItem('userInfo', JSON.stringify(response.data));
 
                 // Cache the user credential
-                localStorage.setItem('userCredential', globalCredential);
+                //localStorage.setItem('userCredential', globalCredential);
                 //reset checkinstate to false
                 setCheckinState(false);
 

@@ -80,15 +80,16 @@ export default function ContentDrawer() {
     // setLongitude(longitude);
 
     const apiEndpoint = 'http://localhost:8001/api/user/update';
+    const cachedUserCredential = localStorage.getItem('userCredential');
 
-    const idToken = globalCredential; // get this from credential in signupform
-    console.log(globalCredential, 'this is the global credential');
+    const idToken = cachedUserCredential; // get this from credential in signupform
+    console.log(cachedUserCredential, 'this is the global credential');
 
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: "40.7492258", //hardcoded for testing
-      lng: "-73.9813971", //hardcoded for testing
+      lat: "40.742045", //hardcoded for testing
+      lng: "-73.9900845", //hardcoded for testing
     };
 
     axios
