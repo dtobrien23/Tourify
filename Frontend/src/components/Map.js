@@ -5,6 +5,7 @@ import '../App.css';
 import SliderBar from './SliderBar';
 import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
+import WeatherDisplay from './WeatherDisplay.js';
 import {
   Flex,
   Button,
@@ -45,26 +46,23 @@ export default function Map() {
     setIsAttractionsDrawerOpen,
     isMobile,
     hasTouchScreen,
+    mapCenter,
+    setMapCenter,
   } = useContext(MapContext);
 
   ////////////////
   // USE STATES //
   ////////////////
 
-  const [mapCenter, setMapCenter] = useState({
-    lat: 40.755091,
-    lng: -73.978285,
-  });
   //user location from locationInput
   const [userLocation, setUserLocation] = useState(null);
-  
 
   const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['ALL']);
-  
+
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
   const [dataArray, setDataArray] = useState(null);
 
@@ -88,8 +86,6 @@ export default function Map() {
       coordinates_lng: marker.position.lng(),
       price_dollars: marker.price_dollars,
       //image: `/images/${marker.name}.jpg`
-      
-    
     };
     setMarkerObject(markerData);
 
@@ -152,8 +148,6 @@ export default function Map() {
       }
     }
   }, [map, apiAttractions, selectedFilters]);
-
-
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -222,6 +216,7 @@ export default function Map() {
           />
         </Alert>
       )}
+      <WeatherDisplay />
       <GeolocationProvider>
         {hasTouchScreen ? (
           <Flex
@@ -291,7 +286,6 @@ export default function Map() {
           markerObject={markerObject}
         />
         <ContentDrawer />
-        
       </GeolocationProvider>
     </GoogleMap>
   );

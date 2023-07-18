@@ -5,6 +5,10 @@ const MapContext = createContext();
 const MapProvider = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [map, setMap] = useState(null);
+  const [mapCenter, setMapCenter] = useState({
+    lat: 40.755091,
+    lng: -73.978285,
+  });
   const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
@@ -24,30 +28,29 @@ const MapProvider = ({ children }) => {
   const [isBadgesDrawerOpen, setIsBadgesDrawerOpen] = useState(false); // for My Badges drawer
   const [hasTouchScreen, setHasTouchScreen] = useState(null);
 
-  // // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#mobile_device_detection
-  // const detectTouchScreen = () => {
-  //   console.log('HEEEEEEEELLLLLOOOOOOO');
-  //   if ('maxTouchPoints' in navigator) {
-  //     setHasTouchScreen(navigator.maxTouchPoints > 0);
-  //     console.log('touch screen???', hasTouchScreen);
-  //   } else if ('msMaxTouchPoints' in navigator) {
-  //     setHasTouchScreen(navigator.msMaxTouchPoints > 0);
-  //   } else {
-  //     const mQ = matchMedia?.('(pointer:coarse)');
-  //     if (mQ?.media === '(pointer:coarse)') {
-  //       setHasTouchScreen(!!mQ.matches);
-  //     } else if ('orientation' in window) {
-  //       setHasTouchScreen(true); // deprecated, but good fallback
-  //     } else {
-  //       // Only as a last resort, fall back to user agent sniffing
-  //       const UA = navigator.userAgent;
-  //       setHasTouchScreen(
-  //         /\b(BlackBerry|webOS|iPhone|IEMobile|Kindle|Silk)\b/i.test(UA) ||
-  //           /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA)
-  //       );
-  //     }
-  //   }
-  // };
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#mobile_device_detection
+  const detectTouchScreen = () => {
+    if ('maxTouchPoints' in navigator) {
+      setHasTouchScreen(navigator.maxTouchPoints > 0);
+      console.log('touch screen???', hasTouchScreen);
+    } else if ('msMaxTouchPoints' in navigator) {
+      setHasTouchScreen(navigator.msMaxTouchPoints > 0);
+    } else {
+      const mQ = matchMedia?.('(pointer:coarse)');
+      if (mQ?.media === '(pointer:coarse)') {
+        setHasTouchScreen(!!mQ.matches);
+      } else if ('orientation' in window) {
+        setHasTouchScreen(true); // deprecated, but good fallback
+      } else {
+        // Only as a last resort, fall back to user agent sniffing
+        const UA = navigator.userAgent;
+        setHasTouchScreen(
+          /\b(BlackBerry|webOS|iPhone|IEMobile|Kindle|Silk)\b/i.test(UA) ||
+            /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA)
+        );
+      }
+    }
+  };
 
   const google = window.google;
 
@@ -56,7 +59,6 @@ const MapProvider = ({ children }) => {
   /////////////
 
   async function calculateRoute() {
-
     if (sourceCoords && selectedAttraction) {
       if (directionsRenderers.length !== 0) {
         directionsRenderers[0].setMap(null);
@@ -150,6 +152,8 @@ const MapProvider = ({ children }) => {
         setIsMobile,
         hasTouchScreen,
         setHasTouchScreen,
+        mapCenter,
+        setMapCenter,
       }}
     >
       {children}
