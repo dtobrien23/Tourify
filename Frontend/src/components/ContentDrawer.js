@@ -24,7 +24,8 @@ import {
   TabPanels,
   SimpleGrid,
   Heading,
-  Stack,useToast
+  Stack,
+  useToast,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
@@ -32,7 +33,14 @@ import { APIContext } from './APIContext';
 import { getUserGeolocation } from './GeoContext';
 
 export default function ContentDrawer() {
-  const { globalUserInfo, apiAttractions, globalCredential } = useContext(APIContext);
+  const {
+    globalUserInfo,
+    apiAttractions,
+    globalCredential,
+    setGlobalUserInfo,
+    setGlobalCredential,
+    setCheckinState, checkinState
+  } = useContext(APIContext);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
 
@@ -66,62 +74,64 @@ export default function ContentDrawer() {
     return attraction || {};
   };
 
-  const handleCheckIn = async (attractionID) => {
-
-    const { latitude, longitude } = await getUserGeolocation();
-    setLatitude("40.7484405");
-    setLongitude("-73.9856644");
-    
-    // Make your API call here using latitude and longitude
-    // console.log('Latitude:', latitude);
-    // console.log('Longitude:', longitude);
-    // Your API call goes here...
+  const handleCheckIn = async attractionID => {
+    // const { latitude, longitude } = await getUserGeolocation();
+    // setLatitude(latitude);
+    // setLongitude(longitude);
 
     const apiEndpoint = 'http://localhost:8001/api/user/update';
 
     const idToken = globalCredential; // get this from credential in signupform
-    console.log(globalCredential,'this is the global credential')
-    
+    console.log(globalCredential, 'this is the global credential');
+
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: "40.7484405",
-      lng: "-73.9856644",
+      lat: "40.7492258", //hardcoded for testing
+      lng: "-73.9813971", //hardcoded for testing
     };
 
     axios
       .post(apiEndpoint, requestBody)
       .then(response => {
         console.log('API call successful:', response.data);
-        console.log(response,'this is response data')
+        console.log(response, 'this is response data');
         // Handle the response data here
-        if (response.data.code === 0) {
-        //   // set logic that your market has been ticked off
+        if (response.data.code === 200) {
+          //   // set logic that your market has been ticked off
+          setCheckinState(true);
+          console.log(checkinState,'checkinstate - contentdrawer')
+          toastCheckIn({
+            title: 'Check in Successful.',
+            description: "You've Checked in Successfully.",
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
 
-        toastCheckIn({
-          title: 'Check in Successful.',
-          description: "You've Checked in Successfully.",
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-      } else {
-        //   // set logic that distance too long
-        toastNotCheckIn({
-          title: 'Check in Unsuccessful.',
-          description: "You're too far away.",
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
+          // get the updated user info from the backend
+          
+        } if(response.data.code === 10050) {
+          // distance too long
+          setCheckinState(false);
+          console.log(response.data.code,'this is the repsonse code!')
+          toastNotCheckIn({
+            title: 'Check in Unsuccessful.',
+            description: "You're too far away.",
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
         }
       })
       .catch(error => {
         console.error('Error in API call:', error);
         // Handle errors here
-      })
-    }
-    
+      });
+  };
+
+
+
   return (
     <Drawer
       onClose={() => {
@@ -223,7 +233,7 @@ export default function ContentDrawer() {
                       Object.entries(
                         globalUserInfo.data.attractionStatusDO
                       ).map(([attraction, status]) => {
-                        if (!status) { 
+                        if (!status) {
                           const attractionInfo = getAttractionInfo(attraction);
                           if (attractionInfo) {
                             return (
@@ -253,22 +263,25 @@ export default function ContentDrawer() {
                                         borderRadius: '5px',
                                       }}
                                     />
-                                  <Stack spacing={10}>
-                                <Button
-                                  colorScheme="blue"
-                                  style={{
-                                    backgroundColor: 'green',
-                                    color: 'white',
-                                    borderRadius: '8px',
-                                    marginTop: '5px',
-                                    padding: '10px 20px',
-                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-                                  }}
-                                  onClick={() => handleCheckIn(attractionInfo.id)} 
-                                >
-                                  Check In!
-                                </Button>                                  
-                                </Stack>
+                                    <Stack spacing={10}>
+                                      <Button
+                                        colorScheme="blue"
+                                        style={{
+                                          backgroundColor: 'green',
+                                          color: 'white',
+                                          borderRadius: '8px',
+                                          marginTop: '5px',
+                                          padding: '10px 20px',
+                                          boxShadow:
+                                            '0 2px 4px rgba(0, 0, 0, 0.2)',
+                                        }}
+                                        onClick={() =>
+                                          handleCheckIn(attractionInfo.id)
+                                        }
+                                      >
+                                        Check In!
+                                      </Button>
+                                    </Stack>
                                   </p>
                                   <div>
                                     <Heading size="md">

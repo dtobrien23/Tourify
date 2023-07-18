@@ -37,7 +37,13 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [buttonsDirection, setButtonsDirection] = useState('row');
   const { isMobile, hasTouchScreen } = useContext(MapContext);
-  const { globalUserInfo, setGlobalUserInfo, setGlobalCredential } = useContext(APIContext);
+  const {
+    globalUserInfo,
+    setGlobalUserInfo,
+    setGlobalCredential,
+    checkinState,
+    setCheckinState,globalCredential
+  } = useContext(APIContext);
   const [userInfoFetched, setUserInfoFetched] = useState(false);
   const { setIsDrawerOpen } = useContext(MapContext);
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
@@ -76,21 +82,79 @@ export default function SignUpForm({ setIsLoggedIn }) {
     }
   }, [hasTouchScreen]);
 
+  useEffect(() => {
+    if (checkinState) {
+      // Call the userInfoUpdate function to trigger the API call
+      userInfoUpdate();
+
+    }}, [checkinState]);
+
+      const userInfoUpdate = async credentialResponse => {
+        //console.log(credentialResponse, 'THIS IS THE CRED for checkin');
+        // const { checkinCredential } = credentialResponse;
+
+        //setGlobalCredential(credentialResponse.credential); // Set the credential as a global variable
+
+        if (globalCredential){
+          axios
+            .post(
+              `http://localhost:8001/api/user/info?idTokenString=${globalCredential}`
+            ) //user info, json w/ true false
+            .then(response => {
+              console.log(response.data, 'updated user info');
+              setGlobalUserInfo(response.data);
+
+              if (response.status === 200) {
+                setGlobalUserInfo(response.data);
+                setUserLoggedIn(true);
+                setIsLoggedIn(true);
+
+                // Cache the user info
+                localStorage.setItem('userInfo', JSON.stringify(response.data));
+
+                // Cache the user credential
+                localStorage.setItem('userCredential', credential);
+                //reset checkinstate to false
+                setCheckinState(false);
+
+                toastLogin({
+                  title: 'Attractions Updated.',
+                  description: 'Your Attractions Have Been Updated.',
+                  status: 'success',
+                  duration: 3000,
+                  isClosable: true,
+                });
+
+                setUserInfoFetched(true);
+              } else {
+                //setUserLoggedIn(false);
+                //setIsLoggedIn(false);
+                toastLoginError({
+                  title: 'Update Error.',
+                  description: 'Error with update, please please refresh page.',
+                  status: 'error',
+                  duration: 3000,
+                  isClosable: true,
+                });
+              }
+            })
+            .catch(error => console.log(error));
+        
+      };}
+    
+  
+
   const backendLogin = async credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
-    
-    setGlobalCredential(credentialResponse.credential); // Set the credential as a global variable
 
+    setGlobalCredential(credentialResponse.credential); // Set the credential as a global variable
 
     if (credential) {
       axios
         .post(`http://localhost:8001/api/user/info?idTokenString=${credential}`) //user info, json w/ true false
         .then(response => {
-          console.log(
-            response.data,
-            'this is from the backend login for returning user'
-          );
+          console.log(response.data, 'user info');
           setGlobalUserInfo(response.data);
 
           if (response.status === 200) {
@@ -135,9 +199,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
 
-
     if (credential) {
-      console.log(credential)
+      console.log(credential);
       axios
         .post(
           `http://localhost:8001/api/user/register?idTokenString=${credential}`
@@ -190,8 +253,9 @@ export default function SignUpForm({ setIsLoggedIn }) {
     setIsLoggedIn(false);
     localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
     localStorage.removeItem('userInfo');
-    localStorage.removeItem('userCredential')
+    localStorage.removeItem('userCredential');
     setIsDrawerOpen(false);
+    setGlobalCredential(null);
     onToggle(false);
     toastLogout({
       title: 'Logout.',
