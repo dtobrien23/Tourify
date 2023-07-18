@@ -12,3 +12,5 @@
 .idea
 demo.iml
 .onnx
+
+Tourify_Backend/src/main/resources/Tourify_model_v2.onnx
