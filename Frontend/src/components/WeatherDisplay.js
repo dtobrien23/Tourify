@@ -1,5 +1,19 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
-import { Flex, Text, Button, Tooltip } from '@chakra-ui/react';
+import {
+  Flex,
+  Text,
+  Button,
+  Tooltip,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+} from '@chakra-ui/react';
 import { APIContext } from './APIContext';
 import '../App.css';
 
@@ -24,11 +38,11 @@ export default function WeatherDisplay({
     'Squall',
     'Tornado',
   ];
+  const now = new Date();
+  const hour = now.getHours();
 
   useEffect(() => {
     if (apiWeather) {
-      const now = new Date();
-      const hour = now.getHours();
       const sunSet = 20;
       const sunRise = 6;
       const weatherDesc = apiWeather.weather[0].main;
@@ -53,7 +67,7 @@ export default function WeatherDisplay({
   }, [apiWeather]);
 
   return (
-    <Flex top="5" left="5" position="absolute">
+    <Flex top="14px" left="14px" position="absolute">
       <Flex
         bg="white"
         w="fit-content"
@@ -90,23 +104,35 @@ export default function WeatherDisplay({
           </>
         )}
       </Flex>
-      <Tooltip label="Update Current Busyness" placement="right">
-        <Button
-          bg="white"
-          _hover={{ bg: 'white' }}
-          boxShadow="1px 1px 5px 1px rgba(0, 0, 0, 0.6)"
-          ml="15px"
-          borderRadius="50%"
-          w="50px"
-          h="50px"
-          p="10px"
-          onClick={() => {
-            window.location.reload();
-          }}
-        >
-          <img src="/images/refresh.svg" />
-        </Button>
-      </Tooltip>
+      {/* <Tooltip label="Update Current Busyness" placement="right"> */}
+      <Popover trigger="hover" placement="right-start">
+        <PopoverTrigger>
+          <Button
+            bg="white"
+            _hover={{ bg: 'white' }}
+            boxShadow="1px 1px 5px 1px rgba(0, 0, 0, 0.6)"
+            ml="15px"
+            borderRadius="50%"
+            w="50px"
+            h="50px"
+            p="10px"
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            <img src="/images/refresh.svg" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent borderRadius="20px" width="fit-content">
+          <PopoverArrow />
+          <PopoverBody>
+            <h2 style={{ fontWeight: 'bold' }}> Update Current Busyness</h2>
+            Last updated: {now.toLocaleTimeString()}
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
+
+      {/* </Tooltip> */}
     </Flex>
   );
 }

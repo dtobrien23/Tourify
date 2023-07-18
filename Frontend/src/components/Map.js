@@ -169,53 +169,6 @@ export default function Map() {
         }
       }}
     >
-      {/* inert backdrop */}
-      {isSourceAlertOpen && (
-        <div
-          onClick={() => setIsSourceAlertOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 9999,
-          }}
-        />
-      )}
-      {isSourceAlertOpen && (
-        <Alert
-          status="error"
-          position="fixed"
-          top="40%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          w="50vw"
-          h="25vh"
-          zIndex={10000}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          borderRadius="20px"
-        >
-          <AlertIcon boxSize="40px" mr={0} />
-          <Box>
-            <AlertTitle>Source Location Error!</AlertTitle>
-            <AlertDescription>
-              Please select a valid location from the dropdown.
-            </AlertDescription>
-          </Box>
-          <CloseButton
-            alignSelf="flex-start"
-            position="absolute"
-            right={2}
-            top={2}
-            onClick={() => setIsSourceAlertOpen(false)}
-          />
-        </Alert>
-      )}
       <WeatherDisplay />
       <GeolocationProvider>
         {hasTouchScreen ? (
@@ -233,7 +186,7 @@ export default function Map() {
               flexDirection="column"
               style={{
                 // position: 'absolute',
-                height: 'fit-content',
+                // height: 'fit-content',
                 // width: 'calc(100% - 20px)',
 
                 width: '295px',

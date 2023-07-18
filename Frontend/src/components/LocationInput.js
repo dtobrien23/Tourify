@@ -1,19 +1,14 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import LocationButton from './LocationButton';
-import { Flex } from '@chakra-ui/react';
+import { Flex, useToast } from '@chakra-ui/react';
 import { GeolocationProvider, GeolocationContext } from './GeoContext';
 import { MapContext } from './MapContext';
 
-export default function LocationInput(
-  {
-    
-  }
-) {
+export default function LocationInput({}) {
   const autocompleteRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [buttonClicked, setButtonClicked] = useState(1); // to update input box each time current location button is clicked
-  const [inputValue, setInputValue] = useState('');
 
   const {
     map,
@@ -34,10 +29,13 @@ export default function LocationInput(
     google,
     isMobile,
     hasTouchScreen,
+    inputValue,
+    setInputValue,
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
   const [inputWidth, setInputWidth] = useState('270px');
+  const toastInvalidSource = useToast();
 
   useEffect(() => {
     if (autocompleteRef.current && currentLocation !== null) {
@@ -103,7 +101,10 @@ export default function LocationInput(
       .then(response => {
         if (response.results[0]) {
           if (locationMarker.length !== 0) {
-            locationMarker[0].setMap(null);
+            for (const marker of locationMarker) {
+              marker.setMap(null);
+            }
+            setLocationMarker([]);
           }
           const formattedAddress = response.results[0].formatted_address;
           setCurrentLocation(formattedAddress);
@@ -131,6 +132,7 @@ export default function LocationInput(
   };
 
   // when user selects their current location
+
   const handlePlaceSelect = () => {
     const selectedPlace = autocompleteRef.current.getPlace();
     let latLng;
@@ -146,7 +148,10 @@ export default function LocationInput(
         }
 
         if (locationMarker.length !== 0) {
-          locationMarker[0].setMap(null);
+          for (const marker of locationMarker) {
+            marker.setMap(null);
+          }
+          setLocationMarker([]);
         }
 
         setInputValue(selectedPlace.name);
@@ -163,7 +168,14 @@ export default function LocationInput(
         setLocationMarker([marker]);
       }
     } catch {
-      setIsSourceAlertOpen(true);
+      setInputValue('');
+      toastInvalidSource({
+        title: 'Source Error!',
+        description: 'Please Select your Location from the Dropdown.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
       setInputValue('');
     }
   };
@@ -174,6 +186,7 @@ export default function LocationInput(
       ml={1}
       alignItems="center"
       justifyContent="space-between"
+      zIndex="100"
     >
       {google && (
         <>

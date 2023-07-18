@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { useToast } from '@chakra-ui/react';
 
 const MapContext = createContext();
 
@@ -27,6 +28,14 @@ const MapProvider = ({ children }) => {
   const [isAttractionsDrawerOpen, setIsAttractionsDrawerOpen] = useState(false); // for My Attractions drawer
   const [isBadgesDrawerOpen, setIsBadgesDrawerOpen] = useState(false); // for My Badges drawer
   const [hasTouchScreen, setHasTouchScreen] = useState(null);
+  const [inputValue, setInputValue] = useState('');
+  const [inputColour, setInputColour] = useState('#B5BBC6');
+
+  const toastNoSource = useToast();
+  const toastNoDest = useToast();
+  const toastNothing = useToast();
+  const toastZeroResults = useToast();
+  const toastDirectionsError = useToast();
 
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#mobile_device_detection
   const detectTouchScreen = () => {
@@ -54,14 +63,16 @@ const MapProvider = ({ children }) => {
 
   const google = window.google;
 
-  ///////////////
+  /////////////
   // ROUTING //
   /////////////
 
   async function calculateRoute() {
     if (sourceCoords && selectedAttraction) {
       if (directionsRenderers.length !== 0) {
-        directionsRenderers[0].setMap(null);
+        for (const renderer of directionsRenderers) {
+          renderer.setMap(null);
+        }
         setDirectionsRenderers([]);
       }
 
@@ -76,42 +87,95 @@ const MapProvider = ({ children }) => {
       const destLat = parseFloat(selectedAttraction.coordinates_lat);
       const destLng = parseFloat(selectedAttraction.coordinates_lng);
       const destLatLng = { lat: destLat, lng: destLng };
-
-      const results = await directionsService.route(
-        {
-          origin: sourceLatLng,
-          destination: destLatLng,
-          travelMode: google.maps.TravelMode.WALKING,
-        },
-        (results, status) => {
-          if (status === google.maps.DirectionsStatus.OK) {
-            directionsRenderer.setOptions({
-              directions: results,
-              polylineOptions: {
-                strokeColor: 'orangered',
-                strokeOpacity: 0.8,
-                strokeWeight: 4,
-              },
-              suppressMarkers: true,
-            });
-          } else {
-            console.error('Error fetching directions:', status);
+      try {
+        const results = await directionsService.route(
+          {
+            origin: sourceLatLng,
+            destination: destLatLng,
+            travelMode: google.maps.TravelMode.WALKING,
+          },
+          (results, status) => {
+            if (status === google.maps.DirectionsStatus.OK) {
+              directionsRenderer.setOptions({
+                directions: results,
+                polylineOptions: {
+                  strokeColor: 'orangered',
+                  strokeOpacity: 0.8,
+                  strokeWeight: 4,
+                },
+                suppressMarkers: true,
+              });
+              setDirectionsRenderers([directionsRenderer]);
+            }
           }
+        );
+      } catch (error) {
+        console.log(error);
+        if (error.message.includes('ZERO_RESULTS')) {
+          toastZeroResults({
+            title: 'No Route Available!',
+            description:
+              'There is no valid route from your location to your selected attraction.',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+        } else {
+          toastDirectionsError({
+            title: 'Routing Error!',
+            description:
+              'Sorry - There was an Error in Routing. Please Try Again Later.',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
         }
-      );
-      setDirectionsRenderers([directionsRenderer]);
-      locationMarker[0].setMap(map); // in case this is set to null by clearRoute
+      }
+    } else if (sourceCoords) {
+      toastNoDest({
+        title: 'No Destination Selected!',
+        description: 'Please Select an Attraction.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } else if (selectedAttraction) {
+      toastNoSource({
+        title: 'No Location Selected!',
+        description: 'Please Provide your Location.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      toastNothing({
+        title: 'No Information Provided!',
+        description: 'Please Provide your Location and Select an Attraction.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   }
 
   function clearRoute() {
-    if (directionsRenderers.length !== 0) {
-      directionsRenderers[0].setMap(null);
-      setDirectionsRenderers([]);
+    // setLocationMarker([]);
+    // if (directionsRenderers.length !== 0) {
+    for (const renderer of directionsRenderers) {
+      renderer.setMap(null);
     }
+    setDirectionsRenderers([]);
+    // }
     if (locationMarker.length !== 0) {
-      locationMarker[0].setMap(null);
+      for (const marker of locationMarker) {
+        marker.setMap(null);
+      }
+      setLocationMarker([]);
     }
+    setInputColour('#B5BBC6');
+    setSelectedAttraction(null);
+    setSourceCoords(null);
+    setInputValue('');
   }
 
   const [buttonState, setButtonState] = useState();
@@ -154,6 +218,10 @@ const MapProvider = ({ children }) => {
         setHasTouchScreen,
         mapCenter,
         setMapCenter,
+        inputValue,
+        setInputValue,
+        inputColour,
+        setInputColour,
       }}
     >
       {children}
