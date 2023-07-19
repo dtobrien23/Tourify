@@ -50,6 +50,20 @@ const APIContextProvider = ({ children }) => {
       }
     };
 
+    const fetchAllCurrentBusynessData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8001/api/attraction/getAllPrediction?temperature=73&precipitation=0`
+        );
+        const data = await response.json();
+        console.log(data, 'THIS IS THE MODEL PREDICTION');
+        setAPIWeather(data);
+      } catch (error) {
+        console.error('Error fetching model prediction data:', error);
+      }
+    };
+
+    fetchAllCurrentBusynessData();
     fetchAttractionData();
     fetchWeatherData();
   }, []);
@@ -73,7 +87,6 @@ const APIContextProvider = ({ children }) => {
         apiWeather,
       }}
     >
-    
       {children}
     </APIContext.Provider>
   );
