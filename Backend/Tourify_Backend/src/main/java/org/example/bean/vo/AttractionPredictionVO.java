@@ -22,6 +22,6 @@ public class AttractionPredictionVO implements Serializable {
     private String attraction_id;
     private String name;
     private String name_alias; // alias contains the underscore
-    private Float businessRate;
+    private Integer businessRate;
 
 }
