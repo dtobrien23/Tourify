@@ -88,8 +88,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: "40.742045", //hardcoded for testing
-      lng: "-73.9900845", //hardcoded for testing
+      lat: "40.7484405", //hardcoded for testing
+      lng: "-73.9856644", //hardcoded for testing
     };
 
     axios
