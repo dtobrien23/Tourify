@@ -88,8 +88,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: "40.7484405", //hardcoded for testing
-      lng: "-73.9856644", //hardcoded for testing
+      lat: "40.7484405", //hardcoded for testing replace with geolocation variable
+      lng: "-73.9856644", //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
