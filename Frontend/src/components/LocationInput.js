@@ -34,7 +34,7 @@ export default function LocationInput({}) {
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
-  const [inputWidth, setInputWidth] = useState('50%');
+  const [inputWidth, setInputWidth] = useState('270px');
   const toastInvalidSource = useToast();
   const toastOutsideNYC = useToast();
 
@@ -55,7 +55,7 @@ export default function LocationInput({}) {
     if (hasTouchScreen) {
       setInputWidth('100%');
     } else {
-      setInputWidth('50%');
+      setInputWidth('270px');
     }
   }, [hasTouchScreen]);
 

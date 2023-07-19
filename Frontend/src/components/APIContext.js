@@ -6,6 +6,7 @@ const APIContext = createContext();
 const APIContextProvider = ({ children }) => {
   const [apiAttractions, setAPIAttractions] = useState(null);
   const [apiWeather, setAPIWeather] = useState(null);
+  const [apiAllCurrentBusyness, setAPIAllCurrentBusyness] = useState(null);
   const [apiLoaded, setApiLoaded] = useState(false);
   const [globalUserInfo, setGlobalUserInfo] = useState();
   const [globalCredential, setGlobalCredential] = useState();
@@ -57,7 +58,7 @@ const APIContextProvider = ({ children }) => {
         );
         const data = await response.json();
         console.log(data, 'THIS IS THE MODEL PREDICTION');
-        setAPIWeather(data);
+        setAPIAllCurrentBusyness(data);
       } catch (error) {
         console.error('Error fetching model prediction data:', error);
       }
