@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import LocationButton from './LocationButton';
-import { Flex, useToast } from '@chakra-ui/react';
+import { Flex, useToast, Tooltip } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 
 export default function LocationInput({}) {
