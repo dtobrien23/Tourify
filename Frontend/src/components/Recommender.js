@@ -17,6 +17,7 @@ import {
   SimpleGrid,
   Heading
 } from '@chakra-ui/react';
+//import attractions from '../static/attractions.json';
 import { GeolocationContext } from './GeoContext';
 import { MapContext } from './MapContext';
 import { APIContext } from './APIContext';
@@ -30,9 +31,9 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const { activeDrawer, isDrawerOpen, setIsDrawerOpen } =
     useContext(MapContext);
 
-  //geolocation, cant be null or error occurs
+  //geolocation, cant be null or error o1ccurs
   const userLocation = geolocation
-    ? { lat: geolocation.latitude, lng: geolocation.longitude }
+    ? { lat: 40.7484405, lng: -73.9856974 }
     : { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location as a fallback if user opts out
 
   console.log(

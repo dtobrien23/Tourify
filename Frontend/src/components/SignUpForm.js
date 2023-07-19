@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, VStack, Badge, useDisclosure } from '@chakra-ui/react';
-
-// import { setGlobalCredential } from './auth'; //REMOVE
+import { Button, VStack, Badge, useDisclosure, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 
 import {
   googleLogout,
@@ -29,7 +27,7 @@ import {
   ModalCloseButton,
   useToast,
 } from '@chakra-ui/react';
-import { APIContext } from './APIContext';
+import { APIContext, globalCredential } from './APIContext';
 import { MapContext } from './MapContext';
 
 export default function SignUpForm({ setIsLoggedIn }) {
@@ -280,6 +278,47 @@ export default function SignUpForm({ setIsLoggedIn }) {
     }
   };
 
+  const deleteAccount = async () => {
+    console.log(globalCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
+
+    if (globalCredential) {
+      axios
+        .post(`http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`) //user info, json w/ true false
+        .then(response => {
+          console.log(response);
+          // setGlobalUserInfo(response.data);
+          // setBadgeState(response.data);
+
+          if (response.status === 200) {
+            setUserLoggedIn(false);
+            setIsLoggedIn(false);
+            // Cache the user info
+            localStorage.clear() // Clear the cache
+
+            toastLogin({
+              title: 'Account successfully deleted.',
+              description: "We hope to see you again.",
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
+
+            // setUserInfoFetched(true);
+
+          } else {
+            toastLoginError({
+              title: 'Deletion Error.',
+              description: 'Error with deleting your account, please try again.',
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        })
+        .catch(error => console.log(error));
+    }
+  };
+
   const handleLogout = () => {
     setUserLoggedIn(false);
     setIsLoggedIn(false);
@@ -301,6 +340,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   if (loading) {
     return <p>Loading...</p>;
   }
+
   return (
     <Flex
       flexDirection={buttonsDirection}
@@ -308,16 +348,22 @@ export default function SignUpForm({ setIsLoggedIn }) {
       justifyContent="flex-end"
     >
       {userLoggedIn ? (
-        <Button
+        <Menu>
+        <MenuButton
+          as={Button}
           bg="#ff914d"
           color="white"
           border="solid 1px orangered"
           borderRadius="25px"
           _hover={{ bg: 'orangered', color: 'white' }}
-          onClick={handleLogout}
         >
-          Log Out
-        </Button>
+          User Options
+        </MenuButton>
+        <MenuList>
+          <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+          <MenuItem onClick={deleteAccount}>Delete Account</MenuItem>
+        </MenuList>
+      </Menu>
       ) : (
         <>
           <Flex mr={2}>
@@ -401,6 +447,24 @@ export default function SignUpForm({ setIsLoggedIn }) {
           </Modal>
         </>
       )}
+      {/* <Modal isOpen={isDeleteModalOpen} onClose={handleDeleteCancel} size="sm">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Delete Account</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            Are you sure you want to delete your account?
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="red" mr={3} onClick={handleDeleteAccount}>
+              Yes, Delete
+            </Button>
+            <Button variant="ghost" onClick={handleDeleteCancel}>
+              No, Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal> */}
     </Flex>
   );
 }
