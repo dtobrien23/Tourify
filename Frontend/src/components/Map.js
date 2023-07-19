@@ -25,7 +25,7 @@ import { MapContext } from './MapContext';
 import ContentDrawer from './ContentDrawer.js';
 
 export default function Map() {
-  const { apiAttractions } = useContext(APIContext);
+  const { apiAttractions} = useContext(APIContext);
   const {
     map,
     setMap,

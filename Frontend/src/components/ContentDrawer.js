@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import axios from 'axios';
 import {
   Flex,
   Button,
@@ -23,13 +24,25 @@ import {
   TabPanels,
   SimpleGrid,
   Heading,
+  Stack,
+  useToast,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
 import { APIContext } from './APIContext';
+import { getUserGeolocation } from './GeoContext';
 
 export default function ContentDrawer() {
-  const { globalUserInfo, apiAttractions } = useContext(APIContext);
+  const {
+    globalUserInfo,
+    apiAttractions,
+    globalCredential,
+    setGlobalUserInfo,
+    setGlobalCredential,
+    setCheckinState, checkinState
+  } = useContext(APIContext);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
 
   const {
     isAttractionsDrawerOpen,
@@ -39,6 +52,9 @@ export default function ContentDrawer() {
     setIsDrawerOpen,
     hasTouchScreen,
   } = useContext(MapContext);
+
+  const toastCheckIn = useToast();
+  const toastNotCheckIn = useToast();
 
   const kebabToCamelCase = str => {
     return str.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
@@ -57,6 +73,65 @@ export default function ContentDrawer() {
     );
     return attraction || {};
   };
+
+  const handleCheckIn = async attractionID => {
+    // const { latitude, longitude } = await getUserGeolocation();
+    // setLatitude(latitude);
+    // setLongitude(longitude);
+
+    const apiEndpoint = 'http://localhost:8001/api/user/update';
+    const cachedUserCredential = localStorage.getItem('userCredential');
+
+    const idToken = cachedUserCredential; // get this from credential in signupform
+    console.log(cachedUserCredential, 'this is the global credential');
+
+    const requestBody = {
+      id_token: idToken,
+      attraction_id: attractionID,
+      lat: "40.742045", //hardcoded for testing
+      lng: "-73.9900845", //hardcoded for testing
+    };
+
+    axios
+      .post(apiEndpoint, requestBody)
+      .then(response => {
+        console.log('API call successful:', response.data);
+        console.log(response, 'this is response data');
+        // Handle the response data here
+        if (response.data.code === 200) {
+          //   // set logic that your market has been ticked off
+          setCheckinState(true);
+          console.log(checkinState,'checkinstate - contentdrawer')
+          toastCheckIn({
+            title: 'Check in Successful.',
+            description: "You've Checked in Successfully.",
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+
+          // get the updated user info from the backend
+          
+        } if(response.data.code === 10050) {
+          // distance too long
+          setCheckinState(false);
+          console.log(response.data.code,'this is the repsonse code!')
+          toastNotCheckIn({
+            title: 'Check in Unsuccessful.',
+            description: "You're too far away.",
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error in API call:', error);
+        // Handle errors here
+      });
+  };
+
+
 
   return (
     <Drawer
@@ -189,6 +264,25 @@ export default function ContentDrawer() {
                                         borderRadius: '5px',
                                       }}
                                     />
+                                    <Stack spacing={10}>
+                                      <Button
+                                        colorScheme="blue"
+                                        style={{
+                                          backgroundColor: 'green',
+                                          color: 'white',
+                                          borderRadius: '8px',
+                                          marginTop: '5px',
+                                          padding: '10px 20px',
+                                          boxShadow:
+                                            '0 2px 4px rgba(0, 0, 0, 0.2)',
+                                        }}
+                                        onClick={() =>
+                                          handleCheckIn(attractionInfo.id)
+                                        }
+                                      >
+                                        Check In!
+                                      </Button>
+                                    </Stack>
                                   </p>
                                   <div>
                                     <Heading size="md">

@@ -17,7 +17,6 @@ import {
   SimpleGrid,
   Heading
 } from '@chakra-ui/react';
-//import attractions from '../static/attractions.json';
 import { GeolocationContext } from './GeoContext';
 import { MapContext } from './MapContext';
 import { APIContext } from './APIContext';

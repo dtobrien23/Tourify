@@ -8,6 +8,10 @@ const APIContextProvider = ({ children }) => {
   const [apiWeather, setAPIWeather] = useState(null);
   const [apiLoaded, setApiLoaded] = useState(false);
   const [globalUserInfo, setGlobalUserInfo] = useState();
+  const [globalCredential, setGlobalCredential] = useState();
+  const [checkinState, setCheckinState] = useState(false);
+  const [badgeState, setBadgeState] = useState(null);
+  const [newBadgeState, setNewBadgeState] = useState(null);
 
   const { mapCenter } = useContext(MapContext);
 
@@ -17,7 +21,7 @@ const APIContextProvider = ({ children }) => {
         const response = await fetch(
           'http://localhost:8001/api/attraction/getAllAttraction'
         );
-        const data = await response.json();
+        const data = await response.json(); //long/lat data
         console.log(data, 'THIS CAME FROM THE BACK END');
         const dataArray = data.data;
         console.log(dataArray, 'back end data without wrapper');
@@ -25,6 +29,7 @@ const APIContextProvider = ({ children }) => {
         setAPIAttractions(dataArray);
         setApiLoaded(true);
 
+        console.log(apiLoaded, 'youve set it!!');
         console.log(apiLoaded, 'youve set it!!');
       } catch (error) {
         console.error('Error fetching attraction data:', error);
@@ -57,9 +62,18 @@ const APIContextProvider = ({ children }) => {
         apiLoaded,
         globalUserInfo,
         setGlobalUserInfo,
+        setGlobalCredential,
+        globalCredential,
+        setCheckinState,
+        checkinState,
+        badgeState,
+        setBadgeState,
+        newBadgeState,
+        setNewBadgeState,
         apiWeather,
       }}
     >
+    
       {children}
     </APIContext.Provider>
   );
