@@ -25,6 +25,7 @@ public interface UserRepository {
 
     Boolean updateUserBadge(String userId, BadgeDO badgeDO);
 
+    void deleteUser(String userId);
 
 
 }

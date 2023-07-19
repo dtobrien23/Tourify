@@ -78,6 +78,13 @@ public class UserRepositoryImpl implements UserRepository {
 
     }
 
+    @Override
+    public void deleteUser(String userId) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("user_id").is(userId));
+        mongoTemplate.remove(query, UserDO.class);
+    }
+
 
 
 }
