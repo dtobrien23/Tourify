@@ -222,6 +222,27 @@ public class UserService {
 
     }
 
+    public Boolean DeleteUser(String idTokenString) throws Exception {
+        UserDO userDO = validateToken(idTokenString);
+        if (userDO == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_NOT_VAILD);
+        }
+        // see whether the user exist in the DB
+        UserDO userDO2 = userRepository.findUserById(userDO.getUser_id());
+        if (userDO2 == null){
+            // user is already in the DB
+            throw new BusinessException(ResponseCode.PARAM_USER_NOT_EXIST);
+        }
+
+        // proceed to delete the user in the DB
+        try {
+            userRepository.deleteUser(userDO.getUser_id());
+        }catch (Exception e) {
+            return false;
+        }
+        return true;
+
+    }
 
 
 

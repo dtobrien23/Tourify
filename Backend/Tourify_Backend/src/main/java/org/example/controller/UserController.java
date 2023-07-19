@@ -94,4 +94,10 @@ public class UserController {
         return userService.updateUser(userUpdateDTO);
     }
 
+    @PostMapping("/delete")
+    @Operation(summary = "Delete user's info", description = "Delete user's info on tourify website")
+    public Result userUpdate(@RequestParam String idTokenString) throws Exception {
+        return Result.success(userService.DeleteUser(idTokenString));
+    }
+
 }

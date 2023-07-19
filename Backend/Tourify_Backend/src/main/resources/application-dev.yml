@@ -14,11 +14,11 @@ spring:
         registration:
           google:
             # Dave:
-            client-id: 568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com
-            client-secret: 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
+#            client-id: 568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com
+#            client-secret: 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
             # YJ:
-#            client-id: 577463964795-efjr0ld5rmvvlamp117jfrovhqh0utcn.apps.googleusercontent.com
-#            client-secret: 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
+            client-id: 577463964795-efjr0ld5rmvvlamp117jfrovhqh0utcn.apps.googleusercontent.com
+            client-secret: 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
       resourceserver:
         jwt:
           issuer-uri: https://accounts.google.com

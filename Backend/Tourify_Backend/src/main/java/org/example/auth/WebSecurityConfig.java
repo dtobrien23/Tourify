@@ -53,7 +53,7 @@ public class WebSecurityConfig{
                         // Allow public access to swagger
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**").permitAll()
                         // Allow public access to certain endpoint
-                        .requestMatchers("/user/tokensignin/**", "/user/register/**", "/attraction/**").permitAll()
+                        .requestMatchers("/user/**", "/attraction/**").permitAll()
                         // Require authentication for all other requests
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
