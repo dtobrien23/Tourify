@@ -28,6 +28,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.LocalDateTime;
 import java.util.*;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 /**
  * Description of the class.
@@ -97,7 +99,7 @@ public class AttractionService {
             PredictionInternalResult predictionInternalResult = getAveragePassengersNum(month, dayOfWeek, hour, attractionDO.getName_alias());
 
             // invoke the prediction method
-            attractionPredictionVO.setBusinessRate(getModelPrediction(attractionPredictionDTO, month, dayOfWeek, hour, predictionInternalResult.getTaxiLocation(), predictionInternalResult.getPassengersNum()));
+            attractionPredictionVO.setBusinessRate(getModelPythonPrediction(attractionPredictionDTO, month, dayOfWeek, hour, predictionInternalResult.getTaxiLocation(), predictionInternalResult.getPassengersNum()));
             attractionPredictionVOList.add(attractionPredictionVO);
             System.out.println("----------------------------------Finished one attraction's prediction----------------------------------");
         }
@@ -194,7 +196,7 @@ public class AttractionService {
             // Get the prediction for one hour
             System.out.println("2.Preparing to predict. taxiLocation:"+predictionInternalResult.getTaxiLocation()+" passengersNum:"+ predictionInternalResult.getPassengersNum());
             System.out.println("2.Preparing to predict. months:"+months.get(i)+" daysOfWeek:"+ daysOfWeek.get(i)+" hour:" + hours.get(i));
-            attractionPredictionDetailVO.setBusinessRate(getModelPrediction(attractionPredictionDTO, months.get(i), daysOfWeek.get(i), hours.get(i), predictionInternalResult.getTaxiLocation(), predictionInternalResult.getPassengersNum()));
+            attractionPredictionDetailVO.setBusinessRate(getModelPythonPrediction(attractionPredictionDTO, months.get(i), daysOfWeek.get(i), hours.get(i), predictionInternalResult.getTaxiLocation(), predictionInternalResult.getPassengersNum()));
             attractionPredictionDetailVOList.add(attractionPredictionDetailVO);
             System.out.println("----------------------------------Finished one hour of prediction----------------------------------");
         }
@@ -275,6 +277,42 @@ public class AttractionService {
         predictionInternalResult.setPassengersNum(passengersNum);
         return predictionInternalResult;
     }
+
+
+
+    // invoke the model api from python
+    Integer getModelPythonPrediction(AttractionPredictionDTO attractionPredictionDTO, int month, int dayOfWeek, int hour, int taxiLocation, int passengersNum) throws BusinessException{
+        System.out.println("3.Starting to invoke prediction on python service -------------");
+
+        WebClient webClient = WebClient.create("http://127.0.0.1:12345");
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("month", month);
+        map.put("day_of_week", dayOfWeek);
+        map.put("hour", hour);
+        map.put("taxi_locationID", taxiLocation);
+        map.put("passengers", passengersNum);
+        map.put("temp_avg", attractionPredictionDTO.getTemperature());
+        map.put("precipitation", attractionPredictionDTO.getPrecipitation());
+
+        Mono<Map> responseMono = webClient.post()
+                .uri("/predict")
+                .bodyValue(map)
+                .retrieve()
+                .bodyToMono(Map.class);
+
+        // process the response
+        Map<String, Integer> response = responseMono.block();
+        if(response.containsKey("prediction")) {
+            Integer predictionValue = response.get("prediction");
+            System.out.println("Prediction value: " + predictionValue);
+            return predictionValue;
+        } else {
+            System.out.println("The key 'prediction' does not exist in the map");
+            return 0;
+        }
+    }
+
 }
 
 
