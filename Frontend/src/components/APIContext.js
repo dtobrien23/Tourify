@@ -58,7 +58,8 @@ const APIContextProvider = ({ children }) => {
         );
         const data = await response.json();
         console.log(data, 'THIS IS THE MODEL PREDICTION');
-        setAPIAllCurrentBusyness(data);
+        const dataArray = data.data;
+        setAPIAllCurrentBusyness(dataArray);
       } catch (error) {
         console.error('Error fetching model prediction data:', error);
       }
@@ -86,6 +87,7 @@ const APIContextProvider = ({ children }) => {
         newBadgeState,
         setNewBadgeState,
         apiWeather,
+        apiAllCurrentBusyness,
       }}
     >
       {children}

@@ -13,9 +13,11 @@ import { MdGraphicEq } from 'react-icons/md';
 import { APIContext } from './APIContext';
 
 export default function SliderBar({ setSliderListFunc }) {
-  const { apiAttractions, apiLoaded } = useContext(APIContext);
+  const { apiAttractions, apiLoaded, apiAllCurrentBusyness } =
+    useContext(APIContext);
 
   const [sliderValue, setSliderValue] = useState([0, 100]);
+  const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
   const [filteredAttractions, setFilteredAttractions] =
     useState(apiAttractions);
 
@@ -24,11 +26,28 @@ export default function SliderBar({ setSliderListFunc }) {
   };
 
   useEffect(() => {
-    if (apiLoaded) {
-      const filtered = apiAttractions.filter(
+    // adds busyness score to attractions info object
+
+    if (apiAttractions && apiAllCurrentBusyness) {
+      apiAttractions.forEach(attraction => {
+        const matchingPred = apiAllCurrentBusyness.find(
+          prediction => prediction.name === attraction.name
+        );
+        if (matchingPred) {
+          attraction.businessRate = matchingPred.businessRate;
+        }
+      });
+      console.log(apiAttractions, 'PLS HAVE BUSYNESS SCORE');
+      setAttractionsWithBusyness(apiAttractions);
+    }
+  }, [apiAllCurrentBusyness]);
+
+  useEffect(() => {
+    if (attractionsWithBusyness) {
+      const filtered = attractionsWithBusyness.filter(
         attraction =>
-          attraction.busyness_score >= sliderValue[0] &&
-          attraction.busyness_score <= sliderValue[1]
+          attraction.businessRate >= sliderValue[0] &&
+          attraction.businessRate <= sliderValue[1]
       );
       setFilteredAttractions(filtered);
     }
@@ -36,7 +55,7 @@ export default function SliderBar({ setSliderListFunc }) {
 
   useEffect(() => {
     setSliderListFunc(filteredAttractions);
-  }, [filteredAttractions, setSliderListFunc]);
+  }, [filteredAttractions]);
 
   return (
     <Flex

@@ -25,7 +25,7 @@ import { MapContext } from './MapContext';
 import ContentDrawer from './ContentDrawer.js';
 
 export default function Map() {
-  const { apiAttractions} = useContext(APIContext);
+  const { apiAttractions } = useContext(APIContext);
   const {
     map,
     setMap,
@@ -110,7 +110,7 @@ export default function Map() {
     if (map) {
       // fetchData();
 
-      if (apiAttractions !== null) {
+      if (sliderList !== null) {
         console.log(apiAttractions, 'this is the log');
         // clear existing markers from the map for filter
         markers.forEach(marker => {
@@ -119,8 +119,8 @@ export default function Map() {
 
         // filter attractions based on the selected filter value
         const filteredMarkers = selectedFilters.includes('ALL')
-          ? apiAttractions
-          : apiAttractions.filter(attraction =>
+          ? sliderList
+          : sliderList.filter(attraction =>
               selectedFilters.includes(attraction.attractionTypeEnum)
             );
 
@@ -147,7 +147,7 @@ export default function Map() {
         setMarkers(newMarkers);
       }
     }
-  }, [map, apiAttractions, selectedFilters]);
+  }, [map, sliderList, selectedFilters]);
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
