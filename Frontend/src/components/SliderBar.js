@@ -45,14 +45,14 @@ export default function SliderBar({ setSliderListFunc }) {
         // borderRadius: '25px',
         alignItems: 'center',
         // justifyContent: 'center',
-        width: '100px',
+        width: 'fit-content',
         height: '100%',
         zIndex: 1,
         position: 'absolute',
         // marginTop: '5em',
         // marginLeft: '77em',
         top: 14,
-        right: 3,
+        right: '20px',
         flexDirection: 'column',
       }}
     >

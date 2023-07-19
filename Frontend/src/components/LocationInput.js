@@ -1,19 +1,14 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import LocationButton from './LocationButton';
-import { Flex } from '@chakra-ui/react';
+import { Flex, useToast } from '@chakra-ui/react';
 import { GeolocationProvider, GeolocationContext } from './GeoContext';
 import { MapContext } from './MapContext';
 
-export default function LocationInput(
-  {
-    
-  }
-) {
+export default function LocationInput({}) {
   const autocompleteRef = useRef(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [buttonClicked, setButtonClicked] = useState(1); // to update input box each time current location button is clicked
-  const [inputValue, setInputValue] = useState('');
 
   const {
     map,
@@ -34,10 +29,21 @@ export default function LocationInput(
     google,
     isMobile,
     hasTouchScreen,
+    inputValue,
+    setInputValue,
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
-  const [inputWidth, setInputWidth] = useState('270px');
+  const [inputWidth, setInputWidth] = useState('50%');
+  const toastInvalidSource = useToast();
+  const toastOutsideNYC = useToast();
+
+  // used to ensure user's current location is within NYC
+  const minLatitude = 40.4774;
+  const maxLatitude = 40.9176;
+  const minLongitude = -74.2591;
+  const maxLongitude = -73.7004;
+  const rangeThreshold = 0.5;
 
   useEffect(() => {
     if (autocompleteRef.current && currentLocation !== null) {
@@ -96,6 +102,27 @@ export default function LocationInput(
       lng: parseFloat(position.coords.longitude),
     };
 
+    // if current location is outside of NYC, default to Times Square
+    if (
+      !(
+        latlng.lat >= minLatitude &&
+        latlng.lat <= maxLatitude &&
+        latlng.lng >= minLongitude &&
+        latlng.lng <= maxLongitude
+      )
+    ) {
+      latlng.lat = 40.758;
+      latlng.lng = -73.9855;
+      toastOutsideNYC({
+        title: 'You Are Not In NYC!',
+        description:
+          "We have set your location to Times Square - we know you'd rather be there",
+        status: 'info',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+
     const geocoder = new google.maps.Geocoder();
 
     geocoder
@@ -103,7 +130,10 @@ export default function LocationInput(
       .then(response => {
         if (response.results[0]) {
           if (locationMarker.length !== 0) {
-            locationMarker[0].setMap(null);
+            for (const marker of locationMarker) {
+              marker.setMap(null);
+            }
+            setLocationMarker([]);
           }
           const formattedAddress = response.results[0].formatted_address;
           setCurrentLocation(formattedAddress);
@@ -146,7 +176,10 @@ export default function LocationInput(
         }
 
         if (locationMarker.length !== 0) {
-          locationMarker[0].setMap(null);
+          for (const marker of locationMarker) {
+            marker.setMap(null);
+          }
+          setLocationMarker([]);
         }
 
         setInputValue(selectedPlace.name);
@@ -163,7 +196,14 @@ export default function LocationInput(
         setLocationMarker([marker]);
       }
     } catch {
-      setIsSourceAlertOpen(true);
+      setInputValue('');
+      toastInvalidSource({
+        title: 'Source Error!',
+        description: 'Please Select your Location from the Dropdown.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
       setInputValue('');
     }
   };
@@ -174,31 +214,35 @@ export default function LocationInput(
       ml={1}
       alignItems="center"
       justifyContent="space-between"
+      zIndex="100"
     >
       {google && (
         <>
-          <Autocomplete
-            onLoad={autocomplete => {
-              autocompleteRef.current = autocomplete;
-            }}
-            onPlaceChanged={handlePlaceSelect}
-            options={autocompleteOptions}
-            style={{ width: '100%' }}
-          >
-            <input
-              type="text"
-              placeholder="I am currently at..."
-              value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
-              style={{
-                // padding: '3px',
-                paddingLeft: '8px',
-                borderRadius: '20px',
-                fontSize: '16px',
-                width: 'fit-space',
+          <Flex w="100%">
+            <Autocomplete
+              onLoad={autocomplete => {
+                autocompleteRef.current = autocomplete;
               }}
-            />
-          </Autocomplete>
+              onPlaceChanged={handlePlaceSelect}
+              options={autocompleteOptions}
+              menuStyle={{ backgroundColor: 'red', color: 'white' }}
+              itemStyle={{ fontSize: '100px' }}
+            >
+              <input
+                type="text"
+                placeholder="I am currently at..."
+                value={inputValue}
+                onChange={e => setInputValue(e.target.value)}
+                style={{
+                  // padding: '3px',
+                  paddingLeft: '8px',
+                  borderRadius: '20px',
+                  fontSize: '16px',
+                  width: '112%',
+                }}
+              />
+            </Autocomplete>
+          </Flex>
           <LocationButton getPosition={getPosition}></LocationButton>
         </>
       )}

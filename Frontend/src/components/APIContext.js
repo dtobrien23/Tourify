@@ -1,16 +1,22 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { MapContext } from './MapContext';
 
 const APIContext = createContext();
 
 const APIContextProvider = ({ children }) => {
   const [apiAttractions, setAPIAttractions] = useState(null);
+  const [apiWeather, setAPIWeather] = useState(null);
   const [apiLoaded, setApiLoaded] = useState(false);
   const [globalUserInfo, setGlobalUserInfo] = useState();
 
+  const { mapCenter } = useContext(MapContext);
+
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAttractionData = async () => {
       try {
-        const response = await fetch('http://localhost:8001/api/attraction/getAllAttraction');
+        const response = await fetch(
+          'http://localhost:8001/api/attraction/getAllAttraction'
+        );
         const data = await response.json();
         console.log(data, 'THIS CAME FROM THE BACK END');
         const dataArray = data.data;
@@ -19,21 +25,41 @@ const APIContextProvider = ({ children }) => {
         setAPIAttractions(dataArray);
         setApiLoaded(true);
 
-        console.log(apiLoaded,'youve set it!!')
+        console.log(apiLoaded, 'youve set it!!');
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching attraction data:', error);
         setApiLoaded(false);
       }
     };
 
-    fetchData();
+    const fetchWeatherData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${mapCenter.lat}&lon=${mapCenter.lng}&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`
+        );
+        const data = await response.json();
+        console.log(data, 'THIS IS THE WEATHER');
+        setAPIWeather(data);
+      } catch (error) {
+        console.error('Error fetching weather data:', error);
+      }
+    };
+
+    fetchAttractionData();
+    fetchWeatherData();
   }, []);
 
-  
-
-
   return (
-    <APIContext.Provider value={{ apiAttractions, setAPIAttractions, apiLoaded, globalUserInfo, setGlobalUserInfo}}>
+    <APIContext.Provider
+      value={{
+        apiAttractions,
+        setAPIAttractions,
+        apiLoaded,
+        globalUserInfo,
+        setGlobalUserInfo,
+        apiWeather,
+      }}
+    >
       {children}
     </APIContext.Provider>
   );

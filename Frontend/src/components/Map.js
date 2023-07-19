@@ -5,6 +5,7 @@ import '../App.css';
 import SliderBar from './SliderBar';
 import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
+import WeatherDisplay from './WeatherDisplay.js';
 import {
   Flex,
   Button,
@@ -45,26 +46,23 @@ export default function Map() {
     setIsAttractionsDrawerOpen,
     isMobile,
     hasTouchScreen,
+    mapCenter,
+    setMapCenter,
   } = useContext(MapContext);
 
   ////////////////
   // USE STATES //
   ////////////////
 
-  const [mapCenter, setMapCenter] = useState({
-    lat: 40.755091,
-    lng: -73.978285,
-  });
   //user location from locationInput
   const [userLocation, setUserLocation] = useState(null);
-  
 
   const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['ALL']);
-  
+
   const [directionsRenderers, setDirectionsRenderers] = useState([]);
   const [dataArray, setDataArray] = useState(null);
 
@@ -88,8 +86,6 @@ export default function Map() {
       coordinates_lng: marker.position.lng(),
       price_dollars: marker.price_dollars,
       //image: `/images/${marker.name}.jpg`
-      
-    
     };
     setMarkerObject(markerData);
 
@@ -153,8 +149,6 @@ export default function Map() {
     }
   }, [map, apiAttractions, selectedFilters]);
 
-
-
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
 
@@ -175,53 +169,7 @@ export default function Map() {
         }
       }}
     >
-      {/* inert backdrop */}
-      {isSourceAlertOpen && (
-        <div
-          onClick={() => setIsSourceAlertOpen(false)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 9999,
-          }}
-        />
-      )}
-      {isSourceAlertOpen && (
-        <Alert
-          status="error"
-          position="fixed"
-          top="40%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          w="50vw"
-          h="25vh"
-          zIndex={10000}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          borderRadius="20px"
-        >
-          <AlertIcon boxSize="40px" mr={0} />
-          <Box>
-            <AlertTitle>Source Location Error!</AlertTitle>
-            <AlertDescription>
-              Please select a valid location from the dropdown.
-            </AlertDescription>
-          </Box>
-          <CloseButton
-            alignSelf="flex-start"
-            position="absolute"
-            right={2}
-            top={2}
-            onClick={() => setIsSourceAlertOpen(false)}
-          />
-        </Alert>
-      )}
+      <WeatherDisplay />
       <GeolocationProvider>
         {hasTouchScreen ? (
           <Flex
@@ -238,7 +186,7 @@ export default function Map() {
               flexDirection="column"
               style={{
                 // position: 'absolute',
-                height: 'fit-content',
+                // height: 'fit-content',
                 // width: 'calc(100% - 20px)',
 
                 width: '295px',
@@ -291,7 +239,6 @@ export default function Map() {
           markerObject={markerObject}
         />
         <ContentDrawer />
-        
       </GeolocationProvider>
     </GoogleMap>
   );
