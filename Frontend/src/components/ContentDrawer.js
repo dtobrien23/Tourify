@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
+import FlipCard from './FlipCard';
 import axios from 'axios';
 import {
   Flex,
@@ -176,6 +177,8 @@ export default function ContentDrawer() {
     }
     return false;
   };
+
+  
 
   return (
     <Drawer
@@ -361,22 +364,28 @@ export default function ContentDrawer() {
                     )}
 
                     {areAllAttractionsTrue() && (
-                      <p>
-                        {''}
-                          <br />
+                      <FlipCard
+                      frontContent={
+                        <p>
+                          <img
+                            src={'/images/all_Attractions_Visited.jpg'}
+                            alt="All Attractions are True"
+                            style={{
+                              maxWidth: '500px',
+                              height: '500px',
+                              marginRight: '10px',
+                              border: '2px solid orangered',
+                              borderRadius: '5px',
+                            }}
+                          />
+                        </p>
+                      }
+                      backContent={
+                        <div >
                           <Heading>You've Visited All the Attractions!</Heading>
-                          <br />
-                        <img
-                          src={'/images/all_Attractions_Visited.jpg'}
-                          alt="All Attractions are True"
-                          style={{
-                            maxWidth: '500px',
-                            height: '500px',
-                            marginRight: '10px',
-                            border: '2px solid orangered',
-                            borderRadius: '5px',
-                          }}                        />
-                      </p>
+                        </div>
+                      }
+                    />
                     )}
                   </TabPanel>
                 </TabPanels>
@@ -510,23 +519,28 @@ export default function ContentDrawer() {
                         }
                       )}
                       {areAllBadgesTrue() && (
-                        <p>
-                          {''}
-                          <br />
-                          <Heading>You've Collected All the Badges!</Heading>
-                          <br />
-                          <img
-                            src={'/images/badgeimages/all_Badges.jpg'}
-                            alt="All Badges are True"
-                            style={{
-                              maxWidth: '500px',
-                              height: '500px',
-                              marginRight: '10px',
-                              border: '2px solid orangered',
-                              borderRadius: '5px',
-                            }}
-                          />
-                        </p>
+                        <FlipCard
+                        frontContent={
+                          <p>
+                            <img
+                              src={'/images/badgeimages/all_Badges.jpg'}
+                              alt="All Attractions are True"
+                              style={{
+                                maxWidth: '500px',
+                                height: '500px',
+                                marginRight: '10px',
+                                border: '2px solid orangered',
+                                borderRadius: '5px',
+                              }}
+                            />
+                          </p>
+                        }
+                        backContent={
+                          <div >
+                            <Heading>You've Got All The Badges!</Heading>
+                          </div>
+                        }
+                      />
                       )}
                       </div>
                     </Flex>
