@@ -132,6 +132,51 @@ export default function ContentDrawer() {
       });
   };
 
+  // Function to check if all badges have the same status
+  const areAllBadgesTrue = () => {
+    if (globalUserInfo && globalUserInfo.data && globalUserInfo.data.badgeDO) {
+      const badgesStatusArray = Object.values(globalUserInfo.data.badgeDO);
+      return badgesStatusArray.every(status => status === true);
+    }
+    return false;
+  };
+
+  const areAllBadgesFalse = () => {
+    if (globalUserInfo && globalUserInfo.data && globalUserInfo.data.badgeDO) {
+      const badgesStatusArray = Object.values(globalUserInfo.data.badgeDO);
+      return badgesStatusArray.every(status => status === false);
+    }
+    return false;
+  };
+
+  const areAllAttractionsTrue = () => {
+    if (
+      globalUserInfo &&
+      globalUserInfo.data &&
+      globalUserInfo.data.attractionStatusDO
+    ) {
+      const attractionStatusArray = Object.values(
+        globalUserInfo.data.attractionStatusDO
+      );
+      return attractionStatusArray.every(status => status === true);
+    }
+    return false;
+  };
+
+  const areAllAttractionsFalse = () => {
+    if (
+      globalUserInfo &&
+      globalUserInfo.data &&
+      globalUserInfo.data.attractionStatusDO
+    ) {
+      const attractionStatusArray = Object.values(
+        globalUserInfo.data.attractionStatusDO
+      );
+      return attractionStatusArray.every(status => status === false);
+    }
+    return false;
+  };
+
   return (
     <Drawer
       onClose={() => {
@@ -224,6 +269,17 @@ export default function ContentDrawer() {
                     ) : (
                       <p>Loading attractions to visit...</p>
                     )}
+
+                    {/* Conditional rendering for the image when all attractions are false */}
+                    {areAllAttractionsFalse() && (
+                      <p>
+                        <img
+                          src={'/images/no_Attractions_Visited.jpg'}
+                          alt="All Attractions are False"
+                          style={{ maxWidth: '500px', height: '500px' }}
+                        />
+                      </p>
+                    )}
                   </TabPanel>
 
                   <TabPanel>
@@ -298,9 +354,29 @@ export default function ContentDrawer() {
                           }
                         }
                         return null;
-                      })
+                      }
+                      )
                     ) : (
                       <p>Loading attractions to visit...</p>
+                    )}
+
+                    {areAllAttractionsTrue() && (
+                      <p>
+                        {''}
+                          <br />
+                          <Heading>You've Visited All the Attractions!</Heading>
+                          <br />
+                        <img
+                          src={'/images/all_Attractions_Visited.jpg'}
+                          alt="All Attractions are True"
+                          style={{
+                            maxWidth: '500px',
+                            height: '500px',
+                            marginRight: '10px',
+                            border: '2px solid orangered',
+                            borderRadius: '5px',
+                          }}                        />
+                      </p>
                     )}
                   </TabPanel>
                 </TabPanels>
@@ -323,7 +399,7 @@ export default function ContentDrawer() {
                   <TabPanel>
                     <Flex>
                       <div>
-                        <h3>Badges</h3>
+                        
                         {Object.entries(globalUserInfo.data.badgeDO).map(
                           ([badge, status]) => {
                             if (status) {
@@ -354,9 +430,9 @@ export default function ContentDrawer() {
                                       }}
                                     />
                                     <div>
-                                    <Heading size="md">{badge}</Heading>
-                                    <p> Badge info: Some badge info</p>
-                                  </div>
+                                      <Heading size="md">{badge}</Heading>
+                                      <p> Badge info: Some badge info</p>
+                                    </div>
                                   </Flex>
                                 </SimpleGrid>
                               );
@@ -364,12 +440,30 @@ export default function ContentDrawer() {
                             return null;
                           }
                         )}
+                        {areAllBadgesFalse() && (
+                          <p>
+                          {''}
+                          <br />
+                          <Heading>You Dont Have Any Badges Yet!</Heading>
+                          <br />
+                            <img
+                              src={'/images/badgeimages/no_badges.jpg'}
+                              alt="All Badges are True"
+                              style={{
+                                maxWidth: '500px',
+                                height: '500px',
+                                marginRight: '10px',
+                                border: '2px solid orangered',
+                                borderRadius: '5px',
+                              }}                              />
+                          </p>
+                        )}
                       </div>
                     </Flex>
                   </TabPanel>
                   <TabPanel>
                     <Flex>
-                      <h3>Badges</h3>
+                      
                       {Object.entries(globalUserInfo.data.badgeDO).map(
                         ([badge, status]) => {
                           if (!status) {
@@ -386,6 +480,7 @@ export default function ContentDrawer() {
                                 p="10px"
                                 width="425px"
                               >
+                                
                                 <Flex key={badge} width="100%">
                                   <p>
                                     {' '}
@@ -411,6 +506,25 @@ export default function ContentDrawer() {
                           }
                           return null;
                         }
+                      )}
+                      {areAllBadgesTrue() && (
+                        <p>
+                          {''}
+                          <br />
+                          <Heading>You've Collected All the Badges!</Heading>
+                          <br />
+                          <img
+                            src={'/images/badgeimages/all_Badges.jpg'}
+                            alt="All Badges are True"
+                            style={{
+                              maxWidth: '500px',
+                              height: '500px',
+                              marginRight: '10px',
+                              border: '2px solid orangered',
+                              borderRadius: '5px',
+                            }}
+                          />
+                        </p>
                       )}
                     </Flex>
                   </TabPanel>
