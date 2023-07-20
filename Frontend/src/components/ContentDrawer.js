@@ -17,6 +17,10 @@ import {
   Heading,
   Stack,
   useToast,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
@@ -120,7 +124,12 @@ export default function ContentDrawer() {
       <DrawerContent
         pointerEvents="all"
         containerProps={{ pointerEvents: 'none', height: '100%' }}
-        style={{ position: 'absolute', top: '1', height: 'calc(100% - 75px)' }}
+        style={{
+          position: 'absolute',
+          top: '1',
+          height: 'calc(100% - 75px)',
+          width: '50vw',
+        }}
       >
         <DrawerCloseButton />
         {activeDrawer === 'recommender' && (
@@ -274,11 +283,42 @@ export default function ContentDrawer() {
                                       Address: {attractionInfo.full_address}
                                     </p>
                                     <br />
-                                    <p>
-                                      {' '}
-                                      Busyness Score:{' '}
-                                      {attractionInfo.businessRate}
-                                    </p>
+                                    <Alert
+                                      status="info"
+                                      colorScheme={
+                                        attractionInfo.businessRate < 35
+                                          ? 'green'
+                                          : 35 < attractionInfo.businessRate &&
+                                            attractionInfo.businessRate < 70
+                                          ? 'yellow'
+                                          : 'red'
+                                      }
+                                      borderRadius={20}
+                                      mt={5}
+                                    >
+                                      <AlertIcon />
+                                      <AlertTitle>
+                                        {attractionInfo.businessRate < 35
+                                          ? 'Quiet'
+                                          : 35 < attractionInfo.businessRate &&
+                                            attractionInfo.businessRate < 70
+                                          ? 'Moderate'
+                                          : 'Busy'}
+                                      </AlertTitle>
+                                      <AlertDescription>
+                                        {attractionInfo.businessRate < 35
+                                          ? 'This attraction is currently not busy'
+                                          : 35 < attractionInfo.businessRate &&
+                                            attractionInfo.businessRate < 70
+                                          ? 'This attraction is neither quiet nor busy'
+                                          : 'This attraction is currently busy'}
+
+                                        <p>
+                                          Busyness Score:{' '}
+                                          {attractionInfo.businessRate}
+                                        </p>
+                                      </AlertDescription>
+                                    </Alert>
                                   </div>
                                 </Flex>
                               </SimpleGrid>

@@ -7,6 +7,11 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Box,
 } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
@@ -56,7 +61,41 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                     <p fontWeight="bold">Address</p>
                     <p>{attraction.full_address}</p>
                     <br></br>
-                    <p>Busyness Score: {attraction.businessRate}</p>
+                    <Alert
+                      status="info"
+                      colorScheme={
+                        attraction.businessRate < 35
+                          ? 'green'
+                          : 35 < attraction.businessRate &&
+                            attraction.businessRate < 70
+                          ? 'yellow'
+                          : 'red'
+                      }
+                      borderRadius={20}
+                      mt={5}
+                    >
+                      <AlertIcon />
+                      <Box>
+                        <AlertTitle>
+                          {attraction.businessRate < 35
+                            ? 'Quiet'
+                            : 35 < attraction.businessRate &&
+                              attraction.businessRate < 70
+                            ? 'Not Too Busy'
+                            : 'Busy'}
+                        </AlertTitle>
+                        <AlertDescription>
+                          {/* {attraction.businessRate < 35
+                          ? 'This attraction is currently not busy'
+                          : 35 < attraction.businessRate &&
+                            attraction.businessRate < 70
+                          ? 'This attraction is neither quiet nor busy'
+                          : 'This attraction is currently quiet.'} */}
+
+                          <p>Busyness Index: {attraction.businessRate}</p>
+                        </AlertDescription>
+                      </Box>
+                    </Alert>
                     <br />
                     <p>
                       Website:{' '}
