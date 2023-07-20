@@ -26,6 +26,12 @@ import {
   ModalBody,
   ModalCloseButton,
   useToast,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from '@chakra-ui/react';
 import { APIContext, globalCredential } from './APIContext';
 import { MapContext } from './MapContext';
@@ -50,6 +56,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const { setIsDrawerOpen } = useContext(MapContext);
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const [modalContent, setModalContent] = useState('signUp');
+  const [isDeleteAlertOpen, setDeleteAlertOpen] = useState(false);
 
   const handleButtonClick = content => {
     setModalContent(content);
@@ -286,13 +293,10 @@ export default function SignUpForm({ setIsLoggedIn }) {
         .post(`http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`) //user info, json w/ true false
         .then(response => {
           console.log(response);
-          // setGlobalUserInfo(response.data);
-          // setBadgeState(response.data);
 
           if (response.status === 200) {
             setUserLoggedIn(false);
             setIsLoggedIn(false);
-            // Cache the user info
             localStorage.clear() // Clear the cache
 
             toastLogin({
@@ -319,6 +323,19 @@ export default function SignUpForm({ setIsLoggedIn }) {
     }
   };
 
+  const handleDeleteConfirmation = () => {
+    setDeleteAlertOpen(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteAlertOpen(false);
+  };
+
+  const handleDeleteAccount = () => {
+    handleDeleteCancel(); // Close the alert message
+    deleteAccount(); // Call the deleteAccount function
+  };
+
   const handleLogout = () => {
     setUserLoggedIn(false);
     setIsLoggedIn(false);
@@ -342,28 +359,25 @@ export default function SignUpForm({ setIsLoggedIn }) {
   }
 
   return (
-    <Flex
-      flexDirection={buttonsDirection}
-      minWidth="190px"
-      justifyContent="flex-end"
-    >
+    <Flex flexDirection={buttonsDirection} minWidth="190px" justifyContent="flex-end">
       {userLoggedIn ? (
         <Menu>
-        <MenuButton
-          as={Button}
-          bg="#ff914d"
-          color="white"
-          border="solid 1px orangered"
-          borderRadius="25px"
-          _hover={{ bg: 'orangered', color: 'white' }}
-        >
-          User Options
-        </MenuButton>
-        <MenuList>
-          <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-          <MenuItem onClick={deleteAccount}>Delete Account</MenuItem>
-        </MenuList>
-      </Menu>
+          <MenuButton
+            as={Button}
+            bg="#ff914d"
+            color="white"
+            border="solid 1px orangered"
+            borderRadius="25px"
+            _hover={{ bg: 'orangered', color: 'white' }}
+          >
+            User Options
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+            <MenuItem onClick={handleDeleteConfirmation}>Delete Account</MenuItem>
+          </MenuList>
+        </Menu>
+
       ) : (
         <>
           <Flex mr={2}>
@@ -447,24 +461,31 @@ export default function SignUpForm({ setIsLoggedIn }) {
           </Modal>
         </>
       )}
-      {/* <Modal isOpen={isDeleteModalOpen} onClose={handleDeleteCancel} size="sm">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Delete Account</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            Are you sure you want to delete your account?
-          </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={handleDeleteAccount}>
-              Yes, Delete
-            </Button>
-            <Button variant="ghost" onClick={handleDeleteCancel}>
-              No, Cancel
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal> */}
+    <AlertDialog
+        isOpen={isDeleteAlertOpen}
+        leastDestructiveRef={undefined}
+        onClose={handleDeleteCancel}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Account
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Are you sure you want to delete your account?
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={undefined} onClick={handleDeleteCancel}>
+                No
+              </Button>
+              <Button colorScheme="red" ml={3} onClick={handleDeleteAccount}>
+                Yes
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      {/* ... (rest of the code) */}
     </Flex>
   );
 }
