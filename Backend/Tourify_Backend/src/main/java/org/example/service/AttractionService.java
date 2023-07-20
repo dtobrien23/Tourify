@@ -16,6 +16,7 @@ import org.example.config.BusinessException;
 import java.io.File;
 import java.io.IOException;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,11 +80,14 @@ public class AttractionService {
             throw new BusinessException(ResponseCode.PARAM_ATTRACTION_EMPTY_ERROR);
         }
 
-        // set the current time in integer
-        LocalDateTime now = LocalDateTime.now();
-        int month = now.getMonthValue(); // month, from 1 (January) to 12 (December)
-        int dayOfWeek = now.get(ChronoField.DAY_OF_WEEK); // day of week, from 1 (Monday) to 7 (Sunday)
-        int hour = now.getHour(); // hour of day, from 0 to 23
+        // Get the current time in NY (PDT timezone)
+        ZoneId losAngelesZoneId = ZoneId.of("America/New_York");
+        ZonedDateTime nowInLosAngeles = ZonedDateTime.now(losAngelesZoneId);
+
+        // set the NY current time in integer
+        int month = nowInLosAngeles.getMonthValue(); // month, from 1 (January) to 12 (December)
+        int dayOfWeek = nowInLosAngeles.get(ChronoField.DAY_OF_WEEK); // day of week, from 1 (Monday) to 7 (Sunday)
+        int hour = nowInLosAngeles.getHour(); // hour of day, from 0 to 23
 
         // set the return list
         List<AttractionPredictionVO> attractionPredictionVOList = new LinkedList<>();
