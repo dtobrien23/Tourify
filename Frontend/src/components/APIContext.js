@@ -7,12 +7,15 @@ const APIContextProvider = ({ children }) => {
   const [apiAttractions, setAPIAttractions] = useState(null);
   const [apiWeather, setAPIWeather] = useState(null);
   const [apiAllCurrentBusyness, setAPIAllCurrentBusyness] = useState(null);
+  const [api24HoursBusyness, setAPI24HoursBusyness] = useState(null);
   const [apiLoaded, setApiLoaded] = useState(false);
   const [globalUserInfo, setGlobalUserInfo] = useState();
   const [globalCredential, setGlobalCredential] = useState();
   const [checkinState, setCheckinState] = useState(false);
   const [badgeState, setBadgeState] = useState(null);
   const [newBadgeState, setNewBadgeState] = useState(null);
+  const [modelTempParam, setModelTempParam] = useState(null);
+  const [modelRainParam, setModelRainParam] = useState(null);
 
   const { mapCenter } = useContext(MapContext);
 
@@ -46,29 +49,44 @@ const APIContextProvider = ({ children }) => {
         const data = await response.json();
         console.log(data, 'THIS IS THE WEATHER');
         setAPIWeather(data);
+        setModelTempParam(Math.floor((data.main.temp - 273.15) * (9 / 5) + 32)); // must convert kelvin to fahrenheit
+        if (data.rain) {
+          setModelRainParam(data.rain['1h'] / 25.4); // must convert millimetres to inches
+        } else {
+          setModelRainParam(0);
+        }
       } catch (error) {
         console.error('Error fetching weather data:', error);
       }
     };
 
+    fetchAttractionData();
+    fetchWeatherData();
+  }, []);
+
+  useEffect(() => {
     const fetchAllCurrentBusynessData = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:8001/api/attraction/getAllPrediction?temperature=73&precipitation=0`
-        );
-        const data = await response.json();
-        console.log(data, 'THIS IS THE MODEL PREDICTION');
-        const dataArray = data.data;
-        setAPIAllCurrentBusyness(dataArray);
+        if (modelTempParam && modelRainParam >= 0) {
+          console.log(
+            modelTempParam,
+            modelRainParam,
+            'these are the params for the model'
+          );
+          const response = await fetch(
+            `http://localhost:8001/api/attraction/getAllPrediction?temperature=${modelTempParam}&precipitation=${modelRainParam}`
+          );
+          const data = await response.json();
+          console.log(data, 'THIS IS THE MODEL PREDICTION');
+          const dataArray = data.data;
+          setAPIAllCurrentBusyness(dataArray);
+        }
       } catch (error) {
         console.error('Error fetching model prediction data:', error);
       }
     };
-
     fetchAllCurrentBusynessData();
-    fetchAttractionData();
-    fetchWeatherData();
-  }, []);
+  }, [modelTempParam, modelRainParam]);
 
   return (
     <APIContext.Provider
@@ -88,6 +106,7 @@ const APIContextProvider = ({ children }) => {
         setNewBadgeState,
         apiWeather,
         apiAllCurrentBusyness,
+        modelTempParam,
       }}
     >
       {children}

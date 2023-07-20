@@ -15,6 +15,7 @@ import {
   PopoverAnchor,
 } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
+import { MapContext } from './MapContext';
 import '../App.css';
 
 export default function WeatherDisplay({
@@ -24,7 +25,9 @@ export default function WeatherDisplay({
   hasTouchScreen,
 }) {
   const { apiWeather } = useContext(APIContext);
+  const { modelTempParam } = useContext(MapContext);
   const [weatherIcon, setWeatherIcon] = useState(null);
+  const [displayedTemp, setDisplayedTemp] = useState('F');
   //   const weatherDesc = apiWeather.weather[0].main;
   const mistWeather = [
     'Mist',
@@ -98,9 +101,41 @@ export default function WeatherDisplay({
                 marginBottom: '3px',
               }}
             />
-            <Text fontSize="20px">{`${Math.floor(
-              apiWeather.main.temp - 273.15
-            )}\u00B0`}</Text>
+            <Flex flexDirection="row">
+              <Text fontSize="35px">
+                {displayedTemp === 'F'
+                  ? `${Math.floor(
+                      (apiWeather.main.temp - 273.15) * (9 / 5) + 32
+                    )}\u00B0`
+                  : `${Math.floor(apiWeather.main.temp - 273.15)}\u00B0`}
+              </Text>
+              <Flex
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <button
+                  onClick={() => setDisplayedTemp('F')}
+                  style={{
+                    color: displayedTemp === 'F' ? 'black' : 'lightgrey',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  F
+                </button>
+                <button
+                  onClick={() => setDisplayedTemp('C')}
+                  style={{
+                    color: displayedTemp === 'C' ? 'black' : 'lightgrey',
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  C
+                </button>
+              </Flex>
+            </Flex>
           </>
         )}
       </Flex>
@@ -127,7 +162,12 @@ export default function WeatherDisplay({
           <PopoverArrow />
           <PopoverBody>
             <h2 style={{ fontWeight: 'bold' }}> Update Current Busyness</h2>
-            Last updated at {now.toLocaleTimeString()}
+            Last updated at{' '}
+            {now.toLocaleTimeString('en-US', {
+              timeZone: 'America/New_York',
+              hour12: false,
+            })}{' '}
+            EDT
           </PopoverBody>
         </PopoverContent>
       </Popover>
