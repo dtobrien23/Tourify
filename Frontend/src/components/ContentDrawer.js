@@ -461,8 +461,10 @@ export default function ContentDrawer() {
                       </div>
                     </Flex>
                   </TabPanel>
-                  <TabPanel>
+                  <TabPanel >
                     <Flex>
+                      <div>
+
                       
                       {Object.entries(globalUserInfo.data.badgeDO).map(
                         ([badge, status]) => {
@@ -482,7 +484,7 @@ export default function ContentDrawer() {
                               >
                                 
                                 <Flex key={badge} width="100%">
-                                  <p>
+                                  
                                     {' '}
                                     <img
                                       src={`/images/badgeimages/${badge}.jpg`}
@@ -495,7 +497,7 @@ export default function ContentDrawer() {
                                         borderRadius: '5px',
                                       }}
                                     />
-                                  </p>
+                                  
                                   <div>
                                     <Heading size="md">{badge}</Heading>
                                     <p> Badge info: Some badge info</p>
@@ -526,6 +528,7 @@ export default function ContentDrawer() {
                           />
                         </p>
                       )}
+                      </div>
                     </Flex>
                   </TabPanel>
                 </TabPanels>
