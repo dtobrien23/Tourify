@@ -39,7 +39,8 @@ export default function ContentDrawer() {
     globalCredential,
     setGlobalUserInfo,
     setGlobalCredential,
-    setCheckinState, checkinState
+    setCheckinState,
+    checkinState,
   } = useContext(APIContext);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
@@ -88,8 +89,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: "40.7484405", //hardcoded for testing replace with geolocation variable
-      lng: "-73.9856644", //hardcoded for testing reaplace with geolocation variable
+      lat: '40.7484405', //hardcoded for testing replace with geolocation variable
+      lng: '-73.9856644', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -101,7 +102,7 @@ export default function ContentDrawer() {
         if (response.data.code === 200) {
           //   // set logic that your market has been ticked off
           setCheckinState(true);
-          console.log(checkinState,'checkinstate - contentdrawer')
+          console.log(checkinState, 'checkinstate - contentdrawer');
           toastCheckIn({
             title: 'Check in Successful.',
             description: "You've Checked in Successfully.",
@@ -111,11 +112,11 @@ export default function ContentDrawer() {
           });
 
           // get the updated user info from the backend
-          
-        } if(response.data.code === 10050) {
+        }
+        if (response.data.code === 10050) {
           // distance too long
           setCheckinState(false);
-          console.log(response.data.code,'this is the repsonse code!')
+          console.log(response.data.code, 'this is the repsonse code!');
           toastNotCheckIn({
             title: 'Check in Unsuccessful.',
             description: "You're too far away.",
@@ -130,8 +131,6 @@ export default function ContentDrawer() {
         // Handle errors here
       });
   };
-
-
 
   return (
     <Drawer
@@ -328,7 +327,39 @@ export default function ContentDrawer() {
                         {Object.entries(globalUserInfo.data.badgeDO).map(
                           ([badge, status]) => {
                             if (status) {
-                              return <p key={badge}>{badge}</p>;
+                              return (
+                                <SimpleGrid
+                                  alignItems="left"
+                                  justifyItems="left"
+                                  border="3px solid orangered"
+                                  borderRadius="20px"
+                                  marginTop="5px"
+                                  marginLeft="10px"
+                                  overflow="hidden"
+                                  spacing={8}
+                                  p="10px"
+                                  width="425px"
+                                >
+                                  <Flex key={badge} width="100%">
+                                    {' '}
+                                    <img
+                                      src={`/images/badgeimages/${badge}.png`}
+                                      alt={badge}
+                                      style={{
+                                        maxWidth: '100px',
+                                        height: '100px',
+                                        marginRight: '10px',
+                                        border: '2px solid orangered',
+                                        borderRadius: '5px',
+                                      }}
+                                    />
+                                    <div>
+                                    <Heading size="md">{badge}</Heading>
+                                    <p> Badge info: Some badge info</p>
+                                  </div>
+                                  </Flex>
+                                </SimpleGrid>
+                              );
                             }
                             return null;
                           }
@@ -338,17 +369,49 @@ export default function ContentDrawer() {
                   </TabPanel>
                   <TabPanel>
                     <Flex>
-                      <div>
-                        <h3>Badges</h3>
-                        {Object.entries(globalUserInfo.data.badgeDO).map(
-                          ([badge, status]) => {
-                            if (!status) {
-                              return <p key={badge}>{badge}</p>;
-                            }
-                            return null;
+                      <h3>Badges</h3>
+                      {Object.entries(globalUserInfo.data.badgeDO).map(
+                        ([badge, status]) => {
+                          if (!status) {
+                            return (
+                              <SimpleGrid
+                                alignItems="left"
+                                justifyItems="left"
+                                border="3px solid orangered"
+                                borderRadius="20px"
+                                marginTop="5px"
+                                marginLeft="10px"
+                                overflow="hidden"
+                                spacing={8}
+                                p="10px"
+                                width="425px"
+                              >
+                                <Flex key={badge} width="100%">
+                                  <p>
+                                    {' '}
+                                    <img
+                                      src={`/images/badgeimages/${badge}.png`}
+                                      alt={badge}
+                                      style={{
+                                        maxWidth: '100px',
+                                        height: '100px',
+                                        marginRight: '10px',
+                                        border: '2px solid orangered',
+                                        borderRadius: '5px',
+                                      }}
+                                    />
+                                  </p>
+                                  <div>
+                                    <Heading size="md">{badge}</Heading>
+                                    <p> Badge info: Some badge info</p>
+                                  </div>
+                                </Flex>
+                              </SimpleGrid>
+                            );
                           }
-                        )}
-                      </div>
+                          return null;
+                        }
+                      )}
                     </Flex>
                   </TabPanel>
                 </TabPanels>
