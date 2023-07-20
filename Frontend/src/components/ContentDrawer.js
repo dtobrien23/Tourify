@@ -343,7 +343,7 @@ export default function ContentDrawer() {
                                   <Flex key={badge} width="100%">
                                     {' '}
                                     <img
-                                      src={`/images/badgeimages/${badge}.png`}
+                                      src={`/images/badgeimages/${badge}.jpg`}
                                       alt={badge}
                                       style={{
                                         maxWidth: '100px',
@@ -390,7 +390,7 @@ export default function ContentDrawer() {
                                   <p>
                                     {' '}
                                     <img
-                                      src={`/images/badgeimages/${badge}.png`}
+                                      src={`/images/badgeimages/${badge}.jpg`}
                                       alt={badge}
                                       style={{
                                         maxWidth: '100px',
