@@ -21,6 +21,7 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  Box,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
@@ -119,7 +120,7 @@ export default function ContentDrawer() {
       }}
       isOpen={isDrawerOpen}
       placement="left"
-      size={hasTouchScreen ? 'md' : 'sm'}
+      size={hasTouchScreen ? 'md' : 'md'}
     >
       <DrawerContent
         pointerEvents="all"
@@ -128,7 +129,6 @@ export default function ContentDrawer() {
           position: 'absolute',
           top: '1',
           height: 'calc(100% - 75px)',
-          width: '50vw',
         }}
       >
         <DrawerCloseButton />
@@ -146,77 +146,30 @@ export default function ContentDrawer() {
             {' '}
             <DrawerHeader>{`My Attractions`}</DrawerHeader>
             <DrawerBody>
-              <Tabs>
+              <Tabs variant="soft-rounded" colorScheme="orange">
                 <TabList>
-                  <Tab>My Visited Attractions</Tab>
-                  <Tab>Attractions to Visit</Tab>
+                  <Tab
+                    _selected={{
+                      color: 'white',
+                      bg: 'orangered',
+                      // border: 'solid 1px orangered',
+                    }}
+                  >
+                    Attractions to Visit
+                  </Tab>
+                  <Tab
+                    _selected={{
+                      color: 'white',
+                      bg: 'orangered',
+                      // border: 'solid 1px orangered',
+                    }}
+                  >
+                    Visited Attractions
+                  </Tab>
                 </TabList>
 
                 <TabPanels>
-                  <TabPanel>
-                    {globalUserInfo &&
-                    globalUserInfo.data &&
-                    globalUserInfo.data.attractionStatusDO ? (
-                      Object.entries(
-                        globalUserInfo.data.attractionStatusDO
-                      ).map(([attraction, status]) => {
-                        if (status) {
-                          const attractionInfo = getAttractionInfo(attraction);
-                          if (attractionInfo) {
-                            return (
-                              <SimpleGrid
-                                alignItems="left"
-                                justifyItems="left"
-                                border="3px solid orangered"
-                                borderRadius="20px"
-                                marginTop="5px"
-                                marginLeft="10px"
-                                overflow="hidden"
-                                spacing={8}
-                                p="10px"
-                                width="425px"
-                              >
-                                <Flex key={attraction} mb={4} width="100%">
-                                  <p>
-                                    {' '}
-                                    <img
-                                      src={`/images/${attractionInfo.name_alias}.jpg`}
-                                      alt={attractionInfo.name_alias}
-                                      style={{
-                                        maxWidth: '100px',
-                                        height: '100px',
-                                        marginRight: '10px',
-                                        border: '2px solid orangered',
-                                        borderRadius: '5px',
-                                      }}
-                                    />
-                                  </p>
-                                  <div>
-                                    <Heading size="md">
-                                      {attractionInfo.name}
-                                    </Heading>
-                                    <p>
-                                      Address: {attractionInfo.full_address}
-                                    </p>
-                                    <br />
-                                    <p>
-                                      {' '}
-                                      Busyness Score:{' '}
-                                      {attractionInfo.businessRate}
-                                    </p>
-                                  </div>
-                                </Flex>
-                              </SimpleGrid>
-                            );
-                          }
-                        }
-                        return null;
-                      })
-                    ) : (
-                      <p>Loading attractions to visit...</p>
-                    )}
-                  </TabPanel>
-
+                  {/* ATTRACTIONS TO VISIT */}
                   <TabPanel>
                     {globalUserInfo &&
                     globalUserInfo.data &&
@@ -228,20 +181,26 @@ export default function ContentDrawer() {
                           const attractionInfo = getAttractionInfo(attraction);
                           if (attractionInfo) {
                             return (
-                              <SimpleGrid
-                                alignItems="left"
-                                justifyItems="left"
-                                border="3px solid orangered"
+                              <Flex
+                                // alignItems="left"
+                                // justifyItems="left"
+                                border="2px solid orangered"
                                 borderRadius="20px"
                                 marginTop="5px"
                                 marginLeft="10px"
                                 overflow="hidden"
-                                spacing={8}
+                                spacing="20px"
                                 p="10px"
                                 width="425px"
+                                mb="15px"
                               >
-                                <Flex key={attraction} mb={4} width="100%">
-                                  <p>
+                                <Flex
+                                  key={attraction}
+                                  // mb={4}
+                                  width="100%"
+                                  flexDirection="column"
+                                >
+                                  <Flex flexDirection="row">
                                     {' '}
                                     <img
                                       src={`/images/${attractionInfo.name_alias}.jpg`}
@@ -250,39 +209,19 @@ export default function ContentDrawer() {
                                         maxWidth: '100px',
                                         height: '100px',
                                         marginRight: '10px',
-                                        border: '2px solid orangered',
-                                        borderRadius: '5px',
+                                        // border: '2px solid orangered',
+                                        borderRadius: '20px',
                                       }}
                                     />
-                                    <Stack spacing={10}>
-                                      <Button
-                                        colorScheme="blue"
-                                        style={{
-                                          backgroundColor: 'green',
-                                          color: 'white',
-                                          borderRadius: '8px',
-                                          marginTop: '5px',
-                                          padding: '10px 20px',
-                                          boxShadow:
-                                            '0 2px 4px rgba(0, 0, 0, 0.2)',
-                                        }}
-                                        onClick={() =>
-                                          handleCheckIn(attractionInfo.id)
-                                        }
-                                      >
-                                        Check In!
-                                      </Button>
-                                    </Stack>
-                                  </p>
-                                  <div>
-                                    <Heading size="md">
-                                      {attractionInfo.name}
-                                    </Heading>
-                                    <p>
-                                      {' '}
-                                      Address: {attractionInfo.full_address}
-                                    </p>
-                                    <br />
+                                    <div>
+                                      <Heading size="md">
+                                        {attractionInfo.name}
+                                      </Heading>
+                                      <p> {attractionInfo.full_address}</p>
+                                      <br />
+                                    </div>
+                                  </Flex>
+                                  <Flex mt={4}>
                                     <Alert
                                       status="info"
                                       colorScheme={
@@ -294,34 +233,175 @@ export default function ContentDrawer() {
                                           : 'red'
                                       }
                                       borderRadius={20}
-                                      mt={5}
+                                      width="60%"
+                                      // boxShadow="0 2px 4px rgba(0, 0, 0, 0.2)"
                                     >
                                       <AlertIcon />
-                                      <AlertTitle>
-                                        {attractionInfo.businessRate < 35
-                                          ? 'Quiet'
-                                          : 35 < attractionInfo.businessRate &&
-                                            attractionInfo.businessRate < 70
-                                          ? 'Moderate'
-                                          : 'Busy'}
-                                      </AlertTitle>
-                                      <AlertDescription>
-                                        {attractionInfo.businessRate < 35
-                                          ? 'This attraction is currently not busy'
-                                          : 35 < attractionInfo.businessRate &&
-                                            attractionInfo.businessRate < 70
-                                          ? 'This attraction is neither quiet nor busy'
-                                          : 'This attraction is currently busy'}
-
-                                        <p>
-                                          Busyness Score:{' '}
-                                          {attractionInfo.businessRate}
-                                        </p>
-                                      </AlertDescription>
+                                      <Box>
+                                        <AlertTitle>
+                                          {attractionInfo.businessRate < 35
+                                            ? 'Quiet'
+                                            : 35 <
+                                                attractionInfo.businessRate &&
+                                              attractionInfo.businessRate < 70
+                                            ? 'Not Too Busy'
+                                            : 'Busy'}
+                                        </AlertTitle>
+                                        <AlertDescription>
+                                          <p>
+                                            Busyness Index:{' '}
+                                            {attractionInfo.businessRate}
+                                          </p>
+                                        </AlertDescription>
+                                      </Box>
                                     </Alert>
-                                  </div>
+                                    <Stack
+                                      spacing={10}
+                                      justifyContent="center"
+                                      alignItems="center"
+                                      width="40%"
+                                    >
+                                      <Button
+                                        style={{
+                                          backgroundColor: 'gold',
+                                          color: 'white',
+                                          border: 'solid 1px goldenrod',
+                                          borderRadius: '20px',
+                                          marginTop: '5px',
+                                          padding: '10px 20px',
+                                          // boxShadow:
+                                          //   '0 2px 4px rgba(0, 0, 0, 0.2)',
+                                        }}
+                                        onClick={() =>
+                                          handleCheckIn(attractionInfo.id)
+                                        }
+                                      >
+                                        Check In!
+                                      </Button>
+                                    </Stack>
+                                  </Flex>
                                 </Flex>
-                              </SimpleGrid>
+                              </Flex>
+                            );
+                          }
+                        }
+                        return null;
+                      })
+                    ) : (
+                      <p>Loading attractions to visit...</p>
+                    )}
+                  </TabPanel>
+
+                  {/* VISITED ATTRACTIONS */}
+                  <TabPanel>
+                    {globalUserInfo &&
+                    globalUserInfo.data &&
+                    globalUserInfo.data.attractionStatusDO ? (
+                      Object.entries(
+                        globalUserInfo.data.attractionStatusDO
+                      ).map(([attraction, status]) => {
+                        if (status) {
+                          const attractionInfo = getAttractionInfo(attraction);
+                          if (attractionInfo) {
+                            return (
+                              <Flex
+                                // alignItems="left"
+                                // justifyItems="left"
+                                border="2px solid green"
+                                borderRadius="20px"
+                                marginTop="5px"
+                                marginLeft="10px"
+                                overflow="hidden"
+                                spacing="20px"
+                                p="10px"
+                                width="425px"
+                                mb="15px"
+                              >
+                                <Flex
+                                  key={attraction}
+                                  // mb={4}
+                                  width="100%"
+                                  flexDirection="column"
+                                >
+                                  <Flex flexDirection="row">
+                                    {' '}
+                                    <img
+                                      src={`/images/${attractionInfo.name_alias}.jpg`}
+                                      alt={attractionInfo.name_alias}
+                                      style={{
+                                        maxWidth: '100px',
+                                        height: '100px',
+                                        marginRight: '10px',
+                                        // border: '2px solid orangered',
+                                        borderRadius: '20px',
+                                      }}
+                                    />
+                                    <div>
+                                      <Heading size="md">
+                                        {attractionInfo.name}
+                                      </Heading>
+                                      <p> {attractionInfo.full_address}</p>
+                                      <br />
+                                    </div>
+                                  </Flex>
+                                  <Flex mt={4}>
+                                    <Alert
+                                      status="info"
+                                      colorScheme={
+                                        attractionInfo.businessRate < 35
+                                          ? 'green'
+                                          : 35 < attractionInfo.businessRate &&
+                                            attractionInfo.businessRate < 70
+                                          ? 'yellow'
+                                          : 'red'
+                                      }
+                                      borderRadius={20}
+                                      width="60%"
+                                      // boxShadow="0 2px 4px rgba(0, 0, 0, 0.2)"
+                                    >
+                                      <AlertIcon />
+                                      <Box>
+                                        <AlertTitle>
+                                          {attractionInfo.businessRate < 35
+                                            ? 'Quiet'
+                                            : 35 <
+                                                attractionInfo.businessRate &&
+                                              attractionInfo.businessRate < 70
+                                            ? 'Not Too Busy'
+                                            : 'Busy'}
+                                        </AlertTitle>
+                                        <AlertDescription>
+                                          <p>
+                                            Busyness Index:{' '}
+                                            {attractionInfo.businessRate}
+                                          </p>
+                                        </AlertDescription>
+                                      </Box>
+                                    </Alert>
+                                    <Stack
+                                      spacing={10}
+                                      justifyContent="center"
+                                      alignItems="center"
+                                      width="40%"
+                                    >
+                                      <Button
+                                        style={{
+                                          backgroundColor: '#17B169',
+                                          color: 'white',
+                                          border: 'solid 1px green',
+                                          borderRadius: '20px',
+                                          marginTop: '5px',
+                                          padding: '10px 20px',
+                                          // boxShadow:
+                                          //   '0 2px 4px rgba(0, 0, 0, 0.2)',
+                                        }}
+                                      >
+                                        Visited!
+                                      </Button>
+                                    </Stack>
+                                  </Flex>
+                                </Flex>
+                              </Flex>
                             );
                           }
                         }
