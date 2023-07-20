@@ -7,17 +7,15 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Button,
-  useState,
-  Input,
-  Flex,
 } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
+import { MapContext } from './MapContext';
 
 // passing it marker state and method to change state so the X button can close the drawer
 // also passing in marker object to render info in drawer
 function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
   const { apiAttractions } = useContext(APIContext);
+  const { attractionsWithBusyness } = useContext(MapContext);
 
   if (!markerObject) {
     return null; // Return null when markerObject is null
@@ -33,11 +31,11 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
           justifyItems="left"
           border="1px solid orangered"
           borderRadius="20px"
-          marginTop='5px'
-          marginLeft='10px'
-          overflow='hidden'
+          marginTop="5px"
+          marginLeft="10px"
+          overflow="hidden"
           spacing={8}
-          p='10px'
+          p="10px"
         >
           <DrawerCloseButton />
 
@@ -51,13 +49,15 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
               alt={markerObject.name.name}
             />
             <br></br>
-            {apiAttractions.map(attraction => {
+            {attractionsWithBusyness.map(attraction => {
               if (attraction.name === markerObject.name.name) {
                 return (
                   <div>
                     <p fontWeight="bold">Address</p>
                     <p>{attraction.full_address}</p>
                     <br></br>
+                    <p>Busyness Score: {attraction.businessRate}</p>
+                    <br />
                     <p>
                       Website:{' '}
                       <a

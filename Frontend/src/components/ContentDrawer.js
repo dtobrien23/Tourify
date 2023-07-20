@@ -1,20 +1,11 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import {
   Flex,
   Button,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  Box,
-  CloseButton,
-  Tooltip,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
-  DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
   Tab,
@@ -30,27 +21,17 @@ import {
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
 import { APIContext } from './APIContext';
-import { getUserGeolocation } from './GeoContext';
 
 export default function ContentDrawer() {
-  const {
-    globalUserInfo,
-    apiAttractions,
-    globalCredential,
-    setGlobalUserInfo,
-    setGlobalCredential,
-    setCheckinState, checkinState
-  } = useContext(APIContext);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+  const { globalUserInfo, setCheckinState, checkinState } =
+    useContext(APIContext);
 
   const {
-    isAttractionsDrawerOpen,
-    setIsAttractionsDrawerOpen,
     activeDrawer,
     isDrawerOpen,
     setIsDrawerOpen,
     hasTouchScreen,
+    attractionsWithBusyness,
   } = useContext(MapContext);
 
   const toastCheckIn = useToast();
@@ -68,17 +49,13 @@ export default function ContentDrawer() {
     const formattedAttractionName = capitalizeFirstLetter(
       kebabToCamelCase(attractionName)
     );
-    const attraction = apiAttractions.find(
+    const attraction = attractionsWithBusyness.find(
       attraction => attraction.name_alias === formattedAttractionName
     );
     return attraction || {};
   };
 
   const handleCheckIn = async attractionID => {
-    // const { latitude, longitude } = await getUserGeolocation();
-    // setLatitude(latitude);
-    // setLongitude(longitude);
-
     const apiEndpoint = 'http://localhost:8001/api/user/update';
     const cachedUserCredential = localStorage.getItem('userCredential');
 
@@ -88,8 +65,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: "40.742045", //hardcoded for testing
-      lng: "-73.9900845", //hardcoded for testing
+      lat: '40.742045', //hardcoded for testing
+      lng: '-73.9900845', //hardcoded for testing
     };
 
     axios
@@ -101,7 +78,7 @@ export default function ContentDrawer() {
         if (response.data.code === 200) {
           //   // set logic that your market has been ticked off
           setCheckinState(true);
-          console.log(checkinState,'checkinstate - contentdrawer')
+          console.log(checkinState, 'checkinstate - contentdrawer');
           toastCheckIn({
             title: 'Check in Successful.',
             description: "You've Checked in Successfully.",
@@ -111,11 +88,11 @@ export default function ContentDrawer() {
           });
 
           // get the updated user info from the backend
-          
-        } if(response.data.code === 10050) {
+        }
+        if (response.data.code === 10050) {
           // distance too long
           setCheckinState(false);
-          console.log(response.data.code,'this is the repsonse code!')
+          console.log(response.data.code, 'this is the repsonse code!');
           toastNotCheckIn({
             title: 'Check in Unsuccessful.',
             description: "You're too far away.",
@@ -130,8 +107,6 @@ export default function ContentDrawer() {
         // Handle errors here
       });
   };
-
-
 
   return (
     <Drawer
@@ -214,6 +189,12 @@ export default function ContentDrawer() {
                                     <p>
                                       Address: {attractionInfo.full_address}
                                     </p>
+                                    <br />
+                                    <p>
+                                      {' '}
+                                      Busyness Score:{' '}
+                                      {attractionInfo.businessRate}
+                                    </p>
                                   </div>
                                 </Flex>
                               </SimpleGrid>
@@ -291,6 +272,12 @@ export default function ContentDrawer() {
                                     <p>
                                       {' '}
                                       Address: {attractionInfo.full_address}
+                                    </p>
+                                    <br />
+                                    <p>
+                                      {' '}
+                                      Busyness Score:{' '}
+                                      {attractionInfo.businessRate}
                                     </p>
                                   </div>
                                 </Flex>

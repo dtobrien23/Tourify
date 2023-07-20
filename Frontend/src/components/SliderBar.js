@@ -11,13 +11,15 @@ import { Flex } from '@chakra-ui/react';
 import { MdGraphicEq } from 'react-icons/md';
 //import attractions from '../static/attractions.json';
 import { APIContext } from './APIContext';
+import { MapContext } from './MapContext';
 
 export default function SliderBar({ setSliderListFunc }) {
   const { apiAttractions, apiLoaded, apiAllCurrentBusyness } =
     useContext(APIContext);
+  const { attractionsWithBusyness, setAttractionsWithBusyness } =
+    useContext(MapContext);
 
   const [sliderValue, setSliderValue] = useState([0, 100]);
-  const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
   const [filteredAttractions, setFilteredAttractions] =
     useState(apiAttractions);
 
@@ -38,6 +40,7 @@ export default function SliderBar({ setSliderListFunc }) {
         }
       });
       console.log(apiAttractions, 'PLS HAVE BUSYNESS SCORE');
+      setSliderListFunc(apiAttractions); // so all markers load when page loads
       setAttractionsWithBusyness(apiAttractions);
     }
   }, [apiAllCurrentBusyness]);

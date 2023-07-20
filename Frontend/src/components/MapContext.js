@@ -30,6 +30,7 @@ const MapProvider = ({ children }) => {
   const [hasTouchScreen, setHasTouchScreen] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [inputColour, setInputColour] = useState('#B5BBC6');
+  const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
 
   const toastNoSource = useToast();
   const toastNoDest = useToast();
@@ -222,6 +223,8 @@ const MapProvider = ({ children }) => {
         setInputValue,
         inputColour,
         setInputColour,
+        attractionsWithBusyness,
+        setAttractionsWithBusyness,
       }}
     >
       {children}

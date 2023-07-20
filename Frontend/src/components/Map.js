@@ -6,18 +6,7 @@ import SliderBar from './SliderBar';
 import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
 import WeatherDisplay from './WeatherDisplay.js';
-import {
-  Flex,
-  Button,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  Box,
-  CloseButton,
-  Tooltip,
-} from '@chakra-ui/react';
-import Recommender from './Recommender';
+import { Flex } from '@chakra-ui/react';
 import { GeolocationProvider } from './GeoContext';
 import FiltersNavBar from './FiltersNavBar.js';
 import { APIContext } from './APIContext';
@@ -29,42 +18,24 @@ export default function Map() {
   const {
     map,
     setMap,
-    selectedAttraction,
-    setSelectedAttraction,
-    setSourceCoords,
-    locationMarker,
-    isSourceAlertOpen,
-    setLocationMarker,
-    setIsSourceAlertOpen,
-    buttonState,
     setButtonState,
-    handleRecommenderClick,
-    clearRoute,
-    calculateRoute,
     google,
-    isAttractionsDrawerOpen,
-    setIsAttractionsDrawerOpen,
     isMobile,
     hasTouchScreen,
     mapCenter,
     setMapCenter,
+    attractionsWithBusyness,
   } = useContext(MapContext);
 
   ////////////////
   // USE STATES //
   ////////////////
 
-  //user location from locationInput
-  const [userLocation, setUserLocation] = useState(null);
-
-  const [sliderList, setSliderList] = useState(null);
+  const [sliderList, setSliderList] = useState(attractionsWithBusyness);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['ALL']);
-
-  const [directionsRenderers, setDirectionsRenderers] = useState([]);
-  const [dataArray, setDataArray] = useState(null);
 
   const mapZoom = 13; // default map zoom
 
