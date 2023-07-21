@@ -11,6 +11,7 @@ import {
   Button,
   Text,
   MenuItem,
+  useToast,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
@@ -25,6 +26,7 @@ export default function NavBar() {
   });
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const toastNoSourceLocation = useToast();
 
   const {
     setActiveDrawer,
@@ -32,6 +34,8 @@ export default function NavBar() {
     setIsDrawerOpen,
     isMobile,
     hasTouchScreen,
+    sourceCoords,
+    geolocation,
   } = useContext(MapContext);
 
   const handleLogin = () => {
@@ -85,9 +89,20 @@ export default function NavBar() {
           w="fit-content"
           isDisabled={!isLoggedIn}
           onClick={() => {
-            setActiveDrawer('recommender');
-            {
-              !isDrawerOpen && setIsDrawerOpen(true);
+            if (geolocation) {
+              setActiveDrawer('recommender');
+              {
+                !isDrawerOpen && setIsDrawerOpen(true);
+              }
+            } else {
+              toastNoSourceLocation({
+                title: 'Recommender Unavailable!',
+                description:
+                  'Please allow your current location or select a location from the dropdown',
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+              });
             }
           }}
         >

@@ -31,6 +31,7 @@ export default function LocationInput({}) {
     hasTouchScreen,
     inputValue,
     setInputValue,
+    sourceCoords,
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
@@ -140,8 +141,8 @@ export default function LocationInput({}) {
 
           setGeolocation(latlng); // Update the geolocation value in the context
           console.log(latlng, 'this is lat lang');
-
           setSourceCoords(latlng);
+          console.log(sourceCoords);
           map.panTo(latlng);
           map.setZoom(15);
 
@@ -183,7 +184,7 @@ export default function LocationInput({}) {
         }
 
         setInputValue(selectedPlace.name);
-        setSourceCoords(latLng);
+        setGeolocation(latLng);
         map.panTo(latLng);
         map.setZoom(15);
         // eslint-disable-next-line
