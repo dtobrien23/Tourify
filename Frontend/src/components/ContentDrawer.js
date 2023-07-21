@@ -263,14 +263,14 @@ export default function ContentDrawer() {
                                     >
                                       <Button
                                         style={{
-                                          backgroundColor: 'gold',
-                                          color: 'white',
-                                          border: 'solid 1px goldenrod',
+                                          backgroundColor: 'white',
+                                          color: 'black',
+                                          border: 'solid 2px gold',
                                           borderRadius: '20px',
                                           marginTop: '5px',
                                           padding: '10px 20px',
-                                          // boxShadow:
-                                          //   '0 2px 4px rgba(0, 0, 0, 0.2)',
+                                          boxShadow:
+                                            '0 2px 4px rgba(0, 0, 0, 0.2)',
                                         }}
                                         onClick={() =>
                                           handleCheckIn(attractionInfo.id)
