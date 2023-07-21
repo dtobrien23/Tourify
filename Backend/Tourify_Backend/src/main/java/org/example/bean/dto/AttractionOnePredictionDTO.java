@@ -23,10 +23,10 @@ public class AttractionOnePredictionDTO {
 
     @NotNull
     @Schema(description = "24 hours of temperature in Fahrenheit")
-    private List<Long> temperatures;
+    private List<Float> temperatures;
 
     @NotNull
     @Schema(description = "24 hours of precipitation level in inches")
-    private List<Long> precipitation;
+    private List<Float> precipitation;
 
 }
