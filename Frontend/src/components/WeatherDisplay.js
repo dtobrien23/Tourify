@@ -105,7 +105,9 @@ export default function WeatherDisplay({
               <Text fontSize="35px">
                 {displayedTemp === 'F'
                   ? `${Math.floor(apiCurrentWeather.main.temp)}\u00B0`
-                  : `${Math.floor(apiCurrentWeather.main.temp - 273.15)}\u00B0`}
+                  : `${Math.floor(
+                      (apiCurrentWeather.main.temp - 32) * (5 / 9)
+                    )}\u00B0`}
               </Text>
               <Flex
                 flexDirection="column"

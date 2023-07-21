@@ -137,7 +137,7 @@ const APIContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // when forecast is returned, 24 hour model API is requested
+    // processing the weather forecast into parameters for the model
     if (apiWeatherForecast) {
       // convert rain from millimetres to inches
       apiWeatherForecast.forEach(hour => {
@@ -193,6 +193,7 @@ const APIContextProvider = ({ children }) => {
   }, [apiWeatherForecast]);
 
   useEffect(() => {
+    // making API request when parameters are processed from weather forecast
     const fetchBusynessPredictions = async () => {
       if (
         day1Params &&
@@ -228,13 +229,10 @@ const APIContextProvider = ({ children }) => {
             data4,
             'THIS IS THE FORECAST PREDICTIONS'
           );
-          // setAPICurrentWeather(data);
-          // setCurrentModelTempParam(Math.floor(data.main.temp)); // must convert kelvin to fahrenheit
-          // if (data.rain) {
-          //   setCurrentModelRainParam(data.rain['1h'] / 25.4); // must convert millimetres to inches
-          // } else {
-          //   setCurrentModelRainParam(0);
-          // }
+          setDay1BusynessPred(data1.data.attractionPredictionDetailVOList);
+          setDay2BusynessPred(data2.data.attractionPredictionDetailVOList);
+          setDay3BusynessPred(data3.data.attractionPredictionDetailVOList);
+          setDay4BusynessPred(data4.data.attractionPredictionDetailVOList);
         } catch (error) {
           console.error('Error fetching weather data:', error);
         }
