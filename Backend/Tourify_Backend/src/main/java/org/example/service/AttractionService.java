@@ -122,7 +122,7 @@ public class AttractionService {
             String modelPath = currentWorkingDir + "/Tourify_Backend/src/main/resources/Tourify_model_v2.onnx";
             try (OrtSession session = env.createSession(modelPath, options)) {
                 // create the input
-                long[][] longArray = new long[1][7];
+                float[][] longArray = new float[1][7];
                 longArray[0][0] = month;
                 longArray[0][1] = dayOfWeek;
                 longArray[0][2] = hour;

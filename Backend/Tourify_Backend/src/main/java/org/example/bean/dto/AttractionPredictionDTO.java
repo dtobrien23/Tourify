@@ -22,9 +22,9 @@ public class AttractionPredictionDTO {
 
     @NotNull
     @Schema(description = "current temperature in Fahrenheit")
-    private long temperature;
+    private float temperature;
 
     @NotNull
     @Schema(description = "current precipitation level in inches")
-    private long precipitation;
+    private float precipitation;
 }
