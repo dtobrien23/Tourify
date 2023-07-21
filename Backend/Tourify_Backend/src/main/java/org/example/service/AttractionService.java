@@ -15,6 +15,7 @@ import org.example.bean.vo.AttractionPredictionVO;
 import org.example.config.BusinessException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -31,6 +32,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+
 
 /**
  * Description of the class.
@@ -43,6 +47,7 @@ import reactor.core.publisher.Mono;
 public class AttractionService {
 
     @Autowired AttractionRepository attractionRepository;
+    @Autowired ResourceLoader resourceLoader;
 
 
     // convert the json into a map object
@@ -51,9 +56,9 @@ public class AttractionService {
         ObjectMapper mapper = new ObjectMapper();
         try {
             // load the JSON
-            String currentWorkingDir = System.getProperty("user.dir");
-            String modelPath = currentWorkingDir + "/Tourify_Backend/src/main/resources/passengers_average_v1.json";
-            List<Map<String, String>> list = mapper.readValue(new File(modelPath), new TypeReference<List<Map<String, String>>>(){});
+            Resource resource = resourceLoader.getResource("classpath:passengers_average_v1.json");
+            InputStream inputStream = resource.getInputStream();
+            List<Map<String, String>> list = mapper.readValue(inputStream, new TypeReference<List<Map<String, String>>>(){});
             hashMap = new HashMap<>();
             for (Map<String, String> item : list) {
                 String dayZoneCombined = (String) item.get("day_zone_combined");
