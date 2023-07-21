@@ -12,6 +12,7 @@ import {
   AlertTitle,
   AlertDescription,
   Box,
+  Button,
 } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
@@ -19,7 +20,7 @@ import { MapContext } from './MapContext';
 // passing it marker state and method to change state so the X button can close the drawer
 // also passing in marker object to render info in drawer
 function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
-  const { apiAttractions } = useContext(APIContext);
+  const { apiAttractions, startPrediction } = useContext(APIContext);
   const { attractionsWithBusyness } = useContext(MapContext);
 
   if (!markerObject) {
@@ -101,6 +102,13 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                       </Box>
                     </Alert>
                     <br />
+                    <Button
+                      onClick={() => {
+                        startPrediction(attraction.id);
+                      }}
+                    >
+                      Get 24 Hour Busyness Prediction
+                    </Button>
                     <p>
                       Website:{' '}
                       <a

@@ -24,7 +24,7 @@ export default function WeatherDisplay({
   setSelectedFilters,
   hasTouchScreen,
 }) {
-  const { apiWeather } = useContext(APIContext);
+  const { apiCurrentWeather, currentModelTempParam } = useContext(APIContext);
   const { modelTempParam } = useContext(MapContext);
   const [weatherIcon, setWeatherIcon] = useState(null);
   const [displayedTemp, setDisplayedTemp] = useState('F');
@@ -45,10 +45,10 @@ export default function WeatherDisplay({
   const hour = now.getHours();
 
   useEffect(() => {
-    if (apiWeather) {
+    if (apiCurrentWeather) {
       const sunSet = 20;
       const sunRise = 6;
-      const weatherDesc = apiWeather.weather[0].main;
+      const weatherDesc = apiCurrentWeather.weather[0].main;
 
       // if weather is 'misty'
       if (mistWeather.includes(weatherDesc)) {
@@ -67,7 +67,7 @@ export default function WeatherDisplay({
         setWeatherIcon(`/images/weather-icons/${weatherDesc}.svg`);
       }
     }
-  }, [apiWeather]);
+  }, [apiCurrentWeather]);
 
   return (
     <Flex top="14px" left="14px" position="absolute">
@@ -81,7 +81,7 @@ export default function WeatherDisplay({
         justifyContent="center"
         alignItems="center"
       >
-        {apiWeather && (
+        {apiCurrentWeather && (
           <>
             <h2
               style={{
@@ -104,10 +104,8 @@ export default function WeatherDisplay({
             <Flex flexDirection="row">
               <Text fontSize="35px">
                 {displayedTemp === 'F'
-                  ? `${Math.floor(
-                      (apiWeather.main.temp - 273.15) * (9 / 5) + 32
-                    )}\u00B0`
-                  : `${Math.floor(apiWeather.main.temp - 273.15)}\u00B0`}
+                  ? `${Math.floor(apiCurrentWeather.main.temp)}\u00B0`
+                  : `${Math.floor(apiCurrentWeather.main.temp - 273.15)}\u00B0`}
               </Text>
               <Flex
                 flexDirection="column"

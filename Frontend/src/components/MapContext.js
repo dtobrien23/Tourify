@@ -69,7 +69,7 @@ const MapProvider = ({ children }) => {
   /////////////
 
   async function calculateRoute() {
-    if (sourceCoords && selectedAttraction) {
+    if (geolocation && selectedAttraction) {
       if (directionsRenderers.length !== 0) {
         for (const renderer of directionsRenderers) {
           renderer.setMap(null);
@@ -82,7 +82,7 @@ const MapProvider = ({ children }) => {
       directionsRenderer.setMap(map);
 
       // source
-      const sourceLatLng = sourceCoords;
+      const sourceLatLng = geolocation;
 
       // destination
       const destLat = parseFloat(selectedAttraction.coordinates_lat);
