@@ -29,18 +29,22 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
   return (
     <>
       <Drawer isOpen={isOpenFunc} placement="right" onClose={isCloseFunc}>
-        <DrawerOverlay />
+        <DrawerOverlay style={{ zIndex: '19' }} />
 
         <DrawerContent
           alignItems="left"
           justifyItems="left"
           border="1px solid orangered"
           borderRadius="20px"
-          marginTop="5px"
+          borderTopRightRadius="0px"
+          borderBottomRightRadius="0px"
+          borderRight="0px"
+          // marginTop="5px"
           marginLeft="10px"
           overflow="hidden"
           spacing={8}
           p="10px"
+          style={{ zIndex: '20' }}
         >
           <DrawerCloseButton />
 

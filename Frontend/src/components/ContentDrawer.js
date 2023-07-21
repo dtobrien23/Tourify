@@ -128,7 +128,13 @@ export default function ContentDrawer() {
         style={{
           position: 'absolute',
           top: '1',
-          height: 'calc(100% - 75px)',
+          height: 'calc(100% - 74px)',
+          border: 'solid 1px orangered',
+          borderLeft: '0px',
+          borderRadius: '20px',
+          borderTopLeftRadius: '0px',
+          borderBottomLeftRadius: '0px',
+          zIndex: '10',
         }}
       >
         <DrawerCloseButton />

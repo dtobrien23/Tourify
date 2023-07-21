@@ -30,7 +30,7 @@ const GeolocationProvider = ({ children }) => {
     getUserGeolocation()
       .then(position => {
         setGeolocation(position);
-        console.log(position, 'current geo')
+        console.log(position, 'current geo');
         setLoading(false);
       })
       .catch(error => {
@@ -38,7 +38,6 @@ const GeolocationProvider = ({ children }) => {
         setLoading(false);
       });
   }, []);
-
 
   return (
     <GeolocationContext.Provider value={{ geolocation, setGeolocation }}>
