@@ -169,15 +169,17 @@ public class AttractionService {
         // store the machine prediction into the attractionPredictionDetailVOList
         List<AttractionPredictionDetailVO> attractionPredictionDetailVOList = new LinkedList<>();
 
-        // set the current time in integer (start with the current time)
-        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
+        // Set the ZoneId to New York
+        ZoneId newYorkZoneId = ZoneId.of("America/New_York");
+        // Get the current date and time in New York time zone
+        LocalDateTime localDateTimeInNewYork = LocalDateTime.now(newYorkZoneId);
         // Prepare lists to hold the month, day of the week, and hour values
         List<Integer> months = new ArrayList<>();
         List<Integer> daysOfWeek = new ArrayList<>();
         List<Integer> hours = new ArrayList<>();
         // Generate the values for the next 24 hours
         for (int i = 0; i < 24; i++) {
-            LocalDateTime futureDateTime = now.plusHours(i);
+            LocalDateTime futureDateTime = localDateTimeInNewYork.plusHours(i);
             months.add(futureDateTime.getMonthValue());
             daysOfWeek.add(futureDateTime.getDayOfWeek().getValue());
             hours.add(futureDateTime.getHour());
@@ -293,7 +295,9 @@ public class AttractionService {
     Integer getModelPythonPrediction(AttractionPredictionDTO attractionPredictionDTO, int month, int dayOfWeek, int hour, int taxiLocation, int passengersNum) throws BusinessException{
         System.out.println("3.Starting to invoke prediction on python service -------------");
 
-        WebClient webClient = WebClient.create("http://127.0.0.1:12345");
+        WebClient webClient = WebClient.create("http://127.0.0.1:12345");  // local testing address
+//        WebClient webClient = WebClient.create("http://172.18.0.3:5000");  //Docker address
+
 
         Map<String, Object> map = new HashMap<>();
         map.put("month", month);
