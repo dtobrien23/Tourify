@@ -332,8 +332,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
   };
 
   const handleDeleteAccount = () => {
-    handleDeleteCancel(); // Close the alert message
-    deleteAccount(); // Call the deleteAccount function
+    handleDeleteCancel(); 
+    deleteAccount(); 
   };
 
   const handleLogout = () => {
