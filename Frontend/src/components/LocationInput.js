@@ -86,21 +86,57 @@ export default function LocationInput({}) {
     }
   };
   const deniedCoords = { lat: 40.758, lng: -73.9855 };
-  const [defaultGeolocationSet, setDefaultGeolocationSet] = useState(false);
+  const [defaultGeolocationSet, setDefaultGeolocationSet] = useState(null);
 
-  useEffect(() => {
-    if (!geolocation && !defaultGeolocationSet) {
-      // Set the default geolocation when geolocation is not available or denied
-      setGeolocation(deniedCoords);
-      setDefaultGeolocationSet(true);
-    }
-  }, [geolocation, defaultGeolocationSet]);
+  // useEffect(() => {
+  //   if (!geolocation && !defaultGeolocationSet) {
+  //     // Set the default geolocation when geolocation is not available or denied
+  //     setGeolocation(deniedCoords);
+  //     setDefaultGeolocationSet(true);
+  //   }
+  // }, [geolocation, defaultGeolocationSet]);
 
   const posError = error => {
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' }).then(res => {
         if (res.state === 'denied') {
-          setGeolocation(deniedCoords);
+          // setGeolocation(deniedCoords);
+
+          const geocoder = new google.maps.Geocoder();
+
+          geocoder
+            .geocode({ location: deniedCoords })
+            .then(response => {
+              if (response.results[0]) {
+                if (locationMarker.length !== 0) {
+                  for (const marker of locationMarker) {
+                    marker.setMap(null);
+                  }
+                  setLocationMarker([]);
+                }
+                const formattedAddress = response.results[0].formatted_address;
+                setCurrentLocation(formattedAddress);
+
+                setGeolocation(deniedCoords); // Update the geolocation value in the context
+                console.log(deniedCoords, 'this is lat lang');
+                setSourceCoords(deniedCoords);
+                console.log(sourceCoords);
+                map.panTo(deniedCoords);
+                map.setZoom(15);
+
+                // eslint-disable-next-line
+                const marker = new google.maps.Marker({
+                  position: deniedCoords,
+                  map: map,
+                  icon: '/images/you-are-here.png',
+                });
+                setLocationMarker([marker]);
+              } else {
+                window.alert('No results found');
+              }
+            })
+            .catch(e => window.alert('Geocoder failed due to: ' + e));
+
           toastDenied({
             title: 'Geolocation Permission Denied.',
             description: 'We have set your location to Times Square',
@@ -111,7 +147,42 @@ export default function LocationInput({}) {
         }
       });
     } else {
-      setGeolocation(deniedCoords);
+      // setGeolocation(deniedCoords);
+      const geocoder = new google.maps.Geocoder();
+
+      geocoder
+        .geocode({ location: deniedCoords })
+        .then(response => {
+          if (response.results[0]) {
+            if (locationMarker.length !== 0) {
+              for (const marker of locationMarker) {
+                marker.setMap(null);
+              }
+              setLocationMarker([]);
+            }
+            const formattedAddress = response.results[0].formatted_address;
+            setCurrentLocation(formattedAddress);
+
+            setGeolocation(deniedCoords); // Update the geolocation value in the context
+            console.log(deniedCoords, 'this is lat lang');
+            setSourceCoords(deniedCoords);
+            console.log(sourceCoords);
+            map.panTo(deniedCoords);
+            map.setZoom(15);
+
+            // eslint-disable-next-line
+            const marker = new google.maps.Marker({
+              position: deniedCoords,
+              map: map,
+              icon: '/images/you-are-here.png',
+            });
+            setLocationMarker([marker]);
+          } else {
+            window.alert('No results found');
+          }
+        })
+        .catch(e => window.alert('Geocoder failed due to: ' + e));
+
       toastUnable({
         title: 'Unable to access location.',
         description: 'We have set your location to Times Square',
@@ -128,7 +199,7 @@ export default function LocationInput({}) {
       lng: parseFloat(position.coords.longitude),
     };
 
-    // If current location is outside of NYC, default to Times Square
+    // if current location is outside of NYC, default to Times Square
     if (
       !(
         latlng.lat >= minLatitude &&
@@ -137,11 +208,8 @@ export default function LocationInput({}) {
         latlng.lng <= maxLongitude
       )
     ) {
-      const defaultLocation = {
-        lat: 40.758,
-        lng: -73.9855,
-      };
-      setGeolocation(defaultLocation);
+      latlng.lat = 40.758;
+      latlng.lng = -73.9855;
       toastOutsideNYC({
         title: 'You Are Not In NYC!',
         description:
@@ -150,52 +218,84 @@ export default function LocationInput({}) {
         duration: 5000,
         isClosable: true,
       });
-    } else {
-      // Update geolocation to the current location within NYC
-      setGeolocation(latlng);
     }
 
+    const geocoder = new google.maps.Geocoder();
+
+    geocoder
+      .geocode({ location: latlng })
+      .then(response => {
+        if (response.results[0]) {
+          if (locationMarker.length !== 0) {
+            for (const marker of locationMarker) {
+              marker.setMap(null);
+            }
+            setLocationMarker([]);
+          }
+          const formattedAddress = response.results[0].formatted_address;
+          setCurrentLocation(formattedAddress);
+
+          setGeolocation(latlng); // Update the geolocation value in the context
+          console.log(latlng, 'this is lat lang');
+          setSourceCoords(latlng);
+          console.log(sourceCoords);
+          map.panTo(latlng);
+          map.setZoom(15);
+
+          // eslint-disable-next-line
+          const marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            icon: '/images/you-are-here.png',
+          });
+          setLocationMarker([marker]);
+        } else {
+          window.alert('No results found');
+        }
+      })
+      .catch(e => window.alert('Geocoder failed due to: ' + e));
     setButtonClicked(buttonClicked + 1);
   };
 
-  // Use useEffect with geolocation as the dependency to handle the panning
-  useEffect(() => {
-    if (geolocation && google) {
-      // Check if geolocation and google are available
-      const geocoder = new google.maps.Geocoder();
-      const latLng = new google.maps.LatLng(geolocation.lat, geolocation.lng);
+  // // Use useEffect with geolocation as the dependency to handle the panning
+  // useEffect(() => {
+  //   if (geolocation && google) {
+  //     console.log(geolocation, 'THIS IS GEOOOOOOOO');
+  //     // Check if geolocation and google are available
+  //     const geocoder = new google.maps.Geocoder();
+  //     const latLng = new google.maps.LatLng(geolocation.lat, geolocation.lng);
 
-      geocoder
-        .geocode({ location: latLng })
-        .then(response => {
-          if (response.results[0]) {
-            if (locationMarker.length !== 0) {
-              for (const marker of locationMarker) {
-                marker.setMap(null);
-              }
-              setLocationMarker([]);
-            }
-            const formattedAddress = response.results[0].formatted_address;
-            setCurrentLocation(formattedAddress);
-            setGeolocation(geolocation);
-            setSourceCoords(geolocation);
-            map.panTo(geolocation); // Pan the map to the current location using geolocation
-            map.setZoom(15);
+  //     geocoder
+  //       .geocode({ location: latLng })
+  //       .then(response => {
+  //         if (response.results[0]) {
+  //           if (locationMarker.length !== 0) {
+  //             for (const marker of locationMarker) {
+  //               marker.setMap(null);
+  //             }
+  //             setLocationMarker([]);
+  //           }
+  //           const formattedAddress = response.results[0].formatted_address;
+  //           setCurrentLocation(formattedAddress);
+  //           setGeolocation(geolocation);
+  //           setSourceCoords(geolocation);
+  //           map.panTo(geolocation); // Pan the map to the current location using geolocation
+  //           map.setZoom(15);
 
-            // eslint-disable-next-line
-            const marker = new google.maps.Marker({
-              position: geolocation, // Use the geolocation context variable here
-              map: map,
-              icon: '/images/you-are-here.png',
-            });
-            setLocationMarker([marker]);
-          } else {
-            window.alert('No results found');
-          }
-        })
-        .catch(e => window.alert('Geocoder failed due to: ' + e));
-    }
-  }, [geolocation, google]);
+  //           // eslint-disable-next-line
+  //           const marker = new google.maps.Marker({
+  //             position: geolocation, // Use the geolocation context variable here
+  //             map: map,
+  //             icon: '/images/you-are-here.png',
+  //           });
+  //           setLocationMarker([marker]);
+  //         } else {
+  //           window.alert('No results found');
+  //         }
+  //       })
+  //       .catch(e => window.alert('Geocoder failed due to: ' + e));
+  //   }
+  // }, [geolocation, google]);
 
   // when user selects their current location
   const handlePlaceSelect = () => {
@@ -210,6 +310,7 @@ export default function LocationInput({}) {
           selectedPlace.geometry.location
         ) {
           latLng = selectedPlace.geometry.location;
+          console.log(latLng, '??????????');
         }
 
         if (locationMarker.length !== 0) {

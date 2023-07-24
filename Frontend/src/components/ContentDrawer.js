@@ -93,7 +93,7 @@ export default function ContentDrawer() {
           //   // set logic that your market has been ticked off
           setCheckinState(true);
           console.log(checkinState, 'checkinstate - contentdrawer');
-          confettiReward();
+          // confettiReward();
           toastCheckIn({
             title: 'Check in Successful.',
             description: "You've Checked in Successfully.",

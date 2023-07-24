@@ -29,6 +29,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
     sourceCoords,
     setSourceCoords,
     geolocation,
+    attractionsWithBusyness,
   } = useContext(MapContext);
 
   //geolocation, cant be null or error occurs
@@ -48,7 +49,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const fetchDistances = () => {
     if (geolocation) {
       const origin = geolocation;
-      const destinations = apiAttractions.map(
+      const destinations = attractionsWithBusyness.map(
         attraction =>
           new window.google.maps.LatLng(
             attraction.coordinates_lat,
@@ -94,7 +95,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
     if (status === window.google.maps.DistanceMatrixStatus.OK) {
       const results = response.rows[0].elements;
 
-      const attractionsWithDistances = apiAttractions.map(
+      const attractionsWithDistances = attractionsWithBusyness.map(
         (attraction, index) => {
           const distance = results[index].distance.text;
           const convertedDistance = convertToKilometers(distance);
@@ -133,13 +134,13 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
   useEffect(() => {
     const leastBusyAttractions = nearestAttractions.sort((a, b) => {
-      const busynessA = parseFloat(a.busyness_score);
-      const busynessB = parseFloat(b.busyness_score);
+      const busynessA = parseFloat(a.businessRate);
+      const busynessB = parseFloat(b.businessRate);
       return busynessA - busynessB;
     });
 
     setQuietestAttractions(leastBusyAttractions);
-  }, []);
+  }, [nearestAttractions]);
 
   return (
     <>
@@ -182,7 +183,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
                   <div>
                     <Heading size="md">{attraction.name}</Heading>{' '}
-                    <p>Busyness Score: {attraction.busyness_score}</p>
+                    <p>Busyness Score: {attraction.businessRate}</p>
                     <p>Distance: {attraction.distance}</p>
                   </div>
                 </Flex>
@@ -208,7 +209,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                 </p>
                 <div>
                   <Heading size="md">{attraction.name}</Heading>{' '}
-                  <p>Busyness Score: {attraction.busyness_score}</p>
+                  <p>Busyness Score: {attraction.businessRate}</p>
                   <p>Distance: {attraction.distance}</p>
                 </div>
               </Flex>
