@@ -292,32 +292,30 @@ export default function SignUpForm({ setIsLoggedIn }) {
       axios
         .post(`http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`) //user info, json w/ true false
         .then(response => {
-          console.log(response);
+          // if (response.data.code === 10004) {
+          setUserLoggedIn(false);
+          setIsLoggedIn(false);
+          localStorage.clear() // Clear the cache
 
-          if (response.status === 200) {
-            setUserLoggedIn(false);
-            setIsLoggedIn(false);
-            localStorage.clear() // Clear the cache
-
-            toastLogin({
-              title: 'Account successfully deleted.',
-              description: "We hope to see you again.",
-              status: 'success',
-              duration: 3000,
-              isClosable: true,
-            });
+          toastLogin({
+            title: 'Account successfully deleted.',
+            description: "We hope to see you again.",
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
 
             // setUserInfoFetched(true);
 
-          } else {
-            toastLoginError({
-              title: 'Deletion Error.',
-              description: 'Error with deleting your account, please try again.',
-              status: 'error',
-              duration: 3000,
-              isClosable: true,
-            });
-          }
+          // } else {
+          //   toastLoginError({
+          //     title: 'Deletion Error.',
+          //     description: 'Error with deleting your account, please try again.',
+          //     status: 'error',
+          //     duration: 3000,
+          //     isClosable: true,
+          //   });
+          // }
         })
         .catch(error => console.log(error));
     }
