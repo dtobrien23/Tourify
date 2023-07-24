@@ -17,12 +17,11 @@ import {
   SimpleGrid,
   Heading
 } from '@chakra-ui/react';
-import { GeolocationContext } from './GeoContext';
 import { MapContext } from './MapContext';
 import { APIContext } from './APIContext';
 
 export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
-  const { geolocation } = useContext(GeolocationContext);
+  const { sourceCoords, setSourceCoords, geolocation } = useContext(MapContext);
   const { apiAttractions } = useContext(APIContext);
 
   console.log(geolocation, 'this is the geo from context');
@@ -30,14 +29,14 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const { activeDrawer, isDrawerOpen, setIsDrawerOpen } =
     useContext(MapContext);
 
-  //geolocation, cant be null or error occurs
+  //userLocation, cant be null or error occurs
   const userLocation = geolocation
-    ? { lat: geolocation.latitude, lng: geolocation.longitude }
+    ? { lat: geolocation.lat, lng: geolocation.lng }
     : { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location as a fallback if user opts out
 
   console.log(
     userLocation,
-    'this is reformatted userlocation from geolocation'
+    'this is reformatted userlocation from sourceCoords'
   );
 
   const [nearestAttractions, setNearestAttractions] = useState([]);

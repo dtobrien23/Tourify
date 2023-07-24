@@ -13,6 +13,7 @@ import {
 import BadgePanel from './components/BadgePanel';
 import './App.css';
 import { MapContext } from './components/MapContext';
+import ProductTour from './components/ProductTour';
 
 function App() {
   // const [selectedTabIndex, setSelectedTabIndex] = useState(0);
@@ -73,11 +74,15 @@ function App() {
     <ChakraProvider theme={theme}>
       {!hasTouchScreen ? (
         <>
+          {/* Call the ProductTour component */}
+          <ProductTour />
           <NavBar map={map} />
           <Map map={map} setMap={setMap} />
         </>
       ) : (
         <>
+          {/* Call the ProductTour component */}
+          <ProductTour />
           <Map map={map} setMap={setMap} />
           <NavBar map={map} />
         </>

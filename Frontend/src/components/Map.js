@@ -18,7 +18,6 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import Recommender from './Recommender';
-import { GeolocationProvider } from './GeoContext';
 import FiltersNavBar from './FiltersNavBar.js';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
@@ -170,7 +169,6 @@ export default function Map() {
       }}
     >
       <WeatherDisplay />
-      <GeolocationProvider>
         {hasTouchScreen ? (
           <Flex
             height="100%"
@@ -239,7 +237,6 @@ export default function Map() {
           markerObject={markerObject}
         />
         <ContentDrawer />
-      </GeolocationProvider>
     </GoogleMap>
   );
 }

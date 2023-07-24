@@ -1,5 +1,5 @@
 import { React, useState } from 'react';
-import { Button } from '@chakra-ui/react';
+import { Button, Tooltip } from '@chakra-ui/react';
 
 export default function LocationButton({ getPosition }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -13,6 +13,7 @@ export default function LocationButton({ getPosition }) {
   };
 
   return (
+    <Tooltip label='Set Geolocation' placement="bottom">
     <Button
       size="auto"
       mr="10px"
@@ -27,5 +28,6 @@ export default function LocationButton({ getPosition }) {
         <img src="/images/location-not-hover.png" alt="location" />
       )}
     </Button>
+    </Tooltip>
   );
 }

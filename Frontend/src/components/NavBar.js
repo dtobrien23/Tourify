@@ -16,6 +16,7 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
 import SearchBar from './SearchBar';
 import { MapContext } from './MapContext';
+import ParallaxDrawer from './ParallaxDrawer';
 
 export default function NavBar() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -146,6 +147,7 @@ export default function NavBar() {
             Badges
           </Text>
         </Button>
+        <ParallaxDrawer/>
       </Flex>
       {hasTouchScreen ? (
         <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>

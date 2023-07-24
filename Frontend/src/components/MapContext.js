@@ -21,7 +21,7 @@ const MapProvider = ({ children }) => {
   const [locationMarker, setLocationMarker] = useState([]); // for current location marker
   const [dataArray, setDataArray] = useState(null);
   const [isSourceAlertOpen, setIsSourceAlertOpen] = useState(false);
-  const [geolocation, setGeolocation] = useState(null);
+  const [geolocation, setGeolocation] = useState();
   const [loading, setLoading] = useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [activeDrawer, setActiveDrawer] = useState(null);
@@ -222,6 +222,8 @@ const MapProvider = ({ children }) => {
         setInputValue,
         inputColour,
         setInputColour,
+        sourceCoords,
+        setSourceCoords
       }}
     >
       {children}

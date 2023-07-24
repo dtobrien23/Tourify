@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { useReward, confetti } from 'react-rewards';
+import FlipCard from './FlipCard';
 import axios from 'axios';
 import {
   Flex,
@@ -39,7 +41,8 @@ export default function ContentDrawer() {
     globalCredential,
     setGlobalUserInfo,
     setGlobalCredential,
-    setCheckinState, checkinState
+    setCheckinState,
+    checkinState,
   } = useContext(APIContext);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
@@ -74,11 +77,14 @@ export default function ContentDrawer() {
     return attraction || {};
   };
 
-  const handleCheckIn = async attractionID => {
-    // const { latitude, longitude } = await getUserGeolocation();
-    // setLatitude(latitude);
-    // setLongitude(longitude);
+  const { reward: confettiReward, isAnimating: isConfettiAnimating } =
+    useReward('confettiReward', 'confetti', {
+      lifetime: 2400,
+      elementSize: 16,
+      elementCount: 100,
+    });
 
+  const handleCheckIn = async attractionID => {
     const apiEndpoint = 'http://localhost:8001/api/user/update';
     const cachedUserCredential = localStorage.getItem('userCredential');
 
@@ -88,8 +94,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: "40.742045", //hardcoded for testing
-      lng: "-73.9900845", //hardcoded for testing
+      lat: '40.7078931', //hardcoded for testing replace with geolocation variable
+      lng: '-74.0117901', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -101,7 +107,7 @@ export default function ContentDrawer() {
         if (response.data.code === 200) {
           //   // set logic that your market has been ticked off
           setCheckinState(true);
-          console.log(checkinState,'checkinstate - contentdrawer')
+          confettiReward();
           toastCheckIn({
             title: 'Check in Successful.',
             description: "You've Checked in Successfully.",
@@ -111,11 +117,11 @@ export default function ContentDrawer() {
           });
 
           // get the updated user info from the backend
-          
-        } if(response.data.code === 10050) {
+        }
+        if (response.data.code === 10050) {
           // distance too long
           setCheckinState(false);
-          console.log(response.data.code,'this is the repsonse code!')
+          console.log(response.data.code, 'this is the repsonse code!');
           toastNotCheckIn({
             title: 'Check in Unsuccessful.',
             description: "You're too far away.",
@@ -131,7 +137,50 @@ export default function ContentDrawer() {
       });
   };
 
+  // Function to check if all badges have the same status
+  const areAllBadgesTrue = () => {
+    if (globalUserInfo && globalUserInfo.data && globalUserInfo.data.badgeDO) {
+      const badgesStatusArray = Object.values(globalUserInfo.data.badgeDO);
+      return badgesStatusArray.every(status => status === true);
+    }
+    return false;
+  };
 
+  const areAllBadgesFalse = () => {
+    if (globalUserInfo && globalUserInfo.data && globalUserInfo.data.badgeDO) {
+      const badgesStatusArray = Object.values(globalUserInfo.data.badgeDO);
+      return badgesStatusArray.every(status => status === false);
+    }
+    return false;
+  };
+
+  const areAllAttractionsTrue = () => {
+    if (
+      globalUserInfo &&
+      globalUserInfo.data &&
+      globalUserInfo.data.attractionStatusDO
+    ) {
+      const attractionStatusArray = Object.values(
+        globalUserInfo.data.attractionStatusDO
+      );
+      return attractionStatusArray.every(status => status === true);
+    }
+    return false;
+  };
+
+  const areAllAttractionsFalse = () => {
+    if (
+      globalUserInfo &&
+      globalUserInfo.data &&
+      globalUserInfo.data.attractionStatusDO
+    ) {
+      const attractionStatusArray = Object.values(
+        globalUserInfo.data.attractionStatusDO
+      );
+      return attractionStatusArray.every(status => status === false);
+    }
+    return false;
+  };
 
   return (
     <Drawer
@@ -160,11 +209,15 @@ export default function ContentDrawer() {
         {activeDrawer === 'attractions' && (
           <>
             {' '}
-            <DrawerHeader>{`My Attractions`}</DrawerHeader>
+            <DrawerHeader>
+              {`My Attractions`}
+              <span id="confettiReward" />
+            </DrawerHeader>
             <DrawerBody>
               <Tabs>
                 <TabList>
                   <Tab>My Visited Attractions</Tab>
+
                   <Tab>Attractions to Visit</Tab>
                 </TabList>
 
@@ -225,6 +278,17 @@ export default function ContentDrawer() {
                     ) : (
                       <p>Loading attractions to visit...</p>
                     )}
+
+                    {/* Conditional rendering for the image when all attractions are false */}
+                    {areAllAttractionsFalse() && (
+                      <p>
+                        <img
+                          src={'/images/no_Attractions_Visited.jpg'}
+                          alt="All Attractions are False"
+                          style={{ maxWidth: '500px', height: '500px' }}
+                        />
+                      </p>
+                    )}
                   </TabPanel>
 
                   <TabPanel>
@@ -276,9 +340,9 @@ export default function ContentDrawer() {
                                           boxShadow:
                                             '0 2px 4px rgba(0, 0, 0, 0.2)',
                                         }}
-                                        onClick={() =>
-                                          handleCheckIn(attractionInfo.id)
-                                        }
+                                        onClick={() => {
+                                          handleCheckIn(attractionInfo.id);
+                                        }}
                                       >
                                         Check In!
                                       </Button>
@@ -303,6 +367,33 @@ export default function ContentDrawer() {
                     ) : (
                       <p>Loading attractions to visit...</p>
                     )}
+
+                    {areAllAttractionsTrue() && (
+                      <FlipCard
+                        frontContent={
+                          <p>
+                            <img
+                              src={'/images/all_Attractions_Visited.jpg'}
+                              alt="All Attractions are True"
+                              style={{
+                                maxWidth: '500px',
+                                height: '500px',
+                                marginRight: '10px',
+                                border: '2px solid orangered',
+                                borderRadius: '5px',
+                              }}
+                            />
+                          </p>
+                        }
+                        backContent={
+                          <div>
+                            <Heading>
+                              You've Visited All the Attractions!
+                            </Heading>
+                          </div>
+                        }
+                      />
+                    )}
                   </TabPanel>
                 </TabPanels>
               </Tabs>
@@ -324,14 +415,64 @@ export default function ContentDrawer() {
                   <TabPanel>
                     <Flex>
                       <div>
-                        <h3>Badges</h3>
                         {Object.entries(globalUserInfo.data.badgeDO).map(
                           ([badge, status]) => {
                             if (status) {
-                              return <p key={badge}>{badge}</p>;
+                              return (
+                                <SimpleGrid
+                                  alignItems="left"
+                                  justifyItems="left"
+                                  border="3px solid orangered"
+                                  borderRadius="20px"
+                                  marginTop="5px"
+                                  marginLeft="10px"
+                                  overflow="hidden"
+                                  spacing={8}
+                                  p="10px"
+                                  width="425px"
+                                >
+                                  <Flex key={badge} width="100%">
+                                    {' '}
+                                    <img
+                                      src={`/images/badgeimages/${badge}.jpg`}
+                                      alt={badge}
+                                      style={{
+                                        maxWidth: '100px',
+                                        height: '100px',
+                                        marginRight: '10px',
+                                        border: '2px solid orangered',
+                                        borderRadius: '5px',
+                                      }}
+                                    />
+                                    <div>
+                                      <Heading size="md">{badge}</Heading>
+                                      <p> Badge info: Some badge info</p>
+                                    </div>
+                                  </Flex>
+                                </SimpleGrid>
+                              );
                             }
                             return null;
                           }
+                        )}
+                        {areAllBadgesFalse() && (
+                          <p>
+                            {''}
+                            <br />
+                            <Heading>You Dont Have Any Badges Yet!</Heading>
+                            <br />
+                            <img
+                              src={'/images/badgeimages/no_badges.jpg'}
+                              alt="All Badges are True"
+                              style={{
+                                maxWidth: '500px',
+                                height: '500px',
+                                marginRight: '10px',
+                                border: '2px solid orangered',
+                                borderRadius: '5px',
+                              }}
+                            />
+                          </p>
                         )}
                       </div>
                     </Flex>
@@ -339,14 +480,69 @@ export default function ContentDrawer() {
                   <TabPanel>
                     <Flex>
                       <div>
-                        <h3>Badges</h3>
                         {Object.entries(globalUserInfo.data.badgeDO).map(
                           ([badge, status]) => {
                             if (!status) {
-                              return <p key={badge}>{badge}</p>;
+                              return (
+                                <SimpleGrid
+                                  alignItems="left"
+                                  justifyItems="left"
+                                  border="3px solid orangered"
+                                  borderRadius="20px"
+                                  marginTop="5px"
+                                  marginLeft="10px"
+                                  overflow="hidden"
+                                  spacing={8}
+                                  p="10px"
+                                  width="425px"
+                                >
+                                  <Flex key={badge} width="100%">
+                                    {' '}
+                                    <img
+                                      src={`/images/badgeimages/${badge}.jpg`}
+                                      alt={badge}
+                                      style={{
+                                        maxWidth: '100px',
+                                        height: '100px',
+                                        marginRight: '10px',
+                                        border: '2px solid orangered',
+                                        borderRadius: '5px',
+                                      }}
+                                    />
+                                    <div>
+                                      <Heading size="md">{badge}</Heading>
+                                      <p> Badge info: Some badge info</p>
+                                    </div>
+                                  </Flex>
+                                </SimpleGrid>
+                              );
                             }
                             return null;
                           }
+                        )}
+                        {areAllBadgesTrue() && (
+                          <FlipCard
+                            frontContent={
+                              <p>
+                                <img
+                                  src={'/images/badgeimages/all_Badges.jpg'}
+                                  alt="All Attractions are True"
+                                  style={{
+                                    maxWidth: '500px',
+                                    height: '500px',
+                                    marginRight: '10px',
+                                    border: '2px solid orangered',
+                                    borderRadius: '5px',
+                                  }}
+                                />
+                              </p>
+                            }
+                            backContent={
+                              <div>
+                                <Heading>You've Got All The Badges!</Heading>
+                              </div>
+                            }
+                          />
                         )}
                       </div>
                     </Flex>

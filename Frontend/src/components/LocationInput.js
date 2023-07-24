@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import LocationButton from './LocationButton';
-import { Flex, useToast } from '@chakra-ui/react';
-import { GeolocationProvider, GeolocationContext } from './GeoContext';
+import { Flex, useToast, Tooltip } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 
 export default function LocationInput({}) {
@@ -15,7 +14,7 @@ export default function LocationInput({}) {
     setMap,
     selectedAttraction,
     setSelectedAttraction,
-    setSourceCoords,
+    setSourceCoords,sourceCoords,
     locationMarker,
     isSourceAlertOpen,
     setLocationMarker,
@@ -25,6 +24,7 @@ export default function LocationInput({}) {
     handleRecommenderClick,
     clearRoute,
     calculateRoute,
+    geolocation,
     setGeolocation,
     google,
     isMobile,
@@ -37,6 +37,9 @@ export default function LocationInput({}) {
   const [inputWidth, setInputWidth] = useState('50%');
   const toastInvalidSource = useToast();
   const toastOutsideNYC = useToast();
+  const toastDenied = useToast();
+  const toastUnable = useToast();
+
 
   // used to ensure user's current location is within NYC
   const minLatitude = 40.4774;
@@ -74,25 +77,46 @@ export default function LocationInput({}) {
   // getting user's current location
   const getPosition = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition, posError);
+      navigator.geolocation.getCurrentPosition(showPosition, error => {
+        console.log('Error getting geolocation:', error); posError();});
     } else {
       alert('Sorry, Geolocation is not supported by this browser.');
     }
   };
+  const deniedCoords = { lat: 40.758, lng: -73.9855 };
+  const [defaultGeolocationSet, setDefaultGeolocationSet] = useState(false);
 
-  const posError = () => {
+  useEffect(() => {
+    if (!geolocation && !defaultGeolocationSet) {
+      // Set the default geolocation when geolocation is not available or denied
+      setGeolocation(deniedCoords);
+      setDefaultGeolocationSet(true);
+    }
+  }, [geolocation, defaultGeolocationSet]);
+
+  const posError = (error) => {
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' }).then(res => {
         if (res.state === 'denied') {
-          alert(
-            'Enable location permissions for this website in your browser settings.'
-          );
+          setGeolocation(deniedCoords);
+          toastDenied({
+            title: 'Geolocation Permission Denied.',
+            description: 'We have set your location to Times Square',
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          });
         }
       });
     } else {
-      alert(
-        'Unable to access your location. You can continue by submitting location manually.'
-      );
+      setGeolocation(deniedCoords);
+          toastUnable({
+            title: 'Unable to access location.',
+            description: 'We have set your location to Times Square',
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          });
     }
   };
 
@@ -101,8 +125,8 @@ export default function LocationInput({}) {
       lat: parseFloat(position.coords.latitude),
       lng: parseFloat(position.coords.longitude),
     };
-
-    // if current location is outside of NYC, default to Times Square
+  
+    // If current location is outside of NYC, default to Times Square
     if (
       !(
         latlng.lat >= minLatitude &&
@@ -111,8 +135,11 @@ export default function LocationInput({}) {
         latlng.lng <= maxLongitude
       )
     ) {
-      latlng.lat = 40.758;
-      latlng.lng = -73.9855;
+      const defaultLocation = {
+        lat: 40.758,
+        lng: -73.9855,
+      };
+      setGeolocation(defaultLocation);
       toastOutsideNYC({
         title: 'You Are Not In NYC!',
         description:
@@ -121,44 +148,55 @@ export default function LocationInput({}) {
         duration: 5000,
         isClosable: true,
       });
+    } else {
+      // Update geolocation to the current location within NYC
+      setGeolocation(latlng);
     }
-
-    const geocoder = new google.maps.Geocoder();
-
-    geocoder
-      .geocode({ location: latlng })
-      .then(response => {
-        if (response.results[0]) {
-          if (locationMarker.length !== 0) {
-            for (const marker of locationMarker) {
-              marker.setMap(null);
-            }
-            setLocationMarker([]);
-          }
-          const formattedAddress = response.results[0].formatted_address;
-          setCurrentLocation(formattedAddress);
-
-          setGeolocation(latlng); // Update the geolocation value in the context
-          console.log(latlng, 'this is lat lang');
-
-          setSourceCoords(latlng);
-          map.panTo(latlng);
-          map.setZoom(15);
-
-          // eslint-disable-next-line
-          const marker = new google.maps.Marker({
-            position: latlng,
-            map: map,
-            icon: '/images/you-are-here.png',
-          });
-          setLocationMarker([marker]);
-        } else {
-          window.alert('No results found');
-        }
-      })
-      .catch(e => window.alert('Geocoder failed due to: ' + e));
+  
     setButtonClicked(buttonClicked + 1);
   };
+  
+  // Use useEffect with geolocation as the dependency to handle the panning
+  useEffect(() => {
+    if (geolocation && google) { // Check if geolocation and google are available
+      const geocoder = new google.maps.Geocoder();
+      const latLng = new google.maps.LatLng(geolocation.lat, geolocation.lng);
+  
+      geocoder
+        .geocode({ location: latLng })
+        .then(response => {
+          if (response.results[0]) {
+            if (locationMarker.length !== 0) {
+              for (const marker of locationMarker) {
+                marker.setMap(null);
+              }
+              setLocationMarker([]);
+            }
+            const formattedAddress = response.results[0].formatted_address;
+            setCurrentLocation(formattedAddress);
+  
+            setSourceCoords(geolocation);
+            map.panTo(geolocation); // Pan the map to the current location using geolocation
+            map.setZoom(15);
+  
+            // eslint-disable-next-line
+            const marker = new google.maps.Marker({
+              position: geolocation, // Use the geolocation context variable here
+              map: map,
+              icon: '/images/you-are-here.png',
+            });
+            setLocationMarker([marker]);
+          } else {
+            window.alert('No results found');
+          }
+        })
+        .catch(e => window.alert('Geocoder failed due to: ' + e));
+    }
+  }, [geolocation, google]);
+  
+  
+  
+  
 
   // when user selects their current location
   const handlePlaceSelect = () => {
@@ -184,7 +222,8 @@ export default function LocationInput({}) {
 
         setInputValue(selectedPlace.name);
         setSourceCoords(latLng);
-        map.panTo(latLng);
+        setGeolocation(sourceCoords);
+        map.panTo(geolocation);
         map.setZoom(15);
         // eslint-disable-next-line
         const marker = new google.maps.Marker({
