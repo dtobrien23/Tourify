@@ -15,7 +15,9 @@ import org.example.bean.vo.AttractionPredictionVO;
 import org.example.config.BusinessException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+
 
 /**
  * Description of the class.
@@ -42,6 +47,7 @@ import reactor.core.publisher.Mono;
 public class AttractionService {
 
     @Autowired AttractionRepository attractionRepository;
+    @Autowired ResourceLoader resourceLoader;
 
 
     // convert the json into a map object
@@ -50,9 +56,9 @@ public class AttractionService {
         ObjectMapper mapper = new ObjectMapper();
         try {
             // load the JSON
-            String currentWorkingDir = System.getProperty("user.dir");
-            String modelPath = currentWorkingDir + "/Tourify_Backend/src/main/resources/passengers_average_v1.json";
-            List<Map<String, String>> list = mapper.readValue(new File(modelPath), new TypeReference<List<Map<String, String>>>(){});
+            Resource resource = resourceLoader.getResource("classpath:passengers_average_v1.json");
+            InputStream inputStream = resource.getInputStream();
+            List<Map<String, String>> list = mapper.readValue(inputStream, new TypeReference<List<Map<String, String>>>(){});
             hashMap = new HashMap<>();
             for (Map<String, String> item : list) {
                 String dayZoneCombined = (String) item.get("day_zone_combined");
@@ -79,11 +85,14 @@ public class AttractionService {
             throw new BusinessException(ResponseCode.PARAM_ATTRACTION_EMPTY_ERROR);
         }
 
-        // set the current time in integer
-        LocalDateTime now = LocalDateTime.now();
-        int month = now.getMonthValue(); // month, from 1 (January) to 12 (December)
-        int dayOfWeek = now.get(ChronoField.DAY_OF_WEEK); // day of week, from 1 (Monday) to 7 (Sunday)
-        int hour = now.getHour(); // hour of day, from 0 to 23
+        // Get the current time in NY (PDT timezone)
+        ZoneId losAngelesZoneId = ZoneId.of("America/New_York");
+        ZonedDateTime nowInLosAngeles = ZonedDateTime.now(losAngelesZoneId);
+
+        // set the NY current time in integer
+        int month = nowInLosAngeles.getMonthValue(); // month, from 1 (January) to 12 (December)
+        int dayOfWeek = nowInLosAngeles.get(ChronoField.DAY_OF_WEEK); // day of week, from 1 (Monday) to 7 (Sunday)
+        int hour = nowInLosAngeles.getHour(); // hour of day, from 0 to 23
 
         // set the return list
         List<AttractionPredictionVO> attractionPredictionVOList = new LinkedList<>();
@@ -118,7 +127,7 @@ public class AttractionService {
             String modelPath = currentWorkingDir + "/Tourify_Backend/src/main/resources/Tourify_model_v2.onnx";
             try (OrtSession session = env.createSession(modelPath, options)) {
                 // create the input
-                long[][] longArray = new long[1][7];
+                float[][] longArray = new float[1][7];
                 longArray[0][0] = month;
                 longArray[0][1] = dayOfWeek;
                 longArray[0][2] = hour;
@@ -160,15 +169,17 @@ public class AttractionService {
         // store the machine prediction into the attractionPredictionDetailVOList
         List<AttractionPredictionDetailVO> attractionPredictionDetailVOList = new LinkedList<>();
 
-        // set the current time in integer (start with the current time)
-        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
+        // Set the ZoneId to New York
+        ZoneId newYorkZoneId = ZoneId.of("America/New_York");
+        // Get the current date and time in New York time zone
+        LocalDateTime localDateTimeInNewYork = LocalDateTime.now(newYorkZoneId);
         // Prepare lists to hold the month, day of the week, and hour values
         List<Integer> months = new ArrayList<>();
         List<Integer> daysOfWeek = new ArrayList<>();
         List<Integer> hours = new ArrayList<>();
         // Generate the values for the next 24 hours
         for (int i = 0; i < 24; i++) {
-            LocalDateTime futureDateTime = now.plusHours(i);
+            LocalDateTime futureDateTime = localDateTimeInNewYork.plusHours(i);
             months.add(futureDateTime.getMonthValue());
             daysOfWeek.add(futureDateTime.getDayOfWeek().getValue());
             hours.add(futureDateTime.getHour());
@@ -284,7 +295,9 @@ public class AttractionService {
     Integer getModelPythonPrediction(AttractionPredictionDTO attractionPredictionDTO, int month, int dayOfWeek, int hour, int taxiLocation, int passengersNum) throws BusinessException{
         System.out.println("3.Starting to invoke prediction on python service -------------");
 
-        WebClient webClient = WebClient.create("http://127.0.0.1:12345");
+        WebClient webClient = WebClient.create("http://127.0.0.1:12345");  // local testing address
+//        WebClient webClient = WebClient.create("http://172.18.0.3:5000");  //Docker address
+
 
         Map<String, Object> map = new HashMap<>();
         map.put("month", month);
