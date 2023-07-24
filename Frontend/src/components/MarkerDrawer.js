@@ -7,17 +7,21 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Box,
   Button,
-  useState,
-  Input,
-  Flex,
 } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
+import { MapContext } from './MapContext';
 
 // passing it marker state and method to change state so the X button can close the drawer
 // also passing in marker object to render info in drawer
 function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
-  const { apiAttractions } = useContext(APIContext);
+  const { apiAttractions, startPrediction } = useContext(APIContext);
+  const { attractionsWithBusyness } = useContext(MapContext);
 
   if (!markerObject) {
     return null; // Return null when markerObject is null
@@ -26,18 +30,22 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
   return (
     <>
       <Drawer isOpen={isOpenFunc} placement="right" onClose={isCloseFunc}>
-        <DrawerOverlay />
+        <DrawerOverlay style={{ zIndex: '19' }} />
 
         <DrawerContent
           alignItems="left"
           justifyItems="left"
           border="1px solid orangered"
           borderRadius="20px"
-          marginTop='5px'
-          marginLeft='10px'
-          overflow='hidden'
+          borderTopRightRadius="0px"
+          borderBottomRightRadius="0px"
+          borderRight="0px"
+          // marginTop="5px"
+          marginLeft="10px"
+          overflow="hidden"
           spacing={8}
-          p='10px'
+          p="10px"
+          style={{ zIndex: '20' }}
         >
           <DrawerCloseButton />
 
@@ -51,13 +59,56 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
               alt={markerObject.name.name}
             />
             <br></br>
-            {apiAttractions.map(attraction => {
+            {attractionsWithBusyness.map(attraction => {
               if (attraction.name === markerObject.name.name) {
                 return (
                   <div>
                     <p fontWeight="bold">Address</p>
                     <p>{attraction.full_address}</p>
                     <br></br>
+                    <Alert
+                      status="info"
+                      colorScheme={
+                        attraction.businessRate < 35
+                          ? 'green'
+                          : 35 < attraction.businessRate &&
+                            attraction.businessRate < 70
+                          ? 'yellow'
+                          : 'red'
+                      }
+                      borderRadius={20}
+                      mt={5}
+                    >
+                      <AlertIcon />
+                      <Box>
+                        <AlertTitle>
+                          {attraction.businessRate < 35
+                            ? 'Quiet'
+                            : 35 < attraction.businessRate &&
+                              attraction.businessRate < 70
+                            ? 'Not Too Busy'
+                            : 'Busy'}
+                        </AlertTitle>
+                        <AlertDescription>
+                          {/* {attraction.businessRate < 35
+                          ? 'This attraction is currently not busy'
+                          : 35 < attraction.businessRate &&
+                            attraction.businessRate < 70
+                          ? 'This attraction is neither quiet nor busy'
+                          : 'This attraction is currently quiet.'} */}
+
+                          <p>Busyness Index: {attraction.businessRate}</p>
+                        </AlertDescription>
+                      </Box>
+                    </Alert>
+                    <br />
+                    <Button
+                      onClick={() => {
+                        startPrediction(attraction.id);
+                      }}
+                    >
+                      Get 24 Hour Busyness Prediction
+                    </Button>
                     <p>
                       Website:{' '}
                       <a

@@ -50,7 +50,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     globalCredential,
     badgeState,
     setBadgeState,
-    newBadgeState,setNewBadgeState
+    newBadgeState,
+    setNewBadgeState,
   } = useContext(APIContext);
   const [userInfoFetched, setUserInfoFetched] = useState(false);
   const { setIsDrawerOpen } = useContext(MapContext);
@@ -99,32 +100,32 @@ export default function SignUpForm({ setIsLoggedIn }) {
     }
   }, [checkinState]);
 
-  useEffect(() =>{
-    if (newBadgeState){
-    badgeChecker(badgeState, newBadgeState)};
-  },[checkinState]);
+  useEffect(() => {
+    if (newBadgeState) {
+      badgeChecker(badgeState, newBadgeState);
+    }
+  }, [checkinState]);
 
-  const badgeChecker = (badgeState, newBadgeState) =>{
-    
-      // Compare each badge property in the objects
-      for (const badge in newBadgeState.badgeDO) {
-        const oldBadgeValue = badgeState.badgeDO[badge];
-        const newBadgeValue = newBadgeState.badgeDO[badge];
-  
-        // Check if the badge value has changed from false to true
-        if (oldBadgeValue === false && newBadgeValue === true) {
-          // Show a toast with the badge name
-          const badgeName = badge.replace(/_/g, ' '); // Replace underscores with spaces
-          toastBadge({
-            title: 'Congratulations!',
-            description: `You've acquired the badge "${badgeName}".`,
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-          });
-        }
+  const badgeChecker = (badgeState, newBadgeState) => {
+    // Compare each badge property in the objects
+    for (const badge in newBadgeState.badgeDO) {
+      const oldBadgeValue = badgeState.badgeDO[badge];
+      const newBadgeValue = newBadgeState.badgeDO[badge];
+
+      // Check if the badge value has changed from false to true
+      if (oldBadgeValue === false && newBadgeValue === true) {
+        // Show a toast with the badge name
+        const badgeName = badge.replace(/_/g, ' '); // Replace underscores with spaces
+        toastBadge({
+          title: 'Congratulations!',
+          description: `You've acquired the badge "${badgeName}".`,
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
       }
-    };
+    }
+  };
 
   const userInfoUpdate = async credentialResponse => {
     //console.log(credentialResponse, 'THIS IS THE CRED for checkin');
@@ -135,7 +136,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (cachedUserCredential) {
       axios
         .post(
-          `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'updated user info');
@@ -188,7 +189,9 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
     if (credential) {
       axios
-        .post(`http://localhost:8001/api/user/info?idTokenString=${credential}`) //user info, json w/ true false
+        .post(
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
+        ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'user info');
           setGlobalUserInfo(response.data);
@@ -240,7 +243,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
       console.log(credential);
       axios
         .post(
-          `http://localhost:8001/api/user/register?idTokenString=${credential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
         )
         .then(response => {
           console.log(

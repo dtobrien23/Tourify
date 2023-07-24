@@ -1,22 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useReward, confetti } from 'react-rewards';
+import { useReward } from 'react-rewards';
 import FlipCard from './FlipCard';
 import axios from 'axios';
 import {
   Flex,
   Button,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  Box,
-  CloseButton,
-  Tooltip,
   Drawer,
   DrawerBody,
-  DrawerFooter,
   DrawerHeader,
-  DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
   Tab,
@@ -28,32 +19,26 @@ import {
   Heading,
   Stack,
   useToast,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Box,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
 import { APIContext } from './APIContext';
-import { getUserGeolocation } from './GeoContext';
 
 export default function ContentDrawer() {
-  const {
-    globalUserInfo,
-    apiAttractions,
-    globalCredential,
-    setGlobalUserInfo,
-    setGlobalCredential,
-    setCheckinState,
-    checkinState,
-  } = useContext(APIContext);
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
+  const { globalUserInfo, setCheckinState, checkinState } =
+    useContext(APIContext);
 
   const {
-    isAttractionsDrawerOpen,
-    setIsAttractionsDrawerOpen,
     activeDrawer,
     isDrawerOpen,
     setIsDrawerOpen,
     hasTouchScreen,
+    attractionsWithBusyness,
   } = useContext(MapContext);
 
   const toastCheckIn = useToast();
@@ -71,7 +56,7 @@ export default function ContentDrawer() {
     const formattedAttractionName = capitalizeFirstLetter(
       kebabToCamelCase(attractionName)
     );
-    const attraction = apiAttractions.find(
+    const attraction = attractionsWithBusyness.find(
       attraction => attraction.name_alias === formattedAttractionName
     );
     return attraction || {};
@@ -85,7 +70,7 @@ export default function ContentDrawer() {
     });
 
   const handleCheckIn = async attractionID => {
-    const apiEndpoint = 'http://localhost:8001/api/user/update';
+    const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
     const cachedUserCredential = localStorage.getItem('userCredential');
 
     const idToken = cachedUserCredential; // get this from credential in signupform
@@ -107,6 +92,7 @@ export default function ContentDrawer() {
         if (response.data.code === 200) {
           //   // set logic that your market has been ticked off
           setCheckinState(true);
+          console.log(checkinState, 'checkinstate - contentdrawer');
           confettiReward();
           toastCheckIn({
             title: 'Check in Successful.',
@@ -137,7 +123,6 @@ export default function ContentDrawer() {
       });
   };
 
-  // Function to check if all badges have the same status
   const areAllBadgesTrue = () => {
     if (globalUserInfo && globalUserInfo.data && globalUserInfo.data.badgeDO) {
       const badgesStatusArray = Object.values(globalUserInfo.data.badgeDO);
@@ -189,12 +174,22 @@ export default function ContentDrawer() {
       }}
       isOpen={isDrawerOpen}
       placement="left"
-      size={hasTouchScreen ? 'md' : 'sm'}
+      size={hasTouchScreen ? 'md' : 'md'}
     >
       <DrawerContent
         pointerEvents="all"
         containerProps={{ pointerEvents: 'none', height: '100%' }}
-        style={{ position: 'absolute', top: '1', height: 'calc(100% - 75px)' }}
+        style={{
+          position: 'absolute',
+          top: '1',
+          height: 'calc(100% - 74px)',
+          border: 'solid 1px orangered',
+          borderLeft: '0px',
+          borderRadius: '20px',
+          borderTopLeftRadius: '0px',
+          borderBottomLeftRadius: '0px',
+          zIndex: '10',
+        }}
       >
         <DrawerCloseButton />
         {activeDrawer === 'recommender' && (
@@ -214,14 +209,30 @@ export default function ContentDrawer() {
               <span id="confettiReward" />
             </DrawerHeader>
             <DrawerBody>
-              <Tabs>
+              <Tabs variant="soft-rounded" colorScheme="orange">
                 <TabList>
-                  <Tab>My Visited Attractions</Tab>
-
-                  <Tab>Attractions to Visit</Tab>
+                  <Tab
+                    _selected={{
+                      color: 'white',
+                      bg: 'orangered',
+                      // border: 'solid 1px orangered',
+                    }}
+                  >
+                    Attractions to Visit
+                  </Tab>
+                  <Tab
+                    _selected={{
+                      color: 'white',
+                      bg: 'orangered',
+                      // border: 'solid 1px orangered',
+                    }}
+                  >
+                    Visited Attractions
+                  </Tab>
                 </TabList>
 
                 <TabPanels>
+                  {/* ATTRACTIONS TO VISIT */}
                   <TabPanel>
                     {globalUserInfo &&
                     globalUserInfo.data &&
@@ -229,24 +240,30 @@ export default function ContentDrawer() {
                       Object.entries(
                         globalUserInfo.data.attractionStatusDO
                       ).map(([attraction, status]) => {
-                        if (status) {
+                        if (!status) {
                           const attractionInfo = getAttractionInfo(attraction);
                           if (attractionInfo) {
                             return (
-                              <SimpleGrid
-                                alignItems="left"
-                                justifyItems="left"
-                                border="3px solid orangered"
+                              <Flex
+                                // alignItems="left"
+                                // justifyItems="left"
+                                border="2px solid orangered"
                                 borderRadius="20px"
                                 marginTop="5px"
                                 marginLeft="10px"
                                 overflow="hidden"
-                                spacing={8}
+                                spacing="20px"
                                 p="10px"
                                 width="425px"
+                                mb="15px"
                               >
-                                <Flex key={attraction} mb={4} width="100%">
-                                  <p>
+                                <Flex
+                                  key={attraction}
+                                  // mb={4}
+                                  width="100%"
+                                  flexDirection="column"
+                                >
+                                  <Flex flexDirection="row">
                                     {' '}
                                     <img
                                       src={`/images/${attractionInfo.name_alias}.jpg`}
@@ -255,21 +272,79 @@ export default function ContentDrawer() {
                                         maxWidth: '100px',
                                         height: '100px',
                                         marginRight: '10px',
-                                        border: '2px solid orangered',
-                                        borderRadius: '5px',
+                                        // border: '2px solid orangered',
+                                        borderRadius: '20px',
                                       }}
                                     />
-                                  </p>
-                                  <div>
-                                    <Heading size="md">
-                                      {attractionInfo.name}
-                                    </Heading>
-                                    <p>
-                                      Address: {attractionInfo.full_address}
-                                    </p>
-                                  </div>
+                                    <div>
+                                      <Heading size="md">
+                                        {attractionInfo.name}
+                                      </Heading>
+                                      <p> {attractionInfo.full_address}</p>
+                                      <br />
+                                    </div>
+                                  </Flex>
+                                  <Flex mt={4}>
+                                    <Alert
+                                      status="info"
+                                      colorScheme={
+                                        attractionInfo.businessRate < 35
+                                          ? 'green'
+                                          : 35 < attractionInfo.businessRate &&
+                                            attractionInfo.businessRate < 70
+                                          ? 'yellow'
+                                          : 'red'
+                                      }
+                                      borderRadius={20}
+                                      width="60%"
+                                      // boxShadow="0 2px 4px rgba(0, 0, 0, 0.2)"
+                                    >
+                                      <AlertIcon />
+                                      <Box>
+                                        <AlertTitle>
+                                          {attractionInfo.businessRate < 35
+                                            ? 'Quiet'
+                                            : 35 <
+                                                attractionInfo.businessRate &&
+                                              attractionInfo.businessRate < 70
+                                            ? 'Not Too Busy'
+                                            : 'Busy'}
+                                        </AlertTitle>
+                                        <AlertDescription>
+                                          <p>
+                                            Busyness Index:{' '}
+                                            {attractionInfo.businessRate}
+                                          </p>
+                                        </AlertDescription>
+                                      </Box>
+                                    </Alert>
+                                    <Stack
+                                      spacing={10}
+                                      justifyContent="center"
+                                      alignItems="center"
+                                      width="40%"
+                                    >
+                                      <Button
+                                        style={{
+                                          backgroundColor: 'white',
+                                          color: 'black',
+                                          border: 'solid 2px gold',
+                                          borderRadius: '20px',
+                                          marginTop: '5px',
+                                          padding: '10px 20px',
+                                          boxShadow:
+                                            '0 2px 4px rgba(0, 0, 0, 0.2)',
+                                        }}
+                                        onClick={() =>
+                                          handleCheckIn(attractionInfo.id)
+                                        }
+                                      >
+                                        Check In!
+                                      </Button>
+                                    </Stack>
+                                  </Flex>
                                 </Flex>
-                              </SimpleGrid>
+                              </Flex>
                             );
                           }
                         }
@@ -291,6 +366,7 @@ export default function ContentDrawer() {
                     )}
                   </TabPanel>
 
+                  {/* VISITED ATTRACTIONS */}
                   <TabPanel>
                     {globalUserInfo &&
                     globalUserInfo.data &&
@@ -298,24 +374,30 @@ export default function ContentDrawer() {
                       Object.entries(
                         globalUserInfo.data.attractionStatusDO
                       ).map(([attraction, status]) => {
-                        if (!status) {
+                        if (status) {
                           const attractionInfo = getAttractionInfo(attraction);
                           if (attractionInfo) {
                             return (
-                              <SimpleGrid
-                                alignItems="left"
-                                justifyItems="left"
-                                border="3px solid orangered"
+                              <Flex
+                                // alignItems="left"
+                                // justifyItems="left"
+                                border="2px solid green"
                                 borderRadius="20px"
                                 marginTop="5px"
                                 marginLeft="10px"
                                 overflow="hidden"
-                                spacing={8}
+                                spacing="20px"
                                 p="10px"
                                 width="425px"
+                                mb="15px"
                               >
-                                <Flex key={attraction} mb={4} width="100%">
-                                  <p>
+                                <Flex
+                                  key={attraction}
+                                  // mb={4}
+                                  width="100%"
+                                  flexDirection="column"
+                                >
+                                  <Flex flexDirection="row">
                                     {' '}
                                     <img
                                       src={`/images/${attractionInfo.name_alias}.jpg`}
@@ -324,41 +406,76 @@ export default function ContentDrawer() {
                                         maxWidth: '100px',
                                         height: '100px',
                                         marginRight: '10px',
-                                        border: '2px solid orangered',
-                                        borderRadius: '5px',
+                                        // border: '2px solid orangered',
+                                        borderRadius: '20px',
                                       }}
                                     />
-                                    <Stack spacing={10}>
+                                    <div>
+                                      <Heading size="md">
+                                        {attractionInfo.name}
+                                      </Heading>
+                                      <p> {attractionInfo.full_address}</p>
+                                      <br />
+                                    </div>
+                                  </Flex>
+                                  <Flex mt={4}>
+                                    <Alert
+                                      status="info"
+                                      colorScheme={
+                                        attractionInfo.businessRate < 35
+                                          ? 'green'
+                                          : 35 < attractionInfo.businessRate &&
+                                            attractionInfo.businessRate < 70
+                                          ? 'yellow'
+                                          : 'red'
+                                      }
+                                      borderRadius={20}
+                                      width="60%"
+                                      // boxShadow="0 2px 4px rgba(0, 0, 0, 0.2)"
+                                    >
+                                      <AlertIcon />
+                                      <Box>
+                                        <AlertTitle>
+                                          {attractionInfo.businessRate < 35
+                                            ? 'Quiet'
+                                            : 35 <
+                                                attractionInfo.businessRate &&
+                                              attractionInfo.businessRate < 70
+                                            ? 'Not Too Busy'
+                                            : 'Busy'}
+                                        </AlertTitle>
+                                        <AlertDescription>
+                                          <p>
+                                            Busyness Index:{' '}
+                                            {attractionInfo.businessRate}
+                                          </p>
+                                        </AlertDescription>
+                                      </Box>
+                                    </Alert>
+                                    <Stack
+                                      spacing={10}
+                                      justifyContent="center"
+                                      alignItems="center"
+                                      width="40%"
+                                    >
                                       <Button
-                                        colorScheme="blue"
                                         style={{
-                                          backgroundColor: 'green',
+                                          backgroundColor: '#17B169',
                                           color: 'white',
-                                          borderRadius: '8px',
+                                          border: 'solid 1px green',
+                                          borderRadius: '20px',
                                           marginTop: '5px',
                                           padding: '10px 20px',
-                                          boxShadow:
-                                            '0 2px 4px rgba(0, 0, 0, 0.2)',
-                                        }}
-                                        onClick={() => {
-                                          handleCheckIn(attractionInfo.id);
+                                          // boxShadow:
+                                          //   '0 2px 4px rgba(0, 0, 0, 0.2)',
                                         }}
                                       >
-                                        Check In!
+                                        Visited!
                                       </Button>
                                     </Stack>
-                                  </p>
-                                  <div>
-                                    <Heading size="md">
-                                      {attractionInfo.name}
-                                    </Heading>
-                                    <p>
-                                      {' '}
-                                      Address: {attractionInfo.full_address}
-                                    </p>
-                                  </div>
+                                  </Flex>
                                 </Flex>
-                              </SimpleGrid>
+                              </Flex>
                             );
                           }
                         }

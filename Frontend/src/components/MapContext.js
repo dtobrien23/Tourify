@@ -30,6 +30,7 @@ const MapProvider = ({ children }) => {
   const [hasTouchScreen, setHasTouchScreen] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [inputColour, setInputColour] = useState('#B5BBC6');
+  const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
 
   const toastNoSource = useToast();
   const toastNoDest = useToast();
@@ -68,7 +69,7 @@ const MapProvider = ({ children }) => {
   /////////////
 
   async function calculateRoute() {
-    if (sourceCoords && selectedAttraction) {
+    if (geolocation && selectedAttraction) {
       if (directionsRenderers.length !== 0) {
         for (const renderer of directionsRenderers) {
           renderer.setMap(null);
@@ -81,7 +82,7 @@ const MapProvider = ({ children }) => {
       directionsRenderer.setMap(map);
 
       // source
-      const sourceLatLng = sourceCoords;
+      const sourceLatLng = geolocation;
 
       // destination
       const destLat = parseFloat(selectedAttraction.coordinates_lat);
@@ -223,7 +224,9 @@ const MapProvider = ({ children }) => {
         inputColour,
         setInputColour,
         sourceCoords,
-        setSourceCoords
+        setSourceCoords,
+        attractionsWithBusyness,
+        setAttractionsWithBusyness,
       }}
     >
       {children}

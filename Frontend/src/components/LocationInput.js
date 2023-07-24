@@ -14,7 +14,7 @@ export default function LocationInput({}) {
     setMap,
     selectedAttraction,
     setSelectedAttraction,
-    setSourceCoords,sourceCoords,
+    setSourceCoords,
     locationMarker,
     isSourceAlertOpen,
     setLocationMarker,
@@ -31,15 +31,15 @@ export default function LocationInput({}) {
     hasTouchScreen,
     inputValue,
     setInputValue,
+    sourceCoords,
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
-  const [inputWidth, setInputWidth] = useState('50%');
+  const [inputWidth, setInputWidth] = useState('270px');
   const toastInvalidSource = useToast();
   const toastOutsideNYC = useToast();
   const toastDenied = useToast();
   const toastUnable = useToast();
-
 
   // used to ensure user's current location is within NYC
   const minLatitude = 40.4774;
@@ -58,7 +58,7 @@ export default function LocationInput({}) {
     if (hasTouchScreen) {
       setInputWidth('100%');
     } else {
-      setInputWidth('50%');
+      setInputWidth('270px');
     }
   }, [hasTouchScreen]);
 
@@ -78,7 +78,9 @@ export default function LocationInput({}) {
   const getPosition = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition, error => {
-        console.log('Error getting geolocation:', error); posError();});
+        console.log('Error getting geolocation:', error);
+        posError();
+      });
     } else {
       alert('Sorry, Geolocation is not supported by this browser.');
     }
@@ -94,7 +96,7 @@ export default function LocationInput({}) {
     }
   }, [geolocation, defaultGeolocationSet]);
 
-  const posError = (error) => {
+  const posError = error => {
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' }).then(res => {
         if (res.state === 'denied') {
@@ -110,13 +112,13 @@ export default function LocationInput({}) {
       });
     } else {
       setGeolocation(deniedCoords);
-          toastUnable({
-            title: 'Unable to access location.',
-            description: 'We have set your location to Times Square',
-            status: 'info',
-            duration: 5000,
-            isClosable: true,
-          });
+      toastUnable({
+        title: 'Unable to access location.',
+        description: 'We have set your location to Times Square',
+        status: 'info',
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
@@ -125,7 +127,7 @@ export default function LocationInput({}) {
       lat: parseFloat(position.coords.latitude),
       lng: parseFloat(position.coords.longitude),
     };
-  
+
     // If current location is outside of NYC, default to Times Square
     if (
       !(
@@ -152,16 +154,17 @@ export default function LocationInput({}) {
       // Update geolocation to the current location within NYC
       setGeolocation(latlng);
     }
-  
+
     setButtonClicked(buttonClicked + 1);
   };
-  
+
   // Use useEffect with geolocation as the dependency to handle the panning
   useEffect(() => {
-    if (geolocation && google) { // Check if geolocation and google are available
+    if (geolocation && google) {
+      // Check if geolocation and google are available
       const geocoder = new google.maps.Geocoder();
       const latLng = new google.maps.LatLng(geolocation.lat, geolocation.lng);
-  
+
       geocoder
         .geocode({ location: latLng })
         .then(response => {
@@ -174,11 +177,11 @@ export default function LocationInput({}) {
             }
             const formattedAddress = response.results[0].formatted_address;
             setCurrentLocation(formattedAddress);
-  
+            setGeolocation(geolocation);
             setSourceCoords(geolocation);
             map.panTo(geolocation); // Pan the map to the current location using geolocation
             map.setZoom(15);
-  
+
             // eslint-disable-next-line
             const marker = new google.maps.Marker({
               position: geolocation, // Use the geolocation context variable here
@@ -193,10 +196,6 @@ export default function LocationInput({}) {
         .catch(e => window.alert('Geocoder failed due to: ' + e));
     }
   }, [geolocation, google]);
-  
-  
-  
-  
 
   // when user selects their current location
   const handlePlaceSelect = () => {
@@ -222,8 +221,9 @@ export default function LocationInput({}) {
 
         setInputValue(selectedPlace.name);
         setSourceCoords(latLng);
-        setGeolocation(sourceCoords);
-        map.panTo(geolocation);
+        // setGeolocation(sourceCoords);
+        setGeolocation(latLng);
+        map.panTo(latLng);
         map.setZoom(15);
         // eslint-disable-next-line
         const marker = new google.maps.Marker({

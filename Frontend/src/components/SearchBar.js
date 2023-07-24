@@ -25,16 +25,16 @@ export default function SearchBar() {
     <>
       {/* DESKTOP VERSION */}
       {!hasTouchScreen ? (
-        <Flex width="60%" minWidth="450px" maxWidth="640px" mr="0px">
+        <Flex width="fit-content" mr="0px">
           <Flex
             style={{
-              width: '100%',
+              width: 'fit-content',
               border: 'solid 1px orangered',
               borderRadius: '20px',
               backgroundColor: 'white',
               zIndex: 1,
               height: '41px',
-              overflow: 'hidden',
+              overflow: 'visible',
             }}
           >
             <LocationInput
@@ -45,7 +45,7 @@ export default function SearchBar() {
               }}
             />
             <Divider orientation="vertical" />
-            <Flex w="50%">
+            <Flex>
               <DestinationInput
                 style={{
                   zIndex: 2,
@@ -62,12 +62,11 @@ export default function SearchBar() {
                   bg="#ff914d"
                   color="white"
                   border="solid 1px orangered"
-                  borderRight="0px"
-                  borderRadius="19px"
+                  borderRadius="50%"
                   _hover={{ bg: 'orangered' }}
                   onClick={calculateRoute}
-                  px="1em"
-                  height="calc(100% + 2px)"
+                  height="50px"
+                  width="50px"
                   padding="10px"
                 >
                   GO

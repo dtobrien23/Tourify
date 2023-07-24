@@ -6,64 +6,35 @@ import SliderBar from './SliderBar';
 import MarkerDrawer from './MarkerDrawer';
 import SearchBar from './SearchBar';
 import WeatherDisplay from './WeatherDisplay.js';
-import {
-  Flex,
-  Button,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  Box,
-  CloseButton,
-  Tooltip,
-} from '@chakra-ui/react';
-import Recommender from './Recommender';
+import { Flex } from '@chakra-ui/react';
 import FiltersNavBar from './FiltersNavBar.js';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 import ContentDrawer from './ContentDrawer.js';
 
 export default function Map() {
-  const { apiAttractions} = useContext(APIContext);
+  const { apiAttractions } = useContext(APIContext);
   const {
     map,
     setMap,
-    selectedAttraction,
-    setSelectedAttraction,
-    setSourceCoords,
-    locationMarker,
-    isSourceAlertOpen,
-    setLocationMarker,
-    setIsSourceAlertOpen,
-    buttonState,
     setButtonState,
-    handleRecommenderClick,
-    clearRoute,
-    calculateRoute,
     google,
-    isAttractionsDrawerOpen,
-    setIsAttractionsDrawerOpen,
     isMobile,
     hasTouchScreen,
     mapCenter,
     setMapCenter,
+    attractionsWithBusyness,
   } = useContext(MapContext);
 
   ////////////////
   // USE STATES //
   ////////////////
 
-  //user location from locationInput
-  const [userLocation, setUserLocation] = useState(null);
-
-  const [sliderList, setSliderList] = useState(null);
+  const [sliderList, setSliderList] = useState(attractionsWithBusyness);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState(['ALL']);
-
-  const [directionsRenderers, setDirectionsRenderers] = useState([]);
-  const [dataArray, setDataArray] = useState(null);
 
   const mapZoom = 13; // default map zoom
 
@@ -109,7 +80,7 @@ export default function Map() {
     if (map) {
       // fetchData();
 
-      if (apiAttractions !== null) {
+      if (sliderList !== null) {
         console.log(apiAttractions, 'this is the log');
         // clear existing markers from the map for filter
         markers.forEach(marker => {
@@ -118,8 +89,8 @@ export default function Map() {
 
         // filter attractions based on the selected filter value
         const filteredMarkers = selectedFilters.includes('ALL')
-          ? apiAttractions
-          : apiAttractions.filter(attraction =>
+          ? sliderList
+          : sliderList.filter(attraction =>
               selectedFilters.includes(attraction.attractionTypeEnum)
             );
 
@@ -146,7 +117,7 @@ export default function Map() {
         setMarkers(newMarkers);
       }
     }
-  }, [map, apiAttractions, selectedFilters]);
+  }, [map, sliderList, selectedFilters]);
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded) return <div>Loading...</div>;
@@ -169,50 +140,31 @@ export default function Map() {
       }}
     >
       <WeatherDisplay />
-        {hasTouchScreen ? (
-          <Flex
-            height="100%"
-            flexDirection="column"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Flex justifyContent="center" alignItems="center" mt="5px">
-              <SearchBar />
-            </Flex>
-            <Flex
-              justifyContent="flex-end"
-              flexDirection="column"
-              style={{
-                // position: 'absolute',
-                // height: 'fit-content',
-                // width: 'calc(100% - 20px)',
-
-                width: '295px',
-                marginBottom: '10px',
-                '-ms-overflow-style': 'none' /* Hide scrollbar on Edge */,
-                'scrollbar-width': 'none' /* Hide scrollbar on Firefox */,
-                '::-webkit-scrollbar': {
-                  display: 'none' /* Hide scrollbar on Chrome and Safari */,
-                },
-              }}
-            >
-              <FiltersNavBar
-                isMobile={isMobile}
-                selectedFilters={selectedFilters}
-                setSelectedFilters={setSelectedFilters}
-              />
-            </Flex>
+      {hasTouchScreen ? (
+        <Flex
+          height="100%"
+          flexDirection="column"
+          justifyContent="space-between"
+          alignItems="center"
+        >
+          <Flex justifyContent="center" alignItems="center" mt="5px">
+            <SearchBar />
           </Flex>
-        ) : (
           <Flex
+            justifyContent="flex-end"
             flexDirection="column"
             style={{
-              position: 'absolute',
-              top: 10,
-              right: 120,
-              height: 'fit-content',
+              // position: 'absolute',
+              // height: 'fit-content',
               // width: 'calc(100% - 20px)',
+
               width: '295px',
+              marginBottom: '10px',
+              '-ms-overflow-style': 'none' /* Hide scrollbar on Edge */,
+              'scrollbar-width': 'none' /* Hide scrollbar on Firefox */,
+              '::-webkit-scrollbar': {
+                display: 'none' /* Hide scrollbar on Chrome and Safari */,
+              },
             }}
           >
             <FiltersNavBar
@@ -221,22 +173,41 @@ export default function Map() {
               setSelectedFilters={setSelectedFilters}
             />
           </Flex>
-        )}
-        {/* passing the setSliderListFunc to the slider from map 
+        </Flex>
+      ) : (
+        <Flex
+          flexDirection="column"
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 120,
+            height: 'fit-content',
+            // width: 'calc(100% - 20px)',
+            width: '295px',
+          }}
+        >
+          <FiltersNavBar
+            isMobile={isMobile}
+            selectedFilters={selectedFilters}
+            setSelectedFilters={setSelectedFilters}
+          />
+        </Flex>
+      )}
+      {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update
         the sliderList state */}
-        {!hasTouchScreen && <SliderBar setSliderListFunc={setSliderList} />}
-        <MarkerDrawer
-          //marker state true opens drawer
-          //false closes it
-          //have to pass set state method into
-          //drawer so the X button can change state to false and close the drawer
-          // also pass in marker object to render infor in drawer
-          isOpenFunc={markerState}
-          isCloseFunc={handleClose}
-          markerObject={markerObject}
-        />
-        <ContentDrawer />
+      {!hasTouchScreen && <SliderBar setSliderListFunc={setSliderList} />}
+      <MarkerDrawer
+        //marker state true opens drawer
+        //false closes it
+        //have to pass set state method into
+        //drawer so the X button can change state to false and close the drawer
+        // also pass in marker object to render infor in drawer
+        isOpenFunc={markerState}
+        isCloseFunc={handleClose}
+        markerObject={markerObject}
+      />
+      <ContentDrawer />
     </GoogleMap>
   );
 }

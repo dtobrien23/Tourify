@@ -15,64 +15,65 @@ import {
   TabPanels,
   useForceUpdate,
   SimpleGrid,
-  Heading
+  Heading,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import { APIContext } from './APIContext';
 
 export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
-  const { sourceCoords, setSourceCoords, geolocation } = useContext(MapContext);
   const { apiAttractions } = useContext(APIContext);
+  const {
+    activeDrawer,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    sourceCoords,
+    setSourceCoords,
+    geolocation,
+  } = useContext(MapContext);
 
-  console.log(geolocation, 'this is the geo from context');
+  //geolocation, cant be null or error occurs
+  // const userLocation = geolocation
+  //   ? { lat: geolocation.latitude, lng: geolocation.longitude }
+  //   : { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location as a fallback if user opts out
 
-  const { activeDrawer, isDrawerOpen, setIsDrawerOpen } =
-    useContext(MapContext);
-
-  //userLocation, cant be null or error occurs
-  const userLocation = geolocation
-    ? { lat: geolocation.lat, lng: geolocation.lng }
-    : { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location as a fallback if user opts out
-
-  console.log(
-    userLocation,
-    'this is reformatted userlocation from sourceCoords'
-  );
+  // console.log(
+  //   userLocation,
+  //   'this is reformatted userlocation from geolocation'
+  // );
 
   const [nearestAttractions, setNearestAttractions] = useState([]);
   const [quietestAttractions, setQuietestAttractions] = useState([]);
   const [combinedAttractions, setCombinedAttractions] = useState([]);
 
   const fetchDistances = () => {
-    const origin = new window.google.maps.LatLng(
-      userLocation.lat,
-      userLocation.lng
-    );
-    const destinations = apiAttractions.map(
-      attraction =>
-        new window.google.maps.LatLng(
-          attraction.coordinates_lat,
-          attraction.coordinates_lng
-        )
-    );
-    console.log('Origin:', origin);
-    console.log('Destinations:', destinations);
+    if (geolocation) {
+      const origin = geolocation;
+      const destinations = apiAttractions.map(
+        attraction =>
+          new window.google.maps.LatLng(
+            attraction.coordinates_lat,
+            attraction.coordinates_lng
+          )
+      );
+      console.log('Origin:', origin);
+      console.log('Destinations:', destinations);
 
-    const service = new window.google.maps.DistanceMatrixService();
+      const service = new window.google.maps.DistanceMatrixService();
 
-    service.getDistanceMatrix(
-      {
-        origins: [origin],
-        destinations: destinations,
-        travelMode: 'WALKING',
-        unitSystem: window.google.maps.UnitSystem.METRIC,
-      },
-      callback
-    );
+      service.getDistanceMatrix(
+        {
+          origins: [origin],
+          destinations: destinations,
+          travelMode: 'WALKING',
+          unitSystem: window.google.maps.UnitSystem.METRIC,
+        },
+        callback
+      );
+    }
   };
 
   useEffect(() => {
-    if (activeDrawer === 'recommender') {
+    if (geolocation && activeDrawer === 'recommender') {
       const loadGoogleMapsAPI = () => {
         const script = document.createElement('script');
         script.src =
@@ -130,7 +131,6 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const topFiveNearestAttractions = nearestAttractions.slice(0, 5);
   console.log(topFiveNearestAttractions, 'TOP 5 NEAREST');
 
-
   useEffect(() => {
     const leastBusyAttractions = nearestAttractions.sort((a, b) => {
       const busynessA = parseFloat(a.busyness_score);
@@ -158,12 +158,11 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                 justifyItems="left"
                 border="3px solid orangered"
                 borderRadius="20px"
-                marginTop='5px'
-                marginLeft='10px'
-                overflow='hidden'
+                marginTop="5px"
+                marginLeft="10px"
+                overflow="hidden"
                 spacing={8}
-                p='10px'
-              
+                p="10px"
               >
                 <Flex key={attraction.id} mb={4}>
                   <p>
@@ -175,14 +174,15 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                         width: '100px',
                         height: '100px',
                         marginRight: '10px',
-                        border:"3px solid orangered",
-                        borderRadius:"5px"
+                        border: '3px solid orangered',
+                        borderRadius: '5px',
                       }}
                     />
                   </p>
 
                   <div>
-                  <Heading size='md'>{attraction.name}</Heading>                    <p>Busyness Score: {attraction.busyness_score}</p>
+                    <Heading size="md">{attraction.name}</Heading>{' '}
+                    <p>Busyness Score: {attraction.busyness_score}</p>
                     <p>Distance: {attraction.distance}</p>
                   </div>
                 </Flex>
@@ -201,13 +201,14 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                       width: '100px',
                       height: '100px',
                       marginRight: '10px',
-                      border:"3px solid orangered",
-                      borderRadius:"5px"
+                      border: '3px solid orangered',
+                      borderRadius: '5px',
                     }}
                   />
                 </p>
                 <div>
-                <Heading size='md'>{attraction.name}</Heading>                  <p>Busyness Score: {attraction.busyness_score}</p>
+                  <Heading size="md">{attraction.name}</Heading>{' '}
+                  <p>Busyness Score: {attraction.busyness_score}</p>
                   <p>Distance: {attraction.distance}</p>
                 </div>
               </Flex>

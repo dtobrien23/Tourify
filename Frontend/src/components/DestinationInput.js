@@ -34,7 +34,7 @@ export default function DestinationInput({}) {
     return <p>Loading attractions...</p>;
   } else {
     return (
-      <Flex w="100%">
+      <Flex w="230px">
         <Menu>
           <MenuButton
             as={Button}
@@ -44,7 +44,7 @@ export default function DestinationInput({}) {
             pt={'0.5px'}
             bg={'white'}
             w={'100%'}
-            maxWidth={'200px'}
+            // maxWidth={'200px'}
             overflow={'hidden'}
             m={0}
             p={0}
