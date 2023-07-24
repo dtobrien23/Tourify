@@ -297,6 +297,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
           setIsLoggedIn(false);
           localStorage.clear() // Clear the cache
 
+          handleLogout()
+
           toastLogin({
             title: 'Account successfully deleted.',
             description: "We hope to see you again.",
