@@ -73,29 +73,6 @@ const APIContextProvider = ({ children }) => {
     fetchWeatherData();
   }, []);
 
-  // const fetchWeatherForecast = async () => {
-  //   // 4 days hourly forecast
-  //   try {
-  //     const response = await fetch(
-  //       `https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=${mapCenter.lat}&lon=${mapCenter.lng}&units=imperial&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`
-  //     );
-  //     const data = await response.json();
-  //     console.log(data, 'THIS IS THE FORECAST');
-  //     setAPIWeatherForecast(data.list);
-  //     console.log(apiWeatherForecast);
-  //     // setCurrentModelTempParam(
-  //     //   Math.floor((data.main.temp - 273.15) * (9 / 5) + 32)
-  //     // ); // must convert kelvin to fahrenheit
-  //     // if (data.rain) {
-  //     //   setCurrentModelRainParam(data.rain['1h'] / 25.4); // must convert millimetres to inches
-  //     // } else {
-  //     //   setCurrentModelRainParam(0);
-  //     // }
-  //   } catch (error) {
-  //     console.error('Error fetching weather data:', error);
-  //   }
-  // };
-
   useEffect(() => {
     const fetchAllCurrentBusynessData = async () => {
       try {
@@ -261,6 +238,10 @@ const APIContextProvider = ({ children }) => {
         apiAllCurrentBusyness,
         currentModelTempParam,
         startPrediction,
+        day1BusynessPred,
+        day2BusynessPred,
+        day3BusynessPred,
+        day4BusynessPred,
       }}
     >
       {children}
