@@ -13,6 +13,7 @@ import {
 import BadgePanel from './components/BadgePanel';
 import './App.css';
 import { MapContext } from './components/MapContext';
+import ProductTour from './components/ProductTour';
 
 function App() {
   // const [selectedTabIndex, setSelectedTabIndex] = useState(0);
