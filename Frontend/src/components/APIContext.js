@@ -32,7 +32,7 @@ const APIContextProvider = ({ children }) => {
     const fetchAttractionData = async () => {
       try {
         const response = await fetch(
-          'http://localhost:8001/api/attraction/getAllAttraction'
+          'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
         );
         const data = await response.json(); //long/lat data
         console.log(data, 'THIS CAME FROM THE BACK END');
@@ -83,7 +83,7 @@ const APIContextProvider = ({ children }) => {
             'these are the params for the model'
           );
           const response = await fetch(
-            `http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+            `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
           );
           const data = await response.json();
           console.log(data, 'THIS IS THE MODEL PREDICTION');
@@ -184,16 +184,16 @@ const APIContextProvider = ({ children }) => {
         console.log(day1Params[0].rain);
         try {
           const response1 = await fetch(
-            `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day1Params[0].temperature}&precipitation=${day1Params[0].rain}`
+            `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day1Params[0].temperature}&precipitation=${day1Params[0].rain}`
           );
           const response2 = await fetch(
-            `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day2Params[0].temperature}&precipitation=${day2Params[0].rain}`
+            `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day2Params[0].temperature}&precipitation=${day2Params[0].rain}`
           );
           const response3 = await fetch(
-            `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day3Params[0].temperature}&precipitation=${day3Params[0].rain}`
+            `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day3Params[0].temperature}&precipitation=${day3Params[0].rain}`
           );
           const response4 = await fetch(
-            `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day4Params[0].temperature}&precipitation=${day4Params[0].rain}`
+            `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day4Params[0].temperature}&precipitation=${day4Params[0].rain}`
           );
           const data1 = await response1.json();
           const data2 = await response2.json();
