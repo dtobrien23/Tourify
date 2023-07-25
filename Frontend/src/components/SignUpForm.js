@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, VStack, Badge, useDisclosure, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import { NFTStorage } from "nft.storage";
 
 import {
   googleLogout,
@@ -69,6 +70,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const toastSignupError = useToast();
   const toastLoginError = useToast();
   const toastBadge = useToast();
+  const toastNFT = useToast();
 
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
@@ -106,6 +108,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     }
   }, [checkinState]);
 
+
+
   const badgeChecker = (badgeState, newBadgeState) => {
     // Compare each badge property in the objects
     for (const badge in newBadgeState.badgeDO) {
@@ -123,9 +127,118 @@ export default function SignUpForm({ setIsLoggedIn }) {
           duration: 3000,
           isClosable: true,
         });
+        toastNFT({
+          title: 'NFT MINTED!',
+          description: `You've acquired the "${badgeName} NFT!".`,
+          status: 'success',
+          duration: 6000,
+          isClosable: true,
+        });
+
+        mintNft(badgeName);
       }
     }
   };
+
+
+
+  ////////////////////////////////
+  /////                      /////
+  ////     NFT MINTING CODE  /////
+  ////                       /////
+  ////////////////////////////////
+
+
+// this cleans up the url after uploading the NFT art
+const cleanupIPFS = (url) => {
+  if(url.includes("ipfs://")) {
+    return url.replace("ipfs://", "https://ipfs.io/ipfs/")
+  }
+}
+
+
+// Fetch the image file data from the URL
+// const empireStateBadgeImagePath = '../../../public/images/badgeimages/empire_State_Badge.jpg';
+
+// Function to fetch image as Blob
+const fetchImageAsBlob = async (url) => {
+const response = await fetch(url);
+const blob = await response.blob();
+return blob;
+};
+
+// this uploads the art to blockchain storage
+const uploadArtToIpfs = async (badgeName) => {
+try {
+  const nftstorage = new NFTStorage({
+    token: process.env.REACT_APP_NFT_STORAGE,
+  });
+
+  const imageBlob = await fetchImageAsBlob(`/images/badgeimages/${badgeName}.jpg`);
+
+  const file = new File([imageBlob], `${badgeName}.jpg`, { // Use badgeName as the image file name
+    type: "image/jpg", // Change this to the correct file type if needed (e.g., "image/png" for PNG images)
+  });
+
+  const store = await nftstorage.store({
+    name: `Badge - ${badgeName}`, 
+    description: `You got the ${badgeName} Badge!`, // generate description or use name again
+    image: file
+  });
+
+  return cleanupIPFS(store.data.image.href);
+} catch (err) {
+  console.log(err);
+  return null;
+}
+};
+
+// THIS MINTS THE NFTS
+const mintNft = async (badgeName) => {
+try {
+  const imageURL = await uploadArtToIpfs(badgeName);
+
+  if (!imageURL) {
+    console.log("Error uploading image to IPFS.");
+    return;
+  }
+
+  // mint as an NFT on nftport
+  const response = await axios.post(
+    `https://api.nftport.xyz/v0/mints/easy/urls`,
+    {
+      file_url: imageURL,
+      chain: "polygon",
+      name: badgeName,
+      description: `You visited The ${badgeName} Badge.`,
+      mint_to_address: "0xA649D68a977AB4d4Ab3ddd275aC3a84D03889Ee4",
+    },
+    {
+      headers: {
+        Authorization: process.env.REACT_APP_NFT_PORT,
+      }
+    }
+  );
+  const data = await response.data;
+  console.log(data);
+} catch (err) {
+  console.log(err);
+}
+};
+/////////////////////////////////
+/////       END OF         ///// 
+////     NFT MINTING CODE  /////
+////                       /////
+////////////////////////////////
+
+
+
+
+
+
+
+
+
 
   const userInfoUpdate = async credentialResponse => {
     //console.log(credentialResponse, 'THIS IS THE CRED for checkin');
@@ -195,16 +308,20 @@ export default function SignUpForm({ setIsLoggedIn }) {
         .then(response => {
           console.log(response.data, 'user info');
           setGlobalUserInfo(response.data);
+          console.log(globalUserInfo,'retrieving the cached info')
+
           setBadgeState(response.data);
 
           if (response.status === 200) {
             setGlobalUserInfo(response.data);
+
             setUserLoggedIn(true);
             setIsLoggedIn(true);
             localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
 
             // Cache the user info
             localStorage.setItem('userInfo', JSON.stringify(response.data));
+
 
             // Cache the user credential
             localStorage.setItem('userCredential', credential);
