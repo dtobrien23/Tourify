@@ -174,10 +174,10 @@ try {
     token: process.env.REACT_APP_NFT_STORAGE,
   });
 
-  const imageBlob = await fetchImageAsBlob(`/images/badgeimages/${badgeName}.jpg`);
+  const imageBlob = await fetchImageAsBlob(`/images/badgeimages_test/${badgeName}.png`);
 
-  const file = new File([imageBlob], `${badgeName}.jpg`, { // Use badgeName as the image file name
-    type: "image/jpg", // Change this to the correct file type if needed (e.g., "image/png" for PNG images)
+  const file = new File([imageBlob], `${badgeName}.png`, { // Use badgeName as the image file name
+    type: "image/png", // Change this to the correct file type if needed (e.g., "image/png" for PNG images)
   });
 
   const store = await nftstorage.store({
@@ -185,6 +185,7 @@ try {
     description: `You got the ${badgeName} Badge!`, // generate description or use name again
     image: file
   });
+  console.log(file,'this is hte blob file converted')
 
   return cleanupIPFS(store.data.image.href);
 } catch (err) {
@@ -197,6 +198,7 @@ try {
 const mintNft = async (badgeName) => {
 try {
   const imageURL = await uploadArtToIpfs(badgeName);
+  console.log("URL for image ", imageURL)
 
   if (!imageURL) {
     console.log("Error uploading image to IPFS.");
