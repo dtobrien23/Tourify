@@ -13,14 +13,25 @@ import {
   AlertDescription,
   Box,
   Button,
+  Flex,
 } from '@chakra-ui/react';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
+import PredBarChart from './PredBarChart';
 
 // passing it marker state and method to change state so the X button can close the drawer
 // also passing in marker object to render info in drawer
 function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
-  const { apiAttractions, startPrediction } = useContext(APIContext);
+  const {
+    apiAttractions,
+    fetchBusynessPredictions,
+    day1Params,
+    day2Params,
+    day3Params,
+    day4Params,
+    chartVisible,
+    busynessPred,
+  } = useContext(APIContext);
   const { attractionsWithBusyness } = useContext(MapContext);
 
   if (!markerObject) {
@@ -102,13 +113,39 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                       </Box>
                     </Alert>
                     <br />
-                    <Button
-                      onClick={() => {
-                        startPrediction(attraction.id);
-                      }}
-                    >
-                      Get 24 Hour Busyness Prediction
-                    </Button>
+                    {busynessPred &&
+                      chartVisible &&
+                      attraction.id === busynessPred.id && <PredBarChart />}
+                    <Flex w="100%">
+                      <Button
+                        onClick={() => {
+                          fetchBusynessPredictions(attraction.id, day1Params);
+                        }}
+                      >
+                        Day 1
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          fetchBusynessPredictions(attraction.id, day2Params);
+                        }}
+                      >
+                        Day 2
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          fetchBusynessPredictions(attraction.id, day3Params);
+                        }}
+                      >
+                        Day 3
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          fetchBusynessPredictions(attraction.id, day4Params);
+                        }}
+                      >
+                        Day 4
+                      </Button>
+                    </Flex>
                     <p>
                       Website:{' '}
                       <a

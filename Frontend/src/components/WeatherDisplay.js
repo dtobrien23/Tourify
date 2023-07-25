@@ -24,7 +24,12 @@ export default function WeatherDisplay({
   setSelectedFilters,
   hasTouchScreen,
 }) {
-  const { apiCurrentWeather, currentModelTempParam } = useContext(APIContext);
+  const {
+    apiCurrentWeather,
+    currentModelTempParam,
+    updateClick,
+    setUpdateClick,
+  } = useContext(APIContext);
   const { modelTempParam } = useContext(MapContext);
   const [weatherIcon, setWeatherIcon] = useState(null);
   const [displayedTemp, setDisplayedTemp] = useState('F');
@@ -152,7 +157,7 @@ export default function WeatherDisplay({
             h="50px"
             p="10px"
             onClick={() => {
-              window.location.reload();
+              setUpdateClick(updateClick + 1);
             }}
           >
             <img src="/images/refresh.svg" />

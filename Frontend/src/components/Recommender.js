@@ -133,7 +133,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   console.log(topFiveNearestAttractions, 'TOP 5 NEAREST');
 
   useEffect(() => {
-    const leastBusyAttractions = nearestAttractions.sort((a, b) => {
+    const leastBusyAttractions = nearestAttractions.slice().sort((a, b) => {
       const busynessA = parseFloat(a.businessRate);
       const busynessB = parseFloat(b.businessRate);
       return busynessA - busynessB;
@@ -141,6 +141,41 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
     setQuietestAttractions(leastBusyAttractions);
   }, [nearestAttractions]);
+
+  useEffect(() => {
+    if (nearestAttractions && quietestAttractions) {
+      nearestAttractions.forEach(attraction => {
+        const nearestIndex = nearestAttractions.indexOf(attraction);
+        const matchingAttraction = quietestAttractions.find(
+          sameAttraction => sameAttraction.name === attraction.name
+        );
+        if (matchingAttraction) {
+          const quietestIndex = quietestAttractions.indexOf(matchingAttraction);
+          const newName = matchingAttraction.name;
+          const newIndex = nearestIndex + quietestIndex;
+          setCombinedAttractions(prevAttractions =>
+            [
+              ...prevAttractions,
+              {
+                name: matchingAttraction.name,
+                id: matchingAttraction.id,
+                combinedIndex: newIndex,
+                businessRate: matchingAttraction.businessRate,
+                distance: matchingAttraction.distance,
+                name_alias: matchingAttraction.name_alias,
+              },
+            ].sort((a, b) => a.combinedIndex - b.combinedIndex)
+          );
+        }
+      });
+    }
+  }, [quietestAttractions]);
+
+  useEffect(() => {
+    if (combinedAttractions) {
+      console.log(combinedAttractions, 'COMBINED ATTRACTIONS');
+    }
+  }, [combinedAttractions]);
 
   return (
     <>
@@ -216,7 +251,31 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
             ))}
           </TabPanel>
           <TabPanel>
-            <p>Nearest + Quietest Here!</p>
+            {combinedAttractions &&
+              combinedAttractions.map(attraction => (
+                <Flex key={attraction.id} mb={4}>
+                  <p>
+                    {' '}
+                    <img
+                      src={`/images/${attraction.name_alias}.jpg`}
+                      alt={attraction.name_alias}
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                        marginRight: '10px',
+                        border: '3px solid orangered',
+                        borderRadius: '5px',
+                      }}
+                    />
+                  </p>
+                  <div>
+                    <Heading size="md">{attraction.name}</Heading>{' '}
+                    <p>Busyness Score: {attraction.businessRate}</p>
+                    <p>Distance: {attraction.distance}</p>
+                    <p>Combined Score: {attraction.combinedIndex}</p>
+                  </div>
+                </Flex>
+              ))}
           </TabPanel>
         </TabPanels>
       </Tabs>
