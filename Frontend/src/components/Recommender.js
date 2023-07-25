@@ -144,32 +144,38 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
   useEffect(() => {
     if (nearestAttractions && quietestAttractions) {
+      const combinedAttractionsArray = [];
+
       nearestAttractions.forEach(attraction => {
         const nearestIndex = nearestAttractions.indexOf(attraction);
         const matchingAttraction = quietestAttractions.find(
           sameAttraction => sameAttraction.name === attraction.name
         );
+
         if (matchingAttraction) {
           const quietestIndex = quietestAttractions.indexOf(matchingAttraction);
           const newName = matchingAttraction.name;
           const newIndex = nearestIndex + quietestIndex;
-          setCombinedAttractions(prevAttractions =>
-            [
-              ...prevAttractions,
-              {
-                name: matchingAttraction.name,
-                id: matchingAttraction.id,
-                combinedIndex: newIndex,
-                businessRate: matchingAttraction.businessRate,
-                distance: matchingAttraction.distance,
-                name_alias: matchingAttraction.name_alias,
-              },
-            ].sort((a, b) => a.combinedIndex - b.combinedIndex)
-          );
+
+          combinedAttractionsArray.push({
+            name: matchingAttraction.name,
+            id: matchingAttraction.id,
+            combinedIndex: newIndex,
+            businessRate: matchingAttraction.businessRate,
+            distance: matchingAttraction.distance,
+            name_alias: matchingAttraction.name_alias,
+          });
         }
       });
+
+      // Sort the combined attractions array by combinedIndex
+      combinedAttractionsArray.sort(
+        (a, b) => a.combinedIndex - b.combinedIndex
+      );
+
+      setCombinedAttractions(combinedAttractionsArray);
     }
-  }, [quietestAttractions]);
+  }, [nearestAttractions, quietestAttractions]);
 
   useEffect(() => {
     if (combinedAttractions) {

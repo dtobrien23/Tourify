@@ -7,13 +7,7 @@ import { MapContext } from './MapContext';
 // Chart.register(registerables);
 
 export default function PredBarChart() {
-  const {
-    apiAttractions,
-    fetchBusynessPredictions,
-    day1BusynessPred,
-    chartData,
-  } = useContext(APIContext);
-  const { attractionsWithBusyness, map } = useContext(MapContext);
+  const { chartData } = useContext(APIContext);
 
   const options = {
     scales: {
@@ -22,24 +16,6 @@ export default function PredBarChart() {
       },
     },
   };
-
-  //   useEffect(() => {
-  //     if (day1BusynessPred !== null) {
-  //       setChartData({
-  //         labels: day1BusynessPred[0].map(hour => hour.hour),
-  //         datasets: [
-  //           {
-  //             label: 'Busyness Rate',
-  //             data: day1BusynessPred.map(hour => hour.businessRate),
-  //             backgroundColor: 'rgba(75, 192, 192, 0.2)',
-  //             borderColor: 'rgba(75, 192, 192, 1)',
-  //             borderWidth: 1,
-  //           },
-  //         ],
-  //       });
-  //       console.log('well???');
-  //     }
-  //   }, [day1BusynessPred]);
 
   useEffect(() => {
     if (chartData) {
