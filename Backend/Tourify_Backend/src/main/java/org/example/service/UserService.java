@@ -204,9 +204,84 @@ public class UserService {
                 if(userDONewBadge.getAttractionStatusDO().areAllDiningTrue()){
                     badgeDO.setAll_Dining_Badge(true);
                 }
-                // Check the Empire_State_Badge
+                // Check every attraction's badge
+
+                if(userDONewBadge.getAttractionStatusDO().getStatue_of_Liberty()){
+                    badgeDO.setStatue_of_Liberty_Badge(true);
+                }
+
                 if(userDONewBadge.getAttractionStatusDO().getEmpire_State_Building()){
                     badgeDO.setEmpire_State_Badge(true);
+                }
+
+                if(userDONewBadge.getAttractionStatusDO().getBrooklyn_Bridge()){
+                    badgeDO.setBrooklyn_Bridge_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getMetropolitan_Museum_of_Art()){
+                    badgeDO.setMetropolitan_Museum_of_Art_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getMuseum_of_Modern_Art()){
+                    badgeDO.setMuseum_of_Modern_Art_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getGuggenheim_Museum()){
+                    badgeDO.setGuggenheim_Museum_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getCentral_Park()){
+                    badgeDO.setCentral_Park_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getBryant_Park()){
+                    badgeDO.setBryant_Park_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getHigh_Line()){
+                    badgeDO.setHigh_Line_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getBroadway()){
+                    badgeDO.setBroadway_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getMadame_Tussauds_New_York()){
+                    badgeDO.setMadame_Tussauds_New_York_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getLincoln_Center()){
+                    badgeDO.setLincoln_Center_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getGreenwich_Village()){
+                    badgeDO.setGreenwich_Village_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getHarlem()){
+                    badgeDO.setHarlem_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getEataly()){
+                    badgeDO.setEataly_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getGrand_Central_Market()){
+                    badgeDO.setGrand_Central_Market_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getWhitney_Museum()){
+                    badgeDO.setWhitney_Museum_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getMuseum_of_Arts_and_Design()){
+                    badgeDO.setMuseum_of_Arts_and_Design_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getNew_Museum()){
+                    badgeDO.setNew_Museum_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getMorgan_Library_Museum()){
+                    badgeDO.setMorgan_Library_Museum_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getTrinity_Church()){
+                    badgeDO.setTrinity_Church_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getFraunces_Tavern()){
+                    badgeDO.setFraunces_Tavern_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getOne_World_Observatory()){
+                    badgeDO.setOne_World_Observatory_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getTop_of_the_Rock()){
+                    badgeDO.setTop_of_the_Rock_Badge(true);
+                }
+                if(userDONewBadge.getAttractionStatusDO().getEdge_Observation_Deck()){
+                    badgeDO.setEdge_Observation_Deck_Badge(true);
                 }
 
                 // update the user badge in DB
