@@ -56,7 +56,7 @@ public class AttractionService {
         ObjectMapper mapper = new ObjectMapper();
         try {
             // load the JSON
-            Resource resource = resourceLoader.getResource("classpath:passengers_average_v1.json");
+            Resource resource = resourceLoader.getResource("classpath:passengers_average_v2.json");
             InputStream inputStream = resource.getInputStream();
             List<Map<String, String>> list = mapper.readValue(inputStream, new TypeReference<List<Map<String, String>>>(){});
             hashMap = new HashMap<>();
@@ -295,8 +295,8 @@ public class AttractionService {
     Integer getModelPythonPrediction(AttractionPredictionDTO attractionPredictionDTO, int month, int dayOfWeek, int hour, int taxiLocation, int passengersNum) throws BusinessException{
         System.out.println("3.Starting to invoke prediction on python service -------------");
 
-        WebClient webClient = WebClient.create("http://127.0.0.1:12345");  // local testing address
-//        WebClient webClient = WebClient.create("http://172.18.0.3:5000");  //Docker address
+//        WebClient webClient = WebClient.create("http://127.0.0.1:12345");  // local testing address
+        WebClient webClient = WebClient.create("http://172.18.0.3:5000");  //Docker address
 
 
         Map<String, Object> map = new HashMap<>();
