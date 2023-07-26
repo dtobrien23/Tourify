@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
+// import { NFTStorage } from "nft.storage";
+
 import { useReward } from 'react-rewards';
 import FlipCard from './FlipCard';
 import axios from 'axios';
@@ -44,6 +46,7 @@ export default function ContentDrawer() {
   const toastCheckIn = useToast();
   const toastNotCheckIn = useToast();
 
+
   const kebabToCamelCase = str => {
     return str.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
   };
@@ -69,6 +72,9 @@ export default function ContentDrawer() {
       elementCount: 100,
     });
 
+
+
+
   const handleCheckIn = async attractionID => {
     const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
     const cachedUserCredential = localStorage.getItem('userCredential');
@@ -79,8 +85,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.7078931', //hardcoded for testing replace with geolocation variable
-      lng: '-74.0117901', //hardcoded for testing reaplace with geolocation variable
+      lat: '40.6892494', //hardcoded for testing replace with geolocation variable
+      lng: '-74.0445004', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -90,10 +96,10 @@ export default function ContentDrawer() {
         console.log(response, 'this is response data');
         // Handle the response data here
         if (response.data.code === 200) {
-          //   // set logic that your market has been ticked off
+          //   // set logic that your marker has been ticked off
           setCheckinState(true);
           console.log(checkinState, 'checkinstate - contentdrawer');
-          // confettiReward();
+          confettiReward();
           toastCheckIn({
             title: 'Check in Successful.',
             description: "You've Checked in Successfully.",
@@ -116,6 +122,34 @@ export default function ContentDrawer() {
             isClosable: true,
           });
         }
+
+        // //nft minting if badge status has changed since last user info check
+        // if (response.data.code == 200 && 'badge status has changed since last check'){
+        //   setCheckinState(true);
+        //   // mintNft();
+        //   confettiReward()
+        //   toastCheckIn({
+        //     title: 'Check in Successful.',
+        //     description: "You've Checked in Successfully.",
+        //     status: 'success',
+        //     duration: 3000,
+        //     isClosable: true,
+        //   });
+        //   toastNFT({
+        //     title: 'NFT Minted!',
+        //     description: "You're Badge has been minted as an NFT and sent to your Metamask Wallet!",
+        //     status: 'success',
+        //     duration: 3000,
+        //     isClosable: true,
+        //   });
+        // }
+
+
+
+
+
+
+
       })
       .catch(error => {
         console.error('Error in API call:', error);
@@ -166,6 +200,105 @@ export default function ContentDrawer() {
     }
     return false;
   };
+
+
+
+
+  /// moved this into the badgechecker code in the signup form for testing
+
+//   ////////////////////////////////
+//   /////                      /////
+//   ////     NFT MINTING CODE  /////
+//   ////                       /////
+//   ////////////////////////////////
+
+
+// // this cleans up the url after uploading the NFT art
+// const cleanupIPFS = (url) => {
+//   if(url.includes("ipfs://")) {
+//     return url.replace("ipfs://", "https://ipfs.io/ipfs/")
+//   }
+// }
+
+
+// // Fetch the image file data from the URL
+// const empireStateBadgeImagePath = '../../../public/images/badgeimages/empire_State_Badge.jpg';
+
+// // Function to fetch image as Blob
+// const fetchImageAsBlob = async (url) => {
+// const response = await fetch(url);
+// const blob = await response.blob();
+// return blob;
+// };
+
+// // this uploads the art to blockchain storage
+// const uploadArtToIpfs = async () => {
+// try {
+//   const nftstorage = new NFTStorage({
+//     token: process.env.REACT_APP_NFT_STORAGE,
+//   });
+
+//   const imageBlob = await fetchImageAsBlob(empireStateBadgeImagePath);
+
+//   const file = new File([imageBlob], "empire_State_Badge.jpg", {
+//     type: "image/jpg", // Change this to the correct file type if needed (e.g., "image/png" for PNG images)
+//   });
+
+//   const store = await nftstorage.store({
+//     name: "EMPIRE STATE BADGE2 TEST", // badge name from json url
+//     description: 'You visited the Empire State Building2', // generate description or use name again
+//     image: file
+//   });
+
+//   return cleanupIPFS(store.data.image.href);
+// } catch (err) {
+//   console.log(err);
+//   return null;
+// }
+// };
+
+// // THIS MINTS THE NFTS
+// const mintNft = async () => {
+// try {
+//   const imageURL = await uploadArtToIpfs();
+
+//   if (!imageURL) {
+//     console.log("Error uploading image to IPFS.");
+//     return;
+//   }
+
+//   // mint as an NFT on nftport
+//   const response = await axios.post(
+//     `https://api.nftport.xyz/v0/mints/easy/urls`,
+//     {
+//       file_url: imageURL,
+//       chain: "polygon",
+//       name: "Empire State Building Badge2",
+//       description: "You visited The Empire State Building Badge2",
+//       mint_to_address: "0xA649D68a977AB4d4Ab3ddd275aC3a84D03889Ee4",
+//     },
+//     {
+//       headers: {
+//         Authorization: process.env.REACT_APP_NFT_PORT,
+//       }
+//     }
+//   );
+//   const data = await response.data;
+//   console.log(data);
+// } catch (err) {
+//   console.log(err);
+// }
+// };
+// /////////////////////////////////
+// /////       END OF         ///// 
+// ////     NFT MINTING CODE  /////
+// ////                       /////
+// ////////////////////////////////
+
+
+
+
+
 
   return (
     <Drawer
@@ -336,7 +469,9 @@ export default function ContentDrawer() {
                                             '0 2px 4px rgba(0, 0, 0, 0.2)',
                                         }}
                                         onClick={() =>
-                                          handleCheckIn(attractionInfo.id)
+                                           handleCheckIn(attractionInfo.id)
+                                          // mintNft()
+
                                         }
                                       >
                                         Check In!
