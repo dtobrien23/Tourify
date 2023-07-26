@@ -32,6 +32,7 @@ public class UserDO implements UserDetails, Serializable {
     private String user_email;
     private String user_icon;
     private boolean emailVerified;
+    private String nftLink;
     private SystemRoleEnum systemRoleEnum;
     private AttractionStatusDO attractionStatusDO;
     private BadgeDO badgeDO;
