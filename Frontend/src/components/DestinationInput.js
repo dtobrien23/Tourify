@@ -31,7 +31,20 @@ export default function DestinationInput({}) {
   };
   // Wait for apiAttractions to be available
   if (!apiLoaded) {
-    return <p>Loading attractions...</p>;
+    return (
+      <p
+        style={{
+          alignSelf: 'center',
+          paddingLeft: '10px',
+          color: inputColour,
+          fontFamily: 'Roboto',
+          fontWeight: 'Normal',
+          fontSize: '16px',
+        }}
+      >
+        I want to visit...
+      </p>
+    );
   } else {
     return (
       <Flex w="230px">
