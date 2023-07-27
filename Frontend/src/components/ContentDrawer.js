@@ -76,7 +76,7 @@ export default function ContentDrawer() {
 
 
   const handleCheckIn = async attractionID => {
-    const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
+    const apiEndpoint = 'http://localhost:8001/api/user/update';
     const cachedUserCredential = localStorage.getItem('userCredential');
 
     const idToken = cachedUserCredential; // get this from credential in signupform
@@ -85,9 +85,9 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.6892494', //hardcoded for testing replace with geolocation variable
-      lng: '-74.0445004', //hardcoded for testing reaplace with geolocation variable
-    };
+      lat: '40.7484405', //hardcoded for testing replace with geolocation variable
+      lng: '-73.9856644', //hardcoded for testing reaplace with geolocation variable
+    }; 
 
     axios
       .post(apiEndpoint, requestBody)
@@ -489,16 +489,6 @@ export default function ContentDrawer() {
                       <p>Loading attractions to visit...</p>
                     )}
 
-                    {/* Conditional rendering for the image when all attractions are false */}
-                    {areAllAttractionsFalse() && (
-                      <p>
-                        <img
-                          src={'/images/no_Attractions_Visited.jpg'}
-                          alt="All Attractions are False"
-                          style={{ maxWidth: '500px', height: '500px' }}
-                        />
-                      </p>
-                    )}
                   </TabPanel>
 
                   {/* VISITED ATTRACTIONS */}
@@ -645,6 +635,16 @@ export default function ContentDrawer() {
                           </div>
                         }
                       />
+                    )}
+                    {/* Conditional rendering for the image when all attractions are false */}
+                    {areAllAttractionsFalse() && (
+                      <p>
+                        <img
+                          src={'/images/no_Attractions_Visited.jpg'}
+                          alt="All Attractions are False"
+                          style={{ maxWidth: '500px', height: '500px' }}
+                        />
+                      </p>
                     )}
                   </TabPanel>
                 </TabPanels>

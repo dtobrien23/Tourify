@@ -127,6 +127,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
           duration: 3000,
           isClosable: true,
         });
+        
+        setPrompt(badgeName);
+        generateArt();
+        mintNft(badgeName);
+
         toastNFT({
           title: 'NFT MINTED!',
           description: `You've acquired the "${badgeName} NFT!".`,
@@ -134,8 +139,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
           duration: 6000,
           isClosable: true,
         });
-
-        mintNft(badgeName);
       }
     }
   };
@@ -147,6 +150,40 @@ export default function SignUpForm({ setIsLoggedIn }) {
   ////     NFT MINTING CODE  /////
   ////                       /////
   ////////////////////////////////
+const [prompt, setPrompt] = useState("")
+const [imageBlob, setImageBlob] = useState(null)
+
+const [file, setFile] = useState(null)
+
+const generateArt = async () => {
+	try {
+		const response = await axios.post(
+			`https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5`,
+			{
+				headers: {
+					Authorization: `Bearer ${process.env.REACT_APP_HUGGING_FACE}}`,
+				},
+				method: "POST",
+				inputs: prompt,
+			},
+			{ responseType: "blob" }
+		);
+		// convert blob to a image file type
+		const file = new File([response.data], "image.png", {
+			type: "image/png",
+		});
+		// saving the file in a state
+		setFile(file);
+		const url = URL.createObjectURL(response.data);
+		// console.log(url)
+		console.log(url);
+		setImageBlob(url);
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+
 
 
 // this cleans up the url after uploading the NFT art
@@ -157,42 +194,28 @@ const cleanupIPFS = (url) => {
 }
 
 
-// Fetch the image file data from the URL
-// const empireStateBadgeImagePath = '../../../public/images/badgeimages/empire_State_Badge.jpg';
-
-// Function to fetch image as Blob
-const fetchImageAsBlob = async (url) => {
-const response = await fetch(url);
-const blob = await response.blob();
-return blob;
-};
-
 // this uploads the art to blockchain storage
 const uploadArtToIpfs = async (badgeName) => {
-try {
-  const nftstorage = new NFTStorage({
-    token: process.env.REACT_APP_NFT_STORAGE,
-  });
+  try {
 
-  const imageBlob = await fetchImageAsBlob(`/images/badgeimages_test/${badgeName}.png`);
+    const nftstorage = new NFTStorage({
+			token: process.env.REACT_APP_NFT_STORAGE,
+		})
 
-  const file = new File([imageBlob], `${badgeName}.png`, { // Use badgeName as the image file name
-    type: "image/png", // Change this to the correct file type if needed (e.g., "image/png" for PNG images)
-  });
+    const store = await nftstorage.store({
+      name: `Badge - ${badgeName}`,
+      description: `You got the ${badgeName} Badge!`,
+      image: file
+    })
+    console.log(store)
+    return cleanupIPFS(store.data.image.href)
 
-  const store = await nftstorage.store({
-    name: `Badge - ${badgeName}`, 
-    description: `You got the ${badgeName} Badge!`, // generate description or use name again
-    image: file
-  });
-  console.log(file,'this is hte blob file converted')
 
-  return cleanupIPFS(store.data.image.href);
-} catch (err) {
-  console.log(err);
-  return null;
+  } catch(err) {
+    console.log(err)
+  }
 }
-};
+
 
 // THIS MINTS THE NFTS
 const mintNft = async (badgeName) => {
@@ -251,7 +274,7 @@ try {
     if (cachedUserCredential) {
       axios
         .post(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
+          `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'updated user info');
@@ -305,7 +328,7 @@ try {
     if (credential) {
       axios
         .post(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
+          `http://localhost:8001/api/user/info?idTokenString=${credential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'user info');
@@ -314,7 +337,7 @@ try {
 
           setBadgeState(response.data);
 
-          if (response.status === 200) {
+          if (response.status === 200 && response.data.code !== 10004) {
             setGlobalUserInfo(response.data);
 
             setUserLoggedIn(true);
@@ -337,13 +360,14 @@ try {
             });
 
             setUserInfoFetched(true);
-          } else {
+          } 
+          if (response.data.code === 10004){
             setUserLoggedIn(false);
             setIsLoggedIn(false);
             localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
             toastLoginError({
               title: 'Login Error.',
-              description: 'Error with login, please try again.',
+              description: 'You need to create and account before you can login.',
               status: 'error',
               duration: 3000,
               isClosable: true,
@@ -362,7 +386,7 @@ try {
       console.log(credential);
       axios
         .post(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
+          `http://localhost:8001/api/user/register?idTokenString=${credential}`
         )
         .then(response => {
           console.log(

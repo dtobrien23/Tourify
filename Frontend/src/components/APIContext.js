@@ -35,7 +35,7 @@ const APIContextProvider = ({ children }) => {
     const fetchAttractionData = async () => {
       try {
         const response = await fetch(
-          'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
+          'http://localhost:8001/api/attraction/getAllAttraction'
         );
         const data = await response.json(); //long/lat data
         console.log(data, 'THIS CAME FROM THE BACK END');
@@ -86,7 +86,7 @@ const APIContextProvider = ({ children }) => {
             'these are the params for the model'
           );
           const response = await fetch(
-            `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+            `http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
           );
           const data = await response.json();
           console.log(data, 'THIS IS THE MODEL PREDICTION');
@@ -183,7 +183,7 @@ const APIContextProvider = ({ children }) => {
       console.log(params[0].rain);
       try {
         const response1 = await fetch(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
+          `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
         );
         // const response2 = await fetch(
         //   `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day2Params[0].temperature}&precipitation=${day2Params[0].rain}`
