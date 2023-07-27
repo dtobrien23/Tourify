@@ -5,12 +5,14 @@ import pandas as pd
 import joblib
 import numpy as np
 import sklearn
+from flask_cors import CORS  # Import the CORS module
 
 # Import the models dictionary from models.py
 from models import models
 
 # Your API definition
 app = Flask(__name__)
+CORS(app)  # This enables CORS for the entire app
 
 @app.route('/predict', methods=['POST'])
 def predict():

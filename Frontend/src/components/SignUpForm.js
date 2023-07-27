@@ -134,6 +134,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
           duration: 3000,
           isClosable: true,
         });
+
+        setPrompt(badgeName);
+        generateArt();
+        mintNft(badgeName);
+
         toastNFT({
           title: 'NFT MINTED!',
           description: `You've acquired the "${badgeName} NFT!".`,
@@ -141,8 +146,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
           duration: 6000,
           isClosable: true,
         });
-
-        mintNft(badgeName);
       }
     }
   };
@@ -152,6 +155,38 @@ export default function SignUpForm({ setIsLoggedIn }) {
   ////     NFT MINTING CODE  /////
   ////                       /////
   ////////////////////////////////
+  const [prompt, setPrompt] = useState('');
+  const [imageBlob, setImageBlob] = useState(null);
+
+  const [file, setFile] = useState(null);
+
+  const generateArt = async () => {
+    try {
+      const response = await axios.post(
+        `https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.REACT_APP_HUGGING_FACE}}`,
+          },
+          method: 'POST',
+          inputs: prompt,
+        },
+        { responseType: 'blob' }
+      );
+      // convert blob to a image file type
+      const file = new File([response.data], 'image.png', {
+        type: 'image/png',
+      });
+      // saving the file in a state
+      setFile(file);
+      const url = URL.createObjectURL(response.data);
+      // console.log(url)
+      console.log(url);
+      setImageBlob(url);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   // this cleans up the url after uploading the NFT art
   const cleanupIPFS = url => {
@@ -313,7 +348,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
           setBadgeState(response.data);
 
-          if (response.status === 200) {
+          if (response.status === 200 && response.data.code !== 10004) {
             setGlobalUserInfo(response.data);
 
             setUserLoggedIn(true);
@@ -335,13 +370,15 @@ export default function SignUpForm({ setIsLoggedIn }) {
             });
 
             setUserInfoFetched(true);
-          } else {
+          }
+          if (response.data.code === 10004) {
             setUserLoggedIn(false);
             setIsLoggedIn(false);
             localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
             toastLoginError({
               title: 'Login Error.',
-              description: 'Error with login, please try again.',
+              description:
+                'You need to create and account before you can login.',
               status: 'error',
               duration: 3000,
               isClosable: true,
