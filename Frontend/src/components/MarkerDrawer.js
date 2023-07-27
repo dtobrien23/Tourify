@@ -40,7 +40,12 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
 
   return (
     <>
-      <Drawer isOpen={isOpenFunc} placement="right" onClose={isCloseFunc}>
+      <Drawer
+        isOpen={isOpenFunc}
+        placement="right"
+        size="sm"
+        onClose={isCloseFunc}
+      >
         <DrawerOverlay style={{ zIndex: '19' }} />
 
         <DrawerContent
@@ -78,6 +83,7 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                     <p>{attraction.full_address}</p>
                     <br></br>
                     <Alert
+                      width="fit-content"
                       status="info"
                       colorScheme={
                         attraction.businessRate < 35
@@ -115,7 +121,11 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                     <br />
                     {busynessPred &&
                       chartVisible &&
-                      attraction.id === busynessPred.id && <PredBarChart />}
+                      attraction.id === busynessPred.id && (
+                        <Flex marginLeft="-10px">
+                          <PredBarChart />
+                        </Flex>
+                      )}
                     <Flex w="100%">
                       <Button
                         onClick={() => {

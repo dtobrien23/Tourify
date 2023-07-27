@@ -4,12 +4,8 @@ import {
   RangeSliderTrack,
   RangeSliderFilledTrack,
   RangeSliderThumb,
-  RangeSliderMark,
-  Box,
 } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
-import { MdGraphicEq } from 'react-icons/md';
-//import attractions from '../static/attractions.json';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 

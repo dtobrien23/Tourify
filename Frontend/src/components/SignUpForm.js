@@ -248,7 +248,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (cachedUserCredential) {
       axios
         .post(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
+          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
+          `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'updated user info');
@@ -302,7 +303,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (credential) {
       axios
         .post(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
+          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
+          `http://localhost:8001/api/user/info?idTokenString=${credential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'user info');
@@ -358,7 +360,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
       console.log(credential);
       axios
         .post(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
+          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
+          `http://localhost:8001/api/user/register?idTokenString=${credential}`
         )
         .then(response => {
           console.log(

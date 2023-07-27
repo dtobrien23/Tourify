@@ -24,7 +24,7 @@ export default function PredBarChart() {
   }, [chartData]);
 
   return (
-    <div style={{ width: '400px', height: '300px' }}>
+    <div style={{ width: '400px', height: '210px' }}>
       {chartData !== null ? (
         <Bar data={chartData} options={options} />
       ) : (

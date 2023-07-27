@@ -46,7 +46,6 @@ export default function ContentDrawer() {
   const toastCheckIn = useToast();
   const toastNotCheckIn = useToast();
 
-
   const kebabToCamelCase = str => {
     return str.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
   };
@@ -72,11 +71,9 @@ export default function ContentDrawer() {
       elementCount: 100,
     });
 
-
-
-
   const handleCheckIn = async attractionID => {
-    const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
+    // const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
+    const apiEndpoint = 'http://localhost:8001/api/user/update';
     const cachedUserCredential = localStorage.getItem('userCredential');
 
     const idToken = cachedUserCredential; // get this from credential in signupform
@@ -143,13 +140,6 @@ export default function ContentDrawer() {
         //     isClosable: true,
         //   });
         // }
-
-
-
-
-
-
-
       })
       .catch(error => {
         console.error('Error in API call:', error);
@@ -201,104 +191,94 @@ export default function ContentDrawer() {
     return false;
   };
 
-
-
-
   /// moved this into the badgechecker code in the signup form for testing
 
-//   ////////////////////////////////
-//   /////                      /////
-//   ////     NFT MINTING CODE  /////
-//   ////                       /////
-//   ////////////////////////////////
+  //   ////////////////////////////////
+  //   /////                      /////
+  //   ////     NFT MINTING CODE  /////
+  //   ////                       /////
+  //   ////////////////////////////////
 
+  // // this cleans up the url after uploading the NFT art
+  // const cleanupIPFS = (url) => {
+  //   if(url.includes("ipfs://")) {
+  //     return url.replace("ipfs://", "https://ipfs.io/ipfs/")
+  //   }
+  // }
 
-// // this cleans up the url after uploading the NFT art
-// const cleanupIPFS = (url) => {
-//   if(url.includes("ipfs://")) {
-//     return url.replace("ipfs://", "https://ipfs.io/ipfs/")
-//   }
-// }
+  // // Fetch the image file data from the URL
+  // const empireStateBadgeImagePath = '../../../public/images/badgeimages/empire_State_Badge.jpg';
 
+  // // Function to fetch image as Blob
+  // const fetchImageAsBlob = async (url) => {
+  // const response = await fetch(url);
+  // const blob = await response.blob();
+  // return blob;
+  // };
 
-// // Fetch the image file data from the URL
-// const empireStateBadgeImagePath = '../../../public/images/badgeimages/empire_State_Badge.jpg';
+  // // this uploads the art to blockchain storage
+  // const uploadArtToIpfs = async () => {
+  // try {
+  //   const nftstorage = new NFTStorage({
+  //     token: process.env.REACT_APP_NFT_STORAGE,
+  //   });
 
-// // Function to fetch image as Blob
-// const fetchImageAsBlob = async (url) => {
-// const response = await fetch(url);
-// const blob = await response.blob();
-// return blob;
-// };
+  //   const imageBlob = await fetchImageAsBlob(empireStateBadgeImagePath);
 
-// // this uploads the art to blockchain storage
-// const uploadArtToIpfs = async () => {
-// try {
-//   const nftstorage = new NFTStorage({
-//     token: process.env.REACT_APP_NFT_STORAGE,
-//   });
+  //   const file = new File([imageBlob], "empire_State_Badge.jpg", {
+  //     type: "image/jpg", // Change this to the correct file type if needed (e.g., "image/png" for PNG images)
+  //   });
 
-//   const imageBlob = await fetchImageAsBlob(empireStateBadgeImagePath);
+  //   const store = await nftstorage.store({
+  //     name: "EMPIRE STATE BADGE2 TEST", // badge name from json url
+  //     description: 'You visited the Empire State Building2', // generate description or use name again
+  //     image: file
+  //   });
 
-//   const file = new File([imageBlob], "empire_State_Badge.jpg", {
-//     type: "image/jpg", // Change this to the correct file type if needed (e.g., "image/png" for PNG images)
-//   });
+  //   return cleanupIPFS(store.data.image.href);
+  // } catch (err) {
+  //   console.log(err);
+  //   return null;
+  // }
+  // };
 
-//   const store = await nftstorage.store({
-//     name: "EMPIRE STATE BADGE2 TEST", // badge name from json url
-//     description: 'You visited the Empire State Building2', // generate description or use name again
-//     image: file
-//   });
+  // // THIS MINTS THE NFTS
+  // const mintNft = async () => {
+  // try {
+  //   const imageURL = await uploadArtToIpfs();
 
-//   return cleanupIPFS(store.data.image.href);
-// } catch (err) {
-//   console.log(err);
-//   return null;
-// }
-// };
+  //   if (!imageURL) {
+  //     console.log("Error uploading image to IPFS.");
+  //     return;
+  //   }
 
-// // THIS MINTS THE NFTS
-// const mintNft = async () => {
-// try {
-//   const imageURL = await uploadArtToIpfs();
-
-//   if (!imageURL) {
-//     console.log("Error uploading image to IPFS.");
-//     return;
-//   }
-
-//   // mint as an NFT on nftport
-//   const response = await axios.post(
-//     `https://api.nftport.xyz/v0/mints/easy/urls`,
-//     {
-//       file_url: imageURL,
-//       chain: "polygon",
-//       name: "Empire State Building Badge2",
-//       description: "You visited The Empire State Building Badge2",
-//       mint_to_address: "0xA649D68a977AB4d4Ab3ddd275aC3a84D03889Ee4",
-//     },
-//     {
-//       headers: {
-//         Authorization: process.env.REACT_APP_NFT_PORT,
-//       }
-//     }
-//   );
-//   const data = await response.data;
-//   console.log(data);
-// } catch (err) {
-//   console.log(err);
-// }
-// };
-// /////////////////////////////////
-// /////       END OF         ///// 
-// ////     NFT MINTING CODE  /////
-// ////                       /////
-// ////////////////////////////////
-
-
-
-
-
+  //   // mint as an NFT on nftport
+  //   const response = await axios.post(
+  //     `https://api.nftport.xyz/v0/mints/easy/urls`,
+  //     {
+  //       file_url: imageURL,
+  //       chain: "polygon",
+  //       name: "Empire State Building Badge2",
+  //       description: "You visited The Empire State Building Badge2",
+  //       mint_to_address: "0xA649D68a977AB4d4Ab3ddd275aC3a84D03889Ee4",
+  //     },
+  //     {
+  //       headers: {
+  //         Authorization: process.env.REACT_APP_NFT_PORT,
+  //       }
+  //     }
+  //   );
+  //   const data = await response.data;
+  //   console.log(data);
+  // } catch (err) {
+  //   console.log(err);
+  // }
+  // };
+  // /////////////////////////////////
+  // /////       END OF         /////
+  // ////     NFT MINTING CODE  /////
+  // ////                       /////
+  // ////////////////////////////////
 
   return (
     <Drawer
@@ -468,10 +448,9 @@ export default function ContentDrawer() {
                                           boxShadow:
                                             '0 2px 4px rgba(0, 0, 0, 0.2)',
                                         }}
-                                        onClick={() =>
-                                           handleCheckIn(attractionInfo.id)
+                                        onClick={
+                                          () => handleCheckIn(attractionInfo.id)
                                           // mintNft()
-
                                         }
                                       >
                                         Check In!
@@ -487,17 +466,6 @@ export default function ContentDrawer() {
                       })
                     ) : (
                       <p>Loading attractions to visit...</p>
-                    )}
-
-                    {/* Conditional rendering for the image when all attractions are false */}
-                    {areAllAttractionsFalse() && (
-                      <p>
-                        <img
-                          src={'/images/no_Attractions_Visited.jpg'}
-                          alt="All Attractions are False"
-                          style={{ maxWidth: '500px', height: '500px' }}
-                        />
-                      </p>
                     )}
                   </TabPanel>
 
@@ -645,6 +613,17 @@ export default function ContentDrawer() {
                           </div>
                         }
                       />
+                    )}
+
+                    {/* Conditional rendering for the image when all attractions are false */}
+                    {areAllAttractionsFalse() && (
+                      <p>
+                        <img
+                          src={'/images/no_Attractions_Visited.jpg'}
+                          alt="All Attractions are False"
+                          style={{ maxWidth: '500px', height: '500px' }}
+                        />
+                      </p>
                     )}
                   </TabPanel>
                 </TabPanels>
