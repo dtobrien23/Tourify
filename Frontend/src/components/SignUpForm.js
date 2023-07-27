@@ -413,7 +413,8 @@ try {
               duration: 3000,
               isClosable: true,
             });
-          } else {
+          } 
+          if (response.data.code === 10006) {
             setUserLoggedIn(false);
             setIsLoggedIn(false);
             onToggle(false);
