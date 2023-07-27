@@ -88,7 +88,7 @@ export default function DestinationInput({}) {
           >
             {apiAttractions.map(attraction => {
               return (
-                <>
+                <React.Fragment key={attraction.name}>
                   <MenuItem
                     onClick={() => handleAttractionSelect(attraction)}
                     h={'32px'}
@@ -104,7 +104,7 @@ export default function DestinationInput({}) {
                     <span>{attraction.name}</span>
                   </MenuItem>
                   <MenuDivider m={0} p={0} />
-                </>
+                </React.Fragment>
               );
             })}
           </MenuList>

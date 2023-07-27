@@ -17,11 +17,6 @@ export default function FiltersNavBar({
       overflowX: 'hidden',
       overflowY: 'hidden',
       scrollbarWidth: 'none',
-      '-ms-overflow-style': 'none' /* Hide scrollbar on Edge */,
-      'scrollbar-width': 'none' /* Hide scrollbar on Firefox */,
-      '::-webkit-scrollbar': {
-        display: 'none' /* Hide scrollbar on Chrome and Safari */,
-      },
       WebkitOverflowScrolling: 'touch',
       msOverflowStyle: 'none',
       scrollBehavior: 'smooth',
@@ -36,9 +31,6 @@ export default function FiltersNavBar({
       zIndex: 0,
       width: 'calc(100% + 1px)',
       scrollbarWidth: 'none',
-      '&::-webkit-scrollbar': {
-        display: 'none',
-      },
     },
   };
 
@@ -119,73 +111,75 @@ export default function FiltersNavBar({
         <AiOutlineLeft size="20" color="orangered" />
       </button>
       {attractionTypes.map(attractionType => (
-        <Tooltip label={attractionType.label} placement="bottom">
-          <button
-            key={attractionType.value}
-            onClick={() => {
-              if (attractionType.value === 'ALL') {
-                if (selectedFilters.includes('ALL')) {
-                  setSelectedFilters([]); // Unselect all filters
+        <React.Fragment key={attractionType.value}>
+          <Tooltip label={attractionType.label} placement="bottom">
+            <button
+              key={attractionType.value}
+              onClick={() => {
+                if (attractionType.value === 'ALL') {
+                  if (selectedFilters.includes('ALL')) {
+                    setSelectedFilters([]); // Unselect all filters
+                  } else {
+                    setSelectedFilters(['ALL']); // Select 'All' filter
+                  }
                 } else {
-                  setSelectedFilters(['ALL']); // Select 'All' filter
+                  if (selectedFilters.includes('ALL')) {
+                    setSelectedFilters([attractionType.value]); // Select the clicked filter only
+                  } else if (selectedFilters.includes(attractionType.value)) {
+                    setSelectedFilters(
+                      selectedFilters.filter(
+                        filter => filter !== attractionType.value
+                      )
+                    ); // Unselect the clicked filter
+                  } else {
+                    setSelectedFilters([
+                      ...selectedFilters,
+                      attractionType.value,
+                    ]); // Add the clicked filter
+                  }
                 }
-              } else {
-                if (selectedFilters.includes('ALL')) {
-                  setSelectedFilters([attractionType.value]); // Select the clicked filter only
-                } else if (selectedFilters.includes(attractionType.value)) {
-                  setSelectedFilters(
-                    selectedFilters.filter(
-                      filter => filter !== attractionType.value
-                    )
-                  ); // Unselect the clicked filter
-                } else {
-                  setSelectedFilters([
-                    ...selectedFilters,
-                    attractionType.value,
-                  ]); // Add the clicked filter
-                }
-              }
-            }}
-            overflow="visible"
-            style={{
-              width: '50px',
-              flexShrink: 0,
-              marginTop: '4px',
-              marginBottom: '6px',
-              marginRight: '10px',
-              padding: '7px',
-              boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
-              border: 'solid 2px white',
-              borderRadius: '50%',
-              background: selectedFilters.includes(attractionType.value)
-                ? 'orangered'
-                : 'white',
-              color: selectedFilters.includes(attractionType.value)
-                ? 'white'
-                : 'black',
-            }}
-          >
-            {selectedFilters.includes(attractionType.value) ? (
-              <img
-                src={
-                  '/images/attractions-icons/active/' +
-                  attractionType.value +
-                  '.svg'
-                }
-                alt={attractionType.label}
-              />
-            ) : (
-              <img
-                src={
-                  '/images/attractions-icons/inactive/' +
-                  attractionType.value +
-                  '.svg'
-                }
-                alt={attractionType.label}
-              />
-            )}
-          </button>
-        </Tooltip>
+              }}
+              overflow="visible"
+              style={{
+                width: '50px',
+                flexShrink: 0,
+                marginTop: '4px',
+                marginBottom: '6px',
+                marginRight: '10px',
+                padding: '7px',
+                boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
+                border: 'solid 2px white',
+                borderRadius: '50%',
+                background: selectedFilters.includes(attractionType.value)
+                  ? 'orangered'
+                  : 'white',
+                color: selectedFilters.includes(attractionType.value)
+                  ? 'white'
+                  : 'black',
+              }}
+            >
+              {selectedFilters.includes(attractionType.value) ? (
+                <img
+                  src={
+                    '/images/attractions-icons/active/' +
+                    attractionType.value +
+                    '.svg'
+                  }
+                  alt={attractionType.label}
+                />
+              ) : (
+                <img
+                  src={
+                    '/images/attractions-icons/inactive/' +
+                    attractionType.value +
+                    '.svg'
+                  }
+                  alt={attractionType.label}
+                />
+              )}
+            </button>
+          </Tooltip>
+        </React.Fragment>
       ))}
       <button
         onClick={scrollRight}

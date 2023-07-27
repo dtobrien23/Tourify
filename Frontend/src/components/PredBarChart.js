@@ -1,4 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
+import {
+  CircularProgress,
+  CircularProgressLabel,
+  Flex,
+} from '@chakra-ui/react';
 import 'chart.js/auto';
 import { Bar } from 'react-chartjs-2';
 import { APIContext } from './APIContext';
@@ -28,7 +33,9 @@ export default function PredBarChart() {
       {chartData !== null ? (
         <Bar data={chartData} options={options} />
       ) : (
-        <p>loading...</p>
+        <Flex height="100%" alignItems="center" justifyContent="center">
+          <CircularProgress isIndeterminate color="orange.400" size="100px" />
+        </Flex>
       )}
     </div>
   );

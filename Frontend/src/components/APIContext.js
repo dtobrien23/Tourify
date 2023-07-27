@@ -16,7 +16,6 @@ const APIContextProvider = ({ children }) => {
   const [day2BusynessPred, setDay2BusynessPred] = useState(null);
   const [day3BusynessPred, setDay3BusynessPred] = useState(null);
   const [day4BusynessPred, setDay4BusynessPred] = useState(null);
-  const [attractionID, setAttractionID] = useState(null);
   const [apiLoaded, setApiLoaded] = useState(false);
   const [globalUserInfo, setGlobalUserInfo] = useState();
   const [globalCredential, setGlobalCredential] = useState();
@@ -28,6 +27,7 @@ const APIContextProvider = ({ children }) => {
   const [updateClick, setUpdateClick] = useState(0);
   const [chartVisible, setChartVisible] = useState(false);
   const [chartData, setChartData] = useState(null);
+  const [activeChart, setActiveChart] = useState(null); // for only showing the chart on the correct attraction
 
   const { mapCenter } = useContext(MapContext);
 
@@ -35,10 +35,7 @@ const APIContextProvider = ({ children }) => {
     const fetchAttractionData = async () => {
       try {
         const response = await fetch(
-<<<<<<< HEAD
           // 'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
-=======
->>>>>>> bug_fixes
           'http://localhost:8001/api/attraction/getAllAttraction'
         );
         const data = await response.json(); //long/lat data
@@ -90,10 +87,7 @@ const APIContextProvider = ({ children }) => {
             'these are the params for the model'
           );
           const response = await fetch(
-<<<<<<< HEAD
             // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
-=======
->>>>>>> bug_fixes
             `http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
           );
           const data = await response.json();
@@ -184,47 +178,30 @@ const APIContextProvider = ({ children }) => {
 
   const fetchBusynessPredictions = async (attractionID, params) => {
     if (params && attractionID) {
+      if (chartData) {
+        setChartData(null);
+      }
       console.log(params, 'THESE ARE THE MODEL PARAMS');
       setChartVisible(true);
+      setActiveChart(attractionID);
       console.log(attractionID);
       console.log(params[0].temperature);
       console.log(params[0].rain);
       try {
-        const response1 = await fetch(
-<<<<<<< HEAD
+        const response = await fetch(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
-=======
->>>>>>> bug_fixes
           `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
         );
-        // const response2 = await fetch(
-        //   `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day2Params[0].temperature}&precipitation=${day2Params[0].rain}`
-        // );
-        // const response3 = await fetch(
-        //   `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day3Params[0].temperature}&precipitation=${day3Params[0].rain}`
-        // );
-        // const response4 = await fetch(
-        //   `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${day4Params[0].temperature}&precipitation=${day4Params[0].rain}`
-        // );
-        const data1 = await response1.json();
-        // const data2 = await response2.json();
-        // const data3 = await response3.json();
-        // const data4 = await response4.json();
-        console.log(
-          data1,
-          // data2,
-          // data3,
-          // data4,
-          'THIS IS THE FORECAST PREDICTIONS'
-        );
+        const data = await response.json();
+        console.log(data, 'THIS IS THE FORECAST PREDICTIONS');
         setChartData({
-          labels: data1.data.attractionPredictionDetailVOList.map(
+          labels: data.data.attractionPredictionDetailVOList.map(
             hour => hour.hour
           ),
           datasets: [
             {
               label: 'Busyness Rate',
-              data: data1.data.attractionPredictionDetailVOList.map(
+              data: data.data.attractionPredictionDetailVOList.map(
                 hour => hour.businessRate
               ),
               backgroundColor: 'rgba(255, 165, 0, 0.2)',
@@ -236,34 +213,13 @@ const APIContextProvider = ({ children }) => {
         // setDay1BusynessPred(data1.data.attractionPredictionDetailVOList);
         setBusynessPred({
           id: attractionID,
-          busynessPreds: data1.data.attractionPredictionDetailVOList,
+          busynessPreds: data.data.attractionPredictionDetailVOList,
         });
-        // setDay2BusynessPred(data2.data.attractionPredictionDetailVOList);
-        // setDay3BusynessPred(data3.data.attractionPredictionDetailVOList);
-        // setDay4BusynessPred(data4.data.attractionPredictionDetailVOList);
       } catch (error) {
         console.error('Error fetching weather data:', error);
       }
     }
   };
-
-  // useEffect(() => {
-  //   if (day1BusynessPred !== null) {
-  //     //   setChartData({
-  //     //     labels: day1BusynessPred.map(hour => hour.hour),
-  //     //     datasets: [
-  //     //       {
-  //     //         label: 'Busyness Rate',
-  //     //         data: day1BusynessPred.map(hour => hour.businessRate),
-  //     //         backgroundColor: 'rgba(75, 192, 192, 0.2)',
-  //     //         borderColor: 'rgba(75, 192, 192, 1)',
-  //     //         borderWidth: 1,
-  //     //       },
-  //     //     ],
-  //     //   });
-  //     console.log('well???');
-  //   }
-  // }, [day1BusynessPred]);
 
   return (
     <APIContext.Provider
@@ -298,6 +254,8 @@ const APIContextProvider = ({ children }) => {
         chartVisible,
         chartData,
         setChartData,
+        activeChart,
+        setChartVisible,
       }}
     >
       {children}

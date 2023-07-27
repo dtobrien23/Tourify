@@ -72,10 +72,7 @@ export default function ContentDrawer() {
     });
 
   const handleCheckIn = async attractionID => {
-<<<<<<< HEAD
     // const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
-=======
->>>>>>> bug_fixes
     const apiEndpoint = 'http://localhost:8001/api/user/update';
     const cachedUserCredential = localStorage.getItem('userCredential');
 
@@ -87,7 +84,7 @@ export default function ContentDrawer() {
       attraction_id: attractionID,
       lat: '40.7484405', //hardcoded for testing replace with geolocation variable
       lng: '-73.9856644', //hardcoded for testing reaplace with geolocation variable
-    }; 
+    };
 
     axios
       .post(apiEndpoint, requestBody)
@@ -470,10 +467,6 @@ export default function ContentDrawer() {
                     ) : (
                       <p>Loading attractions to visit...</p>
                     )}
-<<<<<<< HEAD
-=======
-
->>>>>>> bug_fixes
                   </TabPanel>
 
                   {/* VISITED ATTRACTIONS */}
@@ -621,10 +614,6 @@ export default function ContentDrawer() {
                         }
                       />
                     )}
-<<<<<<< HEAD
-
-=======
->>>>>>> bug_fixes
                     {/* Conditional rendering for the image when all attractions are false */}
                     {areAllAttractionsFalse() && (
                       <p>

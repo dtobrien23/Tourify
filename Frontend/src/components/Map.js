@@ -13,7 +13,7 @@ import { MapContext } from './MapContext';
 import ContentDrawer from './ContentDrawer.js';
 
 export default function Map() {
-  const { apiAttractions } = useContext(APIContext);
+  const { apiAttractions, setChartVisible } = useContext(APIContext);
   const {
     map,
     setMap,
@@ -66,6 +66,7 @@ export default function Map() {
   // close the drawer when state goes to false
   const handleClose = () => {
     setMarkerState(false);
+    setChartVisible(false);
   };
 
   const recommendClose = () => {

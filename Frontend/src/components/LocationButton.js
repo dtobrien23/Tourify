@@ -13,21 +13,21 @@ export default function LocationButton({ getPosition }) {
   };
 
   return (
-    <Tooltip label='Set Geolocation' placement="bottom">
-    <Button
-      size="auto"
-      mr="10px"
-      onClick={getPosition}
-      style={{ backgroundColor: 'white', borderRadius: '20px' }}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {isHovered ? (
-        <img src="/images/location-hover.png" alt="location" />
-      ) : (
-        <img src="/images/location-not-hover.png" alt="location" />
-      )}
-    </Button>
+    <Tooltip label="Set Geolocation" placement="bottom">
+      <Button
+        size="auto"
+        mr="10px"
+        onClick={getPosition}
+        style={{ backgroundColor: 'white', borderRadius: '20px' }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {isHovered ? (
+          <img src="/images/location-hover.png" alt="location" />
+        ) : (
+          <img src="/images/location-not-hover.png" alt="location" />
+        )}
+      </Button>
     </Tooltip>
   );
 }

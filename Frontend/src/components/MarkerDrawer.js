@@ -14,7 +14,13 @@ import {
   Box,
   Button,
   Flex,
+  Tab,
+  Tabs,
+  TabList,
+  TabPanel,
+  TabPanels,
 } from '@chakra-ui/react';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 import PredBarChart from './PredBarChart';
@@ -31,6 +37,7 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
     day4Params,
     chartVisible,
     busynessPred,
+    activeChart,
   } = useContext(APIContext);
   const { attractionsWithBusyness } = useContext(MapContext);
 
@@ -75,135 +82,170 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
               alt={markerObject.name.name}
             />
             <br></br>
-            {attractionsWithBusyness.map(attraction => {
-              if (attraction.name === markerObject.name.name) {
-                return (
-                  <div>
-                    <p fontWeight="bold">Address</p>
-                    <p>{attraction.full_address}</p>
-                    <br></br>
-                    <Alert
-                      width="fit-content"
-                      status="info"
-                      colorScheme={
-                        attraction.businessRate < 35
-                          ? 'green'
-                          : 35 < attraction.businessRate &&
-                            attraction.businessRate < 70
-                          ? 'yellow'
-                          : 'red'
-                      }
-                      borderRadius={20}
-                      mt={5}
-                    >
-                      <AlertIcon />
-                      <Box>
-                        <AlertTitle>
-                          {attraction.businessRate < 35
-                            ? 'Quiet'
-                            : 35 < attraction.businessRate &&
-                              attraction.businessRate < 70
-                            ? 'Not Too Busy'
-                            : 'Busy'}
-                        </AlertTitle>
-                        <AlertDescription>
-                          {/* {attraction.businessRate < 35
-                          ? 'This attraction is currently not busy'
-                          : 35 < attraction.businessRate &&
-                            attraction.businessRate < 70
-                          ? 'This attraction is neither quiet nor busy'
-                          : 'This attraction is currently quiet.'} */}
+            <Tabs>
+              <TabList width="100%">
+                <Tab width="50%" color="orangered">
+                  Info
+                </Tab>
+                <Tab width="50%" color="orangered">
+                  Busyness Prediction
+                </Tab>
+              </TabList>
 
-                          <p>Busyness Index: {attraction.businessRate}</p>
-                        </AlertDescription>
-                      </Box>
-                    </Alert>
-                    <br />
-                    {busynessPred &&
-                      chartVisible &&
-                      attraction.id === busynessPred.id && (
-                        <Flex marginLeft="-10px">
-                          <PredBarChart />
+              <TabPanels>
+                <TabPanel>
+                  {attractionsWithBusyness.map(attraction => {
+                    if (attraction.name === markerObject.name.name) {
+                      return (
+                        <div>
+                          <Flex alignItems="center">
+                            <FaMapMarkerAlt />
+                            {attraction.full_address.replace(
+                              /, United States$/,
+                              '' | /, USA$/,
+                              '' | / United States$/,
+                              '' | /United States$/,
+                              ''
+                            )}
+                          </Flex>
+                          <br></br>
+                          <Alert
+                            width="fit-content"
+                            status="info"
+                            colorScheme={
+                              attraction.businessRate < 35
+                                ? 'green'
+                                : 35 < attraction.businessRate &&
+                                  attraction.businessRate < 70
+                                ? 'yellow'
+                                : 'red'
+                            }
+                            borderRadius={20}
+                            mt={5}
+                          >
+                            <AlertIcon />
+
+                            <AlertTitle>
+                              {attraction.businessRate < 35
+                                ? 'Quiet'
+                                : 35 < attraction.businessRate &&
+                                  attraction.businessRate < 70
+                                ? 'Not Too Busy'
+                                : 'Busy'}
+                            </AlertTitle>
+                            <AlertDescription>
+                              <p>Busyness Index: {attraction.businessRate}</p>
+                            </AlertDescription>
+                          </Alert>
+                          <p>
+                            Website:{' '}
+                            <a
+                              href={attraction.link}
+                              target="_blank"
+                              style={{ color: 'blue' }}
+                            >
+                              {attraction.link}
+                            </a>
+                          </p>
+                          <br></br>
+                          <p fontWeight="bold">Opening Hours:</p>
+                          <p>
+                            Monday: {attraction.openHour.mondayOpen} -{' '}
+                            {attraction.openHour.mondayClose}
+                          </p>
+                          <p>
+                            Tuesday: {attraction.openHour.tuesdayOpen} -{' '}
+                            {attraction.openHour.tuesdayClose}
+                          </p>
+                          <p>
+                            Wednsday: {attraction.openHour.wednesdayOpen} -{' '}
+                            {attraction.openHour.wednesdayClose}
+                          </p>
+                          <p>
+                            Thursday: {attraction.openHour.thursdayOpen} -{' '}
+                            {attraction.openHour.thursdayClose}
+                          </p>
+                          <p>
+                            Friday: {attraction.openHour.fridayOpen} -{' '}
+                            {attraction.openHour.fridayClose}
+                          </p>
+                          <p>
+                            Saturday: {attraction.openHour.saturdayOpen} -{' '}
+                            {attraction.openHour.saturdayClose}
+                          </p>
+                          <p>
+                            Sunday: {attraction.openHour.sundaydayOpen} -{' '}
+                            {attraction.openHour.sundaydayClose}
+                          </p>
+                          <br />
+                          Price: $ {attraction.price}
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
+                </TabPanel>
+                <TabPanel>
+                  {attractionsWithBusyness.map(attraction => {
+                    if (attraction.name === markerObject.name.name) {
+                      return (
+                        <Flex flexDirection="column">
+                          <Flex w="100%">
+                            <Button
+                              onClick={() => {
+                                fetchBusynessPredictions(
+                                  attraction.id,
+                                  day1Params
+                                );
+                              }}
+                            >
+                              Day 1
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                fetchBusynessPredictions(
+                                  attraction.id,
+                                  day2Params
+                                );
+                              }}
+                            >
+                              Day 2
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                fetchBusynessPredictions(
+                                  attraction.id,
+                                  day3Params
+                                );
+                              }}
+                            >
+                              Day 3
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                fetchBusynessPredictions(
+                                  attraction.id,
+                                  day4Params
+                                );
+                              }}
+                            >
+                              Day 4
+                            </Button>
+                          </Flex>
+
+                          {chartVisible && attraction.id === activeChart && (
+                            <Flex marginLeft="-10px">
+                              <PredBarChart />
+                            </Flex>
+                          )}
                         </Flex>
-                      )}
-                    <Flex w="100%">
-                      <Button
-                        onClick={() => {
-                          fetchBusynessPredictions(attraction.id, day1Params);
-                        }}
-                      >
-                        Day 1
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          fetchBusynessPredictions(attraction.id, day2Params);
-                        }}
-                      >
-                        Day 2
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          fetchBusynessPredictions(attraction.id, day3Params);
-                        }}
-                      >
-                        Day 3
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          fetchBusynessPredictions(attraction.id, day4Params);
-                        }}
-                      >
-                        Day 4
-                      </Button>
-                    </Flex>
-                    <p>
-                      Website:{' '}
-                      <a
-                        href={attraction.link}
-                        target="_blank"
-                        style={{ color: 'blue' }}
-                      >
-                        {attraction.link}
-                      </a>
-                    </p>
-                    <br></br>
-                    <p fontWeight="bold">Opening Hours:</p>
-                    <p>
-                      Monday: {attraction.openHour.mondayOpen} -{' '}
-                      {attraction.openHour.mondayClose}
-                    </p>
-                    <p>
-                      Tuesday: {attraction.openHour.tuesdayOpen} -{' '}
-                      {attraction.openHour.tuesdayClose}
-                    </p>
-                    <p>
-                      Wednsday: {attraction.openHour.wednesdayOpen} -{' '}
-                      {attraction.openHour.wednesdayClose}
-                    </p>
-                    <p>
-                      Thursday: {attraction.openHour.thursdayOpen} -{' '}
-                      {attraction.openHour.thursdayClose}
-                    </p>
-                    <p>
-                      Friday: {attraction.openHour.fridayOpen} -{' '}
-                      {attraction.openHour.fridayClose}
-                    </p>
-                    <p>
-                      Saturday: {attraction.openHour.saturdayOpen} -{' '}
-                      {attraction.openHour.saturdayClose}
-                    </p>
-                    <p>
-                      Sunday: {attraction.openHour.sundaydayOpen} -{' '}
-                      {attraction.openHour.sundaydayClose}
-                    </p>
-                    <br />
-                    Price: $ {attraction.price}
-                    <br />
-                  </div>
-                );
-              }
-              return null;
-            })}
+                      );
+                    }
+                    return null;
+                  })}
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </DrawerBody>
 
           <DrawerFooter></DrawerFooter>
