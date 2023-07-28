@@ -28,6 +28,7 @@ const APIContextProvider = ({ children }) => {
   const [updateClick, setUpdateClick] = useState(0);
   const [chartVisible, setChartVisible] = useState(false);
   const [chartData, setChartData] = useState(null);
+  const [nftPrompt, setNftPrompt] = useState(null);
 
   const { mapCenter } = useContext(MapContext);
 
@@ -286,6 +287,7 @@ const APIContextProvider = ({ children }) => {
         chartVisible,
         chartData,
         setChartData,
+        nftPrompt,setNftPrompt
       }}
     >
       {children}
