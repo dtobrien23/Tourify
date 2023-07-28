@@ -184,7 +184,7 @@ public class AttractionService {
         // Get the current date and time in New York time zone
         LocalDateTime localDateTimeInNewYork = LocalDateTime.now(newYorkZoneId);
         predictionDays--;
-        localDateTimeInNewYork = localDateTimeInNewYork.plusDays(1);
+        localDateTimeInNewYork = localDateTimeInNewYork.plusDays(attractionOnePredictionDTO.getPredictionDays());
         // Prepare lists to hold the month, day of the week, and hour values
         List<Integer> months = new ArrayList<>();
         List<Integer> daysOfWeek = new ArrayList<>();
