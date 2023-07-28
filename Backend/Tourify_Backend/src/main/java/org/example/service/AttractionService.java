@@ -157,6 +157,11 @@ public class AttractionService {
 
     // The one attraction's next 24 hours prediction
     public AttractionOnePredictionVO getOnePrediction(AttractionOnePredictionDTO attractionOnePredictionDTO) throws BusinessException{
+        // check the DTO's input number
+        long predictionDays = attractionOnePredictionDTO.getPredictionDays();
+        if(predictionDays<=0 || predictionDays>=8){
+            throw new BusinessException(ResponseCode.PARAM_ATTRACTION_EMPTY_ERROR);
+        }
         // get the attraction from the attraction_id
         AttractionDO attractionDO = attractionRepository.findAttractionById(attractionOnePredictionDTO.getAttraction_id());
         if (attractionDO.getId() == null) {
@@ -166,6 +171,7 @@ public class AttractionService {
         attractionOnePredictionVO.setAttraction_id(attractionOnePredictionDTO.getAttraction_id());
         attractionOnePredictionVO.setAttraction_name(attractionDO.getName());
         attractionOnePredictionVO.setName_alias(attractionDO.getName_alias());
+        attractionOnePredictionVO.setPredictionDays(attractionOnePredictionDTO.getPredictionDays());
         // store the machine prediction into the attractionPredictionDetailVOList
         List<AttractionPredictionDetailVO> attractionPredictionDetailVOList = new LinkedList<>();
 
@@ -173,6 +179,8 @@ public class AttractionService {
         ZoneId newYorkZoneId = ZoneId.of("America/New_York");
         // Get the current date and time in New York time zone
         LocalDateTime localDateTimeInNewYork = LocalDateTime.now(newYorkZoneId);
+        predictionDays--;
+        localDateTimeInNewYork = localDateTimeInNewYork.plusDays(1);
         // Prepare lists to hold the month, day of the week, and hour values
         List<Integer> months = new ArrayList<>();
         List<Integer> daysOfWeek = new ArrayList<>();

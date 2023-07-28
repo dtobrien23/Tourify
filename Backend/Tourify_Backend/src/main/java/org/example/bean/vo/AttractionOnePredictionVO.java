@@ -22,6 +22,7 @@ public class AttractionOnePredictionVO implements Serializable {
     private String attraction_id;
     private String attraction_name;
     private String name_alias; // alias contains the underscore
+    private Long predictionDays;
     private List<AttractionPredictionDetailVO> attractionPredictionDetailVOList;
 
 }
