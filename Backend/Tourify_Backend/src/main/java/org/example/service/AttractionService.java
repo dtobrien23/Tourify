@@ -183,8 +183,11 @@ public class AttractionService {
         ZoneId newYorkZoneId = ZoneId.of("America/New_York");
         // Get the current date and time in New York time zone
         LocalDateTime localDateTimeInNewYork = LocalDateTime.now(newYorkZoneId);
+        System.out.println("localDateTimeInNewYork: " + localDateTimeInNewYork);
         predictionDays--;
-        localDateTimeInNewYork = localDateTimeInNewYork.plusDays(attractionOnePredictionDTO.getPredictionDays());
+        localDateTimeInNewYork = localDateTimeInNewYork.plusDays(predictionDays);
+        System.out.println("--------------------------------------Starting a new prediction----------------------------------");
+        System.out.println("localDateTimeInNewYork: " + localDateTimeInNewYork);
         // Prepare lists to hold the month, day of the week, and hour values
         List<Integer> months = new ArrayList<>();
         List<Integer> daysOfWeek = new ArrayList<>();
@@ -195,8 +198,12 @@ public class AttractionService {
             months.add(futureDateTime.getMonthValue());
             daysOfWeek.add(futureDateTime.getDayOfWeek().getValue());
             hours.add(futureDateTime.getHour());
-        }
+            System.out.println("i: " + i + "   futureDateTime" + futureDateTime + "   localDateTimeInNewYork"+ localDateTimeInNewYork);
 
+        }
+        System.out.println("Months: " + months);
+        System.out.println("Days of Week: " + daysOfWeek);
+        System.out.println("Hours: " + hours);
         // Use monthsList to loop though to insert the attractionPredictionDetailVO(hour and business) into List (attractionPredictionDetailVOList)
         for (int i = 0; i < 24; i++) {
             // set the response VO
@@ -221,7 +228,7 @@ public class AttractionService {
             System.out.println("2.Preparing to predict. months:"+months.get(i)+" daysOfWeek:"+ daysOfWeek.get(i)+" hour:" + hours.get(i));
             attractionPredictionDetailVO.setBusinessRate(getModelPythonPrediction(attractionPredictionDTO, months.get(i), daysOfWeek.get(i), hours.get(i), predictionInternalResult.getTaxiLocation(), predictionInternalResult.getPassengersNum()));
             attractionPredictionDetailVOList.add(attractionPredictionDetailVO);
-            System.out.println("----------------------------------Finished one hour of prediction----------------------------------");
+            System.out.println("--------Finished " + i +  " hour of prediction");
         }
         attractionOnePredictionVO.setAttractionPredictionDetailVOList(attractionPredictionDetailVOList);
         return attractionOnePredictionVO;
