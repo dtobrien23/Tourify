@@ -87,8 +87,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.7223376', //hardcoded for testing replace with geolocation variable
-      lng: '-73.9928905', //hardcoded for testing reaplace with geolocation variable
+      lat: '40.7593495', //hardcoded for testing replace with geolocation variable
+      lng: '-73.9794087', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -214,10 +214,10 @@ export default function ContentDrawer() {
       setImageBlob(url);
 
       // Upload the art to IPFS and get the imageURL
-      const imageURL = await uploadArtToIpfs(prompt, file);
+      const imageURL = await uploadArtToIpfs(PROMPT_TEST, generatedFile);
 
       // Call mintNft with the prompt and imageURL
-      await mintNft(prompt, imageURL);
+      await mintNft(PROMPT_TEST, imageURL);
     } catch (err) {
       console.log(err);
     }
@@ -231,15 +231,15 @@ export default function ContentDrawer() {
   };
 
   // Update uploadArtToIpfs function to accept the file and set it
-  const uploadArtToIpfs = async (prompt, file) => {
+  const uploadArtToIpfs = async (PROMPT_TEST, file) => {
     try {
       const nftstorage = new NFTStorage({
         token: process.env.REACT_APP_NFT_STORAGE,
       });
 
       const store = await nftstorage.store({
-        name: `Badge - ${prompt}`,
-        description: `You got the ${prompt} Badge!`,
+        name: `Badge - ${PROMPT_TEST}`,
+        description: `You got the ${PROMPT_TEST} Badge!`,
         image: file,
       });
       console.log(store, 'this is the store');
