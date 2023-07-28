@@ -27,5 +27,7 @@ public interface UserRepository {
 
     void deleteUser(String userId);
 
+    Boolean updateUserNft(String userId, String nftLink);
+
 
 }
