@@ -25,6 +25,7 @@ import java.time.temporal.ChronoField;
 
 import org.example.repository.AttractionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -49,6 +50,9 @@ public class AttractionService {
     @Autowired AttractionRepository attractionRepository;
     @Autowired ResourceLoader resourceLoader;
 
+    @Value("${spring.custom.docker-flask-ip}")
+    private String FLASK_IP;
+
 
     // convert the json into a map object
     private Map<String, Map<String, String>> hashMap;
@@ -56,7 +60,7 @@ public class AttractionService {
         ObjectMapper mapper = new ObjectMapper();
         try {
             // load the JSON
-            Resource resource = resourceLoader.getResource("classpath:passengers_average_v1.json");
+            Resource resource = resourceLoader.getResource("classpath:passengers_average_v2.json");
             InputStream inputStream = resource.getInputStream();
             List<Map<String, String>> list = mapper.readValue(inputStream, new TypeReference<List<Map<String, String>>>(){});
             hashMap = new HashMap<>();
@@ -157,6 +161,11 @@ public class AttractionService {
 
     // The one attraction's next 24 hours prediction
     public AttractionOnePredictionVO getOnePrediction(AttractionOnePredictionDTO attractionOnePredictionDTO) throws BusinessException{
+        // check the DTO's input number
+        long predictionDays = attractionOnePredictionDTO.getPredictionDays();
+        if(predictionDays<=0 || predictionDays>=8){
+            throw new BusinessException(ResponseCode.PARAM_ATTRACTION_EMPTY_ERROR);
+        }
         // get the attraction from the attraction_id
         AttractionDO attractionDO = attractionRepository.findAttractionById(attractionOnePredictionDTO.getAttraction_id());
         if (attractionDO.getId() == null) {
@@ -166,6 +175,7 @@ public class AttractionService {
         attractionOnePredictionVO.setAttraction_id(attractionOnePredictionDTO.getAttraction_id());
         attractionOnePredictionVO.setAttraction_name(attractionDO.getName());
         attractionOnePredictionVO.setName_alias(attractionDO.getName_alias());
+        attractionOnePredictionVO.setPredictionDays(attractionOnePredictionDTO.getPredictionDays());
         // store the machine prediction into the attractionPredictionDetailVOList
         List<AttractionPredictionDetailVO> attractionPredictionDetailVOList = new LinkedList<>();
 
@@ -173,6 +183,8 @@ public class AttractionService {
         ZoneId newYorkZoneId = ZoneId.of("America/New_York");
         // Get the current date and time in New York time zone
         LocalDateTime localDateTimeInNewYork = LocalDateTime.now(newYorkZoneId);
+        predictionDays--;
+        localDateTimeInNewYork = localDateTimeInNewYork.plusDays(attractionOnePredictionDTO.getPredictionDays());
         // Prepare lists to hold the month, day of the week, and hour values
         List<Integer> months = new ArrayList<>();
         List<Integer> daysOfWeek = new ArrayList<>();
@@ -295,8 +307,8 @@ public class AttractionService {
     Integer getModelPythonPrediction(AttractionPredictionDTO attractionPredictionDTO, int month, int dayOfWeek, int hour, int taxiLocation, int passengersNum) throws BusinessException{
         System.out.println("3.Starting to invoke prediction on python service -------------");
 
-        WebClient webClient = WebClient.create("http://127.0.0.1:12345");  // local testing address
-//        WebClient webClient = WebClient.create("http://172.18.0.3:5000");  //Docker address
+        System.out.println(FLASK_IP);
+        WebClient webClient = WebClient.create(FLASK_IP);
 
 
         Map<String, Object> map = new HashMap<>();

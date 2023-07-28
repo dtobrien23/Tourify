@@ -22,6 +22,10 @@ public class AttractionOnePredictionDTO {
     private String attraction_id;
 
     @NotNull
+    @Schema(description = "the attraction's id")
+    private Long predictionDays;
+
+    @NotNull
     @Schema(description = "24 hours of temperature in Fahrenheit")
     private List<Float> temperatures;
 

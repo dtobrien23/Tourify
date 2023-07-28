@@ -65,10 +65,15 @@ public class WebSecurityConfig{
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "https://csi6220-2-vm1.ucd.ie/"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST","OPTIONS"));
+        //Allow all request header fields
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        //Allowed to carry credentials, if allowed to carry credentials, setAllowedOrigins may not be set to *.
+//        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+   
 }
