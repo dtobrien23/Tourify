@@ -71,6 +71,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const toastLoginError = useToast();
   const toastBadge = useToast();
   const toastNFT = useToast();
+  const toastUpdate = useToast();
+  const toastUpdateError = useToast();
 
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
@@ -106,7 +108,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (newBadgeState) {
       badgeChecker(badgeState, newBadgeState);
     }
-  }, [checkinState]);
+  }, [checkinState,badgeState, newBadgeState]);
 
 
 
@@ -128,133 +130,133 @@ export default function SignUpForm({ setIsLoggedIn }) {
           isClosable: true,
         });
         
-        setPrompt(badgeName);
-        generateArt();
-        mintNft(badgeName);
+        // setPrompt(badgeName);
+        // generateArt();
+        // mintNft(badgeName);
 
-        toastNFT({
-          title: 'NFT MINTED!',
-          description: `You've acquired the "${badgeName} NFT!".`,
-          status: 'success',
-          duration: 6000,
-          isClosable: true,
-        });
+        // toastNFT({
+        //   title: 'NFT MINTED!',
+        //   description: `You've acquired the "${badgeName} NFT!".`,
+        //   status: 'success',
+        //   duration: 6000,
+        //   isClosable: true,
+        // });
       }
     }
   };
 
 
 
-  ////////////////////////////////
-  /////                      /////
-  ////     NFT MINTING CODE  /////
-  ////                       /////
-  ////////////////////////////////
-const [prompt, setPrompt] = useState("")
-const [imageBlob, setImageBlob] = useState(null)
+//   ////////////////////////////////
+//   /////                      /////
+//   ////     NFT MINTING CODE  /////
+//   ////                       /////
+//   ////////////////////////////////
+// const [prompt, setPrompt] = useState("")
+// const [imageBlob, setImageBlob] = useState(null)
 
-const [file, setFile] = useState(null)
+// const [file, setFile] = useState(null)
 
-const generateArt = async () => {
-	try {
-		const response = await axios.post(
-			`https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5`,
-			{
-				headers: {
-					Authorization: `Bearer ${process.env.REACT_APP_HUGGING_FACE}}`,
-				},
-				method: "POST",
-				inputs: prompt,
-			},
-			{ responseType: "blob" }
-		);
-		// convert blob to a image file type
-		const file = new File([response.data], "image.png", {
-			type: "image/png",
-		});
-		// saving the file in a state
-		setFile(file);
-		const url = URL.createObjectURL(response.data);
-		// console.log(url)
-		console.log(url);
-		setImageBlob(url);
-	} catch (err) {
-		console.log(err);
-	}
-};
-
-
+// const generateArt = async () => {
+// 	try {
+// 		const response = await axios.post(
+// 			`https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5`,
+// 			{
+// 				headers: {
+// 					Authorization: `Bearer ${process.env.REACT_APP_HUGGING_FACE}}`,
+// 				},
+// 				method: "POST",
+// 				inputs: prompt,
+// 			},
+// 			{ responseType: "blob" }
+// 		);
+// 		// convert blob to a image file type
+// 		const file = new File([response.data], "image.png", {
+// 			type: "image/png",
+// 		});
+// 		// saving the file in a state
+// 		setFile(file);
+// 		const url = URL.createObjectURL(response.data);
+// 		// console.log(url)
+// 		console.log(url);
+// 		setImageBlob(url);
+// 	} catch (err) {
+// 		console.log(err);
+// 	}
+// };
 
 
-// this cleans up the url after uploading the NFT art
-const cleanupIPFS = (url) => {
-  if(url.includes("ipfs://")) {
-    return url.replace("ipfs://", "https://ipfs.io/ipfs/")
-  }
-}
 
 
-// this uploads the art to blockchain storage
-const uploadArtToIpfs = async (badgeName) => {
-  try {
-
-    const nftstorage = new NFTStorage({
-			token: process.env.REACT_APP_NFT_STORAGE,
-		})
-
-    const store = await nftstorage.store({
-      name: `Badge - ${badgeName}`,
-      description: `You got the ${badgeName} Badge!`,
-      image: file
-    })
-    console.log(store)
-    return cleanupIPFS(store.data.image.href)
+// // this cleans up the url after uploading the NFT art
+// const cleanupIPFS = (url) => {
+//   if(url.includes("ipfs://")) {
+//     return url.replace("ipfs://", "https://ipfs.io/ipfs/")
+//   }
+// }
 
 
-  } catch(err) {
-    console.log(err)
-  }
-}
+// // this uploads the art to blockchain storage
+// const uploadArtToIpfs = async (badgeName) => {
+//   try {
+
+//     const nftstorage = new NFTStorage({
+// 			token: process.env.REACT_APP_NFT_STORAGE,
+// 		})
+
+//     const store = await nftstorage.store({
+//       name: `Badge - ${badgeName}`,
+//       description: `You got the ${badgeName} Badge!`,
+//       image: file
+//     })
+//     console.log(store)
+//     return cleanupIPFS(store.data.image.href)
 
 
-// THIS MINTS THE NFTS
-const mintNft = async (badgeName) => {
-try {
-  const imageURL = await uploadArtToIpfs(badgeName);
-  console.log("URL for image ", imageURL)
+//   } catch(err) {
+//     console.log(err)
+//   }
+// }
 
-  if (!imageURL) {
-    console.log("Error uploading image to IPFS.");
-    return;
-  }
 
-  // mint as an NFT on nftport
-  const response = await axios.post(
-    `https://api.nftport.xyz/v0/mints/easy/urls`,
-    {
-      file_url: imageURL,
-      chain: "polygon",
-      name: badgeName,
-      description: `You visited The ${badgeName} Badge.`,
-      mint_to_address: "0xA649D68a977AB4d4Ab3ddd275aC3a84D03889Ee4",
-    },
-    {
-      headers: {
-        Authorization: process.env.REACT_APP_NFT_PORT,
-      }
-    }
-  );
-  const data = await response.data;
-  console.log(data);
-} catch (err) {
-  console.log(err);
-}
-};
-/////////////////////////////////
-/////       END OF         ///// 
-////     NFT MINTING CODE  /////
-////                       /////
-////////////////////////////////
+// // THIS MINTS THE NFTS
+// const mintNft = async (badgeName) => {
+// try {
+//   const imageURL = await uploadArtToIpfs(badgeName);
+//   console.log("URL for image ", imageURL)
+
+//   if (!imageURL) {
+//     console.log("Error uploading image to IPFS.");
+//     return;
+//   }
+
+//   // mint as an NFT on nftport
+//   const response = await axios.post(
+//     `https://api.nftport.xyz/v0/mints/easy/urls`,
+//     {
+//       file_url: imageURL,
+//       chain: "polygon",
+//       name: badgeName,
+//       description: `You visited The ${badgeName} Badge.`,
+//       mint_to_address: "0xA649D68a977AB4d4Ab3ddd275aC3a84D03889Ee4",
+//     },
+//     {
+//       headers: {
+//         Authorization: process.env.REACT_APP_NFT_PORT,
+//       }
+//     }
+//   );
+//   const data = await response.data;
+//   console.log(data);
+// } catch (err) {
+//   console.log(err);
+// }
+// };
+// /////////////////////////////////
+// /////       END OF         ///// 
+// ////     NFT MINTING CODE  /////
+// ////                       /////
+// ////////////////////////////////
 
 
 
@@ -294,7 +296,7 @@ try {
             //reset checkinstate to false
             setCheckinState(false);
 
-            toastLogin({
+            toastUpdate({
               title: 'Attractions Updated.',
               description: 'Your Attractions Have Been Updated.',
               status: 'success',
@@ -306,7 +308,7 @@ try {
           } else {
             //setUserLoggedIn(false);
             //setIsLoggedIn(false);
-            toastLoginError({
+            toastUpdateError({
               title: 'Update Error.',
               description: 'Error with update, please please refresh page.',
               status: 'error',
