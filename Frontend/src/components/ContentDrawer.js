@@ -46,9 +46,10 @@ export default function ContentDrawer() {
   const toastCheckIn = useToast();
   const toastNotCheckIn = useToast();
   const toastNFT = useToast();
-  const PROMPT_TEST = 'BIG YELLOW FLOWERS';
+  const PROMPT_TEST = 'MUSCULAR MAN HOLDING CHICKEN FILLET ROLL';
 
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState(null);
+  const [promptIsSet, setPromptIsSet] = useState(false);
 
   
 
@@ -87,8 +88,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.7593495', //hardcoded for testing replace with geolocation variable
-      lng: '-73.9794087', //hardcoded for testing reaplace with geolocation variable
+      lat: '40.7223376', //hardcoded for testing replace with geolocation variable
+      lng: '-73.9928905', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -101,6 +102,7 @@ export default function ContentDrawer() {
           //   // set logic that your marker has been ticked off
           setCheckinState(true);
           setPrompt(PROMPT_TEST);
+          generateArt();
           console.log(checkinState, 'checkinstate - contentdrawer');
           confettiReward();
           toastCheckIn({
@@ -110,9 +112,7 @@ export default function ContentDrawer() {
             duration: 3000,
             isClosable: true,
           });
-          // const PROMPT ='HOTDOG BADGE TEST'
           
-          generateArt();
 
           // get the updated user info from the backend
         }
@@ -179,6 +179,7 @@ export default function ContentDrawer() {
     return false;
   };
 
+
   ////////////////////////////////
   /////                      /////
   ////     NFT MINTING CODE  /////
@@ -186,7 +187,7 @@ export default function ContentDrawer() {
   ////////////////////////////////
   const [imageBlob, setImageBlob] = useState(null);
 
-  const [file, setFile] = useState(null);
+  const [fileMade, setFile] = useState(null);
 
   // Update generateArt function to include uploadArtToIpfs logic
   const generateArt = async () => {
@@ -231,7 +232,7 @@ export default function ContentDrawer() {
   };
 
   // Update uploadArtToIpfs function to accept the file and set it
-  const uploadArtToIpfs = async (PROMPT_TEST, file) => {
+  const uploadArtToIpfs = async (PROMPT_TEST, generatedFile) => {
     try {
       const nftstorage = new NFTStorage({
         token: process.env.REACT_APP_NFT_STORAGE,
@@ -240,7 +241,7 @@ export default function ContentDrawer() {
       const store = await nftstorage.store({
         name: `Badge - ${PROMPT_TEST}`,
         description: `You got the ${PROMPT_TEST} Badge!`,
-        image: file,
+        image: generatedFile,
       });
       console.log(store, 'this is the store');
       return cleanupIPFS(store.data.image.href);
@@ -303,6 +304,23 @@ export default function ContentDrawer() {
   ////     NFT MINTING CODE  /////
   ////                       /////
   //////////////////////////////
+
+
+
+// Use useEffect to set promptIsSet to true after prompt has been set
+useEffect(() => {
+  if (prompt !== null) {
+    setPromptIsSet(true);
+  }
+}, [prompt]);
+
+// Use useEffect to call generateArt() when promptIsSet is true
+useEffect(() => {
+  if (promptIsSet) {
+    generateArt();
+  }
+}, [promptIsSet]);
+
 
   return (
     <Drawer
