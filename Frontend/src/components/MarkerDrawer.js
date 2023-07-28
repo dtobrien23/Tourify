@@ -20,7 +20,7 @@ import {
   TabPanel,
   TabPanels,
 } from '@chakra-ui/react';
-import { FaMapMarkerAlt, FaGlobe, FaClock } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaGlobe, FaClock, FaDollarSign } from 'react-icons/fa';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 import PredBarChart from './PredBarChart';
@@ -175,19 +175,36 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                             </AlertDescription>
                           </Alert>
                           <Flex>
-                            <FaGlobe size="20" style={{ marginRight: '4px' }} />
-                            <p>
+                            <Flex h="100%">
+                              <FaGlobe
+                                size="20"
+                                style={{ marginRight: '4px' }}
+                              />
+                            </Flex>
+                            <Flex maxW="100%">
                               &nbsp;&nbsp;
-                              <a
-                                href={attraction.link}
-                                target="_blank"
-                                style={{ color: 'blue' }}
-                              >
-                                {attraction.link}
-                              </a>
-                            </p>
+                              <p>
+                                <a
+                                  href={attraction.link}
+                                  target="_blank"
+                                  style={{ color: 'blue' }}
+                                >
+                                  {attraction.link}
+                                </a>
+                              </p>
+                            </Flex>
                           </Flex>
-
+                          <Flex mt="10px">
+                            <Flex h="100%">
+                              <FaDollarSign
+                                size="21"
+                                style={{ marginRight: '3px' }}
+                              />
+                            </Flex>
+                            <Flex>
+                              <p>&nbsp;&nbsp;{attraction.price}</p>
+                            </Flex>
+                          </Flex>
                           <Flex mt="10px">
                             <FaClock size="21" style={{ marginRight: '3px' }} />
                             &nbsp;&nbsp;
@@ -201,15 +218,14 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                               <p>Saturday</p>
                               <p>Sunday</p>
                               <br />
-                              Price: $ {attraction.price}
                             </Flex>
                             <Flex flexDirection="column" ml="15px">
                               {days.map(day => (
                                 <p key={day}>
                                   {formatTime(
                                     attraction.openHour[`${day}Open`]
-                                  )}{' '}
-                                  -{' '}
+                                  )}
+                                  -
                                   {formatTime(
                                     attraction.openHour[`${day}Close`]
                                   )}
