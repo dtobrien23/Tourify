@@ -25,6 +25,7 @@ import java.time.temporal.ChronoField;
 
 import org.example.repository.AttractionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -48,6 +49,9 @@ public class AttractionService {
 
     @Autowired AttractionRepository attractionRepository;
     @Autowired ResourceLoader resourceLoader;
+
+    @Value("${spring.custom.docker-flask-ip}")
+    private String FLASK_IP;
 
 
     // convert the json into a map object
@@ -303,8 +307,8 @@ public class AttractionService {
     Integer getModelPythonPrediction(AttractionPredictionDTO attractionPredictionDTO, int month, int dayOfWeek, int hour, int taxiLocation, int passengersNum) throws BusinessException{
         System.out.println("3.Starting to invoke prediction on python service -------------");
 
-//        WebClient webClient = WebClient.create("http://127.0.0.1:12345");  // local testing address
-        WebClient webClient = WebClient.create("http://172.18.0.3:5000");  //Docker address
+        System.out.println(FLASK_IP);
+        WebClient webClient = WebClient.create(FLASK_IP);
 
 
         Map<String, Object> map = new HashMap<>();
