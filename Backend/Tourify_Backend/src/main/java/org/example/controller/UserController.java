@@ -100,4 +100,10 @@ public class UserController {
         return Result.success(userService.DeleteUser(idTokenString));
     }
 
+    @PostMapping("/updateNft")
+    @Operation(summary = "update user's nft wallet", description = "update user's nft wallet in database")
+    public Result userUpdateNft(@RequestParam String nftLink, @RequestParam String idTokenString) throws Exception {
+        return Result.success(userService.updateNft(nftLink, idTokenString));
+    }
+
 }

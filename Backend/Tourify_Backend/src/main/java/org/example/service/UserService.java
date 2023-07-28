@@ -67,6 +67,7 @@ public class UserService {
             userDO.setUser_icon(pictureUrl);
             userDO.setUser_name(name);
             userDO.setEmailVerified(emailVerified);
+            userDO.setNftLink("");
             userDO.setSystemRoleEnum(SystemRoleEnum.USER);
             // set the default data for the new user
             AttractionStatusDO attractionStatusDO = new AttractionStatusDO();
@@ -319,6 +320,29 @@ public class UserService {
 
     }
 
+    public UserDO updateNft(String nftLink, String idTokenString) throws Exception {
 
+        // Process the token, authenticate user etc
+        UserDO userDO = validateToken(idTokenString);
+        if (userDO == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_IDTOKEN_NOT_VAILD);
+        }
+        // get the user info in DB
+        UserDO userDOdb = findUserById(userDO.getUser_id());
+        if (userDOdb == null){
+            throw new BusinessException(ResponseCode.PARAM_USER_NOT_EXIST);
+        }
+        if (nftLink == null) {
+            throw new BusinessException(ResponseCode.PARAM_NFTLINK_NOT_EXIST);
+        }
+        // update the user's nft link
+        Boolean resultBoolean = userRepository.updateUserNft(userDO.getUser_id(), nftLink);
+        if (resultBoolean == false){
+            throw new BusinessException(ResponseCode.INTERNAL_ERROR);
+        }
+        // get the latest user info in db and return
+        UserDO userDONew = findUserById(userDO.getUser_id());
+        return userDONew;
+    }
 
 }

@@ -20,6 +20,7 @@ public enum ResponseCode {
     PARAM_USER_NOT_EXIST(10004, "param.user.not.exist"),
     PARAM_USER_ID_EMPTY(10005, "param.user.id.empty"),
     PARAM_USER_ALREADY_EXIST(10006, "param.user.already.exist"),
+    PARAM_NFTLINK_NOT_EXIST(10007, "param.ntflink.not.exist"),
     PARAM_DISTANCE_TOO_LONG(10050, "param.distance.too.long"),
     PARAM_UPDATE_BADGE_ERROR(10051, "param.update.badge.error"),
     PARAM_ATTRACTION_EMPTY_ERROR(10007, "param.attraction.empty.error"),

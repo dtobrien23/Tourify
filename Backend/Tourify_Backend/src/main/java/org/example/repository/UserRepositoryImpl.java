@@ -98,15 +98,23 @@ public class UserRepositoryImpl implements UserRepository {
         update.set("badgeDO.Top_of_the_Rock_Badge", badgeDO.getTop_of_the_Rock_Badge());
         update.set("badgeDO.Edge_Observation_Deck_Badge", badgeDO.getEdge_Observation_Deck_Badge());
 
-
-
-
-
-
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, UserDO.class);
         // updateResult.wasAcknowledged() will return true if successful. false if error
         return updateResult.wasAcknowledged();
 
+    }
+
+
+    @Override
+    public Boolean updateUserNft(String userId, String nftLink) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("user_id").is(userId));
+        Update update = new Update();
+        // set the variables needs to be updated
+        update.set("nftLink", nftLink);
+        UpdateResult updateResult = mongoTemplate.updateFirst(query, update, UserDO.class);
+        // updateResult.wasAcknowledged() will return true if successful. false if error
+        return updateResult.wasAcknowledged();
     }
 
     @Override
