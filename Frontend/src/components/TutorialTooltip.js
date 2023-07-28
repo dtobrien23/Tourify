@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { useDisclosure, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from '@chakra-ui/react';
+import {
+  useDisclosure,
+  Button,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from '@chakra-ui/react';
 
 const TutorialTooltip = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -36,9 +46,18 @@ const TutorialTooltip = () => {
           <ModalCloseButton />
           <ModalBody>
             {/* Show different content based on the current step */}
-            {currentStep === 1 && <p>Step 1: Welcome to our website! This is the first step of the tutorial.</p>}
-            {currentStep === 2 && <p>Step 2: Here's how you can use feature XYZ.</p>}
-            {currentStep === 3 && <p>Step 3: And here's another feature ABC explained.</p>}
+            {currentStep === 1 && (
+              <p>
+                Step 1: Welcome to our website! This is the first step of the
+                tutorial.
+              </p>
+            )}
+            {currentStep === 2 && (
+              <p>Step 2: Here's how you can use feature XYZ.</p>
+            )}
+            {currentStep === 3 && (
+              <p>Step 3: And here's another feature ABC explained.</p>
+            )}
             {/* Add more steps as needed */}
           </ModalBody>
           <ModalFooter>

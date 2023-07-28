@@ -9,10 +9,13 @@ import {
   Tabs,
   TabPanels,
   TabPanel,
+  Flex,
+  CircularProgress,
 } from '@chakra-ui/react';
 import BadgePanel from './components/BadgePanel';
 import './App.css';
 import { MapContext } from './components/MapContext';
+import { APIContext } from './components/APIContext';
 import ProductTour from './components/ProductTour';
 
 function App() {
@@ -27,6 +30,8 @@ function App() {
     setHasTouchScreen,
   } = useContext(MapContext);
   // const [map, setMap] = useState(null);
+
+  const { apisLoaded } = useContext(APIContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -72,19 +77,27 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      {!hasTouchScreen ? (
-        <>
-          {/* Call the ProductTour component */}
-          <ProductTour />
-          <NavBar map={map} />
-          <Map map={map} setMap={setMap} />
-        </>
+      {apisLoaded === false ? (
+        <Flex height="100vh" alignItems="center" justifyContent="center">
+          <CircularProgress isIndeterminate color="orange.400" size="100px" />
+        </Flex>
       ) : (
         <>
-          {/* Call the ProductTour component */}
-          <ProductTour />
-          <Map map={map} setMap={setMap} />
-          <NavBar map={map} />
+          {!hasTouchScreen ? (
+            <>
+              {/* Call the ProductTour component */}
+              <ProductTour />
+              <NavBar map={map} />
+              <Map map={map} setMap={setMap} />
+            </>
+          ) : (
+            <>
+              {/* Call the ProductTour component */}
+              <ProductTour />
+              <Map map={map} setMap={setMap} />
+              <NavBar map={map} />
+            </>
+          )}
         </>
       )}
     </ChakraProvider>

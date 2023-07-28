@@ -43,7 +43,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from '@chakra-ui/react';
-import { APIContext, globalCredential } from './APIContext';
+import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 
 export default function SignUpForm({ setIsLoggedIn }) {
@@ -283,8 +283,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (cachedUserCredential) {
       axios
         .post(
-          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
-          `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
+          // `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'updated user info');
@@ -338,8 +338,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (credential) {
       axios
         .post(
-          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
-          `http://localhost:8001/api/user/info?idTokenString=${credential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
+          // `http://localhost:8001/api/user/info?idTokenString=${credential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'user info');
@@ -392,29 +392,87 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const backendSignUp = credentialResponse => {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
+    setGlobalCredential(credentialResponse.credential);
 
     if (credential) {
       console.log(credential);
       axios
         .post(
-          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
-          `http://localhost:8001/api/user/register?idTokenString=${credential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
+          // `http://localhost:8001/api/user/register?idTokenString=${credential}`
         )
         .then(response => {
+          // setGlobalUserInfo(response.data);
           console.log(
             response.data,
             'this is from the backend login for sign up'
           );
 
           if (response.data.code !== 10006) {
+            backendLogin(credential);
+            // if (credential) {
+            //   axios
+            //     .post(
+            //       `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
+            //       // `http://localhost:8001/api/user/info?idTokenString=${credential}`
+            //     ) //user info, json w/ true false
+            //     .then(response => {
+            //       console.log(response.data, 'user info');
+            //       setGlobalUserInfo(response.data);
+            //       console.log(globalUserInfo, 'retrieving the cached info');
+
+            //       setBadgeState(response.data);
+
+            //       if (response.status === 200 && response.data.code !== 10004) {
+            //         setGlobalUserInfo(response.data);
+
+            //         setUserLoggedIn(true);
+            //         setIsLoggedIn(true);
+            //         localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
+
+            //         // Cache the user info
+            //         localStorage.setItem(
+            //           'userInfo',
+            //           JSON.stringify(response.data)
+            //         );
+
+            //         // Cache the user credential
+            //         localStorage.setItem('userCredential', credential);
+
+            //         toastLogin({
+            //           title: 'Login Successful.',
+            //           description: "You've Logged in Successfully.",
+            //           status: 'success',
+            //           duration: 3000,
+            //           isClosable: true,
+            //         });
+
+            //         setUserInfoFetched(true);
+            //       }
+            //       if (response.data.code === 10004) {
+            //         setUserLoggedIn(false);
+            //         setIsLoggedIn(false);
+            //         localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
+            //         toastLoginError({
+            //           title: 'Login Error.',
+            //           description:
+            //             'You need to create and account before you can login.',
+            //           status: 'error',
+            //           duration: 3000,
+            //           isClosable: true,
+            //         });
+            //       }
+            //     })
+            //     .catch(error => console.log(error));
+            // }
             console.log(response.data.code, 'this is the code!!!!');
-            setGlobalUserInfo(response.data);
+            // setGlobalUserInfo(response.data);
             setUserLoggedIn(true);
             setIsLoggedIn(true);
             localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
 
             // Cache the user info
-            localStorage.setItem('userInfo', JSON.stringify(response.data));
+            // localStorage.setItem('userInfo', JSON.stringify(response.data));
 
             setUserInfoFetched(true);
 
@@ -449,7 +507,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (globalCredential) {
       axios
         .post(
-          `http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/delete?idTokenString=${globalCredential}`
+          // `http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`
         ) //user info, json w/ true false
         .then(response => {
           // if (response.data.code === 10004) {

@@ -28,6 +28,7 @@ const APIContextProvider = ({ children }) => {
   const [chartVisible, setChartVisible] = useState(false);
   const [chartData, setChartData] = useState(null);
   const [activeChart, setActiveChart] = useState(null); // for only showing the chart on the correct attraction
+  const [apisLoaded, setAPIsLoaded] = useState(false);
 
   const { mapCenter } = useContext(MapContext);
 
@@ -35,8 +36,8 @@ const APIContextProvider = ({ children }) => {
     const fetchAttractionData = async () => {
       try {
         const response = await fetch(
-          // 'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
-          'http://localhost:8001/api/attraction/getAllAttraction'
+          'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
+          // 'http://localhost:8001/api/attraction/getAllAttraction'
         );
         const data = await response.json(); //long/lat data
         console.log(data, 'THIS CAME FROM THE BACK END');
@@ -87,8 +88,8 @@ const APIContextProvider = ({ children }) => {
             'these are the params for the model'
           );
           const response = await fetch(
-            // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
-            `http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+            `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+            // `http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
           );
           const data = await response.json();
           console.log(data, 'THIS IS THE MODEL PREDICTION');
@@ -148,6 +149,7 @@ const APIContextProvider = ({ children }) => {
 
       setDay1Params([
         {
+          day: 1,
           temperature: tempValues.slice(0, 24),
           rain: rainValues.slice(0, 24),
         },
@@ -155,6 +157,7 @@ const APIContextProvider = ({ children }) => {
 
       setDay2Params([
         {
+          day: 2,
           temperature: tempValues.slice(24, 48),
           rain: rainValues.slice(24, 48),
         },
@@ -162,6 +165,7 @@ const APIContextProvider = ({ children }) => {
 
       setDay3Params([
         {
+          day: 3,
           temperature: tempValues.slice(48, 72),
           rain: rainValues.slice(48, 72),
         },
@@ -169,6 +173,7 @@ const APIContextProvider = ({ children }) => {
 
       setDay4Params([
         {
+          day: 4,
           temperature: tempValues.slice(72, 96),
           rain: rainValues.slice(72, 96),
         },
@@ -189,7 +194,7 @@ const APIContextProvider = ({ children }) => {
       console.log(params[0].rain);
       try {
         const response = await fetch(
-          // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
+          // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
           `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
         );
         const data = await response.json();
@@ -220,6 +225,23 @@ const APIContextProvider = ({ children }) => {
       }
     }
   };
+
+  useEffect(() => {
+    if (
+      apiAttractions &&
+      currentModelTempParam &&
+      currentModelRainParam >= 0 &&
+      apiAllCurrentBusyness
+    ) {
+      console.log('WELL???');
+      setAPIsLoaded(true);
+    }
+  }, [
+    apiAttractions,
+    currentModelTempParam,
+    currentModelRainParam,
+    apiAllCurrentBusyness,
+  ]);
 
   return (
     <APIContext.Provider
@@ -256,6 +278,7 @@ const APIContextProvider = ({ children }) => {
         setChartData,
         activeChart,
         setChartVisible,
+        apisLoaded,
       }}
     >
       {children}
