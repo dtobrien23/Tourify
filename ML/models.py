@@ -22,3 +22,5 @@ models = {
     249: joblib.load('pickle_files/249.pkl'),
     261: joblib.load('pickle_files/261.pkl')
 }
+
+main_model = joblib.load('pickle_files/main_model.pkl')
