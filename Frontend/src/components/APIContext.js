@@ -36,8 +36,8 @@ const APIContextProvider = ({ children }) => {
     const fetchAttractionData = async () => {
       try {
         const response = await fetch(
-          'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
-          // 'http://localhost:8001/api/attraction/getAllAttraction'
+          // 'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
+          'http://localhost:8001/api/attraction/getAllAttraction'
         );
         const data = await response.json(); //long/lat data
         console.log(data, 'THIS CAME FROM THE BACK END');
@@ -88,8 +88,8 @@ const APIContextProvider = ({ children }) => {
             'these are the params for the model'
           );
           const response = await fetch(
-            `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
-            // `http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+            // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+            `http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
           );
           const data = await response.json();
           console.log(data, 'THIS IS THE MODEL PREDICTION');
@@ -195,7 +195,7 @@ const APIContextProvider = ({ children }) => {
       try {
         const response = await fetch(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
-          `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
+          `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
         );
         const data = await response.json();
         console.log(data, 'THIS IS THE FORECAST PREDICTIONS');

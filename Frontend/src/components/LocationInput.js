@@ -257,94 +257,56 @@ export default function LocationInput({}) {
     setButtonClicked(buttonClicked + 1);
   };
 
-  // // Use useEffect with geolocation as the dependency to handle the panning
-  // useEffect(() => {
-  //   if (geolocation && google) {
-  //     console.log(geolocation, 'THIS IS GEOOOOOOOO');
-  //     // Check if geolocation and google are available
-  //     const geocoder = new google.maps.Geocoder();
-  //     const latLng = new google.maps.LatLng(geolocation.lat, geolocation.lng);
-
-  //     geocoder
-  //       .geocode({ location: latLng })
-  //       .then(response => {
-  //         if (response.results[0]) {
-  //           if (locationMarker.length !== 0) {
-  //             for (const marker of locationMarker) {
-  //               marker.setMap(null);
-  //             }
-  //             setLocationMarker([]);
-  //           }
-  //           const formattedAddress = response.results[0].formatted_address;
-  //           setCurrentLocation(formattedAddress);
-  //           setGeolocation(geolocation);
-  //           setSourceCoords(geolocation);
-  //           map.panTo(geolocation); // Pan the map to the current location using geolocation
-  //           map.setZoom(15);
-
-  //           // eslint-disable-next-line
-  //           const marker = new google.maps.Marker({
-  //             position: geolocation, // Use the geolocation context variable here
-  //             map: map,
-  //             icon: '/images/you-are-here.png',
-  //           });
-  //           setLocationMarker([marker]);
-  //         } else {
-  //           window.alert('No results found');
-  //         }
-  //       })
-  //       .catch(e => window.alert('Geocoder failed due to: ' + e));
-  //   }
-  // }, [geolocation, google]);
-
   // when user selects their current location
   const handlePlaceSelect = () => {
-    const selectedPlace = autocompleteRef.current.getPlace();
-    let latLng;
+    if (autocompleteRef.current) {
+      const selectedPlace = autocompleteRef.current.getPlace();
+      let latLng;
 
-    try {
-      if (map) {
-        if (
-          selectedPlace &&
-          selectedPlace.geometry &&
-          selectedPlace.geometry.location
-        ) {
-          latLng = selectedPlace.geometry.location;
-          console.log(latLng, '??????????');
-        }
-
-        if (locationMarker.length !== 0) {
-          for (const marker of locationMarker) {
-            marker.setMap(null);
+      try {
+        if (map) {
+          if (
+            selectedPlace &&
+            selectedPlace.geometry &&
+            selectedPlace.geometry.location
+          ) {
+            latLng = selectedPlace.geometry.location;
+            console.log(latLng, '??????????');
           }
-          setLocationMarker([]);
-        }
 
-        setInputValue(selectedPlace.name);
-        setSourceCoords(latLng);
-        // setGeolocation(sourceCoords);
-        setGeolocation(latLng);
-        map.panTo(latLng);
-        map.setZoom(15);
-        // eslint-disable-next-line
-        const marker = new google.maps.Marker({
-          position: latLng,
-          map: map,
-          title: selectedPlace.formatted_address,
-          icon: '/images/you-are-here.png',
+          if (locationMarker.length !== 0) {
+            for (const marker of locationMarker) {
+              marker.setMap(null);
+            }
+            setLocationMarker([]);
+          }
+
+          setInputValue(selectedPlace.name);
+          setSourceCoords(latLng);
+          // setGeolocation(sourceCoords);
+          setGeolocation(latLng);
+          map.panTo(latLng);
+          map.setZoom(15);
+          // eslint-disable-next-line
+          const marker = new google.maps.Marker({
+            position: latLng,
+            map: map,
+            title: selectedPlace.formatted_address,
+            icon: '/images/you-are-here.png',
+          });
+          setLocationMarker([marker]);
+        }
+      } catch {
+        setInputValue('');
+        toastInvalidSource({
+          title: 'Source Error!',
+          description: 'Please Select your Location from the Dropdown.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
         });
-        setLocationMarker([marker]);
+        setInputValue('');
       }
-    } catch {
-      setInputValue('');
-      toastInvalidSource({
-        title: 'Source Error!',
-        description: 'Please Select your Location from the Dropdown.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-      setInputValue('');
     }
   };
 
