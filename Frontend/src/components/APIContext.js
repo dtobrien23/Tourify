@@ -29,6 +29,7 @@ const APIContextProvider = ({ children }) => {
   const [chartData, setChartData] = useState(null);
   const [activeChart, setActiveChart] = useState(null); // for only showing the chart on the correct attraction
   const [apisLoaded, setAPIsLoaded] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
 
   const { mapCenter } = useContext(MapContext);
 
@@ -233,8 +234,10 @@ const APIContextProvider = ({ children }) => {
       currentModelRainParam >= 0 &&
       apiAllCurrentBusyness
     ) {
-      console.log('WELL???');
       setAPIsLoaded(true);
+      setTimeout(() => {
+        setShowLoading(false);
+      }, 2000);
     }
   }, [
     apiAttractions,
@@ -279,6 +282,7 @@ const APIContextProvider = ({ children }) => {
         activeChart,
         setChartVisible,
         apisLoaded,
+        showLoading,
       }}
     >
       {children}

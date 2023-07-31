@@ -31,7 +31,7 @@ function App() {
   } = useContext(MapContext);
   // const [map, setMap] = useState(null);
 
-  const { apisLoaded } = useContext(APIContext);
+  const { apisLoaded, setAPIIsLoaded, showLoading } = useContext(APIContext);
 
   useEffect(() => {
     const handleResize = () => {
@@ -77,29 +77,42 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      {apisLoaded === false ? (
-        <Flex height="100vh" alignItems="center" justifyContent="center">
-          <CircularProgress isIndeterminate color="orange.400" size="100px" />
-        </Flex>
-      ) : (
-        <>
-          {!hasTouchScreen ? (
-            <>
-              {/* Call the ProductTour component */}
-              <ProductTour />
-              <NavBar map={map} />
-              <Map map={map} setMap={setMap} />
-            </>
-          ) : (
-            <>
-              {/* Call the ProductTour component */}
-              <ProductTour />
-              <Map map={map} setMap={setMap} />
-              <NavBar map={map} />
-            </>
-          )}
-        </>
-      )}
+      <>
+        {showLoading === true && (
+          <Flex
+            height="100vh"
+            width="100vw"
+            alignItems="center"
+            justifyContent="center"
+            style={{
+              position: 'fixed',
+              opacity: apisLoaded ? 0 : 1,
+              transition: 'opacity 0.5s ease',
+              pointerEvents: apisLoaded ? 'none' : 'auto',
+              backgroundColor: '#ffffff',
+              zIndex: 99999999,
+            }}
+          >
+            <CircularProgress isIndeterminate color="orange.400" size="100px" />
+          </Flex>
+        )}
+        {!hasTouchScreen ? (
+          <>
+            {/* Call the ProductTour component */}
+            <ProductTour />
+            <NavBar map={map} />
+            <Map map={map} setMap={setMap} />
+          </>
+        ) : (
+          <>
+            {/* Call the ProductTour component */}
+            <ProductTour />
+            <Map map={map} setMap={setMap} />
+            <NavBar map={map} />
+          </>
+        )}
+      </>
+      {/* )} */}
     </ChakraProvider>
   );
 }

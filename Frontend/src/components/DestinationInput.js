@@ -48,7 +48,7 @@ export default function DestinationInput({}) {
   } else {
     return (
       <Flex w="230px">
-        <Menu>
+        <Menu style={{ zIndex: 9999 }}>
           <MenuButton
             as={Button}
             rightIcon={
@@ -85,6 +85,7 @@ export default function DestinationInput({}) {
             boxShadow="2xl"
             maxHeight="200px"
             overflowY="auto"
+            style={{ zIndex: 100 }}
           >
             {apiAttractions.map(attraction => {
               return (
@@ -93,6 +94,7 @@ export default function DestinationInput({}) {
                     onClick={() => handleAttractionSelect(attraction)}
                     h={'32px'}
                     fontSize={'14px'}
+                    style={{ zIndex: 100 }}
                   >
                     <Image
                       boxSize="1.5rem"

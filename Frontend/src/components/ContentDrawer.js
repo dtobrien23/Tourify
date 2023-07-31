@@ -288,6 +288,7 @@ export default function ContentDrawer() {
       isOpen={isDrawerOpen}
       placement="left"
       size={hasTouchScreen ? 'md' : 'md'}
+      style={{ zIndex: 0 }}
     >
       <DrawerContent
         pointerEvents="all"
@@ -301,7 +302,7 @@ export default function ContentDrawer() {
           borderRadius: '20px',
           borderTopLeftRadius: '0px',
           borderBottomLeftRadius: '0px',
-          zIndex: '10',
+          zIndex: -1,
         }}
       >
         <DrawerCloseButton />
