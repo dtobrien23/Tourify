@@ -8,6 +8,7 @@ import {
   Flex,
   Button,
   Drawer,
+  DrawerOverlay,
   DrawerBody,
   DrawerHeader,
   DrawerContent,
@@ -290,14 +291,21 @@ export default function ContentDrawer() {
       size={hasTouchScreen ? 'md' : 'md'}
       style={{ zIndex: 0 }}
     >
+      <DrawerOverlay
+        style={{ zIndex: '19' }}
+        onClick={() => {
+          setIsDrawerOpen(false);
+        }}
+      />
+
       <DrawerContent
         pointerEvents="all"
         containerProps={{ pointerEvents: 'none', height: '100%' }}
         style={{
           position: 'absolute',
-          top: '1',
-          height: 'calc(100% - 74px)',
-          border: 'solid 1px orangered',
+          // top: '1',
+          // height: 'calc(100% - 74px)',
+          // border: 'solid 1px orangered',
           borderLeft: '0px',
           borderRadius: '20px',
           borderTopLeftRadius: '0px',
@@ -390,75 +398,81 @@ export default function ContentDrawer() {
                                         borderRadius: '20px',
                                       }}
                                     />
-                                    <div>
+                                    <div style={{ width: '100%' }}>
                                       <Heading size="md">
                                         {attractionInfo.name}
                                       </Heading>
-                                      <p> {attractionInfo.full_address}</p>
-                                      <Alert
-                                        pl="0"
-                                        width="fit-content"
-                                        status="info"
-                                        colorScheme={'white'}
-                                        borderRadius={20}
+                                      {/* <p> {attractionInfo.full_address}</p> */}
+                                      <Flex
+                                        mt="10px"
+                                        alignItems="center"
+                                        justifyContent="space-between"
                                       >
-                                        <AlertIcon
-                                          boxSize={5}
-                                          color={
-                                            attractionInfo.businessRate < 35
-                                              ? 'green'
-                                              : 35 <
-                                                  attractionInfo.businessRate &&
-                                                attractionInfo.businessRate < 70
-                                              ? 'gold'
-                                              : 'red'
-                                          }
-                                        />
-
-                                        <AlertTitle>
-                                          {attractionInfo.businessRate < 35
-                                            ? 'Quiet'
-                                            : 35 <
-                                                attractionInfo.businessRate &&
-                                              attractionInfo.businessRate < 70
-                                            ? 'Not Too Busy'
-                                            : 'Busy'}
-                                        </AlertTitle>
-                                        <AlertDescription>
-                                          <p>
-                                            Busyness Index:{' '}
-                                            {attractionInfo.businessRate}
-                                          </p>
-                                        </AlertDescription>
-                                      </Alert>
+                                        <Alert
+                                          pl="0"
+                                          width="fit-content"
+                                          status="info"
+                                          colorScheme={'white'}
+                                          borderRadius={20}
+                                          mt="-10px"
+                                        >
+                                          <Flex alignItems="center">
+                                            <AlertIcon
+                                              boxSize={5}
+                                              mr="5px"
+                                              color={
+                                                attractionInfo.businessRate < 35
+                                                  ? 'green'
+                                                  : 35 <
+                                                      attractionInfo.businessRate &&
+                                                    attractionInfo.businessRate <
+                                                      70
+                                                  ? 'gold'
+                                                  : 'red'
+                                              }
+                                            />
+                                            <Flex flexDirection="column">
+                                              <AlertTitle>
+                                                {attractionInfo.businessRate <
+                                                35
+                                                  ? 'Quiet'
+                                                  : 35 <
+                                                      attractionInfo.businessRate &&
+                                                    attractionInfo.businessRate <
+                                                      70
+                                                  ? 'Not Too Busy'
+                                                  : 'Busy'}
+                                              </AlertTitle>
+                                              <AlertDescription>
+                                                <p>
+                                                  Busyness Index:
+                                                  {attractionInfo.businessRate}
+                                                </p>
+                                              </AlertDescription>
+                                            </Flex>
+                                          </Flex>
+                                        </Alert>
+                                        <Flex justifyContent="flex-end">
+                                          <Button
+                                            style={{
+                                              backgroundColor: 'orange',
+                                              color: 'white',
+                                              border: 'solid 2px orangered',
+                                              borderRadius: '20px',
+                                              marginBottom: '12px',
+                                              justifySelf: 'flex-end',
+                                            }}
+                                            onClick={
+                                              () =>
+                                                handleCheckIn(attractionInfo.id)
+                                              // mintNft()
+                                            }
+                                          >
+                                            Check In!
+                                          </Button>
+                                        </Flex>
+                                      </Flex>
                                     </div>
-                                  </Flex>
-                                  <Flex mt={4}>
-                                    <Stack
-                                      spacing={10}
-                                      justifyContent="center"
-                                      alignItems="center"
-                                      width="40%"
-                                    >
-                                      <Button
-                                        style={{
-                                          backgroundColor: 'white',
-                                          color: 'black',
-                                          border: 'solid 2px gold',
-                                          borderRadius: '20px',
-                                          marginTop: '5px',
-                                          padding: '10px 20px',
-                                          boxShadow:
-                                            '0 2px 4px rgba(0, 0, 0, 0.2)',
-                                        }}
-                                        onClick={
-                                          () => handleCheckIn(attractionInfo.id)
-                                          // mintNft()
-                                        }
-                                      >
-                                        Check In!
-                                      </Button>
-                                    </Stack>
                                   </Flex>
                                 </Flex>
                               </Flex>
@@ -520,43 +534,50 @@ export default function ContentDrawer() {
                                       <Heading size="md">
                                         {attractionInfo.name}
                                       </Heading>
-                                      <p> {attractionInfo.full_address}</p>
-                                      <br />
+                                      {/* <p> {attractionInfo.full_address}</p>
+                                      <br /> */}
                                     </div>
                                   </Flex>
                                   <Flex mt={4}>
                                     <Alert
+                                      pl="0"
+                                      width="fit-content"
                                       status="info"
-                                      colorScheme={
-                                        attractionInfo.businessRate < 35
-                                          ? 'green'
-                                          : 35 < attractionInfo.businessRate &&
-                                            attractionInfo.businessRate < 70
-                                          ? 'yellow'
-                                          : 'red'
-                                      }
+                                      colorScheme={'white'}
                                       borderRadius={20}
-                                      width="60%"
-                                      // boxShadow="0 2px 4px rgba(0, 0, 0, 0.2)"
+                                      mt="-10px"
                                     >
-                                      <AlertIcon />
-                                      <Box>
-                                        <AlertTitle>
-                                          {attractionInfo.businessRate < 35
-                                            ? 'Quiet'
-                                            : 35 <
-                                                attractionInfo.businessRate &&
-                                              attractionInfo.businessRate < 70
-                                            ? 'Not Too Busy'
-                                            : 'Busy'}
-                                        </AlertTitle>
-                                        <AlertDescription>
-                                          <p>
-                                            Busyness Index:{' '}
-                                            {attractionInfo.businessRate}
-                                          </p>
-                                        </AlertDescription>
-                                      </Box>
+                                      <Flex alignItems="center">
+                                        <AlertIcon
+                                          boxSize={5}
+                                          color={
+                                            attractionInfo.businessRate < 35
+                                              ? 'green'
+                                              : 35 <
+                                                  attractionInfo.businessRate &&
+                                                attractionInfo.businessRate < 70
+                                              ? 'gold'
+                                              : 'red'
+                                          }
+                                        />
+                                        <Flex flexDirection="column">
+                                          <AlertTitle>
+                                            {attractionInfo.businessRate < 35
+                                              ? 'Quiet'
+                                              : 35 <
+                                                  attractionInfo.businessRate &&
+                                                attractionInfo.businessRate < 70
+                                              ? 'Not Too Busy'
+                                              : 'Busy'}
+                                          </AlertTitle>
+                                          <AlertDescription>
+                                            <p>
+                                              Busyness Index:{' '}
+                                              {attractionInfo.businessRate}
+                                            </p>
+                                          </AlertDescription>
+                                        </Flex>
+                                      </Flex>
                                     </Alert>
                                     <Stack
                                       spacing={10}
@@ -638,7 +659,7 @@ export default function ContentDrawer() {
             {' '}
             <DrawerHeader>{`My Badges`}</DrawerHeader>
             <DrawerBody>
-              <Tabs>
+              <Tabs colorScheme="orange">
                 <TabList>
                   <Tab>My Badges</Tab>
                   <Tab>Badges to Collect</Tab>

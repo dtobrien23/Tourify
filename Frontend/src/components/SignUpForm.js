@@ -283,8 +283,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (cachedUserCredential) {
       axios
         .post(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
-          // `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
+          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
+          `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'updated user info');
@@ -338,8 +338,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (credential) {
       axios
         .post(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
-          // `http://localhost:8001/api/user/info?idTokenString=${credential}`
+          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
+          `http://localhost:8001/api/user/info?idTokenString=${credential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'user info');
@@ -398,8 +398,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
       console.log(credential);
       axios
         .post(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
-          // `http://localhost:8001/api/user/register?idTokenString=${credential}`
+          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
+          `http://localhost:8001/api/user/register?idTokenString=${credential}`
         )
         .then(response => {
           // setGlobalUserInfo(response.data);
@@ -507,8 +507,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (globalCredential) {
       axios
         .post(
-          `https://csi6220-2-vm1.ucd.ie/backend/api/user/delete?idTokenString=${globalCredential}`
-          // `http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`
+          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/delete?idTokenString=${globalCredential}`
+          `http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`
         ) //user info, json w/ true false
         .then(response => {
           // if (response.data.code === 10004) {
@@ -587,11 +587,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
         <Menu>
           <MenuButton
             as={Button}
-            bg="#ff914d"
             color="white"
             border="solid 1px orangered"
             borderRadius="25px"
             _hover={{ bg: 'orangered', color: 'white' }}
+            style={{ backgroundColor: 'orange' }}
           >
             User Options
           </MenuButton>

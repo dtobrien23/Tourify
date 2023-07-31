@@ -49,7 +49,7 @@ export default function LocationInput({}) {
   const rangeThreshold = 0.5;
 
   useEffect(() => {
-    if (autocompleteRef.current && currentLocation !== null) {
+    if (autocompleteRef.current) {
       setInputValue(currentLocation);
     }
   }, [currentLocation, buttonClicked]);
@@ -234,7 +234,6 @@ export default function LocationInput({}) {
           }
           const formattedAddress = response.results[0].formatted_address;
           setCurrentLocation(formattedAddress);
-
           setGeolocation(latlng); // Update the geolocation value in the context
           console.log(latlng, 'this is lat lang');
           setSourceCoords(latlng);
@@ -309,6 +308,8 @@ export default function LocationInput({}) {
       }
     }
   };
+
+  useEffect(() => {});
 
   return (
     <Flex

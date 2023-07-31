@@ -177,6 +177,7 @@ const MapProvider = ({ children }) => {
     setSelectedAttraction(null);
     setSourceCoords(null);
     setInputValue('');
+    setGeolocation(null);
   }
 
   const [buttonState, setButtonState] = useState();

@@ -174,7 +174,7 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
         <DrawerContent
           alignItems="left"
           justifyItems="left"
-          border="1px solid orangered"
+          // border="1px solid orangered"
           borderRadius="20px"
           borderTopRightRadius="0px"
           borderBottomRightRadius="0px"

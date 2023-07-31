@@ -17,8 +17,13 @@ import LocationInput from './LocationInput';
 import { MapContext } from './MapContext';
 
 export default function SearchBar() {
-  const { calculateRoute, clearRoute, hasTouchScreen, setIsDrawerOpen } =
-    useContext(MapContext);
+  const {
+    calculateRoute,
+    clearRoute,
+    hasTouchScreen,
+    setIsDrawerOpen,
+    setGeolocation,
+  } = useContext(MapContext);
 
   const { isOpen, onToggle, onClose } = useDisclosure();
 
@@ -28,9 +33,6 @@ export default function SearchBar() {
       {!hasTouchScreen ? (
         <Flex width="fit-content" mr="0px">
           <Flex
-            onClick={() => {
-              setIsDrawerOpen(false);
-            }}
             style={{
               width: 'fit-content',
               border: 'solid 1px orangered',
@@ -63,7 +65,6 @@ export default function SearchBar() {
                 minWidth="40px"
               >
                 <Button
-                  bg="#ff914d"
                   color="white"
                   border="solid 1px orangered"
                   borderRadius="50%"
@@ -72,6 +73,7 @@ export default function SearchBar() {
                   height="50px"
                   width="50px"
                   padding="10px"
+                  style={{ backgroundColor: 'orange' }}
                 >
                   GO
                 </Button>
