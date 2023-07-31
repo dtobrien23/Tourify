@@ -17,7 +17,8 @@ import LocationInput from './LocationInput';
 import { MapContext } from './MapContext';
 
 export default function SearchBar() {
-  const { calculateRoute, clearRoute, hasTouchScreen } = useContext(MapContext);
+  const { calculateRoute, clearRoute, hasTouchScreen, setIsDrawerOpen } =
+    useContext(MapContext);
 
   const { isOpen, onToggle, onClose } = useDisclosure();
 
@@ -27,6 +28,9 @@ export default function SearchBar() {
       {!hasTouchScreen ? (
         <Flex width="fit-content" mr="0px">
           <Flex
+            onClick={() => {
+              setIsDrawerOpen(false);
+            }}
             style={{
               width: 'fit-content',
               border: 'solid 1px orangered',
