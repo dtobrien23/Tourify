@@ -74,6 +74,30 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const toastUpdate = useToast();
   const toastUpdateError = useToast();
 
+  const [timerId, setTimerId] = useState(null);
+
+  // Function to reset the timer
+  const resetLogoutTimer = () => {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+    setTimerId(
+      setTimeout(() => {
+        handleLogout(); // Call  logout function here
+      }, 45 * 60 * 1000) // 45 minutes in milliseconds
+    );
+  };
+
+  useEffect(() => {
+    // When the user is logged in, start the timer
+    if (userLoggedIn) {
+      resetLogoutTimer();
+    } else {
+      // Clear the timer when the user logs out
+      clearTimeout(timerId);
+    }
+  }, [userLoggedIn]);
+
   useEffect(() => {
     const loggedInfo = localStorage.getItem('loggedInfo');
     setUserLoggedIn(loggedInfo === 'true');
@@ -134,14 +158,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
       }
     }
   };
-
-
-
-
-
-
-
-
 
 
   const userInfoUpdate = async credentialResponse => {
