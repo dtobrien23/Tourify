@@ -55,27 +55,69 @@ public class AttractionService {
 
 
     // convert the json into a map object
-    private Map<String, Map<String, String>> hashMap;
-    public void init() {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            // load the JSON
-            Resource resource = resourceLoader.getResource("classpath:passengers_average_v2.json");
-            InputStream inputStream = resource.getInputStream();
-            List<Map<String, String>> list = mapper.readValue(inputStream, new TypeReference<List<Map<String, String>>>(){});
-            hashMap = new HashMap<>();
-            for (Map<String, String> item : list) {
-                String dayZoneCombined = (String) item.get("day_zone_combined");
-                hashMap.put(dayZoneCombined, item);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public Map<String, String> getItem(String key) {
-        return hashMap.get(key);
-    }
+//    private Map<String, Map<String, String>> hashMap;
+//    public void init() {
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            // load the JSON
+//            Resource resource = resourceLoader.getResource("classpath:passengers_average_v2.json");
+//            InputStream inputStream = resource.getInputStream();
+//            List<Map<String, String>> list = mapper.readValue(inputStream, new TypeReference<List<Map<String, String>>>(){});
+//            hashMap = new HashMap<>();
+//            for (Map<String, String> item : list) {
+//                String dayZoneCombined = (String) item.get("day_zone_combined");
+//                hashMap.put(dayZoneCombined, item);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//    public Map<String, String> getItem(String key) {
+//        return hashMap.get(key);
+//    }
 
+    Integer getInteger(String name_alias) throws BusinessException {
+
+        // convert the name_alias into an integer
+        HashMap<String, Integer> locations = new HashMap<>();
+
+        locations.put("Empire_State_Building", 0);
+        locations.put("Statue_of_Liberty", 1);
+        locations.put("Brooklyn_Bridge", 2);
+        locations.put("Metropolitan_Museum_of_Art", 3);
+        locations.put("Museum_of_Modern_Art", 4);
+        locations.put("Guggenheim_Museum", 5);
+        locations.put("Central_Park", 6);
+        locations.put("Bryant_Park", 7);
+        locations.put("High_Line", 8);
+        locations.put("Broadway", 9);
+        locations.put("Madame_Tussauds_New_York", 10);
+        locations.put("Lincoln_Center", 11);
+        locations.put("Greenwich_Village", 12);
+        locations.put("Harlem", 13);
+        locations.put("Eataly", 14);
+        locations.put("Grand_Central_Market", 15);
+        locations.put("Whitney_Museum", 16);
+        locations.put("Museum_of_Arts_and_Design", 17);
+        locations.put("New_Museum", 18);
+        locations.put("Morgan_Library_Museum", 19);
+        locations.put("Trinity_Church", 20);
+        locations.put("Fraunces_Tavern", 21);
+        locations.put("One_World_Observatory", 22);
+        locations.put("Top_of_the_Rock", 23);
+        locations.put("Edge_Observation_Deck", 24);
+
+        // Retrieve a value using a key
+        String key = name_alias;
+        if (locations.containsKey(key)) {
+            int value = locations.get(key);
+            System.out.println("The value associated with key \"" + key + "\" is: " + value);
+            return value;
+        } else {
+            System.out.println("No value is associated with key \"" + key + "\"");
+        }
+        return null;
+    }
 
 
 
@@ -108,11 +150,12 @@ public class AttractionService {
             attractionPredictionVO.setName(attractionDO.getName());
             attractionPredictionVO.setName_alias(attractionDO.getName_alias());
 
+            // Discarded
             // get the taxi-zone and passenger parameter
-            PredictionInternalResult predictionInternalResult = getAveragePassengersNum(month, dayOfWeek, hour, attractionDO.getName_alias());
+//            PredictionInternalResult predictionInternalResult = getAveragePassengersNum(month, dayOfWeek, hour, attractionDO.getName_alias());
 
             // invoke the prediction method
-            attractionPredictionVO.setBusinessRate(getModelPythonPrediction(attractionPredictionDTO, month, dayOfWeek, hour, predictionInternalResult.getTaxiLocation(), predictionInternalResult.getPassengersNum()));
+            attractionPredictionVO.setBusinessRate(getModelPythonPrediction(attractionPredictionDTO, month, dayOfWeek, hour, attractionDO.getName_alias()));
             attractionPredictionVOList.add(attractionPredictionVO);
             System.out.println("----------------------------------Finished one attraction's prediction----------------------------------");
         }
@@ -221,12 +264,13 @@ public class AttractionService {
             }
 
             // get the taxi-zone and passenger parameter
-            PredictionInternalResult predictionInternalResult = getAveragePassengersNum(months.get(i), daysOfWeek.get(i), hours.get(i), attractionOnePredictionVO.getName_alias());
+            // Discarded because new model doesn't require get the average passager form json file
+//            PredictionInternalResult predictionInternalResult = getAveragePassengersNum(months.get(i), daysOfWeek.get(i), hours.get(i), attractionOnePredictionVO.getName_alias());
+//            System.out.println("2.Preparing to predict. taxiLocation:"+predictionInternalResult.getTaxiLocation()+" passengersNum:"+ predictionInternalResult.getPassengersNum());
 
             // Get the prediction for one hour
-            System.out.println("2.Preparing to predict. taxiLocation:"+predictionInternalResult.getTaxiLocation()+" passengersNum:"+ predictionInternalResult.getPassengersNum());
             System.out.println("2.Preparing to predict. months:"+months.get(i)+" daysOfWeek:"+ daysOfWeek.get(i)+" hour:" + hours.get(i));
-            attractionPredictionDetailVO.setBusinessRate(getModelPythonPrediction(attractionPredictionDTO, months.get(i), daysOfWeek.get(i), hours.get(i), predictionInternalResult.getTaxiLocation(), predictionInternalResult.getPassengersNum()));
+            attractionPredictionDetailVO.setBusinessRate(getModelPythonPrediction(attractionPredictionDTO, months.get(i), daysOfWeek.get(i), hours.get(i),attractionDO.getName_alias()));
             attractionPredictionDetailVOList.add(attractionPredictionDetailVO);
             System.out.println("--------Finished " + i +  " hour of prediction");
         }
@@ -237,93 +281,92 @@ public class AttractionService {
 
 
     // get the taxi zone and the average passengers function
-    PredictionInternalResult getAveragePassengersNum(int month, int dayOfWeek, int hour, String attraction_alias) throws BusinessException{
-        // set the map of list of attractions mapped to the taxi zones
-        HashMap<String, String> map = new HashMap<>();
-        map.put("Empire_State_Building", "164");
-        map.put("Statue_of_Liberty", "103");
-        map.put("Brooklyn_Bridge", "045");
-        map.put("Metropolitan_Museum_of_Art", "043");
-        map.put("Museum_of_Modern_Art", "161");
-        map.put("Guggenheim_Museum", "236");
-        map.put("Central_Park", "043");
-        map.put("Bryant_Park", "164");
-        map.put("High_Line", "246");
-        map.put("Broadway", "230");
-        map.put("Madame_Tussauds_New_York", "100");
-        map.put("Lincoln_Center", "142");
-        map.put("Greenwich_Village", "249");
-        map.put("Harlem", "042");
-        map.put("Eataly", "234");
-        map.put("Grand_Central_Market", "162");
-        map.put("Whitney_Museum", "158");
-        map.put("Museum_of_Arts_and_Design", "163");
-        map.put("New_Museum", "148");
-        map.put("Morgan_Library_Museum", "170");
-        map.put("Trinity_Church", "261");
-        map.put("Fraunces_Tavern", "088");
-        map.put("One_World_Observatory", "261");
-        map.put("Top_of_the_Rock", "161");
-        map.put("Edge_Observation_Deck", "246");
-
-        // get the taxiLocation
-        String taxiLocation = map.get(attraction_alias);          // set the taxi location
-        int taxiLocationInt = Integer.parseInt(taxiLocation);        // convert string to integer
-        PredictionInternalResult predictionInternalResult = new PredictionInternalResult();
-        predictionInternalResult.setTaxiLocation(taxiLocationInt);
-        System.out.println("1.GetAveragePassengers function - returned taxiLocation:" + taxiLocationInt);
-
-        // get the average passengers from reading the passages average json file (construct the search id: month - day of week - hour - taxi location id)
-        String passengersId = "";
-        if ( month>=10 && month<=12){
-            passengersId = String.valueOf(month);
-        }
-        else {
-            passengersId = passengersId + "0"+ String.valueOf(month);
-        }
-        passengersId = passengersId + "-" + dayOfWeek + "-";
-        if ( hour>=0 && hour <= 9){
-            passengersId = passengersId + "0" + String.valueOf(hour);
-        }
-        else {
-            passengersId = passengersId + String.valueOf(hour);
-        }
-        passengersId = passengersId + "-" + String.valueOf(taxiLocation);
-        System.out.println("1.Constructing passengersId: " +passengersId);
-
-        // search the primary id(passengersId) in the json file
-        init(); // invoke the method to load the json into map object
-        Map<String, String> mapJson= getItem(passengersId);
-        System.out.println("1.Returned map1:"+mapJson);
-        // Trying to get the passenger
-        int passengersNum;
-        try {
-            passengersNum = Integer.parseInt(mapJson.get("passengers_average"));
-        } catch (NullPointerException e) {
-            System.out.println("1.1.Hit the empty passenger");
-            passengersNum = 0;
-        }
-        System.out.println("1.Returned passengersNum:"+passengersNum);
-        predictionInternalResult.setPassengersNum(passengersNum);
-        return predictionInternalResult;
-    }
+//    PredictionInternalResult getAveragePassengersNum(int month, int dayOfWeek, int hour, String attraction_alias) throws BusinessException{
+//        // set the map of list of attractions mapped to the taxi zones
+//        HashMap<String, String> map = new HashMap<>();
+//        map.put("Empire_State_Building", "164");
+//        map.put("Statue_of_Liberty", "103");
+//        map.put("Brooklyn_Bridge", "045");
+//        map.put("Metropolitan_Museum_of_Art", "043");
+//        map.put("Museum_of_Modern_Art", "161");
+//        map.put("Guggenheim_Museum", "236");
+//        map.put("Central_Park", "043");
+//        map.put("Bryant_Park", "164");
+//        map.put("High_Line", "246");
+//        map.put("Broadway", "230");
+//        map.put("Madame_Tussauds_New_York", "100");
+//        map.put("Lincoln_Center", "142");
+//        map.put("Greenwich_Village", "249");
+//        map.put("Harlem", "042");
+//        map.put("Eataly", "234");
+//        map.put("Grand_Central_Market", "162");
+//        map.put("Whitney_Museum", "158");
+//        map.put("Museum_of_Arts_and_Design", "163");
+//        map.put("New_Museum", "148");
+//        map.put("Morgan_Library_Museum", "170");
+//        map.put("Trinity_Church", "261");
+//        map.put("Fraunces_Tavern", "088");
+//        map.put("One_World_Observatory", "261");
+//        map.put("Top_of_the_Rock", "161");
+//        map.put("Edge_Observation_Deck", "246");
+//
+//        // get the taxiLocation
+//        String taxiLocation = map.get(attraction_alias);          // set the taxi location
+//        int taxiLocationInt = Integer.parseInt(taxiLocation);        // convert string to integer
+//        PredictionInternalResult predictionInternalResult = new PredictionInternalResult();
+//        predictionInternalResult.setTaxiLocation(taxiLocationInt);
+//        System.out.println("1.GetAveragePassengers function - returned taxiLocation:" + taxiLocationInt);
+//
+//        // get the average passengers from reading the passages average json file (construct the search id: month - day of week - hour - taxi location id)
+//        String passengersId = "";
+//        if ( month>=10 && month<=12){
+//            passengersId = String.valueOf(month);
+//        }
+//        else {
+//            passengersId = passengersId + "0"+ String.valueOf(month);
+//        }
+//        passengersId = passengersId + "-" + dayOfWeek + "-";
+//        if ( hour>=0 && hour <= 9){
+//            passengersId = passengersId + "0" + String.valueOf(hour);
+//        }
+//        else {
+//            passengersId = passengersId + String.valueOf(hour);
+//        }
+//        passengersId = passengersId + "-" + String.valueOf(taxiLocation);
+//        System.out.println("1.Constructing passengersId: " +passengersId);
+//
+//        // search the primary id(passengersId) in the json file
+//        init(); // invoke the method to load the json into map object
+//        Map<String, String> mapJson= getItem(passengersId);
+//        System.out.println("1.Returned map1:"+mapJson);
+//        // Trying to get the passenger
+//        int passengersNum;
+//        try {
+//            passengersNum = Integer.parseInt(mapJson.get("passengers_average"));
+//        } catch (NullPointerException e) {
+//            System.out.println("1.1.Hit the empty passenger");
+//            passengersNum = 0;
+//        }
+//        System.out.println("1.Returned passengersNum:"+passengersNum);
+//        predictionInternalResult.setPassengersNum(passengersNum);
+//        return predictionInternalResult;
+//    }
 
 
 
     // invoke the model api from python
-    Integer getModelPythonPrediction(AttractionPredictionDTO attractionPredictionDTO, int month, int dayOfWeek, int hour, int taxiLocation, int passengersNum) throws BusinessException{
+    Integer getModelPythonPrediction(AttractionPredictionDTO attractionPredictionDTO, int month, int dayOfWeek, int hour, String name_alias) throws BusinessException{
         System.out.println("3.Starting to invoke prediction on python service -------------");
 
         System.out.println(FLASK_IP);
         WebClient webClient = WebClient.create(FLASK_IP);
-
+        int value = getInteger(name_alias);
 
         Map<String, Object> map = new HashMap<>();
         map.put("month", month);
         map.put("day_of_week", dayOfWeek);
         map.put("hour", hour);
-        map.put("taxi_locationID", taxiLocation);
-        map.put("passengers", passengersNum);
+        map.put("name_alias", value);
         map.put("temp_avg", attractionPredictionDTO.getTemperature());
         map.put("precipitation", attractionPredictionDTO.getPrecipitation());
 
