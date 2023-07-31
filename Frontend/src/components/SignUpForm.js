@@ -324,7 +324,6 @@ try {
             // Cache the user info
             localStorage.setItem('userInfo', JSON.stringify(response.data));
 
-
             // Cache the user credential
             localStorage.setItem('userCredential', credential);
 
@@ -411,6 +410,7 @@ try {
     console.log(globalCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
 
     if (globalCredential) {
+
       axios
         .post(`http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`) //user info, json w/ true false
         .then(response => {

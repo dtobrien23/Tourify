@@ -368,19 +368,20 @@ export default function LocationInput({}) {
               menuStyle={{ backgroundColor: 'red', color: 'white' }}
               itemStyle={{ fontSize: '100px' }}
             >
-              <input
-                type="text"
-                placeholder="I am currently at..."
-                value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
-                style={{
-                  // padding: '3px',
-                  paddingLeft: '8px',
-                  borderRadius: '20px',
-                  fontSize: '16px',
-                  width: '112%',
-                }}
-              />
+          <div className="tutorial-input">
+            <input
+              type="text"
+              placeholder="I am currently at..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              style={{
+                paddingLeft: '8px',
+                borderRadius: '20px',
+                fontSize: '16px',
+                width: '112%',
+              }}
+            />
+          </div>
             </Autocomplete>
           </Flex>
           <LocationButton getPosition={getPosition}></LocationButton>

@@ -1,35 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDisclosure, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from '@chakra-ui/react';
 
 const TutorialTooltip = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(1);
+  const maxSteps = 3;
+  const tutorialShownKey = 'tutorialShown'; // Local storage key
 
-  // Optionally, use localStorage to store if the user has seen the tutorial before
-  const hasSeenTutorialBefore = localStorage.getItem('hasSeenTutorial');
-  if (!hasSeenTutorialBefore) {
-    // If the user hasn't seen the tutorial, open it
-    onOpen();
-  }
+  useEffect(() => {
+    // Check if the tutorial has been shown before
+    const isTutorialShown = localStorage.getItem(tutorialShownKey);
+
+    if (!isTutorialShown) {
+      // If the tutorial hasn't been shown before, open it
+      onOpen();
+    }
+  }, [onOpen]);
 
   const handleNextStep = () => {
     // Increment the currentStep and show the next step of the tutorial
-    setCurrentStep(prevStep => prevStep + 1);
+    setCurrentStep((prevStep) => prevStep + 1);
   };
 
   const handleSkipTutorial = () => {
-    // Close the tutorial and optionally set a flag in localStorage
+    // Close the tutorial
     onClose();
-    localStorage.setItem('hasSeenTutorial', 'true');
+
+    // Set the flag in local storage to indicate that the tutorial has been shown
+    localStorage.setItem(tutorialShownKey, 'true');
   };
 
   return (
     <>
-      {/* Your main website content goes here */}
-      {/* ... */}
-
-      {/* Tutorial Tooltip Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+      <Modal isOpen={isOpen} onClose={handleSkipTutorial} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Tutorial Tooltip</ModalHeader>
