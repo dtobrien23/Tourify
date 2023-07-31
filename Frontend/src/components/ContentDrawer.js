@@ -367,8 +367,6 @@ export default function ContentDrawer() {
                           if (attractionInfo) {
                             return (
                               <Flex
-                                // alignItems="left"
-                                // justifyItems="left"
                                 border="2px solid orangered"
                                 borderRadius="20px"
                                 marginTop="5px"
@@ -457,7 +455,7 @@ export default function ContentDrawer() {
                                             style={{
                                               backgroundColor: 'orange',
                                               color: 'white',
-                                              border: 'solid 2px orangered',
+                                              border: 'solid 1px orangered',
                                               borderRadius: '20px',
                                               marginBottom: '12px',
                                               justifySelf: 'flex-end',
@@ -499,8 +497,6 @@ export default function ContentDrawer() {
                           if (attractionInfo) {
                             return (
                               <Flex
-                                // alignItems="left"
-                                // justifyItems="left"
                                 border="2px solid green"
                                 borderRadius="20px"
                                 marginTop="5px"
@@ -530,76 +526,75 @@ export default function ContentDrawer() {
                                         borderRadius: '20px',
                                       }}
                                     />
-                                    <div>
+                                    <div style={{ width: '100%' }}>
                                       <Heading size="md">
                                         {attractionInfo.name}
                                       </Heading>
-                                      {/* <p> {attractionInfo.full_address}</p>
-                                      <br /> */}
-                                    </div>
-                                  </Flex>
-                                  <Flex mt={4}>
-                                    <Alert
-                                      pl="0"
-                                      width="fit-content"
-                                      status="info"
-                                      colorScheme={'white'}
-                                      borderRadius={20}
-                                      mt="-10px"
-                                    >
-                                      <Flex alignItems="center">
-                                        <AlertIcon
-                                          boxSize={5}
-                                          color={
-                                            attractionInfo.businessRate < 35
-                                              ? 'green'
-                                              : 35 <
-                                                  attractionInfo.businessRate &&
-                                                attractionInfo.businessRate < 70
-                                              ? 'gold'
-                                              : 'red'
-                                          }
-                                        />
-                                        <Flex flexDirection="column">
-                                          <AlertTitle>
-                                            {attractionInfo.businessRate < 35
-                                              ? 'Quiet'
-                                              : 35 <
-                                                  attractionInfo.businessRate &&
-                                                attractionInfo.businessRate < 70
-                                              ? 'Not Too Busy'
-                                              : 'Busy'}
-                                          </AlertTitle>
-                                          <AlertDescription>
-                                            <p>
-                                              Busyness Index:{' '}
-                                              {attractionInfo.businessRate}
-                                            </p>
-                                          </AlertDescription>
+                                      {/* <p> {attractionInfo.full_address}</p> */}
+                                      <Flex
+                                        mt="10px"
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                      >
+                                        <Alert
+                                          pl="0"
+                                          width="fit-content"
+                                          status="info"
+                                          colorScheme={'white'}
+                                          borderRadius={20}
+                                          mt="-10px"
+                                        >
+                                          <Flex alignItems="center">
+                                            <AlertIcon
+                                              boxSize={5}
+                                              mr="5px"
+                                              color={
+                                                attractionInfo.businessRate < 35
+                                                  ? 'green'
+                                                  : 35 <
+                                                      attractionInfo.businessRate &&
+                                                    attractionInfo.businessRate <
+                                                      70
+                                                  ? 'gold'
+                                                  : 'red'
+                                              }
+                                            />
+                                            <Flex flexDirection="column">
+                                              <AlertTitle>
+                                                {attractionInfo.businessRate <
+                                                35
+                                                  ? 'Quiet'
+                                                  : 35 <
+                                                      attractionInfo.businessRate &&
+                                                    attractionInfo.businessRate <
+                                                      70
+                                                  ? 'Not Too Busy'
+                                                  : 'Busy'}
+                                              </AlertTitle>
+                                              <AlertDescription>
+                                                <p>
+                                                  Busyness Index:
+                                                  {attractionInfo.businessRate}
+                                                </p>
+                                              </AlertDescription>
+                                            </Flex>
+                                          </Flex>
+                                        </Alert>
+                                        <Flex justifyContent="flex-end">
+                                          <Button
+                                            style={{
+                                              backgroundColor: '#17B169',
+                                              color: 'white',
+                                              border: 'solid 1px green',
+                                              borderRadius: '20px',
+                                              marginBottom: '12px',
+                                            }}
+                                          >
+                                            Visited!
+                                          </Button>
                                         </Flex>
                                       </Flex>
-                                    </Alert>
-                                    <Stack
-                                      spacing={10}
-                                      justifyContent="center"
-                                      alignItems="center"
-                                      width="40%"
-                                    >
-                                      <Button
-                                        style={{
-                                          backgroundColor: '#17B169',
-                                          color: 'white',
-                                          border: 'solid 1px green',
-                                          borderRadius: '20px',
-                                          marginTop: '5px',
-                                          padding: '10px 20px',
-                                          // boxShadow:
-                                          //   '0 2px 4px rgba(0, 0, 0, 0.2)',
-                                        }}
-                                      >
-                                        Visited!
-                                      </Button>
-                                    </Stack>
+                                    </div>
                                   </Flex>
                                 </Flex>
                               </Flex>
