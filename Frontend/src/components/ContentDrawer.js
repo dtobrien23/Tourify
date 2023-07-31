@@ -47,8 +47,8 @@ export default function ContentDrawer() {
   const toastCheckIn = useToast();
   const toastNotCheckIn = useToast();
   const toastNFT = useToast();
-  const randomword = generate();
-  const PROMPT_TEST = 'man with top hat and '+ randomword;
+  const randomWord = generate();
+  //const PROMPT_TEST = 'man with banana'+ randomWord;
 
   const [prompt, setPrompt] = useState(null);
   const [promptIsSet, setPromptIsSet] = useState(false);
@@ -78,7 +78,7 @@ export default function ContentDrawer() {
       elementCount: 100,
     });
 
-  const handleCheckIn = async attractionID => {
+  const handleCheckIn = async (attractionID,attractionName,randomWord) => {
     const apiEndpoint = 'http://localhost:8001/api/user/update';
     const cachedUserCredential = localStorage.getItem('userCredential');
 
@@ -88,8 +88,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.7724641', //hardcoded for testing replace with geolocation variable
-      lng: '-73.9834889', //hardcoded for testing reaplace with geolocation variable
+      lat: '40.8115504', //hardcoded for testing replace with geolocation variable
+      lng: '-73.9464769', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -101,7 +101,9 @@ export default function ContentDrawer() {
         if (response.data.code === 200) {
           //   // set logic that your marker has been ticked off
           setCheckinState(true);
+          const PROMPT_TEST= `${attractionName} ${randomWord}`
           setPrompt(PROMPT_TEST);
+          console.log(PROMPT_TEST,'PROMPT_TEST')
           //generatArt();
           console.log(checkinState, 'checkinstate - contentdrawer');
           confettiReward();
@@ -189,7 +191,7 @@ export default function ContentDrawer() {
   const [fileMade, setFile] = useState(null);
 
   // Update generateArt function to include uploadArtToIpfs logic
-  const generateArt = async () => {
+  const generateArt = async (prompt) => {
     try {
       const response = await axios.post(
         `https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5`,
@@ -214,7 +216,7 @@ export default function ContentDrawer() {
       setImageBlob(url);
 
       // Upload the art to IPFS and get the imageURL
-      const imageURL = await uploadArtToIpfs(PROMPT_TEST, generatedFile);
+      const imageURL = await uploadArtToIpfs(prompt, generatedFile);
 
       // Call mintNft with the prompt and imageURL
       await mintNft(prompt, imageURL, nftWalletAddress);
@@ -332,7 +334,7 @@ export default function ContentDrawer() {
       nftWalletAddress.startsWith('0x') &&
       nftWalletAddress.length === 42
     ) {
-      generateArt();
+      generateArt(prompt);
     }
 
     if (
@@ -526,8 +528,7 @@ export default function ContentDrawer() {
                                             '0 2px 4px rgba(0, 0, 0, 0.2)',
                                         }}
                                         onClick={
-                                          () => handleCheckIn(attractionInfo.id)
-                                          // mintNft()
+                                          () => handleCheckIn(attractionInfo.id, attractionInfo.name,randomWord)
                                         }
                                       >
                                         Check In!
