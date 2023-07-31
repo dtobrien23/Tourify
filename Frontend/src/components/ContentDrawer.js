@@ -46,7 +46,7 @@ export default function ContentDrawer() {
   const toastCheckIn = useToast();
   const toastNotCheckIn = useToast();
   const toastNFT = useToast();
-  const PROMPT_TEST = 'MUSCULAR MAN HOLDING CHICKEN FILLET ROLL';
+  const PROMPT_TEST = 'george bush eating cake in a boat with elon musk';
 
   const [prompt, setPrompt] = useState(null);
   const [promptIsSet, setPromptIsSet] = useState(false);
@@ -88,8 +88,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.7223376', //hardcoded for testing replace with geolocation variable
-      lng: '-73.9928905', //hardcoded for testing reaplace with geolocation variable
+      lat: '40.7479925', //hardcoded for testing replace with geolocation variable
+      lng: '-74.0047649', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -102,7 +102,7 @@ export default function ContentDrawer() {
           //   // set logic that your marker has been ticked off
           setCheckinState(true);
           setPrompt(PROMPT_TEST);
-          generateArt();
+          //generatArt();
           console.log(checkinState, 'checkinstate - contentdrawer');
           confettiReward();
           toastCheckIn({
@@ -218,7 +218,7 @@ export default function ContentDrawer() {
       const imageURL = await uploadArtToIpfs(PROMPT_TEST, generatedFile);
 
       // Call mintNft with the prompt and imageURL
-      await mintNft(PROMPT_TEST, imageURL);
+      await mintNft(prompt, imageURL);
     } catch (err) {
       console.log(err);
     }
@@ -251,7 +251,7 @@ export default function ContentDrawer() {
   };
 
   // Update mintNft function to accept the prompt and imageURL as parameters
-  const mintNft = async (prompt, imageURL) => {
+  const mintNft = async (promptFromFunc, imageURL) => {
     try {
       console.log('URL for image ', imageURL);
 
@@ -267,7 +267,7 @@ export default function ContentDrawer() {
           file_url: imageURL,
           chain: 'polygon',
           name: prompt,
-          description: `You visited The ${prompt} Badge.`,
+          description: `You visited The ${promptFromFunc} Badge.`,
           mint_to_address: '0xA649D68a977AB4d4Ab3ddd275aC3a84D03889Ee4',
         },
         {
@@ -285,11 +285,15 @@ export default function ContentDrawer() {
         confettiReward();
         toastNFT({
           title: 'NFT MINTED!',
-          description: `You've acquired the "${prompt} NFT!".`,
+          description: `You've acquired the "${promptFromFunc} NFT!".`,
           status: 'success',
           duration: 6000,
           isClosable: true,
         });
+        setPrompt(null);
+        setPromptIsSet(false);
+        console.log(prompt,'prompt after mint')
+        console.log(promptIsSet,'prompt bool after mint')
       } else {
         // Handle other possible response statuses or errors here
         console.log('Error minting NFT.');
@@ -309,14 +313,14 @@ export default function ContentDrawer() {
 
 // Use useEffect to set promptIsSet to true after prompt has been set
 useEffect(() => {
-  if (prompt !== null) {
+  if (prompt !== null && promptIsSet === false) {
     setPromptIsSet(true);
   }
 }, [prompt]);
 
 // Use useEffect to call generateArt() when promptIsSet is true
 useEffect(() => {
-  if (promptIsSet) {
+  if (promptIsSet && prompt !== null) {
     generateArt();
   }
 }, [promptIsSet]);
