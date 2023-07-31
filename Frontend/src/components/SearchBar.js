@@ -23,17 +23,18 @@ export default function SearchBar() {
 
   return (
     <>
+      {/* DESKTOP VERSION */}
       {!hasTouchScreen ? (
-        <Flex width="60%" minWidth="450px" maxWidth="800px" mr="0px">
+        <Flex width="fit-content" mr="0px">
           <Flex
             style={{
-              width: '100%',
+              width: 'fit-content',
               border: 'solid 1px orangered',
               borderRadius: '20px',
               backgroundColor: 'white',
               zIndex: 1,
               height: '41px',
-              overflow: 'hidden',
+              overflow: 'visible',
             }}
           >
             <LocationInput
@@ -44,7 +45,7 @@ export default function SearchBar() {
               }}
             />
             <Divider orientation="vertical" />
-            <Flex w="50%">
+            <Flex>
               <DestinationInput
                 style={{
                   zIndex: 2,
@@ -61,12 +62,11 @@ export default function SearchBar() {
                   bg="#ff914d"
                   color="white"
                   border="solid 1px orangered"
-                  borderRight="0px"
-                  borderRadius="19px"
+                  borderRadius="50%"
                   _hover={{ bg: 'orangered' }}
                   onClick={calculateRoute}
-                  px="1em"
-                  height="calc(100% + 2px)"
+                  height="50px"
+                  width="50px"
                   padding="10px"
                 >
                   GO
@@ -90,79 +90,83 @@ export default function SearchBar() {
           </Button>
         </Flex>
       ) : (
-        <Popover>
-          <PopoverTrigger>
-            <Flex
-              style={{
-                marginTop: '10px',
-                width: '90vw',
-                border: 'solid 1px orangered',
-                borderRadius: '20px',
-                backgroundColor: 'white',
-                zIndex: 1,
-                height: '41px',
-                overflow: 'hidden',
-              }}
-            >
-              <LocationInput
+        {
+          /* MOBILE VERSION */
+        }(
+          <Popover>
+            <PopoverTrigger>
+              <Flex
                 style={{
+                  marginTop: '10px',
+                  width: '90vw',
                   border: 'solid 1px orangered',
                   borderRadius: '20px',
                   backgroundColor: 'white',
+                  zIndex: 1,
+                  height: '41px',
+                  overflow: 'hidden',
                 }}
-              />
-              <Box ml="5px" display="flex" alignItems="center">
-                <Button
-                  onClick={onToggle}
-                  bg="#ff914d"
-                  color="white"
-                  border="solid 1px orangered"
-                  borderRight="0px"
-                  borderRadius="19px"
-                  _hover={{ bg: 'orangered' }}
-                  px="1em"
-                  height="calc(100% + 2px)"
-                  padding="10px"
-                >
-                  NEXT
-                </Button>
-              </Box>
-            </Flex>
-          </PopoverTrigger>
-          <PopoverContent
-            border="solid 1px orangered"
-            borderRadius="20px"
-            zIndex={2}
-            w="90vw"
-          >
-            <PopoverCloseButton />
-            <PopoverBody>
-              <Flex>
-                <DestinationInput
+              >
+                <LocationInput
                   style={{
-                    zIndex: 2,
+                    border: 'solid 1px orangered',
+                    borderRadius: '20px',
+                    backgroundColor: 'white',
                   }}
                 />
                 <Box ml="5px" display="flex" alignItems="center">
                   <Button
+                    onClick={onToggle}
                     bg="#ff914d"
                     color="white"
                     border="solid 1px orangered"
                     borderRight="0px"
                     borderRadius="19px"
                     _hover={{ bg: 'orangered' }}
-                    onClick={calculateRoute}
                     px="1em"
                     height="calc(100% + 2px)"
                     padding="10px"
                   >
-                    GO
+                    NEXT
                   </Button>
                 </Box>
               </Flex>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
+            </PopoverTrigger>
+            <PopoverContent
+              border="solid 1px orangered"
+              borderRadius="20px"
+              zIndex={2}
+              w="90vw"
+            >
+              <PopoverCloseButton />
+              <PopoverBody>
+                <Flex>
+                  <DestinationInput
+                    style={{
+                      zIndex: 2,
+                    }}
+                  />
+                  <Box ml="5px" display="flex" alignItems="center">
+                    <Button
+                      bg="#ff914d"
+                      color="white"
+                      border="solid 1px orangered"
+                      borderRight="0px"
+                      borderRadius="19px"
+                      _hover={{ bg: 'orangered' }}
+                      onClick={calculateRoute}
+                      px="1em"
+                      height="calc(100% + 2px)"
+                      padding="10px"
+                    >
+                      GO
+                    </Button>
+                  </Box>
+                </Flex>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        )
       )}
     </>
   );

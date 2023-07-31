@@ -24,3 +24,6 @@ The API applies rounding to the prediction value and ensures that it does not ex
 
 #### pickle_files
 This directory contains the pre-trained Random Forest models saved as pickle files. Each pickle file corresponds to a specific taxi location ID and is loaded by the `models.py` file.
+
+
+![image](./Linux_Docker_Working-Flow_Diagram.png)

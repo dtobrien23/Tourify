@@ -11,11 +11,13 @@ import {
   Button,
   Text,
   MenuItem,
+  useToast,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
 import SearchBar from './SearchBar';
 import { MapContext } from './MapContext';
+import ParallaxDrawer from './ParallaxDrawer';
 
 export default function NavBar() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -25,6 +27,7 @@ export default function NavBar() {
   });
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const toastNoSourceLocation = useToast();
 
   const {
     setActiveDrawer,
@@ -32,6 +35,8 @@ export default function NavBar() {
     setIsDrawerOpen,
     isMobile,
     hasTouchScreen,
+    sourceCoords,
+    geolocation,
   } = useContext(MapContext);
 
   const handleLogin = () => {
@@ -85,9 +90,20 @@ export default function NavBar() {
           w="fit-content"
           isDisabled={!isLoggedIn}
           onClick={() => {
-            setActiveDrawer('recommender');
-            {
-              !isDrawerOpen && setIsDrawerOpen(true);
+            if (geolocation) {
+              setActiveDrawer('recommender');
+              {
+                !isDrawerOpen && setIsDrawerOpen(true);
+              }
+            } else {
+              toastNoSourceLocation({
+                title: 'Recommender Unavailable!',
+                description:
+                  'Please allow your current location or select a location from the dropdown',
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+              });
             }
           }}
         >
@@ -146,6 +162,7 @@ export default function NavBar() {
             Badges
           </Text>
         </Button>
+        <ParallaxDrawer/>
       </Flex>
       {hasTouchScreen ? (
         <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>

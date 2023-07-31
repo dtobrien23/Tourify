@@ -15,66 +15,66 @@ import {
   TabPanels,
   useForceUpdate,
   SimpleGrid,
-  Heading
+  Heading,
 } from '@chakra-ui/react';
-//import attractions from '../static/attractions.json';
-import { GeolocationContext } from './GeoContext';
 import { MapContext } from './MapContext';
 import { APIContext } from './APIContext';
 
 export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
-  const { geolocation } = useContext(GeolocationContext);
   const { apiAttractions } = useContext(APIContext);
-
-  console.log(geolocation, 'this is the geo from context');
-
-  const { activeDrawer, isDrawerOpen, setIsDrawerOpen } =
-    useContext(MapContext);
+  const {
+    activeDrawer,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    sourceCoords,
+    setSourceCoords,
+    geolocation,
+    attractionsWithBusyness,
+  } = useContext(MapContext);
 
   //geolocation, cant be null or error occurs
-  const userLocation = geolocation
-    ? { lat: geolocation.latitude, lng: geolocation.longitude }
-    : { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location as a fallback if user opts out
+  // const userLocation = geolocation
+  //   ? { lat: geolocation.latitude, lng: geolocation.longitude }
+  //   : { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location as a fallback if user opts out
 
-  console.log(
-    userLocation,
-    'this is reformatted userlocation from geolocation'
-  );
+  // console.log(
+  //   userLocation,
+  //   'this is reformatted userlocation from geolocation'
+  // );
 
   const [nearestAttractions, setNearestAttractions] = useState([]);
   const [quietestAttractions, setQuietestAttractions] = useState([]);
   const [combinedAttractions, setCombinedAttractions] = useState([]);
 
   const fetchDistances = () => {
-    const origin = new window.google.maps.LatLng(
-      userLocation.lat,
-      userLocation.lng
-    );
-    const destinations = apiAttractions.map(
-      attraction =>
-        new window.google.maps.LatLng(
-          attraction.coordinates_lat,
-          attraction.coordinates_lng
-        )
-    );
-    console.log('Origin:', origin);
-    console.log('Destinations:', destinations);
+    if (geolocation) {
+      const origin = geolocation;
+      const destinations = attractionsWithBusyness.map(
+        attraction =>
+          new window.google.maps.LatLng(
+            attraction.coordinates_lat,
+            attraction.coordinates_lng
+          )
+      );
+      console.log('Origin:', origin);
+      console.log('Destinations:', destinations);
 
-    const service = new window.google.maps.DistanceMatrixService();
+      const service = new window.google.maps.DistanceMatrixService();
 
-    service.getDistanceMatrix(
-      {
-        origins: [origin],
-        destinations: destinations,
-        travelMode: 'WALKING',
-        unitSystem: window.google.maps.UnitSystem.METRIC,
-      },
-      callback
-    );
+      service.getDistanceMatrix(
+        {
+          origins: [origin],
+          destinations: destinations,
+          travelMode: 'WALKING',
+          unitSystem: window.google.maps.UnitSystem.METRIC,
+        },
+        callback
+      );
+    }
   };
 
   useEffect(() => {
-    if (activeDrawer === 'recommender') {
+    if (geolocation && activeDrawer === 'recommender') {
       const loadGoogleMapsAPI = () => {
         const script = document.createElement('script');
         script.src =
@@ -95,7 +95,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
     if (status === window.google.maps.DistanceMatrixStatus.OK) {
       const results = response.rows[0].elements;
 
-      const attractionsWithDistances = apiAttractions.map(
+      const attractionsWithDistances = attractionsWithBusyness.map(
         (attraction, index) => {
           const distance = results[index].distance.text;
           const convertedDistance = convertToKilometers(distance);
@@ -132,16 +132,56 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const topFiveNearestAttractions = nearestAttractions.slice(0, 5);
   console.log(topFiveNearestAttractions, 'TOP 5 NEAREST');
 
-
   useEffect(() => {
-    const leastBusyAttractions = nearestAttractions.sort((a, b) => {
-      const busynessA = parseFloat(a.busyness_score);
-      const busynessB = parseFloat(b.busyness_score);
+    const leastBusyAttractions = nearestAttractions.slice().sort((a, b) => {
+      const busynessA = parseFloat(a.businessRate);
+      const busynessB = parseFloat(b.businessRate);
       return busynessA - busynessB;
     });
 
     setQuietestAttractions(leastBusyAttractions);
-  }, []);
+  }, [nearestAttractions]);
+
+  useEffect(() => {
+    if (nearestAttractions && quietestAttractions) {
+      const combinedAttractionsArray = [];
+
+      nearestAttractions.forEach(attraction => {
+        const nearestIndex = nearestAttractions.indexOf(attraction);
+        const matchingAttraction = quietestAttractions.find(
+          sameAttraction => sameAttraction.name === attraction.name
+        );
+
+        if (matchingAttraction) {
+          const quietestIndex = quietestAttractions.indexOf(matchingAttraction);
+          const newName = matchingAttraction.name;
+          const newIndex = nearestIndex + quietestIndex;
+
+          combinedAttractionsArray.push({
+            name: matchingAttraction.name,
+            id: matchingAttraction.id,
+            combinedIndex: newIndex,
+            businessRate: matchingAttraction.businessRate,
+            distance: matchingAttraction.distance,
+            name_alias: matchingAttraction.name_alias,
+          });
+        }
+      });
+
+      // Sort the combined attractions array by combinedIndex
+      combinedAttractionsArray.sort(
+        (a, b) => a.combinedIndex - b.combinedIndex
+      );
+
+      setCombinedAttractions(combinedAttractionsArray);
+    }
+  }, [nearestAttractions, quietestAttractions]);
+
+  useEffect(() => {
+    if (combinedAttractions) {
+      console.log(combinedAttractions, 'COMBINED ATTRACTIONS');
+    }
+  }, [combinedAttractions]);
 
   return (
     <>
@@ -160,12 +200,11 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                 justifyItems="left"
                 border="3px solid orangered"
                 borderRadius="20px"
-                marginTop='5px'
-                marginLeft='10px'
-                overflow='hidden'
+                marginTop="5px"
+                marginLeft="10px"
+                overflow="hidden"
                 spacing={8}
-                p='10px'
-              
+                p="10px"
               >
                 <Flex key={attraction.id} mb={4}>
                   <p>
@@ -177,14 +216,15 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                         width: '100px',
                         height: '100px',
                         marginRight: '10px',
-                        border:"3px solid orangered",
-                        borderRadius:"5px"
+                        border: '3px solid orangered',
+                        borderRadius: '5px',
                       }}
                     />
                   </p>
 
                   <div>
-                  <Heading size='md'>{attraction.name}</Heading>                    <p>Busyness Score: {attraction.busyness_score}</p>
+                    <Heading size="md">{attraction.name}</Heading>{' '}
+                    <p>Busyness Score: {attraction.businessRate}</p>
                     <p>Distance: {attraction.distance}</p>
                   </div>
                 </Flex>
@@ -203,20 +243,45 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                       width: '100px',
                       height: '100px',
                       marginRight: '10px',
-                      border:"3px solid orangered",
-                      borderRadius:"5px"
+                      border: '3px solid orangered',
+                      borderRadius: '5px',
                     }}
                   />
                 </p>
                 <div>
-                <Heading size='md'>{attraction.name}</Heading>                  <p>Busyness Score: {attraction.busyness_score}</p>
+                  <Heading size="md">{attraction.name}</Heading>{' '}
+                  <p>Busyness Score: {attraction.businessRate}</p>
                   <p>Distance: {attraction.distance}</p>
                 </div>
               </Flex>
             ))}
           </TabPanel>
           <TabPanel>
-            <p>Nearest + Quietest Here!</p>
+            {combinedAttractions &&
+              combinedAttractions.map(attraction => (
+                <Flex key={attraction.id} mb={4}>
+                  <p>
+                    {' '}
+                    <img
+                      src={`/images/${attraction.name_alias}.jpg`}
+                      alt={attraction.name_alias}
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                        marginRight: '10px',
+                        border: '3px solid orangered',
+                        borderRadius: '5px',
+                      }}
+                    />
+                  </p>
+                  <div>
+                    <Heading size="md">{attraction.name}</Heading>{' '}
+                    <p>Busyness Score: {attraction.businessRate}</p>
+                    <p>Distance: {attraction.distance}</p>
+                    <p>Combined Score: {attraction.combinedIndex}</p>
+                  </div>
+                </Flex>
+              ))}
           </TabPanel>
         </TabPanels>
       </Tabs>

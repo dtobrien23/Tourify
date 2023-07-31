@@ -11,9 +11,13 @@ import { Flex } from '@chakra-ui/react';
 import { MdGraphicEq } from 'react-icons/md';
 //import attractions from '../static/attractions.json';
 import { APIContext } from './APIContext';
+import { MapContext } from './MapContext';
 
 export default function SliderBar({ setSliderListFunc }) {
-  const { apiAttractions, apiLoaded } = useContext(APIContext);
+  const { apiAttractions, apiLoaded, apiAllCurrentBusyness } =
+    useContext(APIContext);
+  const { attractionsWithBusyness, setAttractionsWithBusyness } =
+    useContext(MapContext);
 
   const [sliderValue, setSliderValue] = useState([0, 100]);
   const [filteredAttractions, setFilteredAttractions] =
@@ -24,11 +28,29 @@ export default function SliderBar({ setSliderListFunc }) {
   };
 
   useEffect(() => {
-    if (apiLoaded) {
-      const filtered = apiAttractions.filter(
+    // adds busyness score to attractions info object
+
+    if (apiAttractions && apiAllCurrentBusyness) {
+      apiAttractions.forEach(attraction => {
+        const matchingPred = apiAllCurrentBusyness.find(
+          prediction => prediction.name === attraction.name
+        );
+        if (matchingPred) {
+          attraction.businessRate = matchingPred.businessRate;
+        }
+      });
+      console.log(apiAttractions, 'PLS HAVE BUSYNESS SCORE');
+      setSliderListFunc(apiAttractions); // so all markers load when page loads
+      setAttractionsWithBusyness(apiAttractions);
+    }
+  }, [apiAllCurrentBusyness]);
+
+  useEffect(() => {
+    if (attractionsWithBusyness) {
+      const filtered = attractionsWithBusyness.filter(
         attraction =>
-          attraction.busyness_score >= sliderValue[0] &&
-          attraction.busyness_score <= sliderValue[1]
+          attraction.businessRate >= sliderValue[0] &&
+          attraction.businessRate <= sliderValue[1]
       );
       setFilteredAttractions(filtered);
     }
@@ -36,7 +58,7 @@ export default function SliderBar({ setSliderListFunc }) {
 
   useEffect(() => {
     setSliderListFunc(filteredAttractions);
-  }, [filteredAttractions, setSliderListFunc]);
+  }, [filteredAttractions]);
 
   return (
     <Flex
@@ -45,14 +67,14 @@ export default function SliderBar({ setSliderListFunc }) {
         // borderRadius: '25px',
         alignItems: 'center',
         // justifyContent: 'center',
-        width: '100px',
+        width: 'fit-content',
         height: '100%',
         zIndex: 1,
         position: 'absolute',
         // marginTop: '5em',
         // marginLeft: '77em',
         top: 14,
-        right: 3,
+        right: '20px',
         flexDirection: 'column',
       }}
     >
