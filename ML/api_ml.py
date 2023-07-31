@@ -2,8 +2,10 @@ import sys
 from flask import Flask, request, jsonify
 import traceback
 import pandas as pd
+import joblib
+from zipfile import ZipFile
 
-# Import the models dictionary from models.py
+# Import the main_model and models dictionary from models.py
 from models import models, main_model
 
 # Your API definition
@@ -39,8 +41,11 @@ def predict():
 
         # Check if the taxi_locationID exists in the models dictionary
         if taxi_locationID in models:
-            # Load the corresponding model based on the taxi_locationID
-            model = models[taxi_locationID]
+            # Load the corresponding model based on the taxi_locationID from the zip archive
+            with ZipFile('pickle_files/backup_pickle_files.zip', 'r') as archive:
+                model_filename = f'{taxi_locationID}.pkl'
+                with archive.open(model_filename) as file:
+                    model = joblib.load(file)
 
             # Create a new DataFrame with the input data for prediction
             new_data = pd.DataFrame({
