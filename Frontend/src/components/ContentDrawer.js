@@ -394,26 +394,26 @@ export default function ContentDrawer() {
                                         {attractionInfo.name}
                                       </Heading>
                                       <p> {attractionInfo.full_address}</p>
-                                      <br />
-                                    </div>
-                                  </Flex>
-                                  <Flex mt={4}>
-                                    <Alert
-                                      status="info"
-                                      colorScheme={
-                                        attractionInfo.businessRate < 35
-                                          ? 'green'
-                                          : 35 < attractionInfo.businessRate &&
-                                            attractionInfo.businessRate < 70
-                                          ? 'yellow'
-                                          : 'red'
-                                      }
-                                      borderRadius={20}
-                                      width="60%"
-                                      // boxShadow="0 2px 4px rgba(0, 0, 0, 0.2)"
-                                    >
-                                      <AlertIcon />
-                                      <Box>
+                                      <Alert
+                                        pl="0"
+                                        width="fit-content"
+                                        status="info"
+                                        colorScheme={'white'}
+                                        borderRadius={20}
+                                      >
+                                        <AlertIcon
+                                          boxSize={5}
+                                          color={
+                                            attractionInfo.businessRate < 35
+                                              ? 'green'
+                                              : 35 <
+                                                  attractionInfo.businessRate &&
+                                                attractionInfo.businessRate < 70
+                                              ? 'gold'
+                                              : 'red'
+                                          }
+                                        />
+
                                         <AlertTitle>
                                           {attractionInfo.businessRate < 35
                                             ? 'Quiet'
@@ -429,8 +429,10 @@ export default function ContentDrawer() {
                                             {attractionInfo.businessRate}
                                           </p>
                                         </AlertDescription>
-                                      </Box>
-                                    </Alert>
+                                      </Alert>
+                                    </div>
+                                  </Flex>
+                                  <Flex mt={4}>
                                     <Stack
                                       spacing={10}
                                       justifyContent="center"

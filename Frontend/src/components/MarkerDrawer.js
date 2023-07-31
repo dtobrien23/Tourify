@@ -40,7 +40,7 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
     busynessPred,
     activeChart,
   } = useContext(APIContext);
-  const { attractionsWithBusyness } = useContext(MapContext);
+  const { attractionsWithBusyness, setIsDrawerOpen } = useContext(MapContext);
   const [openingHoursAdded, setOpeningHoursAdded] = useState(false);
 
   useEffect(() => {
@@ -77,8 +77,8 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
             openingHours[currentDayKey.replace('Open', 'Close')];
 
           if (
-            currentDayOpeningTime !== undefined &&
-            currentDayClosingTime !== undefined
+            currentDayOpeningTime !== null &&
+            currentDayClosingTime !== null
           ) {
             const currentHoursEDT = new Date(currentTimeEDT).getHours();
             const currentMinutesEDT = new Date(currentTimeEDT).getMinutes();

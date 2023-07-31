@@ -24,6 +24,7 @@ export default function Map() {
     mapCenter,
     setMapCenter,
     attractionsWithBusyness,
+    setIsDrawerOpen,
   } = useContext(MapContext);
 
   ////////////////
@@ -58,6 +59,9 @@ export default function Map() {
       //image: `/images/${marker.name}.jpg`
     };
     setMarkerObject(markerData);
+
+    // close content drawer if open
+    setIsDrawerOpen(false);
 
     //state opens drawer
     setMarkerState(true);
