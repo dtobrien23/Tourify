@@ -46,7 +46,7 @@ export default function ContentDrawer() {
   const toastCheckIn = useToast();
   const toastNotCheckIn = useToast();
   const toastNFT = useToast();
-  const PROMPT_TEST = 'george bush eating cake in a boat with elon musk';
+  const PROMPT_TEST = 'Conor McGregor drinking milk in Pakistan with Ajwad';
 
   const [prompt, setPrompt] = useState(null);
   const [promptIsSet, setPromptIsSet] = useState(false);
@@ -88,8 +88,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.7479925', //hardcoded for testing replace with geolocation variable
-      lng: '-74.0047649', //hardcoded for testing reaplace with geolocation variable
+      lat: '40.7724641', //hardcoded for testing replace with geolocation variable
+      lng: '-73.9834889', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -97,6 +97,7 @@ export default function ContentDrawer() {
       .then(response => {
         console.log('API call successful:', response.data);
         console.log(response, 'this is response data');
+        console.log(globalUserInfo.data.nftLink,'this is wallet man!')
         // Handle the response data here
         if (response.data.code === 200) {
           //   // set logic that your marker has been ticked off
@@ -218,7 +219,7 @@ export default function ContentDrawer() {
       const imageURL = await uploadArtToIpfs(PROMPT_TEST, generatedFile);
 
       // Call mintNft with the prompt and imageURL
-      await mintNft(prompt, imageURL);
+      await mintNft(prompt, imageURL,nftWalletAddress);
     } catch (err) {
       console.log(err);
     }
@@ -250,8 +251,11 @@ export default function ContentDrawer() {
     }
   };
 
+// nft wallet address from cached user info
+const nftWalletAddress = globalUserInfo.data.nftLink;
+
   // Update mintNft function to accept the prompt and imageURL as parameters
-  const mintNft = async (promptFromFunc, imageURL) => {
+  const mintNft = async (promptFromFunc, imageURL, nftWalletAddress) => {
     try {
       console.log('URL for image ', imageURL);
 
@@ -268,7 +272,7 @@ export default function ContentDrawer() {
           chain: 'polygon',
           name: prompt,
           description: `You visited The ${promptFromFunc} Badge.`,
-          mint_to_address: '0xA649D68a977AB4d4Ab3ddd275aC3a84D03889Ee4',
+          mint_to_address: nftWalletAddress,
         },
         {
           headers: {
@@ -303,12 +307,6 @@ export default function ContentDrawer() {
     }
   };
 
-  /////////////////////////////////
-  /////       END OF         /////
-  ////     NFT MINTING CODE  /////
-  ////                       /////
-  //////////////////////////////
-
 
 
 // Use useEffect to set promptIsSet to true after prompt has been set
@@ -325,6 +323,11 @@ useEffect(() => {
   }
 }, [promptIsSet]);
 
+  /////////////////////////////////
+  /////       END OF         /////
+  ////     NFT MINTING CODE  /////
+  ////                       /////
+  ////////////////////////////////
 
   return (
     <Drawer

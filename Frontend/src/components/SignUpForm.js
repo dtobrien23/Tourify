@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, VStack, Badge, useDisclosure, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
-import { NFTStorage } from "nft.storage";
+import {
+  Button,
+  VStack,
+  Badge,
+  useDisclosure,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+} from '@chakra-ui/react';
+import { NFTStorage } from 'nft.storage';
 
 import {
   googleLogout,
@@ -33,6 +42,7 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  Input,
 } from '@chakra-ui/react';
 import { APIContext, globalCredential } from './APIContext';
 import { MapContext } from './MapContext';
@@ -57,7 +67,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const [userInfoFetched, setUserInfoFetched] = useState(false);
   const { setIsDrawerOpen } = useContext(MapContext);
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
-  const [modalContent, setModalContent] = useState('signUp');
+  const [modalContent, setModalContent] = useState('');
   const [isDeleteAlertOpen, setDeleteAlertOpen] = useState(false);
 
   const handleButtonClick = content => {
@@ -73,6 +83,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const toastNFT = useToast();
   const toastUpdate = useToast();
   const toastUpdateError = useToast();
+  const toastWallet = useToast();
 
   const [timerId, setTimerId] = useState(null);
 
@@ -132,9 +143,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     if (newBadgeState) {
       badgeChecker(badgeState, newBadgeState);
     }
-  }, [checkinState,badgeState, newBadgeState]);
-
-
+  }, [checkinState, badgeState, newBadgeState]);
 
   const badgeChecker = (badgeState, newBadgeState) => {
     // Compare each badge property in the objects
@@ -153,12 +162,9 @@ export default function SignUpForm({ setIsLoggedIn }) {
           duration: 3000,
           isClosable: true,
         });
-        
-      
       }
     }
   };
-
 
   const userInfoUpdate = async credentialResponse => {
     //console.log(credentialResponse, 'THIS IS THE CRED for checkin');
@@ -222,13 +228,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
     if (credential) {
       axios
-        .post(
-          `http://localhost:8001/api/user/info?idTokenString=${credential}`
-        ) //user info, json w/ true false
+        .post(`http://localhost:8001/api/user/info?idTokenString=${credential}`) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'user info');
           setGlobalUserInfo(response.data);
-          console.log(globalUserInfo,'retrieving the cached info')
+          console.log(globalUserInfo, 'retrieving the cached info');
 
           setBadgeState(response.data);
 
@@ -242,7 +246,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
             // Cache the user info
             localStorage.setItem('userInfo', JSON.stringify(response.data));
 
-
             // Cache the user credential
             localStorage.setItem('userCredential', credential);
 
@@ -255,14 +258,15 @@ export default function SignUpForm({ setIsLoggedIn }) {
             });
 
             setUserInfoFetched(true);
-          } 
-          if (response.data.code === 10004){
+          }
+          if (response.data.code === 10004) {
             setUserLoggedIn(false);
             setIsLoggedIn(false);
             localStorage.setItem('loggedInfo', 'false'); // Store logged-in state in localStorage
             toastLoginError({
               title: 'Login Error.',
-              description: 'You need to create and account before you can login.',
+              description:
+                'You need to create and account before you can login.',
               status: 'error',
               duration: 3000,
               isClosable: true,
@@ -290,7 +294,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
           );
 
           if (response.data.code !== 10006) {
-            
             console.log(response.data.code, 'this is the code!!!!');
             setGlobalUserInfo(response.data);
             setUserLoggedIn(true);
@@ -309,7 +312,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
               duration: 3000,
               isClosable: true,
             });
-          } 
+            onClose();
+          }
           if (response.data.code === 10006) {
             setUserLoggedIn(false);
             setIsLoggedIn(false);
@@ -333,34 +337,24 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
     if (globalCredential) {
       axios
-        .post(`http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`) //user info, json w/ true false
+        .post(
+          `http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`
+        ) //user info, json w/ true false
         .then(response => {
           // if (response.data.code === 10004) {
           setUserLoggedIn(false);
           setIsLoggedIn(false);
-          localStorage.clear() // Clear the cache
+          localStorage.clear(); // Clear the cache
 
-          handleLogout()
+          handleLogout();
 
           toastLogin({
             title: 'Account successfully deleted.',
-            description: "We hope to see you again.",
+            description: 'We hope to see you again.',
             status: 'success',
             duration: 3000,
             isClosable: true,
           });
-
-            // setUserInfoFetched(true);
-
-          // } else {
-          //   toastLoginError({
-          //     title: 'Deletion Error.',
-          //     description: 'Error with deleting your account, please try again.',
-          //     status: 'error',
-          //     duration: 3000,
-          //     isClosable: true,
-          //   });
-          // }
         })
         .catch(error => console.log(error));
     }
@@ -375,8 +369,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
   };
 
   const handleDeleteAccount = () => {
-    handleDeleteCancel(); 
-    deleteAccount(); 
+    handleDeleteCancel();
+    deleteAccount();
   };
 
   const handleLogout = () => {
@@ -395,6 +389,72 @@ export default function SignUpForm({ setIsLoggedIn }) {
       duration: 3000,
       isClosable: true,
     });
+    onClose();
+  };
+
+  const [walletInput, setWalletInput] = useState('');
+  const {
+    isOpen: isNFTModalOpen,
+    onOpen: onNFTModalOpen,
+    onClose: onNFTModalClose,
+  } = useDisclosure();
+
+  // Function to handle changes in the wallet input field
+  const handleWalletInputChange = event => {
+    setWalletInput(event.target.value);
+  };
+
+  const handleAddWalletClick = () => {
+    onNFTModalOpen();
+    
+  };
+
+
+  const handleWalletEntry = (walletInput) => {
+    console.log(globalCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
+
+    if (globalCredential && walletInput.startsWith('0x') && walletInput.length === 42) {
+      axios
+        .post(
+          `http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
+        ) //Add Wallet address
+        .then(response => {
+          console.log(response.data, 'user info1');
+
+        if (response.data.code === 200) {
+          console.log(response.data, 'user info');
+          setGlobalUserInfo(response.data);
+          console.log(globalUserInfo, 'retrieving the cached info');
+
+          toastWallet({
+            title: 'NFT Wallet Added!.',
+            description: 'You can now mint NFTs when you get a badge!. Be sure to connect your wallet with OpenSea to see you NFTs!',
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+
+          // Close the modal after successful entry
+          onNFTModalClose();
+        }
+      
+      })
+        .catch(error => console.log(error));
+    }
+    else {
+      toastWallet({
+        title: 'Please enter a valid NFT Wallet Address.',
+        description: 'Your Address must be 42 characters long and bgein with 0x',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const handleCancel = () => {
+    setWalletInput(''); // Clear the input field when "Cancel" is clicked
+    onNFTModalClose();
   };
 
   if (loading) {
@@ -402,7 +462,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
   }
 
   return (
-    <Flex flexDirection={buttonsDirection} minWidth="190px" justifyContent="flex-end">
+    <Flex
+      flexDirection={buttonsDirection}
+      minWidth="190px"
+      justifyContent="flex-end"
+    >
       {userLoggedIn ? (
         <Menu>
           <MenuButton
@@ -415,12 +479,14 @@ export default function SignUpForm({ setIsLoggedIn }) {
           >
             User Options
           </MenuButton>
-          <MenuList>
+          <MenuList zIndex={5}>
             <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-            <MenuItem onClick={handleDeleteConfirmation}>Delete Account</MenuItem>
+            <MenuItem onClick={handleDeleteConfirmation}>
+              Delete Account
+            </MenuItem>
+            <MenuItem onClick={handleAddWalletClick}>Add NFT Wallet</MenuItem>{' '}
           </MenuList>
         </Menu>
-
       ) : (
         <>
           <Flex mr={2}>
@@ -504,7 +570,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
           </Modal>
         </>
       )}
-    <AlertDialog
+      <AlertDialog
         isOpen={isDeleteAlertOpen}
         leastDestructiveRef={undefined}
         onClose={handleDeleteCancel}
@@ -528,6 +594,30 @@ export default function SignUpForm({ setIsLoggedIn }) {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
+
+      <Modal z zIndex={9999} isOpen={isNFTModalOpen} onClose={onNFTModalClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader>Add NFT Wallet Address</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Input
+                  placeholder="Enter your wallet address"
+                  value={walletInput}
+                  onChange={handleWalletInputChange}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme="blue" mr={3} onClick={() => handleWalletEntry(walletInput)}>
+                  Submit
+                </Button>
+                <Button variant="ghost" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
     </Flex>
+    
   );
 }
