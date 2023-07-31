@@ -1,33 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
   Button,
-  VStack,
-  Badge,
   useDisclosure,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
 } from '@chakra-ui/react';
-import { NFTStorage } from 'nft.storage';
 
-import {
-  googleLogout,
-  useGoogleLogin,
-  GoogleLogin,
-  useGoogleOneTapLogin,
-} from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import {
   Flex,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
-  PopoverArrow,
-  PopoverCloseButton,
-  Avatar,
-  AvatarBadge,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -249,6 +233,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
             // Cache the user credential
             localStorage.setItem('userCredential', credential);
 
+            
+
             toastLogin({
               title: 'Login Successful.',
               description: "You've Logged in Successfully.",
@@ -256,6 +242,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
               duration: 3000,
               isClosable: true,
             });
+            onClose();
 
             setUserInfoFetched(true);
           }
@@ -271,6 +258,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
               duration: 3000,
               isClosable: true,
             });
+            onClose();
           }
         })
         .catch(error => console.log(error));
@@ -294,16 +282,23 @@ export default function SignUpForm({ setIsLoggedIn }) {
           );
 
           if (response.data.code !== 10006) {
-            console.log(response.data.code, 'this is the code!!!!');
-            setGlobalUserInfo(response.data);
-            setUserLoggedIn(true);
-            setIsLoggedIn(true);
-            localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
+            backendLogin(credentialResponse);
+            // console.log(response.data.code, 'this is the code!!!!');
+            // setGlobalUserInfo(response.data);
+            // console.log(response.data, 'first login data')
+            // setUserLoggedIn(true);
+            // setIsLoggedIn(true);
+            // localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
 
-            // Cache the user info
-            localStorage.setItem('userInfo', JSON.stringify(response.data));
+            // // Cache the user info
+            // localStorage.setItem('userInfo', JSON.stringify(response.data));
+            // // Set the user info in the local state
+            // setGlobalUserInfo(response.data);
 
-            setUserInfoFetched(true);
+            // console.log(localStorage.getItem('userInfo', 'this is from first login'))
+            // console.log(globalUserInfo,'global from first login')
+
+            // setUserInfoFetched(true);
 
             toastSignup({
               title: 'Account created.',
@@ -326,6 +321,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
               duration: 3000,
               isClosable: true,
             });
+            onClose();
           }
         })
         .catch(error => console.log(error));
@@ -355,6 +351,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
             duration: 3000,
             isClosable: true,
           });
+          onClose();
         })
         .catch(error => console.log(error));
     }
@@ -406,14 +403,16 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
   const handleAddWalletClick = () => {
     onNFTModalOpen();
-    
   };
 
-
-  const handleWalletEntry = (walletInput) => {
+  const handleWalletEntry = walletInput => {
     console.log(globalCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
 
-    if (globalCredential && walletInput.startsWith('0x') && walletInput.length === 42) {
+    if (
+      globalCredential &&
+      walletInput.startsWith('0x') &&
+      walletInput.length === 42
+    ) {
       axios
         .post(
           `http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
@@ -421,32 +420,32 @@ export default function SignUpForm({ setIsLoggedIn }) {
         .then(response => {
           console.log(response.data, 'user info1');
 
-        if (response.data.code === 200) {
-          console.log(response.data, 'user info');
-          setGlobalUserInfo(response.data);
-          console.log(globalUserInfo, 'retrieving the cached info');
+          if (response.data.code === 200) {
+            console.log(response.data, 'user info');
+            setGlobalUserInfo(response.data);
+            console.log(globalUserInfo, 'retrieving the cached info');
 
-          toastWallet({
-            title: 'NFT Wallet Added!.',
-            description: 'You can now mint NFTs when you get a badge!. Be sure to connect your wallet with OpenSea to see you NFTs!',
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-          });
+            toastWallet({
+              title: 'NFT Wallet Added!.',
+              description:
+                'You can now mint NFTs when you get a badge!. Be sure to connect your wallet with OpenSea to see your NFTs!',
+              status: 'success',
+              duration: 6000,
+              isClosable: true,
+            });
 
-          // Close the modal after successful entry
-          onNFTModalClose();
-        }
-      
-      })
+            // Close the modal after successful entry
+            onNFTModalClose();
+          }
+        })
         .catch(error => console.log(error));
-    }
-    else {
+    } else {
       toastWallet({
         title: 'Please enter a valid NFT Wallet Address.',
-        description: 'Your Address must be 42 characters long and bgein with 0x',
+        description:
+          'Your Address must be 42 characters long and begin with 0x',
         status: 'error',
-        duration: 3000,
+        duration: 6000,
         isClosable: true,
       });
     }
@@ -596,28 +595,31 @@ export default function SignUpForm({ setIsLoggedIn }) {
       </AlertDialog>
 
       <Modal z zIndex={9999} isOpen={isNFTModalOpen} onClose={onNFTModalClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>Add NFT Wallet Address</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Input
-                  placeholder="Enter your wallet address"
-                  value={walletInput}
-                  onChange={handleWalletInputChange}
-                />
-              </ModalBody>
-              <ModalFooter>
-                <Button colorScheme="blue" mr={3} onClick={() => handleWalletEntry(walletInput)}>
-                  Submit
-                </Button>
-                <Button variant="ghost" onClick={handleCancel}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Add NFT Wallet Address</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input
+              placeholder="Enter your wallet address"
+              value={walletInput}
+              onChange={handleWalletInputChange}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => handleWalletEntry(walletInput)}
+            >
+              Submit
+            </Button>
+            <Button variant="ghost" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
-    
   );
 }

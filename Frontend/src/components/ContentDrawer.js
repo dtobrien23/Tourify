@@ -30,6 +30,7 @@ import {
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
 import { APIContext } from './APIContext';
+import { generate, count } from 'random-words';
 
 export default function ContentDrawer() {
   const { globalUserInfo, setCheckinState, checkinState } =
@@ -46,12 +47,11 @@ export default function ContentDrawer() {
   const toastCheckIn = useToast();
   const toastNotCheckIn = useToast();
   const toastNFT = useToast();
-  const PROMPT_TEST = 'Conor McGregor drinking milk in Pakistan with Ajwad';
+  const randomword = generate();
+  const PROMPT_TEST = 'man with top hat and '+ randomword;
 
   const [prompt, setPrompt] = useState(null);
   const [promptIsSet, setPromptIsSet] = useState(false);
-
-  
 
   const kebabToCamelCase = str => {
     return str.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
@@ -97,7 +97,6 @@ export default function ContentDrawer() {
       .then(response => {
         console.log('API call successful:', response.data);
         console.log(response, 'this is response data');
-        console.log(globalUserInfo.data.nftLink,'this is wallet man!')
         // Handle the response data here
         if (response.data.code === 200) {
           //   // set logic that your marker has been ticked off
@@ -113,7 +112,6 @@ export default function ContentDrawer() {
             duration: 3000,
             isClosable: true,
           });
-          
 
           // get the updated user info from the backend
         }
@@ -180,12 +178,12 @@ export default function ContentDrawer() {
     return false;
   };
 
-
   ////////////////////////////////
   /////                      /////
   ////     NFT MINTING CODE  /////
   ////                       /////
   ////////////////////////////////
+
   const [imageBlob, setImageBlob] = useState(null);
 
   const [fileMade, setFile] = useState(null);
@@ -219,7 +217,7 @@ export default function ContentDrawer() {
       const imageURL = await uploadArtToIpfs(PROMPT_TEST, generatedFile);
 
       // Call mintNft with the prompt and imageURL
-      await mintNft(prompt, imageURL,nftWalletAddress);
+      await mintNft(prompt, imageURL, nftWalletAddress);
     } catch (err) {
       console.log(err);
     }
@@ -250,9 +248,19 @@ export default function ContentDrawer() {
       console.log(err);
     }
   };
+  console.log(localStorage.getItem('loggedInfo'), 'this is logged info');
 
-// nft wallet address from cached user info
-const nftWalletAddress = globalUserInfo.data.nftLink;
+  // nft wallet address from cached user info
+  const [nftWalletAddress, setNFTWalletAddress] = useState(null);
+
+  useEffect(() => {
+    if (
+      localStorage.getItem('loggedInfo') === 'true' &&
+      globalUserInfo.data.nftLink
+    ) {
+      setNFTWalletAddress(globalUserInfo.data.nftLink);
+    }
+  }, [globalUserInfo]);
 
   // Update mintNft function to accept the prompt and imageURL as parameters
   const mintNft = async (promptFromFunc, imageURL, nftWalletAddress) => {
@@ -271,7 +279,7 @@ const nftWalletAddress = globalUserInfo.data.nftLink;
           file_url: imageURL,
           chain: 'polygon',
           name: prompt,
-          description: `You visited The ${promptFromFunc} Badge.`,
+          description: `You got the ${promptFromFunc} Badge.`,
           mint_to_address: nftWalletAddress,
         },
         {
@@ -296,8 +304,8 @@ const nftWalletAddress = globalUserInfo.data.nftLink;
         });
         setPrompt(null);
         setPromptIsSet(false);
-        console.log(prompt,'prompt after mint')
-        console.log(promptIsSet,'prompt bool after mint')
+        // console.log(prompt,'prompt after mint')
+        // console.log(promptIsSet,'prompt bool after mint')
       } else {
         // Handle other possible response statuses or errors here
         console.log('Error minting NFT.');
@@ -307,21 +315,41 @@ const nftWalletAddress = globalUserInfo.data.nftLink;
     }
   };
 
+  // Use useEffect to set promptIsSet to true after prompt has been set
+  useEffect(() => {
+    if (prompt !== null && promptIsSet === false) {
+      setPromptIsSet(true);
+    }
+  }, [prompt]);
 
+  // Use useEffect to call generateArt() when promptIsSet is true
+  useEffect(() => {
+    if (
+      promptIsSet &&
+      prompt !== null &&
+      nftWalletAddress !== null &&
+      nftWalletAddress !=='' &&
+      nftWalletAddress.startsWith('0x') &&
+      nftWalletAddress.length === 42
+    ) {
+      generateArt();
+    }
 
-// Use useEffect to set promptIsSet to true after prompt has been set
-useEffect(() => {
-  if (prompt !== null && promptIsSet === false) {
-    setPromptIsSet(true);
-  }
-}, [prompt]);
-
-// Use useEffect to call generateArt() when promptIsSet is true
-useEffect(() => {
-  if (promptIsSet && prompt !== null) {
-    generateArt();
-  }
-}, [promptIsSet]);
+    if (
+      promptIsSet &&
+      prompt !== null &&
+      (nftWalletAddress === '' || nftWalletAddress === null)
+    ) {
+      toastNotCheckIn({
+        title: 'NFT Wallet Address Error.',
+        description:
+          'Please set your wallet address to mint and receive NFT Badges!',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [promptIsSet, prompt, nftWalletAddress]);
 
   /////////////////////////////////
   /////       END OF         /////
@@ -368,7 +396,7 @@ useEffect(() => {
             {' '}
             <DrawerHeader>
               {`My Attractions`}
-              <span id="confettiReward" />
+              <span zIndex={9999999} id="confettiReward" />
             </DrawerHeader>
             <DrawerBody>
               <Tabs variant="soft-rounded" colorScheme="orange">
