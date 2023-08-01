@@ -7,6 +7,7 @@ import ai.onnxruntime.OrtSession;
 import org.example.bean.dto.AttractionOnePredictionDTO;
 import org.example.bean.dto.AttractionPredictionDTO;
 import org.example.bean.model.AttractionDO;
+import org.example.bean.model.OpenHour;
 import org.example.bean.util.ResponseCode;
 import org.example.bean.util.PredictionInternalResult;
 import org.example.bean.vo.AttractionOnePredictionVO;
@@ -16,6 +17,7 @@ import org.example.config.BusinessException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
@@ -231,27 +233,52 @@ public class AttractionService {
         localDateTimeInNewYork = localDateTimeInNewYork.plusDays(predictionDays);
         System.out.println("--------------------------------------Starting a new prediction----------------------------------");
         System.out.println("localDateTimeInNewYork: " + localDateTimeInNewYork);
+
+
+
         // Prepare lists to hold the month, day of the week, and hour values
         List<Integer> months = new ArrayList<>();
         List<Integer> daysOfWeek = new ArrayList<>();
         List<Integer> hours = new ArrayList<>();
+        List<Boolean> OpenClose = new ArrayList<>();
         // Generate the values for the next 24 hours
         for (int i = 0; i < 24; i++) {
             LocalDateTime futureDateTime = localDateTimeInNewYork.plusHours(i);
             months.add(futureDateTime.getMonthValue());
             daysOfWeek.add(futureDateTime.getDayOfWeek().getValue());
             hours.add(futureDateTime.getHour());
-            System.out.println("i: " + i + "   futureDateTime" + futureDateTime + "   localDateTimeInNewYork"+ localDateTimeInNewYork);
-
+            // Check at the time is the attraction open or close
+            OpenHour openHour = attractionDO.getOpenHour();
+            LocalTime attractionOpen = null;
+            LocalTime attractionClose = null;
+            if (futureDateTime.getDayOfWeek().getValue() == 1){attractionOpen = openHour.getMondayOpen();attractionClose = openHour.getMondayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 2){attractionOpen = openHour.getTuesdayOpen();attractionClose = openHour.getMondayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 3){attractionOpen = openHour.getWednesdayOpen();attractionClose = openHour.getMondayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 4){attractionOpen = openHour.getThursdayOpen();attractionClose = openHour.getMondayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 5){attractionOpen = openHour.getFridayOpen();attractionClose = openHour.getMondayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 6){attractionOpen = openHour.getSaturdayOpen();attractionClose = openHour.getMondayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 7){attractionOpen = openHour.getSundayOpen();attractionClose = openHour.getMondayClose();}
+            // compare the attraction's time range with the iterate time
+            LocalTime futureLocalTime = futureDateTime.toLocalTime();        // Extract the time part from the current date-time
+            // Check if current time is in between the start and end times
+            if(futureLocalTime.isAfter(attractionOpen.minusHours(1)) && futureLocalTime.isBefore(attractionClose.minusHours(1))){
+                OpenClose.add(true);
+            } else {
+                OpenClose.add(false);
+            }
+            // Debugging print statement
+            System.out.println("i: " + i + "   futureDateTime:" + futureDateTime + "   hours:" + hours.get(i) +  "   OpenClose:" + OpenClose.get(i));
         }
         System.out.println("Months: " + months);
         System.out.println("Days of Week: " + daysOfWeek);
         System.out.println("Hours: " + hours);
+        System.out.println("OpenClose: " + OpenClose);
         // Use monthsList to loop though to insert the attractionPredictionDetailVO(hour and business) into List (attractionPredictionDetailVOList)
         for (int i = 0; i < 24; i++) {
             // set the response VO
             AttractionPredictionDetailVO attractionPredictionDetailVO = new AttractionPredictionDetailVO();
             attractionPredictionDetailVO.setHour(hours.get(i));
+            attractionPredictionDetailVO.setOpenOrClose(OpenClose.get(i));
             // get the 24 weather info from the DTO
             AttractionPredictionDTO attractionPredictionDTO = new AttractionPredictionDTO();
             // exception just in case that front end input does not contain 24 items
@@ -388,6 +415,6 @@ public class AttractionService {
         }
     }
 
-}
+    }
 
 
