@@ -8,22 +8,18 @@ const TutorialTooltip = () => {
   const tutorialShownKey = 'tutorialShown'; // Local storage key
 
   useEffect(() => {
-    // Check if the tutorial has been shown before
     const isTutorialShown = localStorage.getItem(tutorialShownKey);
 
-    if (!isTutorialShown) {
-      // If the tutorial hasn't been shown before, open it
+    if (isTutorialShown) {
       onOpen();
     }
   }, [onOpen]);
 
   const handleNextStep = () => {
-    // Increment the currentStep and show the next step of the tutorial
     setCurrentStep((prevStep) => prevStep + 1);
   };
 
   const handleSkipTutorial = () => {
-    // Close the tutorial
     onClose();
 
     // Set the flag in local storage to indicate that the tutorial has been shown
@@ -39,18 +35,29 @@ const TutorialTooltip = () => {
           <ModalCloseButton />
           <ModalBody>
             {/* Show different content based on the current step */}
-            {currentStep === 1 && <p>Step 1: Welcome to our website! This is the first step of the tutorial.</p>}
-            {currentStep === 2 && <p>Step 2: Here's how you can use feature XYZ.</p>}
-            {currentStep === 3 && <p>Step 3: And here's another feature ABC explained.</p>}
-            {/* Add more steps as needed */}
+            {currentStep === 1 && (
+              <p>
+                Step 1: Welcome to Tourify! Collect experiences and enhance your journey with our amazing attractions.
+              </p>
+            )}
+            {currentStep === 2 && (
+              <p>
+                Step 2: You can enjoy various activities on this website, including x, y, and z.
+              </p>
+            )}
+            {currentStep === 3 && (
+              <p>
+                Step 3: Press "About Us" to learn more about our team and mission!
+              </p>
+            )}
           </ModalBody>
           <ModalFooter>
             {currentStep < maxSteps ? (
-              <Button colorScheme="blue" mr={3} onClick={handleNextStep}>
+              <Button colorScheme="orange" mr={3} onClick={handleNextStep}>
                 Next Step
               </Button>
             ) : (
-              <Button colorScheme="blue" mr={3} onClick={handleSkipTutorial}>
+              <Button colorScheme="orange" mr={3} onClick={handleSkipTutorial}>
                 Finish Tutorial
               </Button>
             )}

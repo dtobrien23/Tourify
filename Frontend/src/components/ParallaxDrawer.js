@@ -87,7 +87,7 @@ const ParallaxDrawer = () => {
                       <br />
                       <br />
                       <li>
-                        <strong>Step 2:</strong> Here you have 2 tabs: Attractions to Visit and Visited Attractions
+                        <strong>Step 2:</strong> Here you have 2 tabs:  and Visited Attractions
                         <br />
                         <br />
                         <img src="\images\tutorial\1.2.png" alt="Attractions" />
