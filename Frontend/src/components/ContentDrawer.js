@@ -90,8 +90,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.8115504', //hardcoded for testing replace with geolocation variable
-      lng: '-73.9464769', //hardcoded for testing reaplace with geolocation variable
+      lat: '40.7525596', //hardcoded for testing replace with geolocation variable
+      lng: '-73.9768066', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -257,14 +257,14 @@ export default function ContentDrawer() {
   // nft wallet address from cached user info
   const [nftWalletAddress, setNFTWalletAddress] = useState(null);
 
-  // useEffect(() => {
-  //   if (
-  //     localStorage.getItem('loggedInfo') === 'true' &&
-  //     globalUserInfo.data.nftLink
-  //   ) {
-  //     setNFTWalletAddress(globalUserInfo.data.nftLink);
-  //   }
-  // }, [globalUserInfo]);
+  useEffect(() => {
+    if (
+      localStorage.getItem('loggedInfo') === 'true' &&
+      globalUserInfo.data.nftLink
+    ) {
+      setNFTWalletAddress(globalUserInfo.data.nftLink);
+    }
+  }, [globalUserInfo]);
 
   // Update mintNft function to accept the prompt and imageURL as parameters
   const mintNft = async (promptFromFunc, imageURL, nftWalletAddress) => {
@@ -411,24 +411,12 @@ export default function ContentDrawer() {
               <span zIndex={9999999} id="confettiReward" />
             </DrawerHeader>
             <DrawerBody>
-              <Tabs variant="soft-rounded" colorScheme="orange">
-                <TabList>
-                  <Tab
-                    _selected={{
-                      color: 'white',
-                      bg: 'orangered',
-                      // border: 'solid 1px orangered',
-                    }}
-                  >
+              <Tabs>
+                <TabList width="100%">
+                  <Tab width="50%" color="orangered">
                     Attractions to Visit
                   </Tab>
-                  <Tab
-                    _selected={{
-                      color: 'white',
-                      bg: 'orangered',
-                      // border: 'solid 1px orangered',
-                    }}
-                  >
+                  <Tab width="50%" color="orangered">
                     Visited Attractions
                   </Tab>
                 </TabList>
@@ -450,7 +438,6 @@ export default function ContentDrawer() {
                                 border="2px solid orangered"
                                 borderRadius="20px"
                                 marginTop="5px"
-                                marginLeft="10px"
                                 overflow="hidden"
                                 spacing="20px"
                                 p="10px"
@@ -588,7 +575,6 @@ export default function ContentDrawer() {
                                 border="2px solid green"
                                 borderRadius="20px"
                                 marginTop="5px"
-                                marginLeft="10px"
                                 overflow="hidden"
                                 spacing="20px"
                                 p="10px"
@@ -743,64 +729,67 @@ export default function ContentDrawer() {
             <DrawerHeader>{`My Badges`}</DrawerHeader>
             <DrawerBody>
               <Tabs colorScheme="orange">
-                <TabList>
-                  <Tab>My Badges</Tab>
-                  <Tab>Badges to Collect</Tab>
+                <TabList width="100%">
+                  <Tab width="50%" color="orangered">
+                    Badges to Collect
+                  </Tab>
+                  <Tab width="50%" color="orangered">
+                    My Badges
+                  </Tab>
                 </TabList>
 
                 <TabPanels>
                   <TabPanel>
-                    <Flex>
-                      <div>
-                        {Object.entries(globalUserInfo.data.badgeDO).map(
-                          ([badge, status]) => {
-                            if (status) {
-                              return (
-                                <SimpleGrid
-                                  alignItems="left"
-                                  justifyItems="left"
-                                  border="3px solid orangered"
-                                  borderRadius="20px"
-                                  marginTop="5px"
-                                  marginLeft="10px"
-                                  overflow="hidden"
-                                  spacing={8}
-                                  p="10px"
-                                  width="425px"
-                                >
-                                  <Flex key={badge} width="100%">
-                                    {' '}
-                                    <img
-                                      src={`/images/badgeimages/${badge}.jpg`}
-                                      alt={badge}
-                                      style={{
-                                        maxWidth: '100px',
-                                        height: '100px',
-                                        marginRight: '10px',
-                                        border: '2px solid orangered',
-                                        borderRadius: '5px',
-                                      }}
-                                    />
-                                    <div>
-                                      <Heading size="md">{badge}</Heading>
-                                      <p> Badge info: Some badge info</p>
-                                    </div>
-                                  </Flex>
-                                </SimpleGrid>
-                              );
-                            }
-                            return null;
-                          }
-                        )}
-                        {areAllBadgesFalse() && (
+                    {Object.entries(globalUserInfo.data.badgeDO).map(
+                      ([badge, status]) => {
+                        if (!status) {
+                          return (
+                            <Flex
+                              border="2px solid orangered"
+                              borderRadius="20px"
+                              marginTop="5px"
+                              overflow="hidden"
+                              spacing="20px"
+                              p="10px"
+                              width="425px"
+                              mb="15px"
+                            >
+                              <Flex
+                                key={badge}
+                                width="100%"
+                                flexDirection="column"
+                              >
+                                <Flex flexDirection="row">
+                                  <img
+                                    src={`/images/badgeimages/${badge}.jpg`}
+                                    alt={badge}
+                                    style={{
+                                      maxWidth: '100px',
+                                      height: '100px',
+                                      marginRight: '10px',
+                                      border: '1px solid orangered',
+                                      borderRadius: '20px',
+                                    }}
+                                  />
+                                  <div style={{ width: '100%' }}>
+                                    <Heading size="md">{badge}</Heading>
+                                    <p> Badge info: Some badge info</p>
+                                  </div>
+                                </Flex>
+                              </Flex>
+                            </Flex>
+                          );
+                        }
+                        return null;
+                      }
+                    )}
+                    {areAllBadgesTrue() && (
+                      <FlipCard
+                        frontContent={
                           <p>
-                            {''}
-                            <br />
-                            <Heading>You Dont Have Any Badges Yet!</Heading>
-                            <br />
                             <img
-                              src={'/images/badgeimages/no_badges.jpg'}
-                              alt="All Badges are True"
+                              src={'/images/badgeimages/all_Badges.jpg'}
+                              alt="All Attractions are True"
                               style={{
                                 maxWidth: '500px',
                                 height: '500px',
@@ -810,79 +799,78 @@ export default function ContentDrawer() {
                               }}
                             />
                           </p>
-                        )}
-                      </div>
-                    </Flex>
+                        }
+                        backContent={
+                          <div>
+                            <Heading>You've Got All The Badges!</Heading>
+                          </div>
+                        }
+                      />
+                    )}
                   </TabPanel>
                   <TabPanel>
-                    <Flex>
-                      <div>
-                        {Object.entries(globalUserInfo.data.badgeDO).map(
-                          ([badge, status]) => {
-                            if (!status) {
-                              return (
-                                <SimpleGrid
-                                  alignItems="left"
-                                  justifyItems="left"
-                                  border="3px solid orangered"
-                                  borderRadius="20px"
-                                  marginTop="5px"
-                                  marginLeft="10px"
-                                  overflow="hidden"
-                                  spacing={8}
-                                  p="10px"
-                                  width="425px"
-                                >
-                                  <Flex key={badge} width="100%">
-                                    {' '}
-                                    <img
-                                      src={`/images/badgeimages/${badge}.jpg`}
-                                      alt={badge}
-                                      style={{
-                                        maxWidth: '100px',
-                                        height: '100px',
-                                        marginRight: '10px',
-                                        border: '2px solid orangered',
-                                        borderRadius: '5px',
-                                      }}
-                                    />
-                                    <div>
-                                      <Heading size="md">{badge}</Heading>
-                                      <p> Badge info: Some badge info</p>
-                                    </div>
-                                  </Flex>
-                                </SimpleGrid>
-                              );
-                            }
-                            return null;
-                          }
-                        )}
-                        {areAllBadgesTrue() && (
-                          <FlipCard
-                            frontContent={
-                              <p>
-                                <img
-                                  src={'/images/badgeimages/all_Badges.jpg'}
-                                  alt="All Attractions are True"
-                                  style={{
-                                    maxWidth: '500px',
-                                    height: '500px',
-                                    marginRight: '10px',
-                                    border: '2px solid orangered',
-                                    borderRadius: '5px',
-                                  }}
-                                />
-                              </p>
-                            }
-                            backContent={
-                              <div>
-                                <Heading>You've Got All The Badges!</Heading>
-                              </div>
-                            }
-                          />
-                        )}
-                      </div>
-                    </Flex>
+                    {Object.entries(globalUserInfo.data.badgeDO).map(
+                      ([badge, status]) => {
+                        if (status) {
+                          return (
+                            <Flex
+                              border="2px solid gold"
+                              borderRadius="20px"
+                              marginTop="5px"
+                              overflow="hidden"
+                              spacing="20px"
+                              p="10px"
+                              width="425px"
+                              mb="15px"
+                            >
+                              <Flex
+                                key={badge}
+                                width="100%"
+                                flexDirection="column"
+                              >
+                                <Flex flexDirection="row">
+                                  <img
+                                    src={`/images/badgeimages/${badge}.jpg`}
+                                    alt={badge}
+                                    style={{
+                                      maxWidth: '100px',
+                                      height: '100px',
+                                      marginRight: '10px',
+                                      border: '1px solid gold',
+                                      borderRadius: '20px',
+                                    }}
+                                  />
+                                  <div style={{ width: '100%' }}>
+                                    <Heading size="md">{badge}</Heading>
+                                    <p> Badge info: Some badge info</p>
+                                  </div>
+                                </Flex>
+                              </Flex>
+                            </Flex>
+                          );
+                        }
+                        return null;
+                      }
+                    )}
+                    {areAllBadgesFalse() && (
+                      <p>
+                        {''}
+                        <br />
+                        <Heading>You Dont Have Any Badges Yet!</Heading>
+                        <br />
+                        <img
+                          src={'/images/badgeimages/no_badges.jpg'}
+                          alt="All Badges are True"
+                          style={{
+                            maxWidth: '500px',
+                            height: '500px',
+                            marginRight: '10px',
+                            border: '2px solid orangered',
+                            borderRadius: '5px',
+                          }}
+                        />
+                      </p>
+                    )}
                   </TabPanel>
                 </TabPanels>
               </Tabs>

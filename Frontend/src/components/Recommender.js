@@ -186,100 +186,139 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   return (
     <>
       <Tabs>
-        <TabList>
-          <Tab>Nearest Attractions</Tab>
-          <Tab>Quietest Attractions</Tab>
-          <Tab>Nearest + Quietest</Tab>
+        <TabList width="100%">
+          <Tab width="33.3%" color="orangered">
+            Nearest
+          </Tab>
+          <Tab width="33.3%" color="orangered">
+            Quietest
+          </Tab>
+          <Tab width="33.3%" color="orangered">
+            Best
+          </Tab>
         </TabList>
 
         <TabPanels>
           <TabPanel>
             {nearestAttractions.map(attraction => (
-              <SimpleGrid
-                alignItems="left"
-                justifyItems="left"
-                border="3px solid orangered"
+              <Flex
+                border="2px solid orangered"
                 borderRadius="20px"
                 marginTop="5px"
-                marginLeft="10px"
                 overflow="hidden"
-                spacing={8}
+                spacing="20px"
                 p="10px"
+                width="425px"
+                mb="15px"
               >
-                <Flex key={attraction.id} mb={4}>
-                  <p>
-                    {' '}
+                <Flex
+                  key={attraction}
+                  // mb={4}
+                  width="100%"
+                  flexDirection="column"
+                >
+                  <Flex flexDirection="row">
                     <img
                       src={`/images/${attraction.name_alias}.jpg`}
                       alt={attraction.name_alias}
                       style={{
-                        width: '100px',
+                        maxWidth: '100px',
                         height: '100px',
                         marginRight: '10px',
-                        border: '3px solid orangered',
-                        borderRadius: '5px',
+                        // border: '2px solid orangered',
+                        borderRadius: '20px',
                       }}
                     />
-                  </p>
-
-                  <div>
-                    <Heading size="md">{attraction.name}</Heading>{' '}
-                    <p>Busyness Score: {attraction.businessRate}</p>
-                    <p>Distance: {attraction.distance}</p>
-                  </div>
+                    <div style={{ width: '100%' }}>
+                      {' '}
+                      <Heading size="md">{attraction.name}</Heading>{' '}
+                      <p>Busyness Score: {attraction.businessRate}</p>
+                      <p>Distance: {attraction.distance}</p>
+                    </div>
+                  </Flex>
                 </Flex>
-              </SimpleGrid>
+              </Flex>
             ))}
           </TabPanel>
           <TabPanel>
             {quietestAttractions.map(attraction => (
-              <Flex key={attraction.id} mb={4}>
-                <p>
-                  {' '}
-                  <img
-                    src={`/images/${attraction.name_alias}.jpg`}
-                    alt={attraction.name_alias}
-                    style={{
-                      width: '100px',
-                      height: '100px',
-                      marginRight: '10px',
-                      border: '3px solid orangered',
-                      borderRadius: '5px',
-                    }}
-                  />
-                </p>
-                <div>
-                  <Heading size="md">{attraction.name}</Heading>{' '}
-                  <p>Busyness Score: {attraction.businessRate}</p>
-                  <p>Distance: {attraction.distance}</p>
-                </div>
+              <Flex
+                border="2px solid orangered"
+                borderRadius="20px"
+                marginTop="5px"
+                overflow="hidden"
+                spacing="20px"
+                p="10px"
+                width="425px"
+                mb="15px"
+              >
+                <Flex
+                  key={attraction}
+                  // mb={4}
+                  width="100%"
+                  flexDirection="column"
+                >
+                  <Flex flexDirection="row">
+                    <img
+                      src={`/images/${attraction.name_alias}.jpg`}
+                      alt={attraction.name_alias}
+                      style={{
+                        maxWidth: '100px',
+                        height: '100px',
+                        marginRight: '10px',
+                        // border: '2px solid orangered',
+                        borderRadius: '20px',
+                      }}
+                    />
+                    <div style={{ width: '100%' }}>
+                      <Heading size="md">{attraction.name}</Heading>{' '}
+                      <p>Busyness Score: {attraction.businessRate}</p>
+                      <p>Distance: {attraction.distance}</p>
+                    </div>
+                  </Flex>
+                </Flex>
               </Flex>
             ))}
           </TabPanel>
           <TabPanel>
             {combinedAttractions &&
               combinedAttractions.map(attraction => (
-                <Flex key={attraction.id} mb={4}>
-                  <p>
-                    {' '}
-                    <img
-                      src={`/images/${attraction.name_alias}.jpg`}
-                      alt={attraction.name_alias}
-                      style={{
-                        width: '100px',
-                        height: '100px',
-                        marginRight: '10px',
-                        border: '3px solid orangered',
-                        borderRadius: '5px',
-                      }}
-                    />
-                  </p>
-                  <div>
-                    <Heading size="md">{attraction.name}</Heading>{' '}
-                    <p>Busyness Score: {attraction.businessRate}</p>
-                    <p>Distance: {attraction.distance}</p>
-                    <p>Combined Score: {attraction.combinedIndex}</p>
-                  </div>
+                <Flex
+                  border="2px solid orangered"
+                  borderRadius="20px"
+                  marginTop="5px"
+                  overflow="hidden"
+                  spacing="20px"
+                  p="10px"
+                  width="425px"
+                  mb="15px"
+                >
+                  <Flex
+                    key={attraction}
+                    // mb={4}
+                    width="100%"
+                    flexDirection="column"
+                  >
+                    <Flex flexDirection="row">
+                      <img
+                        src={`/images/${attraction.name_alias}.jpg`}
+                        alt={attraction.name_alias}
+                        style={{
+                          maxWidth: '100px',
+                          height: '100px',
+                          marginRight: '10px',
+                          // border: '2px solid orangered',
+                          borderRadius: '20px',
+                        }}
+                      />
+                      <div style={{ width: '100%' }}>
+                        <Heading size="md">{attraction.name}</Heading>{' '}
+                        <p>Busyness Score: {attraction.businessRate}</p>
+                        <p>Distance: {attraction.distance}</p>
+                        {/* <p>Combined Score: {attraction.combinedIndex}</p> */}
+                      </div>
+                    </Flex>
+                  </Flex>
                 </Flex>
               ))}
           </TabPanel>

@@ -209,7 +209,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
 
-    setGlobalCredential(credentialResponse.credential); // Set the credential as a global variable
+    setGlobalCredential(credential); // Set the credential as a global variable
 
     if (credential) {
       axios
@@ -220,6 +220,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
         .then(response => {
           console.log(response.data, 'user info');
           setGlobalUserInfo(response.data);
+          setGlobalCredential(credential);
           console.log(globalUserInfo, 'retrieving the cached info');
 
           setBadgeState(response.data);
