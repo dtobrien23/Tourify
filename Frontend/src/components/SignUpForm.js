@@ -586,12 +586,12 @@ export default function SignUpForm({ setIsLoggedIn }) {
       {userLoggedIn ? (
         <Menu>
           <MenuButton
+            bg="orange"
             as={Button}
             color="white"
             border="solid 1px orangered"
             borderRadius="25px"
             _hover={{ bg: 'orangered', color: 'white' }}
-            style={{ backgroundColor: 'orange' }}
           >
             User Options
           </MenuButton>
@@ -618,7 +618,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
           </Flex>
           <Flex>
             <Button
-              bg="#ff914d"
+              bg="orange"
               color="white"
               border="solid 1px orangered"
               borderRadius="25px"

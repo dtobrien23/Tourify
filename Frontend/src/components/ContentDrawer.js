@@ -452,8 +452,12 @@ export default function ContentDrawer() {
                                         </Alert>
                                         <Flex justifyContent="flex-end">
                                           <Button
+                                            bg="orange"
+                                            _hover={{
+                                              bg: 'orangered',
+                                              color: 'white',
+                                            }}
                                             style={{
-                                              backgroundColor: 'orange',
                                               color: 'white',
                                               border: 'solid 1px orangered',
                                               borderRadius: '20px',

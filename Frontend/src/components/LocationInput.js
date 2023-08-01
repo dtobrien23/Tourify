@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import LocationButton from './LocationButton';
-import { Flex, useToast, Tooltip } from '@chakra-ui/react';
+import { Flex, useToast } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 
 export default function LocationInput({}) {
@@ -52,7 +52,7 @@ export default function LocationInput({}) {
     if (autocompleteRef.current) {
       setInputValue(currentLocation);
     }
-  }, [currentLocation, buttonClicked]);
+  }, [buttonClicked]);
 
   useEffect(() => {
     if (hasTouchScreen) {
@@ -85,6 +85,7 @@ export default function LocationInput({}) {
       alert('Sorry, Geolocation is not supported by this browser.');
     }
   };
+
   const deniedCoords = { lat: 40.758, lng: -73.9855 };
   const [defaultGeolocationSet, setDefaultGeolocationSet] = useState(null);
 
@@ -163,6 +164,8 @@ export default function LocationInput({}) {
             const formattedAddress = response.results[0].formatted_address;
             setCurrentLocation(formattedAddress);
 
+            setInputValue(formattedAddress);
+
             setGeolocation(deniedCoords); // Update the geolocation value in the context
             console.log(deniedCoords, 'this is lat lang');
             setSourceCoords(deniedCoords);
@@ -191,6 +194,7 @@ export default function LocationInput({}) {
         isClosable: true,
       });
     }
+    setButtonClicked(buttonClicked + 1);
   };
 
   const showPosition = position => {
@@ -234,6 +238,7 @@ export default function LocationInput({}) {
           }
           const formattedAddress = response.results[0].formatted_address;
           setCurrentLocation(formattedAddress);
+          // setInputValue(formattedAddress);
           setGeolocation(latlng); // Update the geolocation value in the context
           console.log(latlng, 'this is lat lang');
           setSourceCoords(latlng);
@@ -309,8 +314,6 @@ export default function LocationInput({}) {
     }
   };
 
-  useEffect(() => {});
-
   return (
     <Flex
       w={inputWidth}
@@ -337,7 +340,6 @@ export default function LocationInput({}) {
                 value={inputValue}
                 onChange={e => setInputValue(e.target.value)}
                 style={{
-                  // padding: '3px',
                   paddingLeft: '8px',
                   borderRadius: '20px',
                   fontSize: '16px',
