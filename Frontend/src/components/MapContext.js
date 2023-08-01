@@ -32,6 +32,7 @@ const MapProvider = ({ children }) => {
   const [inputColour, setInputColour] = useState('#B5BBC6');
   const [isHovered, setIsHovered] = useState(false);
   const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
+  const [waitingOnRoute, setWaitingOnRoute] = useState(false);
 
   const toastNoSource = useToast();
   const toastNoDest = useToast();
@@ -71,6 +72,7 @@ const MapProvider = ({ children }) => {
 
   async function calculateRoute() {
     if (geolocation && selectedAttraction) {
+      setWaitingOnRoute(true);
       if (directionsRenderers.length !== 0) {
         for (const renderer of directionsRenderers) {
           renderer.setMap(null);
@@ -158,6 +160,7 @@ const MapProvider = ({ children }) => {
         isClosable: true,
       });
     }
+    setWaitingOnRoute(false);
   }
 
   function clearRoute() {
@@ -232,6 +235,7 @@ const MapProvider = ({ children }) => {
         setAttractionsWithBusyness,
         isHovered,
         setIsHovered,
+        waitingOnRoute,
       }}
     >
       {children}

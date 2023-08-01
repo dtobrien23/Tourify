@@ -11,6 +11,7 @@ import {
   PopoverArrow,
   PopoverCloseButton,
   useDisclosure,
+  CircularProgress,
 } from '@chakra-ui/react';
 import DestinationInput from './DestinationInput';
 import LocationInput from './LocationInput';
@@ -23,6 +24,7 @@ export default function SearchBar() {
     hasTouchScreen,
     setIsDrawerOpen,
     setGeolocation,
+    waitingOnRoute,
   } = useContext(MapContext);
 
   const { isOpen, onToggle, onClose } = useDisclosure();
@@ -74,6 +76,7 @@ export default function SearchBar() {
                   width="50px"
                   padding="10px"
                   style={{ backgroundColor: 'orange' }}
+                  isLoading={waitingOnRoute}
                 >
                   GO
                 </Button>

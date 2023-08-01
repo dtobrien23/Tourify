@@ -26,6 +26,7 @@ export default function LocationInput({}) {
   //settr for geolocation to be passed to recommender component via context
   const [inputWidth, setInputWidth] = useState('270px');
   const [waitingOnLocation, setWaitingOnLocation] = useState(false);
+  const [waitingOnRoute, setWaitingOnRoute] = useState(false);
   const toastInvalidSource = useToast();
   const toastOutsideNYC = useToast();
   const toastDenied = useToast();
