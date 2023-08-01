@@ -43,76 +43,76 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
   const { attractionsWithBusyness, setIsDrawerOpen } = useContext(MapContext);
   const [openingHoursAdded, setOpeningHoursAdded] = useState(false);
 
-  useEffect(() => {
-    // for checking if an attraction is open
-    const checkIsAttractionOpen = () => {
-      if (attractionsWithBusyness !== null) {
-        const currentTime = new Date();
+  // useEffect(() => {
+  //   // for checking if an attraction is open
+  //   const checkIsAttractionOpen = () => {
+  //     if (attractionsWithBusyness !== null) {
+  //       const currentTime = new Date();
 
-        // to convert time to NYC time
-        const options = {
-          timeZone: 'America/New_York',
-          hour12: false,
-        };
+  //       // to convert time to NYC time
+  //       const options = {
+  //         timeZone: 'America/New_York',
+  //         hour12: false,
+  //       };
 
-        const currentTimeEDT = currentTime.toLocaleString('en-US', options);
+  //       const currentTimeEDT = currentTime.toLocaleString('en-US', options);
 
-        const currentDay = currentTime.getDay();
+  //       const currentDay = currentTime.getDay();
 
-        const dayMapping = {
-          0: 'sunday',
-          1: 'monday',
-          2: 'tuesday',
-          3: 'wednesday',
-          4: 'thursday',
-          5: 'friday',
-          6: 'saturday',
-        };
+  //       const dayMapping = {
+  //         0: 'sunday',
+  //         1: 'monday',
+  //         2: 'tuesday',
+  //         3: 'wednesday',
+  //         4: 'thursday',
+  //         5: 'friday',
+  //         6: 'saturday',
+  //       };
 
-        attractionsWithBusyness.forEach(attraction => {
-          const openingHours = attraction['openHour'];
-          const currentDayKey = dayMapping[currentDay].toLowerCase() + 'Open';
-          const currentDayOpeningTime = openingHours[currentDayKey];
-          const currentDayClosingTime =
-            openingHours[currentDayKey.replace('Open', 'Close')];
+  //       attractionsWithBusyness.forEach(attraction => {
+  //         const openingHours = attraction['openHour'];
+  //         const currentDayKey = dayMapping[currentDay].toLowerCase() + 'Open';
+  //         const currentDayOpeningTime = openingHours[currentDayKey];
+  //         const currentDayClosingTime =
+  //           openingHours[currentDayKey.replace('Open', 'Close')];
 
-          if (
-            currentDayOpeningTime !== null &&
-            currentDayClosingTime !== null
-          ) {
-            const currentHoursEDT = new Date(currentTimeEDT).getHours();
-            const currentMinutesEDT = new Date(currentTimeEDT).getMinutes();
-            const openingHour = parseInt(currentDayOpeningTime.split(':')[0]);
-            const openingMinute = parseInt(currentDayOpeningTime.split(':')[1]);
-            const closingHour = parseInt(currentDayClosingTime.split(':')[0]);
-            const closingMinute = parseInt(currentDayClosingTime.split(':')[1]);
+  //         if (
+  //           currentDayOpeningTime !== null &&
+  //           currentDayClosingTime !== null
+  //         ) {
+  //           const currentHoursEDT = new Date(currentTimeEDT).getHours();
+  //           const currentMinutesEDT = new Date(currentTimeEDT).getMinutes();
+  //           const openingHour = parseInt(currentDayOpeningTime.split(':')[0]);
+  //           const openingMinute = parseInt(currentDayOpeningTime.split(':')[1]);
+  //           const closingHour = parseInt(currentDayClosingTime.split(':')[0]);
+  //           const closingMinute = parseInt(currentDayClosingTime.split(':')[1]);
 
-            if (
-              (currentHoursEDT > openingHour ||
-                (currentHoursEDT === openingHour &&
-                  currentMinutesEDT >= openingMinute)) &&
-              (currentHoursEDT < closingHour ||
-                (currentHoursEDT === closingHour &&
-                  currentMinutesEDT < closingMinute))
-            ) {
-              console.log(`${attraction.name} is open right now.`);
-              attraction.isOpen = true;
-            } else {
-              console.log(
-                `${attraction.name} is open today but not right now.`
-              );
-              attraction.isOpen = false;
-            }
-          } else {
-            console.log(`${attraction.name} is closed today.`);
-            attraction.isOpen = false;
-          }
-          setOpeningHoursAdded(true);
-        });
-      }
-    };
-    checkIsAttractionOpen();
-  }, [attractionsWithBusyness]);
+  //           if (
+  //             (currentHoursEDT > openingHour ||
+  //               (currentHoursEDT === openingHour &&
+  //                 currentMinutesEDT >= openingMinute)) &&
+  //             (currentHoursEDT < closingHour ||
+  //               (currentHoursEDT === closingHour &&
+  //                 currentMinutesEDT < closingMinute))
+  //           ) {
+  //             console.log(`${attraction.name} is open right now.`);
+  //             attraction.isOpen = true;
+  //           } else {
+  //             console.log(
+  //               `${attraction.name} is open today but not right now.`
+  //             );
+  //             attraction.isOpen = false;
+  //           }
+  //         } else {
+  //           console.log(`${attraction.name} is closed today.`);
+  //           attraction.isOpen = false;
+  //         }
+  //         setOpeningHoursAdded(true);
+  //       });
+  //     }
+  //   };
+  //   checkIsAttractionOpen();
+  // }, [attractionsWithBusyness]);
 
   if (!markerObject) {
     return null; // Return null when markerObject is null
@@ -191,243 +191,237 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
           <DrawerHeader fontWeight="bold">
             {markerObject.name.name}
           </DrawerHeader>
-          {openingHoursAdded && (
-            <DrawerBody>
-              <img
-                src={`/images/${markerObject.name.name.replaceAll(
-                  ' ',
-                  '_'
-                )}.jpg`}
-                alt={markerObject.name.name}
-              />
-              <br></br>
-              <Tabs>
-                <TabList width="100%">
-                  <Tab width="50%" color="orangered">
-                    Info
-                  </Tab>
-                  <Tab width="50%" color="orangered">
-                    Busyness Prediction
-                  </Tab>
-                </TabList>
+          <DrawerBody>
+            <img
+              src={`/images/${markerObject.name.name.replaceAll(' ', '_')}.jpg`}
+              alt={markerObject.name.name}
+            />
+            <br></br>
+            <Tabs>
+              <TabList width="100%">
+                <Tab width="50%" color="orangered">
+                  Info
+                </Tab>
+                <Tab width="50%" color="orangered">
+                  Busyness Prediction
+                </Tab>
+              </TabList>
 
-                <TabPanels>
-                  <TabPanel>
-                    {attractionsWithBusyness.map(attraction => {
-                      if (attraction.name === markerObject.name.name) {
-                        return (
-                          <div>
-                            <Flex alignItems="center">
-                              <Flex h="100%">
-                                <FaMapMarkerAlt
-                                  size="20"
-                                  style={{ marginRight: '3px' }}
-                                />
-                              </Flex>
-                              <Flex maxW="100%">
-                                &nbsp;&nbsp;
-                                <p>
-                                  {attraction.full_address.replace(
-                                    /, United States$/,
-                                    '' | /, USA$/,
-                                    '' | / United States$/,
-                                    '' | /United States$/,
-                                    ''
-                                  )}
-                                </p>
-                              </Flex>
-                            </Flex>
-                            <Alert
-                              pl="0"
-                              width="fit-content"
-                              status="info"
-                              colorScheme={'white'}
-                              borderRadius={20}
-                            >
-                              <AlertIcon
-                                boxSize={5}
-                                color={
-                                  attraction.businessRate < 35
-                                    ? 'green'
-                                    : 35 < attraction.businessRate &&
-                                      attraction.businessRate < 70
-                                    ? 'gold'
-                                    : 'red'
-                                }
+              <TabPanels>
+                <TabPanel>
+                  {attractionsWithBusyness.map(attraction => {
+                    if (attraction.name === markerObject.name.name) {
+                      return (
+                        <div>
+                          <Flex alignItems="center">
+                            <Flex h="100%">
+                              <FaMapMarkerAlt
+                                size="20"
+                                style={{ marginRight: '3px' }}
                               />
-
-                              <AlertTitle>
-                                {attraction.businessRate < 35
-                                  ? 'Quiet'
-                                  : 35 < attraction.businessRate &&
-                                    attraction.businessRate < 70
-                                  ? 'Not Too Busy'
-                                  : 'Busy'}
-                              </AlertTitle>
-                              <AlertDescription>
-                                <p>Busyness Index: {attraction.businessRate}</p>
-                              </AlertDescription>
-                            </Alert>
-                            <Flex alignItems="center">
-                              <Flex h="100%">
-                                <FaGlobe
-                                  size="20"
-                                  style={{ marginRight: '4px' }}
-                                />
-                              </Flex>
-                              <Flex maxW="100%">
-                                &nbsp;&nbsp;
-                                <p>
-                                  <a
-                                    href={attraction.link}
-                                    target="_blank"
-                                    style={{ color: 'blue' }}
-                                  >
-                                    {attraction.link}
-                                  </a>
-                                </p>
-                              </Flex>
                             </Flex>
-                            <Flex mt="10px" alignItems="center">
-                              <Flex h="100%">
-                                <FaDollarSign
-                                  size="21"
-                                  style={{ marginRight: '3px' }}
-                                />
-                              </Flex>
-                              <Flex>
-                                <p>&nbsp;&nbsp;{attraction.price}</p>
-                              </Flex>
-                            </Flex>
-                            <Flex mt="10px">
-                              <FaClock
-                                size="21"
-                                style={{ marginRight: '3px', marginTop: '2px' }}
-                              />
+                            <Flex maxW="100%">
                               &nbsp;&nbsp;
-                              <Flex flexDirection="column">
-                                <p
-                                  style={{
-                                    fontWeight: 'bold',
-                                    color:
-                                      attraction.isOpen === true
-                                        ? 'green'
-                                        : 'red',
-                                  }}
-                                >
-                                  {attraction.isOpen === true
-                                    ? 'Open'
-                                    : 'Closed'}
-                                </p>
-                                <p>Monday</p>
-                                <p>Tuesday</p>
-                                <p>Wednesday</p>
-                                <p>Thursday</p>
-                                <p>Friday</p>
-                                <p>Saturday</p>
-                                <p>Sunday</p>
-                                <br />
-                              </Flex>
-                              <Flex flexDirection="column" ml="15px">
-                                <br />
-                                {days.map(day => (
-                                  <p key={day}>
-                                    {formatTime(
-                                      attraction.openHour[`${day}Open`]
-                                    )}{' '}
-                                    -{' '}
-                                    {formatTime(
-                                      attraction.openHour[`${day}Close`]
-                                    )}
-                                  </p>
-                                ))}
-                              </Flex>
-                            </Flex>
-                          </div>
-                        );
-                      }
-                      return null;
-                    })}
-                  </TabPanel>
-                  <TabPanel>
-                    {attractionsWithBusyness.map(attraction => {
-                      if (attraction.name === markerObject.name.name) {
-                        return (
-                          <Flex flexDirection="column">
-                            <Flex w="100%" justify="space-between" mb="10px">
-                              <Button
-                                bg="white"
-                                border="solid 1px orangered"
-                                borderRadius="25px"
-                                onClick={() => {
-                                  fetchBusynessPredictions(
-                                    attraction.id,
-                                    day1Params
-                                  );
-                                }}
-                              >
-                                Day 1
-                              </Button>
-                              <Button
-                                bg="white"
-                                border="solid 1px orangered"
-                                borderRadius="25px"
-                                onClick={() => {
-                                  fetchBusynessPredictions(
-                                    attraction.id,
-                                    day2Params
-                                  );
-                                }}
-                              >
-                                Day 2
-                              </Button>
-                              <Button
-                                bg="white"
-                                border="solid 1px orangered"
-                                borderRadius="25px"
-                                onClick={() => {
-                                  fetchBusynessPredictions(
-                                    attraction.id,
-                                    day3Params
-                                  );
-                                }}
-                              >
-                                Day 3
-                              </Button>
-                              <Button
-                                bg="white"
-                                border="solid 1px orangered"
-                                borderRadius="25px"
-                                onClick={() => {
-                                  fetchBusynessPredictions(
-                                    attraction.id,
-                                    day4Params
-                                  );
-                                }}
-                              >
-                                Day 4
-                              </Button>
-                            </Flex>
-                            <Flex marginLeft="-10px">
-                              {chartVisible && attraction.id === activeChart ? (
-                                <PredBarChart />
-                              ) : (
-                                <img
-                                  src="/images/crowd.jpeg"
-                                  alt="Crowd of People"
-                                />
-                              )}
+                              <p>{attraction.full_address}</p>
                             </Flex>
                           </Flex>
-                        );
-                      }
-                      return null;
-                    })}
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            </DrawerBody>
-          )}
+                          <Alert
+                            pl="0"
+                            width="fit-content"
+                            status="info"
+                            colorScheme={'white'}
+                            borderRadius={20}
+                          >
+                            <AlertIcon
+                              boxSize={5}
+                              color={
+                                attraction.isOpen === false
+                                  ? 'grey'
+                                  : attraction.businessRate < 35
+                                  ? 'green'
+                                  : 35 <= attraction.businessRate &&
+                                    attraction.businessRate < 70
+                                  ? 'gold'
+                                  : 'red'
+                              }
+                            />
+
+                            <AlertTitle>
+                              {attraction.isOpen === false
+                                ? 'Closed'
+                                : attraction.businessRate < 35
+                                ? 'Quiet'
+                                : 35 <= attraction.businessRate &&
+                                  attraction.businessRate < 70
+                                ? 'Not Too Busy'
+                                : 'Busy'}
+                            </AlertTitle>
+                            <AlertDescription>
+                              <p>
+                                Busyness Index:{' '}
+                                {attraction.isOpen === false
+                                  ? '0'
+                                  : attraction.businessRate}
+                              </p>
+                            </AlertDescription>
+                          </Alert>
+                          <Flex alignItems="center">
+                            <Flex h="100%">
+                              <FaGlobe
+                                size="20"
+                                style={{ marginRight: '4px' }}
+                              />
+                            </Flex>
+                            <Flex maxW="100%">
+                              &nbsp;&nbsp;
+                              <p>
+                                <a
+                                  href={attraction.link}
+                                  target="_blank"
+                                  style={{ color: 'blue' }}
+                                >
+                                  {attraction.link}
+                                </a>
+                              </p>
+                            </Flex>
+                          </Flex>
+                          <Flex mt="10px" alignItems="center">
+                            <Flex h="100%">
+                              <FaDollarSign
+                                size="21"
+                                style={{ marginRight: '3px' }}
+                              />
+                            </Flex>
+                            <Flex>
+                              <p>&nbsp;&nbsp;{attraction.price}</p>
+                            </Flex>
+                          </Flex>
+                          <Flex mt="10px">
+                            <FaClock
+                              size="21"
+                              style={{ marginRight: '3px', marginTop: '2px' }}
+                            />
+                            &nbsp;&nbsp;
+                            <Flex flexDirection="column">
+                              <p
+                                style={{
+                                  fontWeight: 'bold',
+                                  color:
+                                    attraction.isOpen === true
+                                      ? 'green'
+                                      : 'red',
+                                }}
+                              >
+                                {attraction.isOpen === true ? 'Open' : 'Closed'}
+                              </p>
+                              <p>Monday</p>
+                              <p>Tuesday</p>
+                              <p>Wednesday</p>
+                              <p>Thursday</p>
+                              <p>Friday</p>
+                              <p>Saturday</p>
+                              <p>Sunday</p>
+                              <br />
+                            </Flex>
+                            <Flex flexDirection="column" ml="15px">
+                              <br />
+                              {days.map(day => (
+                                <p key={day}>
+                                  {formatTime(
+                                    attraction.openHour[`${day}Open`]
+                                  )}{' '}
+                                  -{' '}
+                                  {formatTime(
+                                    attraction.openHour[`${day}Close`]
+                                  )}
+                                </p>
+                              ))}
+                            </Flex>
+                          </Flex>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })}
+                </TabPanel>
+                <TabPanel>
+                  {attractionsWithBusyness.map(attraction => {
+                    if (attraction.name === markerObject.name.name) {
+                      return (
+                        <Flex flexDirection="column">
+                          <Flex w="100%" justify="space-between" mb="10px">
+                            <Button
+                              bg="white"
+                              border="solid 1px orangered"
+                              borderRadius="25px"
+                              onClick={() => {
+                                fetchBusynessPredictions(
+                                  attraction.id,
+                                  day1Params
+                                );
+                              }}
+                            >
+                              Day 1
+                            </Button>
+                            <Button
+                              bg="white"
+                              border="solid 1px orangered"
+                              borderRadius="25px"
+                              onClick={() => {
+                                fetchBusynessPredictions(
+                                  attraction.id,
+                                  day2Params
+                                );
+                              }}
+                            >
+                              Day 2
+                            </Button>
+                            <Button
+                              bg="white"
+                              border="solid 1px orangered"
+                              borderRadius="25px"
+                              onClick={() => {
+                                fetchBusynessPredictions(
+                                  attraction.id,
+                                  day3Params
+                                );
+                              }}
+                            >
+                              Day 3
+                            </Button>
+                            <Button
+                              bg="white"
+                              border="solid 1px orangered"
+                              borderRadius="25px"
+                              onClick={() => {
+                                fetchBusynessPredictions(
+                                  attraction.id,
+                                  day4Params
+                                );
+                              }}
+                            >
+                              Day 4
+                            </Button>
+                          </Flex>
+                          <Flex marginLeft="-10px">
+                            {chartVisible && attraction.id === activeChart ? (
+                              <PredBarChart />
+                            ) : (
+                              <img
+                                src="/images/crowd.jpeg"
+                                alt="Crowd of People"
+                              />
+                            )}
+                          </Flex>
+                        </Flex>
+                      );
+                    }
+                    return null;
+                  })}
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          </DrawerBody>
 
           <DrawerFooter></DrawerFooter>
         </DrawerContent>

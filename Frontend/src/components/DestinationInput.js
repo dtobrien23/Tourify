@@ -23,12 +23,9 @@ export default function DestinationInput({}) {
     setSelectedAttraction,
     inputColour,
     setInputColour,
+    handleAttractionSelect,
   } = useContext(MapContext);
 
-  const handleAttractionSelect = attraction => {
-    setSelectedAttraction(attraction);
-    setInputColour('black');
-  };
   // Wait for apiAttractions to be available
   if (!apiLoaded) {
     return (

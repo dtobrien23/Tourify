@@ -46,22 +46,76 @@ const APIContextProvider = ({ children }) => {
         const dataArray = data.data;
         console.log(dataArray, 'back end data without wrapper');
 
-        // turning time strings to time objects
-        // dataArray.forEach(attraction => {
-        //   for (const key in attraction.openHour) {
-        //     const time = attraction.openHour[key];
-        //     if (time !== null) {
-        //       const [hour, minute, second] = time.split(':').map(Number);
-        //       const timeObj = new Date();
-        //       timeObj.setHours(hour);
-        //       timeObj.setMinutes(minute);
-        //       timeObj.setSeconds(second);
-        //       attraction.openHour[key] = timeObj;
-        //       console.log(typeof time);
-        //       console.log(typeof timeObj);
-        //     }
-        //   }
-        // });
+        // setting open or closed boolean
+        const currentTime = new Date();
+
+        // to convert time to NYC time
+        const options = {
+          timeZone: 'America/New_York',
+          hour12: false,
+        };
+
+        const currentTimeEDT = currentTime.toLocaleString('en-US', options);
+
+        const currentDay = currentTime.getDay();
+
+        const dayMapping = {
+          0: 'sunday',
+          1: 'monday',
+          2: 'tuesday',
+          3: 'wednesday',
+          4: 'thursday',
+          5: 'friday',
+          6: 'saturday',
+        };
+
+        dataArray.forEach(attraction => {
+          const openingHours = attraction['openHour'];
+          const currentDayKey = dayMapping[currentDay].toLowerCase() + 'Open';
+          const currentDayOpeningTime = openingHours[currentDayKey];
+          const currentDayClosingTime =
+            openingHours[currentDayKey.replace('Open', 'Close')];
+
+          if (
+            currentDayOpeningTime !== null &&
+            currentDayClosingTime !== null
+          ) {
+            const currentHoursEDT = new Date(currentTimeEDT).getHours();
+            const currentMinutesEDT = new Date(currentTimeEDT).getMinutes();
+            const openingHour = parseInt(currentDayOpeningTime.split(':')[0]);
+            const openingMinute = parseInt(currentDayOpeningTime.split(':')[1]);
+            let closingHour = parseInt(currentDayClosingTime.split(':')[0]);
+            const closingMinute = parseInt(currentDayClosingTime.split(':')[1]);
+
+            // for 12am and 1am closing times
+            if (closingHour === 0) {
+              closingHour = 24;
+            } else if (closingHour === 1) {
+              closingHour = 25;
+            }
+
+            if (
+              (currentHoursEDT > openingHour ||
+                (currentHoursEDT === openingHour &&
+                  currentMinutesEDT >= openingMinute)) &&
+              (currentHoursEDT < closingHour ||
+                (currentHoursEDT === closingHour &&
+                  currentMinutesEDT < closingMinute))
+            ) {
+              console.log(`${attraction.name} is open right now.`);
+              attraction.isOpen = true;
+            } else {
+              console.log(
+                `${attraction.name} is open today but not right now.`
+              );
+              attraction.isOpen = false;
+            }
+          } else {
+            console.log(`${attraction.name} is closed today.`);
+            attraction.isOpen = false;
+          }
+          // setOpeningHoursAdded(true);
+        });
 
         setAPIAttractions(dataArray);
         setApiLoaded(true);

@@ -45,6 +45,7 @@ export default function ContentDrawer() {
     attractionsWithBusyness,
   } = useContext(MapContext);
 
+  const toastAttractionClosed = useToast();
   const toastCheckIn = useToast();
   const toastNotCheckIn = useToast();
   const toastNFT = useToast();
@@ -79,63 +80,78 @@ export default function ContentDrawer() {
       elementCount: 100,
     });
 
-  const handleCheckIn = async (attractionID, attractionName, randomWord) => {
-    // const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
-    const apiEndpoint = 'http://localhost:8001/api/user/update';
-    const cachedUserCredential = localStorage.getItem('userCredential');
-
-    const idToken = cachedUserCredential; // get this from credential in signupform
-    console.log(cachedUserCredential, 'this is the global credential');
-
-    const requestBody = {
-      id_token: idToken,
-      attraction_id: attractionID,
-      lat: '40.7525596', //hardcoded for testing replace with geolocation variable
-      lng: '-73.9768066', //hardcoded for testing reaplace with geolocation variable
-    };
-
-    axios
-      .post(apiEndpoint, requestBody)
-      .then(response => {
-        console.log('API call successful:', response.data);
-        console.log(response, 'this is response data');
-        // Handle the response data here
-        if (response.data.code === 200) {
-          //   // set logic that your marker has been ticked off
-          setCheckinState(true);
-          const PROMPT_TEST = `${attractionName} ${randomWord}`;
-          setPrompt(PROMPT_TEST);
-          console.log(PROMPT_TEST, 'PROMPT_TEST');
-          //generatArt();
-          console.log(checkinState, 'checkinstate - contentdrawer');
-          confettiReward();
-          toastCheckIn({
-            title: 'Check in Successful.',
-            description: "You've Checked in Successfully.",
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-          });
-
-          // get the updated user info from the backend
-        }
-        if (response.data.code === 10050) {
-          // distance too long
-          setCheckinState(false);
-          console.log(response.data.code, 'this is the repsonse code!');
-          toastNotCheckIn({
-            title: 'Check in Unsuccessful.',
-            description: "You're too far away.",
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error in API call:', error);
-        // Handle errors here
+  const handleCheckIn = async (
+    attractionID,
+    attractionName,
+    isOpen,
+    randomWord
+  ) => {
+    if (isOpen === false) {
+      toastAttractionClosed({
+        title: 'Attraction Closed!',
+        description: 'Come back later.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
       });
+    } else {
+      // const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
+      const apiEndpoint = 'http://localhost:8001/api/user/update';
+      const cachedUserCredential = localStorage.getItem('userCredential');
+
+      const idToken = cachedUserCredential; // get this from credential in signupform
+      console.log(cachedUserCredential, 'this is the global credential');
+
+      const requestBody = {
+        id_token: idToken,
+        attraction_id: attractionID,
+        lat: '40.7525596', //hardcoded for testing replace with geolocation variable
+        lng: '-73.9768066', //hardcoded for testing reaplace with geolocation variable
+      };
+
+      axios
+        .post(apiEndpoint, requestBody)
+        .then(response => {
+          console.log('API call successful:', response.data);
+          console.log(response, 'this is response data');
+          // Handle the response data here
+          if (response.data.code === 200) {
+            //   // set logic that your marker has been ticked off
+            setCheckinState(true);
+            const PROMPT_TEST = `${attractionName} ${randomWord}`;
+            setPrompt(PROMPT_TEST);
+            console.log(PROMPT_TEST, 'PROMPT_TEST');
+            //generatArt();
+            console.log(checkinState, 'checkinstate - contentdrawer');
+            confettiReward();
+            toastCheckIn({
+              title: 'Check in Successful.',
+              description: "You've Checked in Successfully.",
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
+
+            // get the updated user info from the backend
+          }
+          if (response.data.code === 10050) {
+            // distance too long
+            setCheckinState(false);
+            console.log(response.data.code, 'this is the repsonse code!');
+            toastNotCheckIn({
+              title: 'Check in Unsuccessful.',
+              description: "You're too far away.",
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error in API call:', error);
+          // Handle errors here
+        });
+    }
   };
 
   const areAllBadgesTrue = () => {
@@ -484,11 +500,14 @@ export default function ContentDrawer() {
                                           <Flex alignItems="center">
                                             <AlertIcon
                                               boxSize={5}
-                                              mr="5px"
+                                              mr="8px"
                                               color={
-                                                attractionInfo.businessRate < 35
+                                                attractionInfo.isOpen === false
+                                                  ? 'grey'
+                                                  : attractionInfo.businessRate <
+                                                    35
                                                   ? 'green'
-                                                  : 35 <
+                                                  : 35 <=
                                                       attractionInfo.businessRate &&
                                                     attractionInfo.businessRate <
                                                       70
@@ -498,10 +517,12 @@ export default function ContentDrawer() {
                                             />
                                             <Flex flexDirection="column">
                                               <AlertTitle>
-                                                {attractionInfo.businessRate <
-                                                35
+                                                {attractionInfo.isOpen === false
+                                                  ? 'Closed'
+                                                  : attractionInfo.businessRate <
+                                                    35
                                                   ? 'Quiet'
-                                                  : 35 <
+                                                  : 35 <=
                                                       attractionInfo.businessRate &&
                                                     attractionInfo.businessRate <
                                                       70
@@ -510,8 +531,11 @@ export default function ContentDrawer() {
                                               </AlertTitle>
                                               <AlertDescription>
                                                 <p>
-                                                  Busyness Index:
-                                                  {attractionInfo.businessRate}
+                                                  Busyness Index:&nbsp;
+                                                  {attractionInfo.isOpen ===
+                                                  false
+                                                    ? '0'
+                                                    : attractionInfo.businessRate}
                                                 </p>
                                               </AlertDescription>
                                             </Flex>
@@ -536,6 +560,7 @@ export default function ContentDrawer() {
                                                 handleCheckIn(
                                                   attractionInfo.id,
                                                   attractionInfo.name,
+                                                  attractionInfo.isOpen,
                                                   randomWord
                                                 )
                                               // mintNft()
@@ -621,11 +646,14 @@ export default function ContentDrawer() {
                                           <Flex alignItems="center">
                                             <AlertIcon
                                               boxSize={5}
-                                              mr="5px"
+                                              mr="8px"
                                               color={
-                                                attractionInfo.businessRate < 35
+                                                attractionInfo.isOpen === false
+                                                  ? 'grey'
+                                                  : attractionInfo.businessRate <
+                                                    35
                                                   ? 'green'
-                                                  : 35 <
+                                                  : 35 <=
                                                       attractionInfo.businessRate &&
                                                     attractionInfo.businessRate <
                                                       70
@@ -635,10 +663,12 @@ export default function ContentDrawer() {
                                             />
                                             <Flex flexDirection="column">
                                               <AlertTitle>
-                                                {attractionInfo.businessRate <
-                                                35
+                                                {attractionInfo.isOpen === false
+                                                  ? 'Closed'
+                                                  : attractionInfo.businessRate <
+                                                    35
                                                   ? 'Quiet'
-                                                  : 35 <
+                                                  : 35 <=
                                                       attractionInfo.businessRate &&
                                                     attractionInfo.businessRate <
                                                       70
@@ -647,8 +677,11 @@ export default function ContentDrawer() {
                                               </AlertTitle>
                                               <AlertDescription>
                                                 <p>
-                                                  Busyness Index:
-                                                  {attractionInfo.businessRate}
+                                                  Busyness Index:&nbsp;
+                                                  {attractionInfo.isOpen ===
+                                                  false
+                                                    ? '0'
+                                                    : attractionInfo.businessRate}
                                                 </p>
                                               </AlertDescription>
                                             </Flex>

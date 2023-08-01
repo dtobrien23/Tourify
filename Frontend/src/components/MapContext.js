@@ -191,6 +191,11 @@ const MapProvider = ({ children }) => {
     setButtonState(true);
   };
 
+  const handleAttractionSelect = attraction => {
+    setSelectedAttraction(attraction);
+    setInputColour('black');
+  };
+
   return (
     <MapContext.Provider
       value={{
@@ -236,6 +241,7 @@ const MapProvider = ({ children }) => {
         isHovered,
         setIsHovered,
         waitingOnRoute,
+        handleAttractionSelect,
       }}
     >
       {children}

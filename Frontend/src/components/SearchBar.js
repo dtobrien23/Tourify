@@ -61,21 +61,25 @@ export default function SearchBar() {
               />
               <Box
                 flexShrink="0"
-                ml="5px"
+                // ml="5px"
                 display="flex"
                 alignItems="center"
-                minWidth="40px"
+                // minWidth="40px"
+                border="solid 3px white"
+                borderRadius="20px"
               >
                 <Button
                   color="white"
                   border="solid 1px orangered"
-                  borderRadius="50%"
+                  bg="orange"
+                  borderRadius="20px"
+                  h="100%"
                   _hover={{ bg: 'orangered' }}
                   onClick={calculateRoute}
-                  height="50px"
-                  width="50px"
+                  // height=""
+                  // width="50px"
                   padding="10px"
-                  style={{ backgroundColor: 'orange' }}
+                  // style={{ backgroundColor: 'orange' }}
                   isLoading={waitingOnRoute}
                 >
                   GO
