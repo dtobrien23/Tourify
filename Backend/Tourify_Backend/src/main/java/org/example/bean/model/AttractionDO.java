@@ -5,14 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.bean.util.*;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Date;
 
 /**
  * Description of the class.
@@ -44,30 +41,3 @@ public class AttractionDO implements Serializable {
     private LocalDateTime creat_time;
 }
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class OpenHour implements Serializable{
-
-//    前端传参 - example
-//        "openHour":
-//    {
-//        "mondayOpen":"09:00:00", "mondayClose":"23:00:00"
-//    }
-
-    private LocalTime mondayOpen;
-    private LocalTime mondayClose;
-    private LocalTime tuesdayOpen;
-    private LocalTime tuesdayClose;
-    private LocalTime wednesdayOpen;
-    private LocalTime wednesdayClose;
-    private LocalTime thursdayOpen;
-    private LocalTime thursdayClose;
-    private LocalTime fridayOpen;
-    private LocalTime fridayClose;
-    private LocalTime saturdayOpen;
-    private LocalTime saturdayClose;
-    private LocalTime sundayOpen;
-    private LocalTime sundayClose;
-
-}
