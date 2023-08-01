@@ -30,6 +30,7 @@ const APIContextProvider = ({ children }) => {
   const [activeChart, setActiveChart] = useState(null); // for only showing the chart on the correct attraction
   const [apisLoaded, setAPIsLoaded] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
+  const [nftPrompt, setNftPrompt] = useState(null);
 
   const { mapCenter } = useContext(MapContext);
 
@@ -283,6 +284,8 @@ const APIContextProvider = ({ children }) => {
         setChartVisible,
         apisLoaded,
         showLoading,
+        nftPrompt,
+        setNftPrompt,
       }}
     >
       {children}
