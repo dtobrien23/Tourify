@@ -19,6 +19,7 @@ import java.io.Serializable;
 public class AttractionPredictionDetailVO implements Serializable {
 
     private int hour;
-    private Integer businessRate;
+    private int businessRate;
+    private boolean openOrClose;
 
 }
