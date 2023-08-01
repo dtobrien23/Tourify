@@ -27,7 +27,15 @@ import {
   AlertDescription,
   Box,
   AbsoluteCenter,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
+
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
 import { APIContext } from './APIContext';
@@ -175,8 +183,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.7593495', //hardcoded for testing replace with geolocation variable
-      lng: '-73.9794087', //hardcoded for testing reaplace with geolocation variable
+      lat: '40.7479925', //hardcoded for testing replace with geolocation variable
+      lng: '-74.0047649', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -512,38 +520,90 @@ export default function ContentDrawer() {
   /////                          /////
   ////////////////////////////////////
 
-
   const wikiApiCall = async () => {
     try {
       ///get the date from backend api call for user
-      const month = 'from the backend api';
-      const day = 'from the backend';
+      const month = 2;
+      const day = 2;
       const url = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${month}/${day}`;
-  
       const response = await fetch(url, {
         headers: {
-          'Authorization': 'Bearer REACT_APP_WIKI',
-          'Api-User-Agent': 'Tourify',
+          Authorization: `Bearer ${process.env.REACT_APP_WIKI}`,
         },
       });
-  
-      return response.json();
+
+      const data = await response.json();
+      console.log(data,'WIKI DATA!!!!!!')
+
+      // Extract the relevant information from the 0th index entry
+      const entry = data.births[0];
+      const text = entry.text;
+      const extract = entry.pages[0].extract;
+
+      // Create an object containing the desired information
+      const wikiResult = {
+        text: text,
+        extract: extract,
+      };
+
+      
+      console.log(data, 'THIS IS THE WIKI RESPONSE');
+      console.log('entry:', entry);
+      console.log('text:', text);
+      console.log(' extract:', extract);
+      setWikiData(wikiResult);
+      return wikiResult;
     } catch (error) {
       throw new Error('Error fetching data from the API');
     }
   };
+  const [wikiData, setWikiData] = useState({});
 
-  const [data, setData] = useState(null);
+  const {
+    isOpen: isWikiModalOpen,
+    onOpen: onWikiModalOpen,
+    onClose: onWikiModalClose,
+  } = useDisclosure();
 
   useEffect(() => {
-    if (checkinState){
-       
-        await wikiApiCall();
+     
+      const fetchData = async () => {
+        try {
+          const wikiApiResult = await wikiApiCall(); // Await the result
+          setWikiData(wikiApiResult);
+          onWikiModalOpen();
+
+        } catch (error) {
+          console.error(error);
+        }
       
-
-    }, [checkinState]);
-
   
+      fetchData();
+    }
+  }, [checkinState]);
+  
+  // useEffect(() => {
+  //   if (Object.keys(wikiData).length > 0) {
+  //     onWikiModalOpen();
+  //   }
+  // }, [wikiData]);
+  
+  
+
+  const WikiModal = ({ isOpen, onClose, text, extract }) => {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{text}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <p>{extract}</p>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  };
 
   return (
     <Drawer
@@ -721,16 +781,18 @@ export default function ContentDrawer() {
                                             '0 2px 4px rgba(0, 0, 0, 0.2)',
                                         }}
                                         onClick={() =>
-                                          handleCheckIn(
-                                            attractionInfo.id,
-                                            attractionInfo.name,
-                                            randomWord,
-                                            attractionInfo.name_alias
-                                          )
+                                          // handleCheckIn(
+                                          //   attractionInfo.id,
+                                          //   attractionInfo.name,
+                                          //   randomWord,
+                                          //   attractionInfo.name_alias
+                                          // )
+                                           wikiApiCall()
                                         }
                                       >
                                         Check In!
                                       </Button>
+                                      
                                     </Stack>
                                   </Flex>
                                 </Flex>
@@ -1070,6 +1132,14 @@ export default function ContentDrawer() {
                   </TabPanel>
                 </TabPanels>
               </Tabs>
+              {Object.keys(wikiData).length > 0 && ( // Check if there is data in wikiData
+                <WikiModal
+                  isOpen={isWikiModalOpen}
+                  onClose={onWikiModalClose}
+                  text={wikiData.text}
+                  extract={wikiData.extract}
+                />
+              )}
             </DrawerBody>
           </>
         )}

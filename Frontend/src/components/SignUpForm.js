@@ -288,22 +288,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
           if (response.data.code !== 10006) {
             backendLogin(credentialResponse);
-            // console.log(response.data.code, 'this is the code!!!!');
-            // setGlobalUserInfo(response.data);
-            // console.log(response.data, 'first login data')
-            // setUserLoggedIn(true);
-            // setIsLoggedIn(true);
-            // localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
-
-            // // Cache the user info
-            // localStorage.setItem('userInfo', JSON.stringify(response.data));
-            // // Set the user info in the local state
-            // setGlobalUserInfo(response.data);
-
-            // console.log(localStorage.getItem('userInfo', 'this is from first login'))
-            // console.log(globalUserInfo,'global from first login')
-
-            // setUserInfoFetched(true);
 
             toastSignup({
               title: 'Account created.',
