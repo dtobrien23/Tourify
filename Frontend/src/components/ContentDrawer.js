@@ -26,6 +26,7 @@ import {
   AlertTitle,
   AlertDescription,
   Box,
+  AbsoluteCenter,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
@@ -148,15 +149,20 @@ export default function ContentDrawer() {
   };
 
   const { reward: confettiReward, isAnimating: isConfettiAnimating } =
-    useReward('confettiReward', 'confetti', {
+    useReward('confettiReward1', 'confetti', {
       lifetime: 2400,
       elementSize: 16,
       elementCount: 100,
     });
 
-    const [placeHolderImageUrl, setPlaceHolderImaegUrl]=useState()
+  const [placeHolderImageUrl, setPlaceHolderImaegUrl] = useState();
 
-  const handleCheckIn = async (attractionID, attractionName, randomWord,attractionNameAlias) => {
+  const handleCheckIn = async (
+    attractionID,
+    attractionName,
+    randomWord,
+    attractionNameAlias
+  ) => {
     const apiEndpoint = 'http://localhost:8001/api/user/update';
     const cachedUserCredential = localStorage.getItem('userCredential');
 
@@ -169,8 +175,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.7535965', //hardcoded for testing replace with geolocation variable
-      lng: '-73.9832326', //hardcoded for testing reaplace with geolocation variable
+      lat: '40.7593495', //hardcoded for testing replace with geolocation variable
+      lng: '-73.9794087', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -197,11 +203,16 @@ export default function ContentDrawer() {
             isClosable: true,
           });
 
+          // Get the current timestamp and date
+          const currentTimeStamp = new Date().getTime();
+          const currentDate = new Date().toLocaleDateString();
+
           // get the updated user info from the backend
         }
         if (response.data.code === 10050) {
           // distance too long
           setCheckinState(false);
+
           console.log(response.data.code, 'this is the repsonse code!');
           toastNotCheckIn({
             title: 'Check in Unsuccessful.',
@@ -286,28 +297,29 @@ export default function ContentDrawer() {
           },
           { responseType: 'blob' }
         );
-  
+
         // // Check if the response status is successful
         if (response.status === 200) {
           const generatedFile = new File([response.data], 'image.png', {
             type: 'image/png',
           });
           setFile(generatedFile);
-  
+
           const url = URL.createObjectURL(response.data);
           setImageBlob(url);
-        } 
-        else {
+        } else {
           // Use a placeholder image when the API call fails
           const safetyImageUrl = `/images/${safetyImage}.jpg`;
-  
+
           // Fetch the placeholder image as a Blob
-          const safetyImageBlob = await fetch(safetyImageUrl).then(res => res.blob());
+          const safetyImageBlob = await fetch(safetyImageUrl).then(res =>
+            res.blob()
+          );
           const generatedFile = new File([safetyImageBlob], 'image.jpg', {
             type: 'image/jpg',
           });
           setFile(generatedFile);
-  
+
           // Use the object URL of the fetched Blob as the image blob
           const url = URL.createObjectURL(safetyImageBlob);
           setImageBlob(url);
@@ -316,14 +328,16 @@ export default function ContentDrawer() {
       } catch (err) {
         // Handle errors here and use the placeholder image
         const safetyImageUrl = `/images/${safetyImage}.jpg`;
-  
+
         // Fetch the placeholder image as a Blob
-        const safetyImageBlob = await fetch(safetyImageUrl).then(res => res.blob());
+        const safetyImageBlob = await fetch(safetyImageUrl).then(res =>
+          res.blob()
+        );
         const generatedFile = new File([safetyImageBlob], 'image.jpg', {
           type: 'image/jpg',
         });
         setFile(generatedFile);
-  
+
         // Use the object URL of the fetched Blob as the image blob
         const url = URL.createObjectURL(safetyImageBlob);
         setImageBlob(url);
@@ -333,8 +347,6 @@ export default function ContentDrawer() {
       console.log('THE PROMPT WAS NULL!!! WHY?? ');
     }
   };
-  
-  
 
   // this cleans up the url after uploading the NFT art
   const cleanupIPFS = url => {
@@ -446,7 +458,7 @@ export default function ContentDrawer() {
       nftWalletAddress.startsWith('0x') &&
       nftWalletAddress.length === 42
     ) {
-      generateArt(prompt,placeHolderImageUrl);
+      generateArt(prompt, placeHolderImageUrl);
     }
 
     if (
@@ -485,6 +497,53 @@ export default function ContentDrawer() {
   ////     NFT MINTING CODE  /////
   ////                       /////
   ////////////////////////////////
+
+  // Helper function to format badge names
+  const formatBadgeName = name => {
+    const words = name.split('_');
+    const capitalizedWords = words.map(
+      word => word.charAt(0).toUpperCase() + word.slice(1)
+    );
+    return capitalizedWords.join(' ');
+  };
+
+  ////////////////////////////////////
+  //////    wiki on this day api /////
+  /////                          /////
+  ////////////////////////////////////
+
+
+  const wikiApiCall = async () => {
+    try {
+      ///get the date from backend api call for user
+      const month = 'from the backend api';
+      const day = 'from the backend';
+      const url = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${month}/${day}`;
+  
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': 'Bearer REACT_APP_WIKI',
+          'Api-User-Agent': 'Tourify',
+        },
+      });
+  
+      return response.json();
+    } catch (error) {
+      throw new Error('Error fetching data from the API');
+    }
+  };
+
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    if (checkinState){
+       
+        await wikiApiCall();
+      
+
+    }, [checkinState]);
+
+  
 
   return (
     <Drawer
@@ -525,7 +584,14 @@ export default function ContentDrawer() {
             {' '}
             <DrawerHeader>
               {`My Attractions`}
-              <span zIndex={9999999} id="confettiReward" />
+              <Box
+                position="absolute"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                zIndex={9999999}
+                id="confettiReward1"
+              />
             </DrawerHeader>
             <DrawerBody>
               <Tabs variant="soft-rounded" colorScheme="orange">
@@ -859,6 +925,7 @@ export default function ContentDrawer() {
                         {Object.entries(globalUserInfo.data.badgeDO).map(
                           ([badge, status]) => {
                             if (status) {
+                              const formattedBadgeName = formatBadgeName(badge);
                               return (
                                 <SimpleGrid
                                   alignItems="left"
@@ -886,8 +953,14 @@ export default function ContentDrawer() {
                                       }}
                                     />
                                     <div>
-                                      <Heading size="md">{badge}</Heading>
-                                      <p> Badge info: Some badge info</p>
+                                      <Heading size="md">
+                                        {formattedBadgeName}
+                                      </Heading>
+                                      <p>
+                                        {' '}
+                                        You got the {formattedBadgeName}! Great
+                                        Job!
+                                      </p>
                                     </div>
                                   </Flex>
                                 </SimpleGrid>
@@ -924,6 +997,7 @@ export default function ContentDrawer() {
                         {Object.entries(globalUserInfo.data.badgeDO).map(
                           ([badge, status]) => {
                             if (!status) {
+                              const formattedBadgeName = formatBadgeName(badge);
                               return (
                                 <SimpleGrid
                                   alignItems="left"
@@ -951,8 +1025,14 @@ export default function ContentDrawer() {
                                       }}
                                     />
                                     <div>
-                                      <Heading size="md">{badge}</Heading>
-                                      <p> Badge info: Some badge info</p>
+                                      <Heading size="md">
+                                        {formattedBadgeName}
+                                      </Heading>
+                                      <p>
+                                        {' '}
+                                        You still have to get the{' '}
+                                        {formattedBadgeName}!
+                                      </p>
                                     </div>
                                   </Flex>
                                 </SimpleGrid>

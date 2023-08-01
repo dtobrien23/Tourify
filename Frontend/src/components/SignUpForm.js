@@ -6,7 +6,9 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Box
 } from '@chakra-ui/react';
+import { useReward } from 'react-rewards';
 
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
@@ -68,6 +70,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const toastUpdate = useToast();
   const toastUpdateError = useToast();
   const toastWallet = useToast();
+  const toastFeedback = useToast();
 
   const [timerId, setTimerId] = useState(null);
 
@@ -407,7 +410,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     onNFTModalOpen();
   };
 
-  const handleWalletEntry = walletInput => {
+const handleWalletEntry = walletInput => {
     console.log(globalCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
 
     if (
@@ -458,6 +461,63 @@ export default function SignUpForm({ setIsLoggedIn }) {
     onNFTModalClose();
   };
 
+
+
+////////////////////////////////
+///                      ///////
+///  FEEDBACK FORM CODE ////////
+///                     ////////
+////////////////////////////////
+
+const { reward: confettiReward, isAnimating: isConfettiAnimating } =
+useReward('confettiReward', 'confetti', {
+  lifetime: 2400,
+  elementSize: 16,
+  elementCount: 100,
+});
+  const [feedbackInput, setFeedbackInput] = useState('');
+
+  // Function to handle changes in the user feedback input field
+  const handleFeedbackInputChange = event => {
+    setFeedbackInput(event.target.value);
+  };
+  const {
+    isOpen: isFeedbackModalOpen,
+    onOpen: onFeedbackModalOpen,
+    onClose: onFeedbackModalClose,
+  } = useDisclosure();
+
+const handleFeedbackClick = () => {
+  setFeedbackInput('');
+onFeedbackModalOpen();
+};
+const handleFeedbackEntry = feedbackInput => {
+  setFeedbackInput('');
+  confettiReward();
+  toastFeedback({
+    title: 'Feedback Submitted.',
+    description: "Thankyou for the input to help us improve the site.",
+    status: 'success',
+    duration: 3000,
+    isClosable: true,
+  });
+
+  onFeedbackModalClose();
+};
+
+const handleFeedbackCancel = () => {
+  setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
+  onFeedbackModalClose();
+};
+
+
+
+
+
+
+
+
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -467,7 +527,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
       flexDirection={buttonsDirection}
       minWidth="190px"
       justifyContent="flex-end"
-    >
+    >  <Box position="absolute"
+    top="50%"
+    left="50%"
+    transform="translate(-50%, -50%)" zIndex={9999999} id="confettiReward" />
+
       {userLoggedIn ? (
         <Menu>
           <MenuButton
@@ -485,7 +549,9 @@ export default function SignUpForm({ setIsLoggedIn }) {
             <MenuItem onClick={handleDeleteConfirmation}>
               Delete Account
             </MenuItem>
-            <MenuItem onClick={handleAddWalletClick}>Add NFT Wallet</MenuItem>{' '}
+            <MenuItem onClick={handleAddWalletClick}>Add NFT Wallet</MenuItem>
+            <MenuItem onClick={handleFeedbackClick}>User Feedback</MenuItem>{' '}
+
           </MenuList>
         </Menu>
       ) : (
@@ -596,7 +662,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
         </AlertDialogOverlay>
       </AlertDialog>
 
-      <Modal z zIndex={9999} isOpen={isNFTModalOpen} onClose={onNFTModalClose}>
+      <Modal zIndex={9999} isOpen={isNFTModalOpen} onClose={onNFTModalClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add NFT Wallet Address</ModalHeader>
@@ -617,6 +683,35 @@ export default function SignUpForm({ setIsLoggedIn }) {
               Submit
             </Button>
             <Button variant="ghost" onClick={handleCancel}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <Modal zIndex={9999} isOpen={isFeedbackModalOpen} onClose={onFeedbackModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Submit User Feedback</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input
+              placeholder="Any ways you think we could improve the website?"
+              value={feedbackInput}
+              onChange={handleFeedbackInputChange}
+            />
+          </ModalBody>
+          <ModalFooter>
+
+            <Button
+            
+              colorScheme="blue"
+              mr={3}
+              onClick={() => handleFeedbackEntry(feedbackInput)}
+            >
+              Submit
+            </Button>
+            <Button variant="ghost" onClick={handleFeedbackCancel}>
               Cancel
             </Button>
           </ModalFooter>
