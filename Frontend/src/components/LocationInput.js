@@ -11,23 +11,11 @@ export default function LocationInput({}) {
 
   const {
     map,
-    setMap,
-    selectedAttraction,
-    setSelectedAttraction,
     setSourceCoords,
     locationMarker,
-    isSourceAlertOpen,
     setLocationMarker,
-    setIsSourceAlertOpen,
-    buttonState,
-    setButtonState,
-    handleRecommenderClick,
-    clearRoute,
-    calculateRoute,
-    geolocation,
     setGeolocation,
     google,
-    isMobile,
     hasTouchScreen,
     inputValue,
     setInputValue,
@@ -52,7 +40,7 @@ export default function LocationInput({}) {
     if (autocompleteRef.current) {
       setInputValue(currentLocation);
     }
-  }, [buttonClicked]);
+  }, [currentLocation, buttonClicked]);
 
   useEffect(() => {
     if (hasTouchScreen) {
@@ -164,7 +152,7 @@ export default function LocationInput({}) {
             const formattedAddress = response.results[0].formatted_address;
             setCurrentLocation(formattedAddress);
 
-            setInputValue(formattedAddress);
+            // setInputValue(formattedAddress);
 
             setGeolocation(deniedCoords); // Update the geolocation value in the context
             console.log(deniedCoords, 'this is lat lang');
@@ -284,10 +272,9 @@ export default function LocationInput({}) {
             }
             setLocationMarker([]);
           }
-
+          setCurrentLocation(selectedPlace.name);
           setInputValue(selectedPlace.name);
           setSourceCoords(latLng);
-          // setGeolocation(sourceCoords);
           setGeolocation(latLng);
           map.panTo(latLng);
           map.setZoom(15);
@@ -309,7 +296,6 @@ export default function LocationInput({}) {
           duration: 3000,
           isClosable: true,
         });
-        setInputValue('');
       }
     }
   };

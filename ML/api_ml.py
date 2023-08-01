@@ -3,13 +3,10 @@ from flask import Flask, request, jsonify
 import traceback
 import pandas as pd
 import joblib
-<<<<<<< HEAD
 import numpy as np
 import sklearn
 from flask_cors import CORS  # Import the CORS module
-=======
 from zipfile import ZipFile
->>>>>>> master
 
 # Import the main_model and models dictionary from models.py
 from models import models, main_model
