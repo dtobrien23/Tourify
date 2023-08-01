@@ -9,14 +9,10 @@ import org.example.bean.dto.AttractionPredictionDTO;
 import org.example.bean.model.AttractionDO;
 import org.example.bean.model.OpenHour;
 import org.example.bean.util.ResponseCode;
-import org.example.bean.util.PredictionInternalResult;
 import org.example.bean.vo.AttractionOnePredictionVO;
 import org.example.bean.vo.AttractionPredictionDetailVO;
 import org.example.bean.vo.AttractionPredictionVO;
 import org.example.config.BusinessException;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -29,13 +25,10 @@ import org.example.repository.AttractionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 
@@ -50,7 +43,7 @@ import org.springframework.core.io.ResourceLoader;
 public class AttractionService {
 
     @Autowired AttractionRepository attractionRepository;
-    @Autowired ResourceLoader resourceLoader;
+//    @Autowired ResourceLoader resourceLoader;
 
     @Value("${spring.custom.docker-flask-ip}")
     private String FLASK_IP;
