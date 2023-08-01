@@ -217,11 +217,13 @@ export default function SignUpForm({ setIsLoggedIn }) {
           console.log(response.data, 'user info');
           setGlobalUserInfo(response.data);
           console.log(globalUserInfo, 'retrieving the cached info');
-
+          setGlobalCredential(credential);
           setBadgeState(response.data);
 
           if (response.status === 200 && response.data.code !== 10004) {
             setGlobalUserInfo(response.data);
+            setGlobalCredential(credential);
+
 
             setUserLoggedIn(true);
             setIsLoggedIn(true);
