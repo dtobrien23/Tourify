@@ -20,10 +20,12 @@ export default function LocationInput({}) {
     inputValue,
     setInputValue,
     sourceCoords,
+    setIsHovered,
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
   const [inputWidth, setInputWidth] = useState('270px');
+  const [waitingOnLocation, setWaitingOnLocation] = useState(false);
   const toastInvalidSource = useToast();
   const toastOutsideNYC = useToast();
   const toastDenied = useToast();
@@ -64,6 +66,8 @@ export default function LocationInput({}) {
 
   // getting user's current location
   const getPosition = () => {
+    setWaitingOnLocation(true);
+    // setCurrentLocation(null); // reset current location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition, error => {
         console.log('Error getting geolocation:', error);
@@ -86,6 +90,8 @@ export default function LocationInput({}) {
   // }, [geolocation, defaultGeolocationSet]);
 
   const posError = error => {
+    setWaitingOnLocation(false);
+    setIsHovered(false);
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' }).then(res => {
         if (res.state === 'denied') {
@@ -105,6 +111,7 @@ export default function LocationInput({}) {
                 }
                 const formattedAddress = response.results[0].formatted_address;
                 setCurrentLocation(formattedAddress);
+                setWaitingOnLocation(false);
 
                 setGeolocation(deniedCoords); // Update the geolocation value in the context
                 console.log(deniedCoords, 'this is lat lang');
@@ -154,6 +161,7 @@ export default function LocationInput({}) {
 
             // setInputValue(formattedAddress);
 
+            setWaitingOnLocation(false);
             setGeolocation(deniedCoords); // Update the geolocation value in the context
             console.log(deniedCoords, 'this is lat lang');
             setSourceCoords(deniedCoords);
@@ -227,6 +235,8 @@ export default function LocationInput({}) {
           const formattedAddress = response.results[0].formatted_address;
           setCurrentLocation(formattedAddress);
           // setInputValue(formattedAddress);
+          setWaitingOnLocation(false);
+
           setGeolocation(latlng); // Update the geolocation value in the context
           console.log(latlng, 'this is lat lang');
           setSourceCoords(latlng);
@@ -334,7 +344,11 @@ export default function LocationInput({}) {
               />
             </Autocomplete>
           </Flex>
-          <LocationButton getPosition={getPosition}></LocationButton>
+          <LocationButton
+            getPosition={getPosition}
+            waitingOnLocation={waitingOnLocation}
+            currentLocation={currentLocation}
+          ></LocationButton>
         </>
       )}
     </Flex>

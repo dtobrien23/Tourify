@@ -46,6 +46,23 @@ const APIContextProvider = ({ children }) => {
         const dataArray = data.data;
         console.log(dataArray, 'back end data without wrapper');
 
+        // turning time strings to time objects
+        // dataArray.forEach(attraction => {
+        //   for (const key in attraction.openHour) {
+        //     const time = attraction.openHour[key];
+        //     if (time !== null) {
+        //       const [hour, minute, second] = time.split(':').map(Number);
+        //       const timeObj = new Date();
+        //       timeObj.setHours(hour);
+        //       timeObj.setMinutes(minute);
+        //       timeObj.setSeconds(second);
+        //       attraction.openHour[key] = timeObj;
+        //       console.log(typeof time);
+        //       console.log(typeof timeObj);
+        //     }
+        //   }
+        // });
+
         setAPIAttractions(dataArray);
         setApiLoaded(true);
 

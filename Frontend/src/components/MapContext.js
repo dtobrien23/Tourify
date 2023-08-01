@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 
 const MapContext = createContext();
@@ -30,6 +30,7 @@ const MapProvider = ({ children }) => {
   const [hasTouchScreen, setHasTouchScreen] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [inputColour, setInputColour] = useState('#B5BBC6');
+  const [isHovered, setIsHovered] = useState(false);
   const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
 
   const toastNoSource = useToast();
@@ -178,6 +179,7 @@ const MapProvider = ({ children }) => {
     setSourceCoords(null);
     setInputValue('');
     setGeolocation(null);
+    setIsHovered(false); // to turn the location button back grey
   }
 
   const [buttonState, setButtonState] = useState();
@@ -228,6 +230,8 @@ const MapProvider = ({ children }) => {
         setSourceCoords,
         attractionsWithBusyness,
         setAttractionsWithBusyness,
+        isHovered,
+        setIsHovered,
       }}
     >
       {children}
