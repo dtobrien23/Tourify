@@ -187,8 +187,8 @@ export default function ContentDrawer() {
       const requestBody = {
         id_token: idToken,
         attraction_id: attractionID,
-        lat: '40.7484405', //hardcoded for testing replace with geolocation variable
-        lng: '-73.9856644', //hardcoded for testing reaplace with geolocation variable
+        lat: '40.7825547', //hardcoded for testing replace with geolocation variable
+        lng: '-73.9655834', //hardcoded for testing reaplace with geolocation variable
       };
 
       axios
@@ -512,9 +512,6 @@ export default function ContentDrawer() {
         const imageURL = await uploadArtToIpfs(prompt, fileMade);
         if (imageURL) {
           console.log('Uploading to IPFS completed. Image URL:', imageURL);
-          // Call mintNft with the prompt and imageURL
-          await new Promise((resolve) => setTimeout(resolve, 60000));
-          console.log('60-second timer ended. Minting NFT now.');
           toastNFT({
             title: 'NFT Minting in progress.',
             description: `Please wait as this can take several minutes.`,
@@ -522,6 +519,11 @@ export default function ContentDrawer() {
             duration: 6000,
             isClosable: true,
           });
+          
+          // Call mintNft with the prompt and imageURL
+          await new Promise((resolve) => setTimeout(resolve, 60000));
+          console.log('60-second timer ended. Minting NFT now.');
+          
           await mintNft(prompt, imageURL, nftWalletAddress);
           console.log('NFT minted successfully.');
           setFile(null);
