@@ -172,7 +172,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
       axios
         .post(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
-          `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
+          // `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
+          `http://192.168.23.129:8001/api/user/info?idTokenString=${cachedUserCredential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'updated user info');
@@ -227,7 +228,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
       axios
         .post(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
-          `http://localhost:8001/api/user/info?idTokenString=${credential}`
+          // `http://localhost:8001/api/user/info?idTokenString=${credential}`
+          `http://192.168.23.129:8001/api/user/info?idTokenString=${credential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'user info');
@@ -291,7 +293,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
       axios
         .post(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
-          `http://localhost:8001/api/user/register?idTokenString=${credential}`
+          // `http://localhost:8001/api/user/register?idTokenString=${credential}`
+          `http://192.168.23.129:8001/api/user/register?idTokenString=${credential}`
         )
         .then(response => {
           // setGlobalUserInfo(response.data);
@@ -338,7 +341,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
       axios
         .post(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/user/delete?idTokenString=${globalCredential}`
-          `http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`
+          // `http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`
+          `http://192.168.23.129:8001/api/user/delete?idTokenString=${globalCredential}`
         ) //user info, json w/ true false
         .then(response => {
           // if (response.data.code === 10004) {
@@ -419,7 +423,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     ) {
       axios
         .post(
-          `http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
+          // `http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
+          `http://192.168.23.129:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
         ) //Add Wallet address
         .then(response => {
           console.log(response.data, 'user info1');

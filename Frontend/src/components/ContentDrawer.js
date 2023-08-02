@@ -186,7 +186,8 @@ export default function ContentDrawer() {
       });
     } else {
       // const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
-      const apiEndpoint = 'http://localhost:8001/api/user/update';
+      // const apiEndpoint = 'http://localhost:8001/api/user/update';
+      const apiEndpoint = 'http://192.168.23.129:8001/api/user/update';
       const cachedUserCredential = localStorage.getItem('userCredential');
 
       const placeHolder = attractionNameAlias;
