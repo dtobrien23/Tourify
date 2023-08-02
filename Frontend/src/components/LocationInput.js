@@ -82,13 +82,7 @@ export default function LocationInput({}) {
   const deniedCoords = { lat: 40.758, lng: -73.9855 };
   const [defaultGeolocationSet, setDefaultGeolocationSet] = useState(null);
 
-  // useEffect(() => {
-  //   if (!geolocation && !defaultGeolocationSet) {
-  //     // Set the default geolocation when geolocation is not available or denied
-  //     setGeolocation(deniedCoords);
-  //     setDefaultGeolocationSet(true);
-  //   }
-  // }, [geolocation, defaultGeolocationSet]);
+  
 
   const posError = error => {
     setWaitingOnLocation(false);

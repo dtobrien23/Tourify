@@ -18,23 +18,13 @@ import {
   TabList,
   TabPanel,
   TabPanels,
-  SimpleGrid,
   Heading,
-  Stack,
   useToast,
   Alert,
   AlertIcon,
   AlertTitle,
   AlertDescription,
   Box,
-  AbsoluteCenter,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
 } from '@chakra-ui/react';
 
 import { MapContext } from './MapContext';
@@ -135,7 +125,6 @@ export default function ContentDrawer() {
   };
 
   const randomWord = getRandomAdjective();
-  //console.log(randomWord, 'randomword');
 
   const [prompt, setPrompt] = useState(null);
   const [promptIsSet, setPromptIsSet] = useState(false);
@@ -168,15 +157,13 @@ export default function ContentDrawer() {
   const [placeHolderImageUrl, setPlaceHolderImaegUrl] = useState();
 
   const handleCheckIn = async (
-    
     attractionID,
-    
+
     attractionName,
-    
+
     isOpen,
     randomWord,
     attractionNameAlias
-  
   ) => {
     if (isOpen === false) {
       toastAttractionClosed({
@@ -191,8 +178,8 @@ export default function ContentDrawer() {
       const apiEndpoint = 'http://localhost:8001/api/user/update';
       const cachedUserCredential = localStorage.getItem('userCredential');
 
-    const placeHolder = attractionNameAlias;
-    setPlaceHolderImaegUrl(placeHolder);
+      const placeHolder = attractionNameAlias;
+      setPlaceHolderImaegUrl(placeHolder);
 
       const idToken = cachedUserCredential; // get this from credential in signupform
       console.log(cachedUserCredential, 'this is the global credential');
@@ -200,58 +187,59 @@ export default function ContentDrawer() {
       const requestBody = {
         id_token: idToken,
         attraction_id: attractionID,
-        lat: '40.7060855', //hardcoded for testing replace with geolocation variable
-        lng: '-73.9968643', //hardcoded for testing reaplace with geolocation variable
+        lat: '40.7484405', //hardcoded for testing replace with geolocation variable
+        lng: '-73.9856644', //hardcoded for testing reaplace with geolocation variable
       };
 
-    axios
-      .post(apiEndpoint, requestBody)
-      .then(response => {
-        console.log('API call successful:', response.data);
-        console.log(response, 'this is response data');
-        // Handle the response data here
-        if (response.data.code === 200) {
-          //   // set logic that your marker has been ticked off
-          setCheckinState(true);
-          const PROMPT_TEST = `${attractionName} ${randomWord}`;
-          setPrompt(PROMPT_TEST);
-          setPlaceHolderImaegUrl(placeHolder);
+      axios
+        .post(apiEndpoint, requestBody)
+        .then(response => {
+          console.log('API call successful:', response.data);
+          console.log(response, 'this is response data');
+          // Handle the response data here
+          if (response.data.code === 200) {
+            //   // set logic that your marker has been ticked off
+            setCheckinState(true);
+            const PROMPT_TEST = `${attractionName} ${randomWord}`;
+            setPrompt(PROMPT_TEST);
+            setPlaceHolderImaegUrl(placeHolder);
 
-          console.log(PROMPT_TEST, 'PROMPT_TEST');
-          console.log(checkinState, 'checkinstate - contentdrawer');
-          confettiReward();
-          toastCheckIn({
-            title: 'Check in Successful.',
-            description: "You've Checked in Successfully.",
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-          });
+            console.log(PROMPT_TEST, 'PROMPT_TEST');
+            console.log(checkinState, 'checkinstate - contentdrawer');
+            confettiReward();
+            toastCheckIn({
+              title: 'Check in Successful.',
+              description: "You've Checked in Successfully.",
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
 
-          // Get the current timestamp and date
-          const currentTimeStamp = new Date().getTime();
-          const currentDate = new Date().toLocaleDateString();
+            // Get the current timestamp and date
+            const currentTimeStamp = new Date().getTime();
+            const currentDate = new Date().toLocaleDateString();
 
-          // get the updated user info from the backend
-        }
-        if (response.data.code === 10050) {
-          // distance too long
-          setCheckinState(false);
+            // get the updated user info from the backend
+          }
+          if (response.data.code === 10050) {
+            // distance too long
+            setCheckinState(false);
 
-          console.log(response.data.code, 'this is the repsonse code!');
-          toastNotCheckIn({
-            title: 'Check in Unsuccessful.',
-            description: "You're too far away.",
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error in API call:', error);
-        // Handle errors here
-      });
+            console.log(response.data.code, 'this is the repsonse code!');
+            toastNotCheckIn({
+              title: 'Check in Unsuccessful.',
+              description: "You're too far away.",
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error in API call:', error);
+          // Handle errors here
+        });
+    }
   };
 
   const areAllBadgesTrue = () => {
@@ -325,7 +313,7 @@ export default function ContentDrawer() {
 
         // // Check if the response status is successful
         if (response.status === 200) {
-          console.log('huggingface api responded')
+          console.log('huggingface api responded');
           const generatedFile = new File([response.data], 'image.png', {
             type: 'image/png',
           });
@@ -367,6 +355,8 @@ export default function ContentDrawer() {
         // Use the object URL of the fetched Blob as the image blob
         const url = URL.createObjectURL(safetyImageBlob);
         setImageBlob(url);
+        console.log(safetyImageBlob, 'safety im age blob');
+        console.log(url, 'this is the error url');
         console.log('API call unsuccessful. Using placeholder image.', err);
       }
     } else {
@@ -439,9 +429,8 @@ export default function ContentDrawer() {
           },
         }
       );
-      console.log(imageURL,'THIS IS THE IMAGE URL')
-      console.log(prompt,'NFT PORT PROMPT')
-
+      console.log(imageURL, 'THIS IS THE IMAGE URL');
+      console.log(prompt, 'NFT PORT PROMPT');
 
       const data = response.data;
       console.log(data, 'data from mintNFT function');
@@ -459,9 +448,17 @@ export default function ContentDrawer() {
 
         setPrompt(null);
         setPromptIsSet(false);
+        setFile(null);
       } else {
         // Handle other possible response statuses or errors here
         console.log('Error minting NFT.');
+        toastNFT({
+          title: 'Error Minting NFT.',
+          description: `An error has occured in the minting process please try again later`,
+          status: 'error',
+          duration: 6000,
+          isClosable: true,
+        });
       }
     } catch (err) {
       console.log(err);
@@ -513,9 +510,22 @@ export default function ContentDrawer() {
       // Call the function to upload the art to IPFS and get the imageURL
       const uploadToIPFS = async () => {
         const imageURL = await uploadArtToIpfs(prompt, fileMade);
-
-        // Call mintNft with the prompt and imageURL
-        await mintNft(prompt, imageURL, nftWalletAddress);
+        if (imageURL) {
+          console.log('Uploading to IPFS completed. Image URL:', imageURL);
+          // Call mintNft with the prompt and imageURL
+          await new Promise((resolve) => setTimeout(resolve, 60000));
+          console.log('60-second timer ended. Minting NFT now.');
+          toastNFT({
+            title: 'NFT Minting in progress.',
+            description: `Please wait as this can take several minutes.`,
+            status: 'success',
+            duration: 6000,
+            isClosable: true,
+          });
+          await mintNft(prompt, imageURL, nftWalletAddress);
+          console.log('NFT minted successfully.');
+          setFile(null);
+        }
       };
 
       uploadToIPFS();
@@ -535,96 +545,6 @@ export default function ContentDrawer() {
       word => word.charAt(0).toUpperCase() + word.slice(1)
     );
     return capitalizedWords.join(' ');
-  };
-
-  ////////////////////////////////////
-  //////    wiki on this day api /////
-  /////                          /////
-  ////////////////////////////////////
-
-  const wikiApiCall = async () => {
-    try {
-      ///get the date from backend api call for user
-      const month = 2;
-      const day = 2;
-      const url = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${month}/${day}`;
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${process.env.REACT_APP_WIKI}`,
-        },
-      });
-
-      const data = await response.json();
-      console.log(data,'WIKI DATA!!!!!!')
-
-      // Extract the relevant information from the 0th index entry
-      const entry = data.births[0];
-      const text = entry.text;
-      const extract = entry.pages[0].extract;
-
-      // Create an object containing the desired information
-      const wikiResult = {
-        text: text,
-        extract: extract,
-      };
-
-      
-      console.log(data, 'THIS IS THE WIKI RESPONSE');
-      console.log('entry:', entry);
-      console.log('text:', text);
-      console.log(' extract:', extract);
-      setWikiData(wikiResult);
-      return wikiResult;
-    } catch (error) {
-      throw new Error('Error fetching data from the API');
-    }
-  };
-  const [wikiData, setWikiData] = useState({});
-
-  const {
-    isOpen: isWikiModalOpen,
-    onOpen: onWikiModalOpen,
-    onClose: onWikiModalClose,
-  } = useDisclosure();
-
-  useEffect(() => {
-     
-      const fetchData = async () => {
-        try {
-          const wikiApiResult = await wikiApiCall(); // Await the result
-          setWikiData(wikiApiResult);
-          onWikiModalOpen();
-
-        } catch (error) {
-          console.error(error);
-        }
-      
-  
-      fetchData();
-    }
-  }, [checkinState]);
-  
-  // useEffect(() => {
-  //   if (Object.keys(wikiData).length > 0) {
-  //     onWikiModalOpen();
-  //   }
-  // }, [wikiData]);
-  
-  
-
-  const WikiModal = ({ isOpen, onClose, text, extract }) => {
-    return (
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>{text}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <p>{extract}</p>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    );
   };
 
   return (
@@ -820,7 +740,6 @@ export default function ContentDrawer() {
                                                   attractionInfo.isOpen,
                                                   randomWord,
                                                   attractionInfo.name_alias
-
                                                 )
                                               // mintNft()
                                             }
@@ -1036,7 +955,7 @@ export default function ContentDrawer() {
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
                         if (!status) {
-                              const formattedBadgeName = formatBadgeName(badge);
+                          const formattedBadgeName = formatBadgeName(badge);
                           return (
                             <Flex
                               border="2px solid orangered"
@@ -1067,13 +986,13 @@ export default function ContentDrawer() {
                                   />
                                   <div style={{ width: '100%' }}>
                                     <Heading size="md">
-                                        {formattedBadgeName}
-                                      </Heading>
+                                      {formattedBadgeName}
+                                    </Heading>
                                     <p>
-                                        {' '}
-                                        You got the {formattedBadgeName}! Great
-                                        Job!
-                                      </p>
+                                      {' '}
+                                      You got the {formattedBadgeName}! Great
+                                      Job!
+                                    </p>
                                   </div>
                                 </Flex>
                               </Flex>
@@ -1112,7 +1031,7 @@ export default function ContentDrawer() {
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
                         if (status) {
-                              const formattedBadgeName = formatBadgeName(badge);
+                          const formattedBadgeName = formatBadgeName(badge);
                           return (
                             <Flex
                               border="2px solid gold"
@@ -1143,13 +1062,13 @@ export default function ContentDrawer() {
                                   />
                                   <div style={{ width: '100%' }}>
                                     <Heading size="md">
-                                        {formattedBadgeName}
-                                      </Heading>
+                                      {formattedBadgeName}
+                                    </Heading>
                                     <p>
-                                        {' '}
-                                        You still have to get the{' '}
-                                        {formattedBadgeName}!
-                                      </p>
+                                      {' '}
+                                      You still have to get the{' '}
+                                      {formattedBadgeName}!
+                                    </p>
                                   </div>
                                 </Flex>
                               </Flex>
@@ -1181,20 +1100,10 @@ export default function ContentDrawer() {
                   </TabPanel>
                 </TabPanels>
               </Tabs>
-              {Object.keys(wikiData).length > 0 && ( // Check if there is data in wikiData
-                <WikiModal
-                  isOpen={isWikiModalOpen}
-                  onClose={onWikiModalClose}
-                  text={wikiData.text}
-                  extract={wikiData.extract}
-                />
-              )}
             </DrawerBody>
           </>
         )}
       </DrawerContent>
     </Drawer>
   );
-}
-
 }

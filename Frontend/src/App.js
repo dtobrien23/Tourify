@@ -4,22 +4,15 @@ import AttractionsList from './components/AttractionsList';
 import NavBar from './components/NavBar';
 import {
   ChakraProvider,
-  Box,
   theme,
-  Tabs,
-  TabPanels,
-  TabPanel,
   Flex,
   CircularProgress,
 } from '@chakra-ui/react';
-import BadgePanel from './components/BadgePanel';
 import './App.css';
 import { MapContext } from './components/MapContext';
 import { APIContext } from './components/APIContext';
-import ProductTour from './components/ProductTour';
 
 function App() {
-  // const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const {
     map,
     setMap,
@@ -29,7 +22,6 @@ function App() {
     hasTouchScreen,
     setHasTouchScreen,
   } = useContext(MapContext);
-  // const [map, setMap] = useState(null);
 
   const { apisLoaded, setAPIIsLoaded, showLoading } = useContext(APIContext);
 
@@ -98,15 +90,11 @@ function App() {
         )}
         {!hasTouchScreen ? (
           <>
-            {/* Call the ProductTour component */}
-            <ProductTour />
             <NavBar map={map} />
             <Map map={map} setMap={setMap} />
           </>
         ) : (
           <>
-            {/* Call the ProductTour component */}
-            <ProductTour />
             <Map map={map} setMap={setMap} />
             <NavBar map={map} />
           </>

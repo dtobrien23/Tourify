@@ -2,18 +2,10 @@ import React, { useState, useContext } from 'react';
 import {
   Box,
   Flex,
-  TabList,
-  Tab,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
   Button,
   Text,
-  MenuItem,
   useToast,
 } from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
 import SearchBar from './SearchBar';
 import { MapContext } from './MapContext';
@@ -167,26 +159,7 @@ export default function NavBar() {
       {hasTouchScreen ? (
         <div></div>
       ) : (
-        // <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
-        //   <Menu
-        //     isOpen={isMenuOpen}
-        //     onClose={() => setIsMenuOpen(false)}
-        //     style={{ width: '100px' }}
-        //   >
-        //     <MenuButton
-        //       as={IconButton}
-        //       icon={<HamburgerIcon />}
-        //       variant="ghost"
-        //       onClick={handleMenuToggle}
-        //       l={1}
-        //     />
-        //     <MenuList minW="0" w="fit-content">
-        //       <MenuItem style={{ width: '100px' }}>
-        //         <SignUpForm setIsLoggedIn={setIsLoggedIn} />
-        //       </MenuItem>
-        //     </MenuList>
-        //   </Menu>
-        // </Box>
+        
         <Flex>
           <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
         </Flex>

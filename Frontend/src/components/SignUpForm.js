@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { NFTStorage } from 'nft.storage';
 import {
   Button,
   useDisclosure,
@@ -67,7 +66,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const toastSignupError = useToast();
   const toastLoginError = useToast();
   const toastBadge = useToast();
-  const toastNFT = useToast();
   const toastUpdate = useToast();
   const toastUpdateError = useToast();
   const toastWallet = useToast();
@@ -155,10 +153,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   };
 
   const userInfoUpdate = async credentialResponse => {
-    //console.log(credentialResponse, 'THIS IS THE CRED for checkin');
-    // const { checkinCredential } = credentialResponse;
 
-    //setGlobalCredential(credentialResponse.credential); // Set the credential as a global variable
     const cachedUserCredential = localStorage.getItem('userCredential');
     if (cachedUserCredential) {
       axios
@@ -180,8 +175,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
             localStorage.setItem('userInfo', JSON.stringify(response.data));
 
             // Cache the user credential
-            //localStorage.setItem('userCredential', globalCredential);
-            //reset checkinstate to false
             setCheckinState(false);
 
             toastUpdate({
@@ -194,8 +187,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
 
             setUserInfoFetched(true);
           } else {
-            //setUserLoggedIn(false);
-            //setIsLoggedIn(false);
             toastUpdateError({
               title: 'Update Error.',
               description: 'Error with update, please please refresh page.',
@@ -463,7 +454,7 @@ const handleWalletEntry = walletInput => {
 
 const { reward: confettiReward, isAnimating: isConfettiAnimating } =
 useReward('confettiReward', 'confetti', {
-  lifetime: 2400,
+  lifetime: 190,
   elementSize: 16,
   elementCount: 100,
 });
@@ -502,14 +493,6 @@ const handleFeedbackCancel = () => {
   onFeedbackModalClose();
 };
 
-
-
-
-
-
-
-
-
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -520,9 +503,11 @@ const handleFeedbackCancel = () => {
       minWidth="190px"
       justifyContent="flex-end"
     >  <Box position="absolute"
+    maxHeight={'100vh'}
+    maxWidth={'100vh'}
     top="50%"
     left="50%"
-    transform="translate(-50%, -50%)" zIndex={9999999} id="confettiReward" />
+    transform="translate(-50%, -50%)" zIndex={9} id="confettiReward" />
 
       {userLoggedIn ? (
         <Menu>

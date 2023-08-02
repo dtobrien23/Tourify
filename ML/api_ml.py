@@ -4,7 +4,6 @@ import traceback
 import pandas as pd
 import joblib
 import numpy as np
-import sklearn
 from flask_cors import CORS  # Import the CORS module
 from zipfile import ZipFile
 
