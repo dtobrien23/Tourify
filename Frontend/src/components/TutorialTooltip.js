@@ -1,59 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDisclosure, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton } from '@chakra-ui/react';
 
 const TutorialTooltip = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(1);
+  const maxSteps = 4;
+  const tutorialShownKey = 'tutorialShown'; // Local storage key
 
-  // Optionally, use localStorage to store if the user has seen the tutorial before
-  const hasSeenTutorialBefore = localStorage.getItem('hasSeenTutorial');
-  if (!hasSeenTutorialBefore) {
-    // If the user hasn't seen the tutorial, open it
-    onOpen();
-  }
+  useEffect(() => {
+    const isTutorialShown = localStorage.getItem(tutorialShownKey);
+
+    if (isTutorialShown) { // Check if the tutorial has not been shown before
+      onOpen();
+    }
+  }, [onOpen]);
 
   const handleNextStep = () => {
-    // Increment the currentStep and show the next step of the tutorial
-    setCurrentStep(prevStep => prevStep + 1);
+    setCurrentStep((prevStep) => prevStep + 1);
+  };
+
+  const handleBackStep = () => {
+    setCurrentStep((prevStep) => {
+      const newStep = prevStep - 1;
+      return newStep < 1 ? 1 : newStep;
+    });
   };
 
   const handleSkipTutorial = () => {
-    // Close the tutorial and optionally set a flag in localStorage
     onClose();
-    localStorage.setItem('hasSeenTutorial', 'true');
+
+    // Set the flag in local storage to indicate that the tutorial has been shown
+    localStorage.setItem(tutorialShownKey, 'true');
   };
 
   return (
     <>
-      {/* Your main website content goes here */}
-      {/* ... */}
-
-      {/* Tutorial Tooltip Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+      <Modal isOpen={isOpen} onClose={handleSkipTutorial} size="lg">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Tutorial Tooltip</ModalHeader>
-          <ModalCloseButton />
+          <ModalHeader> Welcome to Tourify! </ModalHeader>
+          <ModalCloseButton onClick={handleSkipTutorial} />
           <ModalBody>
             {/* Show different content based on the current step */}
-            {currentStep === 1 && <p>Step 1: Welcome to our website! This is the first step of the tutorial.</p>}
-            {currentStep === 2 && <p>Step 2: Here's how you can use feature XYZ.</p>}
-            {currentStep === 3 && <p>Step 3: And here's another feature ABC explained.</p>}
-            {/* Add more steps as needed */}
+            {currentStep === 1 && (
+              <p>
+                Welcome to Tourify! Collect experiences and enhance your journey with our amazing attractions.
+              </p>
+            )}
+            {currentStep === 2 && (
+              <p>
+                You can collect your own unique NFTs badges on our website by visiting famous New York attractions!
+              </p>
+            )}
+            {currentStep === 3 && (
+              <p>
+                To access all the fun features on our website please Log In through Google!
+              </p>
+            )}
+            {currentStep === 4 && (
+              <p>
+                Press "Guide" to learn more about about the features on this website!
+              </p>
+            )}
           </ModalBody>
           <ModalFooter>
+            {currentStep > 1 && (
+              <Button variant="ghost" variant='solid' onClick={handleBackStep} mr={2}>
+                Back
+              </Button>
+            )}
             {currentStep < maxSteps ? (
-              <Button colorScheme="blue" mr={3} onClick={handleNextStep}>
+              <Button colorScheme="orange" mr={3} onClick={handleNextStep}>
                 Next Step
               </Button>
             ) : (
-              <Button colorScheme="blue" mr={3} onClick={handleSkipTutorial}>
+              <Button colorScheme="orange" onClick={handleSkipTutorial}>
                 Finish Tutorial
               </Button>
             )}
-            <Button variant="ghost" onClick={handleSkipTutorial}>
-              Skip Tutorial
-            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
