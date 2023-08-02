@@ -168,15 +168,13 @@ export default function ContentDrawer() {
   const [placeHolderImageUrl, setPlaceHolderImaegUrl] = useState();
 
   const handleCheckIn = async (
-    
     attractionID,
-    
+
     attractionName,
-    
+
     isOpen,
     randomWord,
     attractionNameAlias
-  
   ) => {
     if (isOpen === false) {
       toastAttractionClosed({
@@ -191,8 +189,8 @@ export default function ContentDrawer() {
       const apiEndpoint = 'http://localhost:8001/api/user/update';
       const cachedUserCredential = localStorage.getItem('userCredential');
 
-    const placeHolder = attractionNameAlias;
-    setPlaceHolderImaegUrl(placeHolder);
+      const placeHolder = attractionNameAlias;
+      setPlaceHolderImaegUrl(placeHolder);
 
       const idToken = cachedUserCredential; // get this from credential in signupform
       console.log(cachedUserCredential, 'this is the global credential');
@@ -204,54 +202,55 @@ export default function ContentDrawer() {
         lng: '-73.9968643', //hardcoded for testing reaplace with geolocation variable
       };
 
-    axios
-      .post(apiEndpoint, requestBody)
-      .then(response => {
-        console.log('API call successful:', response.data);
-        console.log(response, 'this is response data');
-        // Handle the response data here
-        if (response.data.code === 200) {
-          //   // set logic that your marker has been ticked off
-          setCheckinState(true);
-          const PROMPT_TEST = `${attractionName} ${randomWord}`;
-          setPrompt(PROMPT_TEST);
-          setPlaceHolderImaegUrl(placeHolder);
+      axios
+        .post(apiEndpoint, requestBody)
+        .then(response => {
+          console.log('API call successful:', response.data);
+          console.log(response, 'this is response data');
+          // Handle the response data here
+          if (response.data.code === 200) {
+            //   // set logic that your marker has been ticked off
+            setCheckinState(true);
+            const PROMPT_TEST = `${attractionName} ${randomWord}`;
+            setPrompt(PROMPT_TEST);
+            setPlaceHolderImaegUrl(placeHolder);
 
-          console.log(PROMPT_TEST, 'PROMPT_TEST');
-          console.log(checkinState, 'checkinstate - contentdrawer');
-          confettiReward();
-          toastCheckIn({
-            title: 'Check in Successful.',
-            description: "You've Checked in Successfully.",
-            status: 'success',
-            duration: 3000,
-            isClosable: true,
-          });
+            console.log(PROMPT_TEST, 'PROMPT_TEST');
+            console.log(checkinState, 'checkinstate - contentdrawer');
+            confettiReward();
+            toastCheckIn({
+              title: 'Check in Successful.',
+              description: "You've Checked in Successfully.",
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
 
-          // Get the current timestamp and date
-          const currentTimeStamp = new Date().getTime();
-          const currentDate = new Date().toLocaleDateString();
+            // Get the current timestamp and date
+            const currentTimeStamp = new Date().getTime();
+            const currentDate = new Date().toLocaleDateString();
 
-          // get the updated user info from the backend
-        }
-        if (response.data.code === 10050) {
-          // distance too long
-          setCheckinState(false);
+            // get the updated user info from the backend
+          }
+          if (response.data.code === 10050) {
+            // distance too long
+            setCheckinState(false);
 
-          console.log(response.data.code, 'this is the repsonse code!');
-          toastNotCheckIn({
-            title: 'Check in Unsuccessful.',
-            description: "You're too far away.",
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
-        }
-      })
-      .catch(error => {
-        console.error('Error in API call:', error);
-        // Handle errors here
-      });
+            console.log(response.data.code, 'this is the repsonse code!');
+            toastNotCheckIn({
+              title: 'Check in Unsuccessful.',
+              description: "You're too far away.",
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error in API call:', error);
+          // Handle errors here
+        });
+    }
   };
 
   const areAllBadgesTrue = () => {
@@ -325,7 +324,7 @@ export default function ContentDrawer() {
 
         // // Check if the response status is successful
         if (response.status === 200) {
-          console.log('huggingface api responded')
+          console.log('huggingface api responded');
           const generatedFile = new File([response.data], 'image.png', {
             type: 'image/png',
           });
@@ -439,9 +438,8 @@ export default function ContentDrawer() {
           },
         }
       );
-      console.log(imageURL,'THIS IS THE IMAGE URL')
-      console.log(prompt,'NFT PORT PROMPT')
-
+      console.log(imageURL, 'THIS IS THE IMAGE URL');
+      console.log(prompt, 'NFT PORT PROMPT');
 
       const data = response.data;
       console.log(data, 'data from mintNFT function');
@@ -555,7 +553,7 @@ export default function ContentDrawer() {
       });
 
       const data = await response.json();
-      console.log(data,'WIKI DATA!!!!!!')
+      console.log(data, 'WIKI DATA!!!!!!');
 
       // Extract the relevant information from the 0th index entry
       const entry = data.births[0];
@@ -568,7 +566,6 @@ export default function ContentDrawer() {
         extract: extract,
       };
 
-      
       console.log(data, 'THIS IS THE WIKI RESPONSE');
       console.log('entry:', entry);
       console.log('text:', text);
@@ -588,29 +585,24 @@ export default function ContentDrawer() {
   } = useDisclosure();
 
   useEffect(() => {
-     
-      const fetchData = async () => {
-        try {
-          const wikiApiResult = await wikiApiCall(); // Await the result
-          setWikiData(wikiApiResult);
-          onWikiModalOpen();
+    const fetchData = async () => {
+      try {
+        const wikiApiResult = await wikiApiCall(); // Await the result
+        setWikiData(wikiApiResult);
+        onWikiModalOpen();
+      } catch (error) {
+        console.error(error);
+      }
 
-        } catch (error) {
-          console.error(error);
-        }
-      
-  
       fetchData();
-    }
+    };
   }, [checkinState]);
-  
+
   // useEffect(() => {
   //   if (Object.keys(wikiData).length > 0) {
   //     onWikiModalOpen();
   //   }
   // }, [wikiData]);
-  
-  
 
   const WikiModal = ({ isOpen, onClose, text, extract }) => {
     return (
@@ -714,7 +706,7 @@ export default function ContentDrawer() {
                                 overflow="hidden"
                                 spacing="20px"
                                 p="10px"
-                                width="425px"
+                                width={hasTouchScreen ? '100%' : '425px'}
                                 mb="15px"
                               >
                                 <Flex
@@ -820,7 +812,6 @@ export default function ContentDrawer() {
                                                   attractionInfo.isOpen,
                                                   randomWord,
                                                   attractionInfo.name_alias
-
                                                 )
                                               // mintNft()
                                             }
@@ -889,7 +880,7 @@ export default function ContentDrawer() {
                                 overflow="hidden"
                                 spacing="20px"
                                 p="10px"
-                                width="425px"
+                                width={hasTouchScreen ? '100%' : '425px'}
                                 mb="15px"
                               >
                                 <Flex
@@ -1032,11 +1023,11 @@ export default function ContentDrawer() {
                 </TabList>
 
                 <TabPanels>
-                  <TabPanel>
+                  <TabPanel width={hasTouchScreen && '100%'}>
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
                         if (!status) {
-                              const formattedBadgeName = formatBadgeName(badge);
+                          const formattedBadgeName = formatBadgeName(badge);
                           return (
                             <Flex
                               border="2px solid orangered"
@@ -1045,7 +1036,7 @@ export default function ContentDrawer() {
                               overflow="hidden"
                               spacing="20px"
                               p="10px"
-                              width="425px"
+                              width={hasTouchScreen ? '100%' : '425px'}
                               mb="15px"
                             >
                               <Flex
@@ -1067,13 +1058,13 @@ export default function ContentDrawer() {
                                   />
                                   <div style={{ width: '100%' }}>
                                     <Heading size="md">
-                                        {formattedBadgeName}
-                                      </Heading>
+                                      {formattedBadgeName}
+                                    </Heading>
                                     <p>
-                                        {' '}
-                                        You got the {formattedBadgeName}! Great
-                                        Job!
-                                      </p>
+                                      {' '}
+                                      You got the {formattedBadgeName}! Great
+                                      Job!
+                                    </p>
                                   </div>
                                 </Flex>
                               </Flex>
@@ -1112,7 +1103,7 @@ export default function ContentDrawer() {
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
                         if (status) {
-                              const formattedBadgeName = formatBadgeName(badge);
+                          const formattedBadgeName = formatBadgeName(badge);
                           return (
                             <Flex
                               border="2px solid gold"
@@ -1121,7 +1112,7 @@ export default function ContentDrawer() {
                               overflow="hidden"
                               spacing="20px"
                               p="10px"
-                              width="425px"
+                              width={hasTouchScreen ? '100%' : '425px'}
                               mb="15px"
                             >
                               <Flex
@@ -1143,13 +1134,13 @@ export default function ContentDrawer() {
                                   />
                                   <div style={{ width: '100%' }}>
                                     <Heading size="md">
-                                        {formattedBadgeName}
-                                      </Heading>
+                                      {formattedBadgeName}
+                                    </Heading>
                                     <p>
-                                        {' '}
-                                        You still have to get the{' '}
-                                        {formattedBadgeName}!
-                                      </p>
+                                      {' '}
+                                      You still have to get the{' '}
+                                      {formattedBadgeName}!
+                                    </p>
                                   </div>
                                 </Flex>
                               </Flex>
@@ -1195,6 +1186,4 @@ export default function ContentDrawer() {
       </DrawerContent>
     </Drawer>
   );
-}
-
 }

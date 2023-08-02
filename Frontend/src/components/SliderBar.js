@@ -91,9 +91,17 @@ export default function SliderBar({ setSliderListFunc }) {
         }}
       >
         <img
-          src="/images/busyness-slider/busy.svg"
+          src={
+            !hasTouchScreen
+              ? '/images/busyness-slider/busy.svg'
+              : '/images/busyness-slider/not-busy.svg'
+          }
           alt="Busyness Slider"
-          style={{ height: '40px', width: '40px' }}
+          style={
+            !hasTouchScreen
+              ? { height: '40px', width: '40px' }
+              : { height: '30px', width: '30px' }
+          }
         />
         <RangeSlider
           aria-label={['min', 'max']}
@@ -125,9 +133,17 @@ export default function SliderBar({ setSliderListFunc }) {
           />
         </RangeSlider>
         <img
-          src="/images/busyness-slider/not-busy.svg"
+          src={
+            !hasTouchScreen
+              ? '/images/busyness-slider/not-busy.svg'
+              : '/images/busyness-slider/busy.svg'
+          }
           alt="Busyness Slider"
-          style={{ height: '45px', width: '45px' }}
+          style={
+            !hasTouchScreen
+              ? { height: '40px', width: '40px' }
+              : { height: '30px', width: '30px' }
+          }
         />
       </Flex>
     </Flex>
