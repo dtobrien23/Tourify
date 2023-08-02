@@ -98,6 +98,38 @@ public class UserRepositoryImpl implements UserRepository {
         update.set("badgeDO.Top_of_the_Rock_Badge", badgeDO.getTop_of_the_Rock_Badge());
         update.set("badgeDO.Edge_Observation_Deck_Badge", badgeDO.getEdge_Observation_Deck_Badge());
 
+
+        update.set("badgeDO.All_Attraction_Badge_CreateTime", badgeDO.getAll_Attraction_Badge_CreateTime());
+        update.set("badgeDO.All_Museum_Badge_CreateTime", badgeDO.getAll_Museum_Badge_CreateTime());
+        update.set("badgeDO.All_Park_Badge_CreateTime", badgeDO.getAll_Park_Badge_CreateTime());
+        update.set("badgeDO.All_Dining_Badge_CreateTime", badgeDO.getAll_Dining_Badge_CreateTime());
+
+        update.set("badgeDO.Empire_State_Badge_CreateTime", badgeDO.getEmpire_State_Badge_CreateTime());
+        update.set("badgeDO.Statue_of_Liberty_Badge_CreateTime", badgeDO.getStatue_of_Liberty_Badge_CreateTime());
+        update.set("badgeDO.Brooklyn_Bridge_Badge_CreateTime", badgeDO.getBrooklyn_Bridge_Badge_CreateTime());
+        update.set("badgeDO.Metropolitan_Museum_of_Art_Badge_CreateTime", badgeDO.getMetropolitan_Museum_of_Art_Badge_CreateTime());
+        update.set("badgeDO.Museum_of_Modern_Art_Badge_CreateTime", badgeDO.getMuseum_of_Modern_Art_Badge_CreateTime());
+        update.set("badgeDO.Guggenheim_Museum_Badge_CreateTime", badgeDO.getGuggenheim_Museum_Badge_CreateTime());
+        update.set("badgeDO.Central_Park_Badge_CreateTime", badgeDO.getCentral_Park_Badge_CreateTime());
+        update.set("badgeDO.Bryant_Park_Badge_CreateTime", badgeDO.getBryant_Park_Badge_CreateTime());
+        update.set("badgeDO.High_Line_Badge_CreateTime", badgeDO.getHigh_Line_Badge_CreateTime());
+        update.set("badgeDO.Broadway_Badge_CreateTime", badgeDO.getBroadway_Badge_CreateTime());
+        update.set("badgeDO.Madame_Tussauds_New_York_Badge_CreateTime", badgeDO.getMadame_Tussauds_New_York_Badge_CreateTime());
+        update.set("badgeDO.Lincoln_Center_Badge_CreateTime", badgeDO.getLincoln_Center_Badge_CreateTime());
+        update.set("badgeDO.Greenwich_Village_Badge_CreateTime", badgeDO.getGreenwich_Village_Badge_CreateTime());
+        update.set("badgeDO.Harlem_Badge_CreateTime", badgeDO.getHarlem_Badge_CreateTime());
+        update.set("badgeDO.Eataly_Badge_CreateTime", badgeDO.getEataly_Badge_CreateTime());
+        update.set("badgeDO.Grand_Central_Market_Badge_CreateTime", badgeDO.getGrand_Central_Market_Badge_CreateTime());
+        update.set("badgeDO.Whitney_Museum_Badge_CreateTime", badgeDO.getWhitney_Museum_Badge_CreateTime());
+        update.set("badgeDO.Museum_of_Arts_and_Design_Badge_CreateTime", badgeDO.getMuseum_of_Arts_and_Design_Badge_CreateTime());
+        update.set("badgeDO.New_Museum_Badge_CreateTime", badgeDO.getNew_Museum_Badge_CreateTime());
+        update.set("badgeDO.Morgan_Library_Museum_Badge_CreateTime", badgeDO.getMorgan_Library_Museum_Badge_CreateTime());
+        update.set("badgeDO.Trinity_Church_Badge_CreateTime", badgeDO.getTrinity_Church_Badge_CreateTime());
+        update.set("badgeDO.Fraunces_Tavern_Badge_CreateTime", badgeDO.getFraunces_Tavern_Badge_CreateTime());
+        update.set("badgeDO.One_World_Observatory_Badge_CreateTime", badgeDO.getOne_World_Observatory_Badge_CreateTime());
+        update.set("badgeDO.Top_of_the_Rock_Badge_CreateTime", badgeDO.getTop_of_the_Rock_Badge_CreateTime());
+        update.set("badgeDO.Edge_Observation_Deck_Badge_CreateTime", badgeDO.getEdge_Observation_Deck_Badge_CreateTime());
+
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, UserDO.class);
         // updateResult.wasAcknowledged() will return true if successful. false if error
         return updateResult.wasAcknowledged();

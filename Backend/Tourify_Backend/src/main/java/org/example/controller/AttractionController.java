@@ -1,9 +1,7 @@
 package org.example.controller;
 
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
+import java.time.LocalDateTime;
 
 import org.example.bean.dto.AttractionOnePredictionDTO;
 import org.example.bean.dto.AttractionPredictionDTO;
@@ -15,12 +13,9 @@ import org.example.bean.vo.AttractionOnePredictionVO;
 import org.example.bean.vo.AttractionPredictionVO;
 import org.example.repository.AttractionRepository;
 import org.example.service.AttractionService;
-import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.example.config.*;
-import ai.onnxruntime.*;
-import java.time.LocalDateTime;
 
 
 
@@ -34,10 +29,10 @@ public class AttractionController {
 
     //getMapping注解用于将/greeting的http请求定向到greeting方法上
     //@PostMapping, @RequestMapping等
-    @GetMapping("/test")
-    @Operation(summary = "return greeting string", description = "testing return string (testing)")
-    public String index() {
-        return "Greetings from Spring Boot!";
+    @PostMapping("/feedback")
+    @Operation(summary = "User feed back")
+    public String index(@RequestBody String feedback) {
+        return "Thank you for your feedback!";
     }
 
     @PostMapping("/addAttraction")
