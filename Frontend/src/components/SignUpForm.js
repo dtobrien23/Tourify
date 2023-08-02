@@ -7,8 +7,10 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Box
+  Box,
+  IconButton,
 } from '@chakra-ui/react';
+import { HamburgerIcon } from '@chakra-ui/icons';
 import { useReward } from 'react-rewards';
 
 import { GoogleLogin } from '@react-oauth/google';
@@ -56,6 +58,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const [modalContent, setModalContent] = useState('');
   const [isDeleteAlertOpen, setDeleteAlertOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleButtonClick = content => {
     setModalContent(content);
@@ -74,6 +77,11 @@ export default function SignUpForm({ setIsLoggedIn }) {
   const toastFeedback = useToast();
 
   const [timerId, setTimerId] = useState(null);
+
+  // for mobile hamburger menu
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   // Function to reset the timer
   const resetLogoutTimer = () => {
@@ -233,7 +241,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
             setGlobalUserInfo(response.data);
             setGlobalCredential(credential);
 
-
             setUserLoggedIn(true);
             setIsLoggedIn(true);
             localStorage.setItem('loggedInfo', 'true'); // Store logged-in state in localStorage
@@ -328,7 +335,6 @@ export default function SignUpForm({ setIsLoggedIn }) {
     console.log(globalCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
 
     if (globalCredential) {
-
       axios
         .post(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/user/delete?idTokenString=${globalCredential}`
@@ -403,7 +409,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     onNFTModalOpen();
   };
 
-const handleWalletEntry = walletInput => {
+  const handleWalletEntry = walletInput => {
     console.log(globalCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
 
     if (
@@ -454,20 +460,18 @@ const handleWalletEntry = walletInput => {
     onNFTModalClose();
   };
 
+  ////////////////////////////////
+  ///                      ///////
+  ///  FEEDBACK FORM CODE ////////
+  ///                     ////////
+  ////////////////////////////////
 
-
-////////////////////////////////
-///                      ///////
-///  FEEDBACK FORM CODE ////////
-///                     ////////
-////////////////////////////////
-
-const { reward: confettiReward, isAnimating: isConfettiAnimating } =
-useReward('confettiReward', 'confetti', {
-  lifetime: 2400,
-  elementSize: 16,
-  elementCount: 100,
-});
+  const { reward: confettiReward, isAnimating: isConfettiAnimating } =
+    useReward('confettiReward', 'confetti', {
+      lifetime: 2400,
+      elementSize: 16,
+      elementCount: 100,
+    });
   const [feedbackInput, setFeedbackInput] = useState('');
 
   // Function to handle changes in the user feedback input field
@@ -480,36 +484,28 @@ useReward('confettiReward', 'confetti', {
     onClose: onFeedbackModalClose,
   } = useDisclosure();
 
-const handleFeedbackClick = () => {
-  setFeedbackInput('');
-onFeedbackModalOpen();
-};
-const handleFeedbackEntry = feedbackInput => {
-  setFeedbackInput('');
-  confettiReward();
-  toastFeedback({
-    title: 'Feedback Submitted.',
-    description: "Thankyou for the input to help us improve the site.",
-    status: 'success',
-    duration: 3000,
-    isClosable: true,
-  });
+  const handleFeedbackClick = () => {
+    setFeedbackInput('');
+    onFeedbackModalOpen();
+  };
+  const handleFeedbackEntry = feedbackInput => {
+    setFeedbackInput('');
+    confettiReward();
+    toastFeedback({
+      title: 'Feedback Submitted.',
+      description: 'Thankyou for the input to help us improve the site.',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
 
-  onFeedbackModalClose();
-};
+    onFeedbackModalClose();
+  };
 
-const handleFeedbackCancel = () => {
-  setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
-  onFeedbackModalClose();
-};
-
-
-
-
-
-
-
-
+  const handleFeedbackCancel = () => {
+    setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
+    onFeedbackModalClose();
+  };
 
   if (loading) {
     return <p>Loading...</p>;
@@ -520,33 +516,74 @@ const handleFeedbackCancel = () => {
       flexDirection={buttonsDirection}
       minWidth="190px"
       justifyContent="flex-end"
-    >  <Box position="absolute"
-    top="50%"
-    left="50%"
-    transform="translate(-50%, -50%)" zIndex={9999999} id="confettiReward" />
-
+    >
+      {' '}
+      <Box
+        position="absolute"
+        top="50%"
+        left="50%"
+        transform="translate(-50%, -50%)"
+        zIndex={9999999}
+        id="confettiReward"
+      />
       {userLoggedIn ? (
-        <Menu>
-          <MenuButton
-            bg="orange"
-            as={Button}
-            color="white"
-            border="solid 1px orangered"
-            borderRadius="25px"
-            _hover={{ bg: 'orangered', color: 'white' }}
-          >
-            User Options
-          </MenuButton>
-          <MenuList zIndex={5}>
-            <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-            <MenuItem onClick={handleDeleteConfirmation}>
-              Delete Account
-            </MenuItem>
-            <MenuItem onClick={handleAddWalletClick}>Add NFT Wallet</MenuItem>
-            <MenuItem onClick={handleFeedbackClick}>User Feedback</MenuItem>{' '}
-
-          </MenuList>
-        </Menu>
+        <>
+          {!hasTouchScreen ? (
+            <Menu>
+              <MenuButton
+                bg="orange"
+                as={Button}
+                color="white"
+                border="solid 1px orangered"
+                borderRadius="25px"
+                _hover={{ bg: 'orangered', color: 'white' }}
+              >
+                User Options
+              </MenuButton>
+              <MenuList zIndex={5}>
+                <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                <MenuItem onClick={handleDeleteConfirmation}>
+                  Delete Account
+                </MenuItem>
+                <MenuItem onClick={handleAddWalletClick}>
+                  Add NFT Wallet
+                </MenuItem>
+                <MenuItem onClick={handleFeedbackClick}>User Feedback</MenuItem>{' '}
+              </MenuList>
+            </Menu>
+          ) : (
+            <Box
+              display={{ base: 'block', md: 'none' }}
+              style={{ zIndex: '2' }}
+            >
+              <Menu
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+                style={{ width: '100px' }}
+              >
+                <MenuButton
+                  as={IconButton}
+                  icon={<HamburgerIcon />}
+                  variant="ghost"
+                  onClick={handleMenuToggle}
+                  l={1}
+                />
+                <MenuList minW="0" w="fit-content">
+                  <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                  <MenuItem onClick={handleDeleteConfirmation}>
+                    Delete Account
+                  </MenuItem>
+                  <MenuItem onClick={handleAddWalletClick}>
+                    Add NFT Wallet
+                  </MenuItem>
+                  <MenuItem onClick={handleFeedbackClick}>
+                    User Feedback
+                  </MenuItem>{' '}
+                </MenuList>
+              </Menu>
+            </Box>
+          )}
+        </>
       ) : (
         <>
           <Flex mr={2}>
@@ -654,7 +691,6 @@ const handleFeedbackCancel = () => {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-
       <Modal zIndex={9999} isOpen={isNFTModalOpen} onClose={onNFTModalClose}>
         <ModalOverlay />
         <ModalContent>
@@ -681,8 +717,11 @@ const handleFeedbackCancel = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-      <Modal zIndex={9999} isOpen={isFeedbackModalOpen} onClose={onFeedbackModalClose}>
+      <Modal
+        zIndex={9999}
+        isOpen={isFeedbackModalOpen}
+        onClose={onFeedbackModalClose}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Submit User Feedback</ModalHeader>
@@ -695,9 +734,7 @@ const handleFeedbackCancel = () => {
             />
           </ModalBody>
           <ModalFooter>
-
             <Button
-            
               colorScheme="blue"
               mr={3}
               onClick={() => handleFeedbackEntry(feedbackInput)}
