@@ -8,7 +8,7 @@ import sklearn
 from flask_cors import CORS  # Import the CORS module
 from zipfile import ZipFile
 
-# Import the main_model and models dictionary from models.py
+# Import the main_model and models list of taxi_locationIDs
 from models import models, main_model
 
 # Your API definition
@@ -43,10 +43,20 @@ def predict():
         temp_avg = json_['temp_avg']
         precipitation = json_['precipitation']
 
-        # Check if the taxi_locationID exists in the models dictionary
+        # Check if the taxi_locationID exists in the models list
         if taxi_locationID in models:
+            # Determine the appropriate zip archive based on taxi_locationID
+            if taxi_locationID <= 107:
+                archive_filename = 'pickle_files/backup_pickle_files_1.zip'
+            elif taxi_locationID <= 153:
+                archive_filename = 'pickle_files/backup_pickle_files_2.zip'
+            elif taxi_locationID <= 231:
+                archive_filename = 'pickle_files/backup_pickle_files_3.zip'
+            else:
+                archive_filename = 'pickle_files/backup_pickle_files_4.zip'
+
             # Load the corresponding model based on the taxi_locationID from the zip archive
-            with ZipFile('pickle_files/backup_pickle_files.zip', 'r') as archive:
+            with ZipFile(archive_filename, 'r') as archive:
                 model_filename = f'{taxi_locationID}.pkl'
                 with archive.open(model_filename) as file:
                     model = joblib.load(file)

@@ -20,6 +20,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 
 /**
@@ -189,100 +191,132 @@ public class UserService {
                 // get the latest user info in DB to check the badge
                 UserDO userDONewBadge = findUserById(userDO.getUser_id());
                 BadgeDO badgeDO = userDONewBadge.getBadgeDO();
+                // set the badge's create time to be the current time in NY
+                ZoneId newYorkZoneId = ZoneId.of("America/New_York");   // Set the ZoneId to New York
+                LocalDateTime localDateTimeInNewYork = LocalDateTime.now(newYorkZoneId);   // Get the current date and time in New York time zone
                 // Check the All_Attraction_Badge
                 if(userDONewBadge.getAttractionStatusDO().areAllFieldsTrue()){
                     badgeDO.setAll_Attraction_Badge(true);
+                    badgeDO.setAll_Attraction_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 // Check the All_Museum_Badge
                 if(userDONewBadge.getAttractionStatusDO().areAllMuseumTrue()){
                     badgeDO.setAll_Museum_Badge(true);
+                    badgeDO.setAll_Museum_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 // Check the All_Park_Badge
                 if(userDONewBadge.getAttractionStatusDO().areAllParkTrue()){
                     badgeDO.setAll_Park_Badge(true);
+                    badgeDO.setAll_Park_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 // Check the All_Dining_Badge
                 if(userDONewBadge.getAttractionStatusDO().areAllDiningTrue()){
                     badgeDO.setAll_Dining_Badge(true);
+                    badgeDO.setAll_Dining_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 // Check every attraction's badge
 
                 if(userDONewBadge.getAttractionStatusDO().getStatue_of_Liberty()){
                     badgeDO.setStatue_of_Liberty_Badge(true);
+                    badgeDO.setStatue_of_Liberty_Badge_CreateTime(localDateTimeInNewYork);
                 }
 
                 if(userDONewBadge.getAttractionStatusDO().getEmpire_State_Building()){
                     badgeDO.setEmpire_State_Badge(true);
+                    badgeDO.setEmpire_State_Badge_CreateTime(localDateTimeInNewYork);
                 }
 
                 if(userDONewBadge.getAttractionStatusDO().getBrooklyn_Bridge()){
                     badgeDO.setBrooklyn_Bridge_Badge(true);
+                    badgeDO.setBrooklyn_Bridge_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getMetropolitan_Museum_of_Art()){
                     badgeDO.setMetropolitan_Museum_of_Art_Badge(true);
+                    badgeDO.setMetropolitan_Museum_of_Art_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getMuseum_of_Modern_Art()){
                     badgeDO.setMuseum_of_Modern_Art_Badge(true);
+                    badgeDO.setMuseum_of_Modern_Art_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getGuggenheim_Museum()){
                     badgeDO.setGuggenheim_Museum_Badge(true);
+                    badgeDO.setGuggenheim_Museum_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getCentral_Park()){
                     badgeDO.setCentral_Park_Badge(true);
+                    badgeDO.setCentral_Park_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getBryant_Park()){
                     badgeDO.setBryant_Park_Badge(true);
+                    badgeDO.setBryant_Park_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getHigh_Line()){
                     badgeDO.setHigh_Line_Badge(true);
+                    badgeDO.setHigh_Line_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getBroadway()){
                     badgeDO.setBroadway_Badge(true);
+                    badgeDO.setBroadway_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getMadame_Tussauds_New_York()){
                     badgeDO.setMadame_Tussauds_New_York_Badge(true);
+                    badgeDO.setMadame_Tussauds_New_York_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getLincoln_Center()){
                     badgeDO.setLincoln_Center_Badge(true);
+                    badgeDO.setLincoln_Center_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getGreenwich_Village()){
                     badgeDO.setGreenwich_Village_Badge(true);
+                    badgeDO.setGreenwich_Village_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getHarlem()){
                     badgeDO.setHarlem_Badge(true);
+                    badgeDO.setHarlem_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getEataly()){
                     badgeDO.setEataly_Badge(true);
+                    badgeDO.setEataly_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getGrand_Central_Market()){
                     badgeDO.setGrand_Central_Market_Badge(true);
+                    badgeDO.setGrand_Central_Market_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getWhitney_Museum()){
                     badgeDO.setWhitney_Museum_Badge(true);
+                    badgeDO.setWhitney_Museum_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getMuseum_of_Arts_and_Design()){
                     badgeDO.setMuseum_of_Arts_and_Design_Badge(true);
+                    badgeDO.setMuseum_of_Arts_and_Design_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getNew_Museum()){
                     badgeDO.setNew_Museum_Badge(true);
+                    badgeDO.setNew_Museum_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getMorgan_Library_Museum()){
                     badgeDO.setMorgan_Library_Museum_Badge(true);
+                    badgeDO.setMorgan_Library_Museum_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getTrinity_Church()){
                     badgeDO.setTrinity_Church_Badge(true);
+                    badgeDO.setTrinity_Church_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getFraunces_Tavern()){
                     badgeDO.setFraunces_Tavern_Badge(true);
+                    badgeDO.setFraunces_Tavern_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getOne_World_Observatory()){
                     badgeDO.setOne_World_Observatory_Badge(true);
+                    badgeDO.setOne_World_Observatory_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getTop_of_the_Rock()){
                     badgeDO.setTop_of_the_Rock_Badge(true);
+                    badgeDO.setTop_of_the_Rock_Badge_CreateTime(localDateTimeInNewYork);
                 }
                 if(userDONewBadge.getAttractionStatusDO().getEdge_Observation_Deck()){
                     badgeDO.setEdge_Observation_Deck_Badge(true);
+                    badgeDO.setEdge_Observation_Deck_Badge_CreateTime(localDateTimeInNewYork);
                 }
 
                 // update the user badge in DB

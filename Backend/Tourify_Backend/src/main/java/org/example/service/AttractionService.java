@@ -245,23 +245,28 @@ public class AttractionService {
             LocalTime attractionOpen = null;
             LocalTime attractionClose = null;
             if (futureDateTime.getDayOfWeek().getValue() == 1){attractionOpen = openHour.getMondayOpen();attractionClose = openHour.getMondayClose();}
-            if (futureDateTime.getDayOfWeek().getValue() == 2){attractionOpen = openHour.getTuesdayOpen();attractionClose = openHour.getMondayClose();}
-            if (futureDateTime.getDayOfWeek().getValue() == 3){attractionOpen = openHour.getWednesdayOpen();attractionClose = openHour.getMondayClose();}
-            if (futureDateTime.getDayOfWeek().getValue() == 4){attractionOpen = openHour.getThursdayOpen();attractionClose = openHour.getMondayClose();}
-            if (futureDateTime.getDayOfWeek().getValue() == 5){attractionOpen = openHour.getFridayOpen();attractionClose = openHour.getMondayClose();}
-            if (futureDateTime.getDayOfWeek().getValue() == 6){attractionOpen = openHour.getSaturdayOpen();attractionClose = openHour.getMondayClose();}
-            if (futureDateTime.getDayOfWeek().getValue() == 7){attractionOpen = openHour.getSundayOpen();attractionClose = openHour.getMondayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 2){attractionOpen = openHour.getTuesdayOpen();attractionClose = openHour.getTuesdayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 3){attractionOpen = openHour.getWednesdayOpen();attractionClose = openHour.getWednesdayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 4){attractionOpen = openHour.getThursdayOpen();attractionClose = openHour.getThursdayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 5){attractionOpen = openHour.getFridayOpen();attractionClose = openHour.getFridayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 6){attractionOpen = openHour.getSaturdayOpen();attractionClose = openHour.getSaturdayClose();}
+            if (futureDateTime.getDayOfWeek().getValue() == 7){attractionOpen = openHour.getSundayOpen();attractionClose = openHour.getSundayClose();}
             // compare the attraction's time range with the iterate time
             LocalTime futureLocalTime = futureDateTime.toLocalTime();        // Extract the time part from the current date-time
             if (attractionOpen!=null && attractionClose!=null) {  // The database is storing empty if the attraction is not open that day
                 // Check if current time is in between the start and end times
                 if (futureLocalTime.isAfter(attractionOpen.minusHours(1)) && futureLocalTime.isBefore(attractionClose.minusHours(1))) {
                     OpenClose.add(true);
+                    System.out.println("111111111");
                 } else {
                     OpenClose.add(false);
+                    System.out.println("222222222");
                 }
             }
-            else {
+            else {  // null means the attraction is not open on that day, skip the conditional statement and directly add false
+                System.out.println("33333333");
+                System.out.println(attractionOpen);
+                System.out.println(attractionClose);
                 OpenClose.add(false);
             }
             // Debugging print statement
