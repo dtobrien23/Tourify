@@ -162,30 +162,31 @@ export default function NavBar() {
             Badges
           </Text>
         </Button>
-        <ParallaxDrawer/>
+        <ParallaxDrawer />
       </Flex>
       {hasTouchScreen ? (
-        <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
-          <Menu
-            isOpen={isMenuOpen}
-            onClose={() => setIsMenuOpen(false)}
-            style={{ width: '100px' }}
-          >
-            <MenuButton
-              as={IconButton}
-              icon={<HamburgerIcon />}
-              variant="ghost"
-              onClick={handleMenuToggle}
-              l={1}
-            />
-            <MenuList minW="0" w="fit-content">
-              <MenuItem style={{ width: '100px' }}>
-                <SignUpForm setIsLoggedIn={setIsLoggedIn} />
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </Box>
+        <div></div>
       ) : (
+        // <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
+        //   <Menu
+        //     isOpen={isMenuOpen}
+        //     onClose={() => setIsMenuOpen(false)}
+        //     style={{ width: '100px' }}
+        //   >
+        //     <MenuButton
+        //       as={IconButton}
+        //       icon={<HamburgerIcon />}
+        //       variant="ghost"
+        //       onClick={handleMenuToggle}
+        //       l={1}
+        //     />
+        //     <MenuList minW="0" w="fit-content">
+        //       <MenuItem style={{ width: '100px' }}>
+        //         <SignUpForm setIsLoggedIn={setIsLoggedIn} />
+        //       </MenuItem>
+        //     </MenuList>
+        //   </Menu>
+        // </Box>
         <Flex>
           <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
         </Flex>

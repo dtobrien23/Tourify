@@ -105,8 +105,8 @@ export default function ContentDrawer() {
       const requestBody = {
         id_token: idToken,
         attraction_id: attractionID,
-        lat: '40.7525596', //hardcoded for testing replace with geolocation variable
-        lng: '-73.9768066', //hardcoded for testing reaplace with geolocation variable
+        lat: '40.7060855', //hardcoded for testing replace with geolocation variable
+        lng: '-73.9968643', //hardcoded for testing reaplace with geolocation variable
       };
 
       axios
@@ -383,8 +383,8 @@ export default function ContentDrawer() {
         setIsDrawerOpen(false);
       }}
       isOpen={isDrawerOpen}
-      placement="left"
-      size={hasTouchScreen ? 'md' : 'md'}
+      placement={hasTouchScreen ? 'bottom' : 'left'}
+      size={hasTouchScreen ? 'xs' : 'md'}
       style={{ zIndex: 0 }}
     >
       <DrawerOverlay
@@ -397,6 +397,7 @@ export default function ContentDrawer() {
       <DrawerContent
         pointerEvents="all"
         containerProps={{ pointerEvents: 'none', height: '100%' }}
+        height={hasTouchScreen ? '60vh' : '100%'}
         style={{
           position: 'absolute',
           // top: '1',
@@ -412,7 +413,6 @@ export default function ContentDrawer() {
         <DrawerCloseButton />
         {activeDrawer === 'recommender' && (
           <>
-            {' '}
             <DrawerHeader>{`Recommender`}</DrawerHeader>
             <DrawerBody>
               <Recommender />

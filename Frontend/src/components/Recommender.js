@@ -167,12 +167,12 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
           combinedAttractionsArray.push({
             // name: matchingAttraction.name,
             // id: matchingAttraction.id,
-            // combinedIndex: newIndex,
             // businessRate: matchingAttraction.businessRate,
             // distance: matchingAttraction.distance,
             // name_alias: matchingAttraction.name_alias,
             // isOpen: matchingAttraction.isOpen,
             ...matchingAttraction,
+            combinedIndex: newIndex,
           });
         }
       });

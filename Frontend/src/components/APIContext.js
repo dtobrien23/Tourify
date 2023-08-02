@@ -272,6 +272,13 @@ const APIContextProvider = ({ children }) => {
         );
         const data = await response.json();
         console.log(data, 'THIS IS THE FORECAST PREDICTIONS');
+        const dataArray = data.data.attractionPredictionDetailVOList;
+        console.log(dataArray, 'YYYYYYYES');
+        // dataArray.forEach(hour => {
+        //   if (hour.openOrClose === false) {
+        //     hour
+        //   }
+        // })
         setChartData({
           labels: data.data.attractionPredictionDetailVOList.map(
             hour => hour.hour

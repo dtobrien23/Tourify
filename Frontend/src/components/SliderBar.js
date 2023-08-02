@@ -12,8 +12,11 @@ import { MapContext } from './MapContext';
 export default function SliderBar({ setSliderListFunc }) {
   const { apiAttractions, apiLoaded, apiAllCurrentBusyness } =
     useContext(APIContext);
-  const { attractionsWithBusyness, setAttractionsWithBusyness } =
-    useContext(MapContext);
+  const {
+    attractionsWithBusyness,
+    setAttractionsWithBusyness,
+    hasTouchScreen,
+  } = useContext(MapContext);
 
   const [sliderValue, setSliderValue] = useState([0, 100]);
   const [filteredAttractions, setFilteredAttractions] =
@@ -58,28 +61,30 @@ export default function SliderBar({ setSliderListFunc }) {
 
   return (
     <Flex
-      style={{
-        // border: 'solid 10px orangered',
-        // borderRadius: '25px',
-        alignItems: 'center',
-        // justifyContent: 'center',
-        width: 'fit-content',
-        height: '100%',
-        zIndex: 1,
-        position: 'absolute',
-        // marginTop: '5em',
-        // marginLeft: '77em',
-        top: 14,
-        right: '20px',
-        flexDirection: 'column',
-      }}
+      width={hasTouchScreen ? '90%' : 'fit-content'}
+      height={hasTouchScreen ? 'auto' : '100%'}
+      mb={hasTouchScreen ? '10px' : '0px'}
+      alignItems="center"
+      justifyContent={hasTouchScreen && 'center'}
+      zIndex="1"
+      position="absolute"
+      style={
+        hasTouchScreen
+          ? { bottom: 1 }
+          : {
+              top: 14,
+              right: '20px',
+              flexDirection: 'column',
+            }
+      }
     >
       <Flex
+        flexDirection={hasTouchScreen ? 'row' : 'column'}
+        width={hasTouchScreen && '100%'}
         style={{
           border: 'solid 2px white',
           borderRadius: '25px',
           boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
-          flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           background: 'white',
@@ -93,10 +98,11 @@ export default function SliderBar({ setSliderListFunc }) {
         <RangeSlider
           aria-label={['min', 'max']}
           defaultValue={[0, 100]}
-          orientation="vertical"
-          minH="505"
-          maxW="20"
-          position={'right'}
+          orientation={hasTouchScreen ? 'horizontal' : 'vertical'}
+          width={hasTouchScreen && '100%'}
+          minH={!hasTouchScreen && '505'}
+          maxW={!hasTouchScreen && '20'}
+          position={!hasTouchScreen && 'right'}
           border={'solid 20px white'}
           borderRadius={'20px'}
           backgroundColor={'white'}
