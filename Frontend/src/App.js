@@ -17,6 +17,7 @@ import './App.css';
 import { MapContext } from './components/MapContext';
 import { APIContext } from './components/APIContext';
 import TutorialTooltip from './components/TutorialTooltip';
+import MobileDrawer from './components/MobileDrawer';
 
 function App() {
   const {
@@ -47,8 +48,29 @@ function App() {
     detectTouchScreen();
   }, []);
 
+  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#mobile_device_detection
   const detectTouchScreen = () => {
-    // ... (Your existing detectTouchScreen logic)
+    console.log('HEEEEEEEELLLLLOOOOOOO');
+    if ('maxTouchPoints' in navigator) {
+      setHasTouchScreen(navigator.maxTouchPoints > 0);
+      console.log('touch screen???', hasTouchScreen);
+    } else if ('msMaxTouchPoints' in navigator) {
+      setHasTouchScreen(navigator.msMaxTouchPoints > 0);
+    } else {
+      const mQ = matchMedia?.('(pointer:coarse)');
+      if (mQ?.media === '(pointer:coarse)') {
+        setHasTouchScreen(!!mQ.matches);
+      } else if ('orientation' in window) {
+        setHasTouchScreen(true); // deprecated, but good fallback
+      } else {
+        // Only as a last resort, fall back to user agent sniffing
+        const UA = navigator.userAgent;
+        setHasTouchScreen(
+          /\b(BlackBerry|webOS|iPhone|IEMobile|Kindle|Silk)\b/i.test(UA) ||
+            /\b(Android|Windows Phone|iPad|iPod)\b/i.test(UA)
+        );
+      }
+    }
   };
 
   return (
@@ -80,7 +102,8 @@ function App() {
       ) : (
         <>
           <Map map={map} setMap={setMap} />
-          <NavBar map={map} />
+          {/* <NavBar map={map} /> */}
+          <MobileDrawer />
         </>
       )}
     </ChakraProvider>

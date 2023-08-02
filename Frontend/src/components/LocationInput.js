@@ -320,7 +320,11 @@ export default function LocationInput({}) {
     >
       {google && (
         <>
-          <Flex w="100%">
+          <Flex
+            w={hasTouchScreen ? '100%' : '230px'}
+            h={hasTouchScreen && '35px'}
+            alignItems="center"
+          >
             <Autocomplete
               onLoad={autocomplete => {
                 autocompleteRef.current = autocomplete;
@@ -346,11 +350,13 @@ export default function LocationInput({}) {
               </div>
             </Autocomplete>
           </Flex>
-          <LocationButton
-            getPosition={getPosition}
-            waitingOnLocation={waitingOnLocation}
-            currentLocation={currentLocation}
-          ></LocationButton>
+          <Flex mr="1px">
+            <LocationButton
+              getPosition={getPosition}
+              waitingOnLocation={waitingOnLocation}
+              currentLocation={currentLocation}
+            ></LocationButton>
+          </Flex>
         </>
       )}
     </Flex>

@@ -24,7 +24,14 @@ export default function DestinationInput({}) {
     inputColour,
     setInputColour,
     handleAttractionSelect,
+    hasTouchScreen,
   } = useContext(MapContext);
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   // Wait for apiAttractions to be available
   if (!apiLoaded) {
@@ -44,13 +51,18 @@ export default function DestinationInput({}) {
     );
   } else {
     return (
-      <Flex w="230px">
-        <Menu style={{ zIndex: 9999 }}>
+      <Flex
+        w={hasTouchScreen ? '100%' : '230px'}
+        justifyContent="space-between"
+        h={hasTouchScreen && '35px'}
+        alignItems="center"
+      >
+        <Menu isOpen={isMenuOpen} style={{ zIndex: 9999 }}>
           <MenuButton
             as={Button}
-            rightIcon={
-              <ChevronDownIcon style={{ color: '#B5BBC6', fontSize: '30px' }} />
-            }
+            // rightIcon={
+            //   <ChevronDownIcon style={{ color: '#B5BBC6', fontSize: '30px' }} />
+            // }
             pt={'0.5px'}
             bg={'white'}
             w={'100%'}
@@ -71,11 +83,18 @@ export default function DestinationInput({}) {
               borderRadius: '20px',
               textAlign: 'left',
             }}
+            onClick={handleMenuToggle}
           >
             {!selectedAttraction
               ? 'I want to visit...'
               : selectedAttraction.name}
           </MenuButton>
+          {/* <Flex alignItems="center" onClick={handleMenuToggle}>
+            <ChevronDownIcon
+              onClick={handleMenuToggle}
+              style={{ color: '#B5BBC6', fontSize: '30px' }}
+            />
+          </Flex> */}
           <MenuList
             mt={0}
             pt={0}
@@ -88,7 +107,10 @@ export default function DestinationInput({}) {
               return (
                 <React.Fragment key={attraction.name}>
                   <MenuItem
-                    onClick={() => handleAttractionSelect(attraction)}
+                    onClick={() => {
+                      handleAttractionSelect(attraction);
+                      handleMenuToggle();
+                    }}
                     h={'32px'}
                     fontSize={'14px'}
                     style={{ zIndex: 100 }}
@@ -108,6 +130,12 @@ export default function DestinationInput({}) {
             })}
           </MenuList>
         </Menu>
+        <Flex alignItems="center" onClick={handleMenuToggle}>
+          <ChevronDownIcon
+            onClick={handleMenuToggle}
+            style={{ color: '#B5BBC6', fontSize: '30px' }}
+          />
+        </Flex>
       </Flex>
     );
   }

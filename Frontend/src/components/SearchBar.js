@@ -1,31 +1,12 @@
 import React, { useContext } from 'react';
-import {
-  Flex,
-  Divider,
-  Button,
-  Box,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverBody,
-  PopoverArrow,
-  PopoverCloseButton,
-  useDisclosure,
-  CircularProgress,
-} from '@chakra-ui/react';
+import { Flex, Divider, Button, Box, useDisclosure } from '@chakra-ui/react';
 import DestinationInput from './DestinationInput';
 import LocationInput from './LocationInput';
 import { MapContext } from './MapContext';
 
 export default function SearchBar() {
-  const {
-    calculateRoute,
-    clearRoute,
-    hasTouchScreen,
-    setIsDrawerOpen,
-    setGeolocation,
-    waitingOnRoute,
-  } = useContext(MapContext);
+  const { calculateRoute, clearRoute, hasTouchScreen, waitingOnRoute } =
+    useContext(MapContext);
 
   const { isOpen, onToggle, onClose } = useDisclosure();
 
@@ -61,10 +42,8 @@ export default function SearchBar() {
               />
               <Box
                 flexShrink="0"
-                // ml="5px"
                 display="flex"
                 alignItems="center"
-                // minWidth="40px"
                 border="solid 3px white"
                 borderRadius="20px"
               >
@@ -76,10 +55,7 @@ export default function SearchBar() {
                   h="100%"
                   _hover={{ bg: 'orangered' }}
                   onClick={calculateRoute}
-                  // height=""
-                  // width="50px"
                   padding="10px"
-                  // style={{ backgroundColor: 'orange' }}
                   isLoading={waitingOnRoute}
                 >
                   GO
@@ -103,80 +79,86 @@ export default function SearchBar() {
           </Button>
         </Flex>
       ) : (
-        <Popover>
-          {/* MOBILE VERSION */}
-          <PopoverTrigger>
-            <Flex
+        <Flex width="90vw" mr="0px">
+          <Flex
+            flexDirection="column"
+            paddingLeft="15px"
+            paddingRight="15px"
+            style={{
+              width: '100%',
+              border: 'solid 1px orangered',
+              borderRadius: '20px',
+              backgroundColor: 'white',
+              zIndex: 1,
+              height: 'fit-content',
+              overflow: 'visible',
+            }}
+          >
+            <LocationInput
               style={{
-                marginTop: '10px',
-                width: '90vw',
                 border: 'solid 1px orangered',
                 borderRadius: '20px',
                 backgroundColor: 'white',
-                zIndex: 1,
-                height: '41px',
-                overflow: 'hidden',
               }}
-            >
-              <LocationInput
+            />
+            <Divider orientation="horizontal" />
+            <Flex justifyContent="space-between">
+              <DestinationInput
                 style={{
-                  border: 'solid 1px orangered',
-                  borderRadius: '20px',
-                  backgroundColor: 'white',
+                  zIndex: 2,
                 }}
               />
-              <Box ml="5px" display="flex" alignItems="center">
-                <Button
-                  onClick={onToggle}
-                  bg="#ff914d"
-                  color="white"
-                  border="solid 1px orangered"
-                  borderRight="0px"
-                  borderRadius="19px"
-                  _hover={{ bg: 'orangered' }}
-                  px="1em"
-                  height="calc(100% + 2px)"
-                  padding="10px"
-                >
-                  NEXT
-                </Button>
-              </Box>
             </Flex>
-          </PopoverTrigger>
-          <PopoverContent
-            border="solid 1px orangered"
-            borderRadius="20px"
-            zIndex={2}
-            w="90vw"
+          </Flex>
+          <Flex
+            marginLeft="5px"
+            flexDirection="column"
+            justifyContent="space-between"
           >
-            <PopoverCloseButton />
-            <PopoverBody>
-              <Flex>
-                <DestinationInput
-                  style={{
-                    zIndex: 2,
-                  }}
-                />
-                <Box ml="5px" display="flex" alignItems="center">
-                  <Button
-                    bg="#ff914d"
-                    color="white"
-                    border="solid 1px orangered"
-                    borderRight="0px"
-                    borderRadius="19px"
-                    _hover={{ bg: 'orangered' }}
-                    onClick={calculateRoute}
-                    px="1em"
-                    height="calc(100% + 2px)"
-                    padding="10px"
-                  >
-                    GO
-                  </Button>
-                </Box>
-              </Flex>
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
+            <Box
+              flexShrink="0"
+              display="flex"
+              alignItems="center"
+              borderRadius="20px"
+            >
+              <Button
+                color="white"
+                border="solid 1px orangered"
+                bg="orange"
+                borderRadius="20px"
+                h="100%"
+                w="30px"
+                fontSize="14px"
+                _hover={{ bg: 'orange' }}
+                onClick={calculateRoute}
+                padding="8px"
+                isLoading={waitingOnRoute}
+              >
+                GO
+              </Button>
+            </Box>
+            <Box
+              flexShrink="0"
+              display="flex"
+              alignItems="center"
+              borderRadius="20px"
+            >
+              <Button
+                color="white"
+                border="solid 1px orangered"
+                bg="orangered"
+                borderRadius="20px"
+                h="100%"
+                fontSize="15px"
+                _hover={{ bg: 'orangered' }}
+                onClick={clearRoute}
+                padding="8px"
+              >
+                X
+              </Button>
+            </Box>
+          </Flex>
+        </Flex>
       )}
     </>
   );

@@ -29,7 +29,7 @@ const MapProvider = ({ children }) => {
   const [isBadgesDrawerOpen, setIsBadgesDrawerOpen] = useState(false); // for My Badges drawer
   const [hasTouchScreen, setHasTouchScreen] = useState(null);
   const [inputValue, setInputValue] = useState('');
-  const [inputColour, setInputColour] = useState('#B5BBC6');
+  const [inputColour, setInputColour] = useState('#718096');
   const [isHovered, setIsHovered] = useState(false);
   const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
   const [waitingOnRoute, setWaitingOnRoute] = useState(false);
@@ -177,7 +177,7 @@ const MapProvider = ({ children }) => {
       }
       setLocationMarker([]);
     }
-    setInputColour('#B5BBC6');
+    setInputColour('#718096');
     setSelectedAttraction(null);
     setSourceCoords(null);
     setInputValue('');
@@ -242,6 +242,10 @@ const MapProvider = ({ children }) => {
         setIsHovered,
         waitingOnRoute,
         handleAttractionSelect,
+        selectedFilters,
+        setSelectedFilters,
+        sliderList,
+        setSliderList,
       }}
     >
       {children}

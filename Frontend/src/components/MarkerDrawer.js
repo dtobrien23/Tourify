@@ -39,8 +39,9 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
     chartVisible,
     busynessPred,
     activeChart,
+    attractionsWithBusyness,
   } = useContext(APIContext);
-  const { attractionsWithBusyness, setIsDrawerOpen } = useContext(MapContext);
+  const { setIsDrawerOpen } = useContext(MapContext);
   const [openingHoursAdded, setOpeningHoursAdded] = useState(false);
 
   // useEffect(() => {

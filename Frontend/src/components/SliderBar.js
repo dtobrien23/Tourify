@@ -10,39 +10,42 @@ import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 
 export default function SliderBar({ setSliderListFunc }) {
-  const { apiAttractions, apiLoaded, apiAllCurrentBusyness } =
-    useContext(APIContext);
   const {
+    apiAttractions,
+    apiLoaded,
+    apiAllCurrentBusyness,
     attractionsWithBusyness,
-    setAttractionsWithBusyness,
-    hasTouchScreen,
-  } = useContext(MapContext);
+    filteredAttractions,
+    setFilteredAttractions,
+    setSliderList,
+  } = useContext(APIContext);
+  const { hasTouchScreen } = useContext(MapContext);
 
   const [sliderValue, setSliderValue] = useState([0, 100]);
-  const [filteredAttractions, setFilteredAttractions] =
-    useState(apiAttractions);
+  // const [filteredAttractions, setFilteredAttractions] =
+  //   useState(apiAttractions);
 
   const handleSliderChange = value => {
     setSliderValue(value);
   };
 
-  useEffect(() => {
-    // adds busyness score to attractions info object
+  // useEffect(() => {
+  //   // adds busyness score to attractions info object
 
-    if (apiAttractions && apiAllCurrentBusyness) {
-      apiAttractions.forEach(attraction => {
-        const matchingPred = apiAllCurrentBusyness.find(
-          prediction => prediction.name === attraction.name
-        );
-        if (matchingPred) {
-          attraction.businessRate = matchingPred.businessRate;
-        }
-      });
-      console.log(apiAttractions, 'PLS HAVE BUSYNESS SCORE');
-      setSliderListFunc(apiAttractions); // so all markers load when page loads
-      setAttractionsWithBusyness(apiAttractions);
-    }
-  }, [apiAllCurrentBusyness]);
+  //   if (apiAttractions && apiAllCurrentBusyness) {
+  //     apiAttractions.forEach(attraction => {
+  //       const matchingPred = apiAllCurrentBusyness.find(
+  //         prediction => prediction.name === attraction.name
+  //       );
+  //       if (matchingPred) {
+  //         attraction.businessRate = matchingPred.businessRate;
+  //       }
+  //     });
+  //     console.log(apiAttractions, 'PLS HAVE BUSYNESS SCORE');
+  //     setSliderListFunc(apiAttractions); // so all markers load when page loads
+  //     setAttractionsWithBusyness(apiAttractions);
+  //   }
+  // }, [apiAllCurrentBusyness]);
 
   useEffect(() => {
     if (attractionsWithBusyness) {
@@ -56,7 +59,7 @@ export default function SliderBar({ setSliderListFunc }) {
   }, [sliderValue]);
 
   useEffect(() => {
-    setSliderListFunc(filteredAttractions);
+    setSliderList(filteredAttractions);
   }, [filteredAttractions]);
 
   return (
@@ -67,7 +70,7 @@ export default function SliderBar({ setSliderListFunc }) {
       alignItems="center"
       justifyContent={hasTouchScreen && 'center'}
       zIndex="1"
-      position="absolute"
+      position={!hasTouchScreen && 'absolute'}
       style={
         hasTouchScreen
           ? { bottom: 1 }

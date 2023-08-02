@@ -4,7 +4,6 @@ import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import '../App.css';
 
 export default function FiltersNavBar({
-  isMobile,
   selectedFilters,
   setSelectedFilters,
   hasTouchScreen,

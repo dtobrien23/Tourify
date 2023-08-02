@@ -31,6 +31,9 @@ const APIContextProvider = ({ children }) => {
   const [apisLoaded, setAPIsLoaded] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
   const [nftPrompt, setNftPrompt] = useState(null);
+  const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
+  const [filteredAttractions, setFilteredAttractions] =
+    useState(apiAttractions);
 
   const { mapCenter } = useContext(MapContext);
 
@@ -309,6 +312,26 @@ const APIContextProvider = ({ children }) => {
     }
   };
 
+  const [sliderList, setSliderList] = useState(null);
+
+  useEffect(() => {
+    // adds busyness score to attractions info object
+
+    if (apiAttractions && apiAllCurrentBusyness) {
+      apiAttractions.forEach(attraction => {
+        const matchingPred = apiAllCurrentBusyness.find(
+          prediction => prediction.name === attraction.name
+        );
+        if (matchingPred) {
+          attraction.businessRate = matchingPred.businessRate;
+        }
+      });
+      console.log(apiAttractions, 'PLS HAVE BUSYNESS SCORE');
+      setSliderList(apiAttractions); // so all markers load when page loads
+      setAttractionsWithBusyness(apiAttractions);
+    }
+  }, [apiAllCurrentBusyness]);
+
   useEffect(() => {
     if (
       apiAttractions &&
@@ -367,6 +390,12 @@ const APIContextProvider = ({ children }) => {
         showLoading,
         nftPrompt,
         setNftPrompt,
+        filteredAttractions,
+        setFilteredAttractions,
+        sliderList,
+        setSliderList,
+        attractionsWithBusyness,
+        setAttractionsWithBusyness,
       }}
     >
       {children}
