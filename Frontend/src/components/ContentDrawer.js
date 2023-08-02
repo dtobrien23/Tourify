@@ -27,11 +27,19 @@ import {
   AlertTitle,
   AlertDescription,
   Box,
+  AbsoluteCenter,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
 } from '@chakra-ui/react';
+
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
 import { APIContext } from './APIContext';
-import { generate, count } from 'random-words';
 
 export default function ContentDrawer() {
   const { globalUserInfo, setCheckinState, checkinState } =
@@ -49,8 +57,85 @@ export default function ContentDrawer() {
   const toastCheckIn = useToast();
   const toastNotCheckIn = useToast();
   const toastNFT = useToast();
-  const randomWord = generate();
-  //const PROMPT_TEST = 'man with banana'+ randomWord;
+
+  const getRandomAdjective = () => {
+    const adjectives = [
+      'Enchanting',
+      'Majestic',
+      'Vibrant',
+      'Exotic',
+      'Breathtaking',
+      'Serene',
+      'Captivating',
+      'Whimsical',
+      'Picturesque',
+      'Alluring',
+      'Mystical',
+      'Spectacular',
+      'Thrilling',
+      'Dazzling',
+      'Lush',
+      'Tranquil',
+      'Charming',
+      'Blissful',
+      'Awe-inspiring',
+      'Spellbinding',
+      'Fascinating',
+      'Colorful',
+      'Ethereal',
+      'Glorious',
+      'Unique',
+      'Mesmerizing',
+      'Enthralling',
+      'Astonishing',
+      'Dramatic',
+      'Magical',
+      'Opulent',
+      'Radiant',
+      'Wonderous',
+      'Celestial',
+      'Glistening',
+      'Fantastic',
+      'Intriguing',
+      'Stunning',
+      'Gorgeous',
+      'Resplendent',
+      'Brilliant',
+      'Extraordinary',
+      'Majestic',
+      'Panoramic',
+      'Enormous',
+      'Unforgettable',
+      'Dreamy',
+      'Luminous',
+      'Pristine',
+      'Epic',
+      'Transcendent',
+      'Charming',
+      'Ravishing',
+      'Splendid',
+      'Elegant',
+      'Surreal',
+      'Aromatic',
+      'Astonishing',
+      'Dazzling',
+      'Dramatic',
+      'Mystifying',
+      'Pristine',
+      'Sensational',
+      'Tantalizing',
+      'Unexplored',
+      'Wonderful',
+      'Zestful',
+      'Zealous',
+    ];
+
+    const randomIndex = Math.floor(Math.random() * adjectives.length);
+    return adjectives[randomIndex];
+  };
+
+  const randomWord = getRandomAdjective();
+  //console.log(randomWord, 'randomword');
 
   const [prompt, setPrompt] = useState(null);
   const [promptIsSet, setPromptIsSet] = useState(false);
@@ -74,17 +159,24 @@ export default function ContentDrawer() {
   };
 
   const { reward: confettiReward, isAnimating: isConfettiAnimating } =
-    useReward('confettiReward', 'confetti', {
+    useReward('confettiReward1', 'confetti', {
       lifetime: 2400,
       elementSize: 16,
       elementCount: 100,
     });
 
+  const [placeHolderImageUrl, setPlaceHolderImaegUrl] = useState();
+
   const handleCheckIn = async (
+    
     attractionID,
+    
     attractionName,
+    
     isOpen,
-    randomWord
+    randomWord,
+    attractionNameAlias
+  
   ) => {
     if (isOpen === false) {
       toastAttractionClosed({
@@ -99,6 +191,9 @@ export default function ContentDrawer() {
       const apiEndpoint = 'http://localhost:8001/api/user/update';
       const cachedUserCredential = localStorage.getItem('userCredential');
 
+    const placeHolder = attractionNameAlias;
+    setPlaceHolderImaegUrl(placeHolder);
+
       const idToken = cachedUserCredential; // get this from credential in signupform
       console.log(cachedUserCredential, 'this is the global credential');
 
@@ -109,49 +204,54 @@ export default function ContentDrawer() {
         lng: '-73.9968643', //hardcoded for testing reaplace with geolocation variable
       };
 
-      axios
-        .post(apiEndpoint, requestBody)
-        .then(response => {
-          console.log('API call successful:', response.data);
-          console.log(response, 'this is response data');
-          // Handle the response data here
-          if (response.data.code === 200) {
-            //   // set logic that your marker has been ticked off
-            setCheckinState(true);
-            const PROMPT_TEST = `${attractionName} ${randomWord}`;
-            setPrompt(PROMPT_TEST);
-            console.log(PROMPT_TEST, 'PROMPT_TEST');
-            //generatArt();
-            console.log(checkinState, 'checkinstate - contentdrawer');
-            confettiReward();
-            toastCheckIn({
-              title: 'Check in Successful.',
-              description: "You've Checked in Successfully.",
-              status: 'success',
-              duration: 3000,
-              isClosable: true,
-            });
+    axios
+      .post(apiEndpoint, requestBody)
+      .then(response => {
+        console.log('API call successful:', response.data);
+        console.log(response, 'this is response data');
+        // Handle the response data here
+        if (response.data.code === 200) {
+          //   // set logic that your marker has been ticked off
+          setCheckinState(true);
+          const PROMPT_TEST = `${attractionName} ${randomWord}`;
+          setPrompt(PROMPT_TEST);
+          setPlaceHolderImaegUrl(placeHolder);
 
-            // get the updated user info from the backend
-          }
-          if (response.data.code === 10050) {
-            // distance too long
-            setCheckinState(false);
-            console.log(response.data.code, 'this is the repsonse code!');
-            toastNotCheckIn({
-              title: 'Check in Unsuccessful.',
-              description: "You're too far away.",
-              status: 'error',
-              duration: 3000,
-              isClosable: true,
-            });
-          }
-        })
-        .catch(error => {
-          console.error('Error in API call:', error);
-          // Handle errors here
-        });
-    }
+          console.log(PROMPT_TEST, 'PROMPT_TEST');
+          console.log(checkinState, 'checkinstate - contentdrawer');
+          confettiReward();
+          toastCheckIn({
+            title: 'Check in Successful.',
+            description: "You've Checked in Successfully.",
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          });
+
+          // Get the current timestamp and date
+          const currentTimeStamp = new Date().getTime();
+          const currentDate = new Date().toLocaleDateString();
+
+          // get the updated user info from the backend
+        }
+        if (response.data.code === 10050) {
+          // distance too long
+          setCheckinState(false);
+
+          console.log(response.data.code, 'this is the repsonse code!');
+          toastNotCheckIn({
+            title: 'Check in Unsuccessful.',
+            description: "You're too far away.",
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error in API call:', error);
+        // Handle errors here
+      });
   };
 
   const areAllBadgesTrue = () => {
@@ -208,38 +308,69 @@ export default function ContentDrawer() {
 
   const [fileMade, setFile] = useState(null);
 
-  // Update generateArt function to include uploadArtToIpfs logic
-  const generateArt = async prompt => {
-    try {
-      const response = await axios.post(
-        `https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5`,
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.REACT_APP_HUGGING_FACE}`,
+  const generateArt = async (passedPrompt, safetyImage) => {
+    if (passedPrompt !== null && safetyImage !== null) {
+      try {
+        const response = await axios.post(
+          `https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5`,
+          {
+            headers: {
+              Authorization: `Bearer ${process.env.REACT_APP_HUGGING_FACE}`,
+            },
+            method: 'POST',
+            inputs: passedPrompt,
           },
-          method: 'POST',
-          inputs: prompt,
-        },
-        { responseType: 'blob' }
-      );
-      // convert blob to an image file type
-      const generatedFile = new File([response.data], 'image.png', {
-        type: 'image/png',
-      });
-      // saving the file in a state
-      setFile(generatedFile);
+          { responseType: 'blob' }
+        );
 
-      const url = URL.createObjectURL(response.data);
-      console.log(url, 'this is the url');
-      setImageBlob(url);
+        // // Check if the response status is successful
+        if (response.status === 200) {
+          console.log('huggingface api responded')
+          const generatedFile = new File([response.data], 'image.png', {
+            type: 'image/png',
+          });
+          setFile(generatedFile);
 
-      // Upload the art to IPFS and get the imageURL
-      const imageURL = await uploadArtToIpfs(prompt, generatedFile);
+          const url = URL.createObjectURL(response.data);
+          setImageBlob(url);
+        } else {
+          // Use a placeholder image when the API call fails
+          const safetyImageUrl = `/images/${safetyImage}.jpg`;
 
-      // Call mintNft with the prompt and imageURL
-      await mintNft(prompt, imageURL, nftWalletAddress);
-    } catch (err) {
-      console.log(err);
+          // Fetch the placeholder image as a Blob
+          const safetyImageBlob = await fetch(safetyImageUrl).then(res =>
+            res.blob()
+          );
+          const generatedFile = new File([safetyImageBlob], 'image.jpg', {
+            type: 'image/jpg',
+          });
+          setFile(generatedFile);
+
+          // Use the object URL of the fetched Blob as the image blob
+          const url = URL.createObjectURL(safetyImageBlob);
+          setImageBlob(url);
+          console.log('API call unsuccessful. Using placeholder image.');
+        }
+      } catch (err) {
+        // Handle errors here and use the placeholder image
+        const safetyImageUrl = `/images/${safetyImage}.jpg`;
+
+        // Fetch the placeholder image as a Blob
+        const safetyImageBlob = await fetch(safetyImageUrl).then(res =>
+          res.blob()
+        );
+        const generatedFile = new File([safetyImageBlob], 'image.jpg', {
+          type: 'image/jpg',
+        });
+        setFile(generatedFile);
+
+        // Use the object URL of the fetched Blob as the image blob
+        const url = URL.createObjectURL(safetyImageBlob);
+        setImageBlob(url);
+        console.log('API call unsuccessful. Using placeholder image.', err);
+      }
+    } else {
+      console.log('THE PROMPT WAS NULL!!! WHY?? ');
     }
   };
 
@@ -308,6 +439,9 @@ export default function ContentDrawer() {
           },
         }
       );
+      console.log(imageURL,'THIS IS THE IMAGE URL')
+      console.log(prompt,'NFT PORT PROMPT')
+
 
       const data = response.data;
       console.log(data, 'data from mintNFT function');
@@ -322,10 +456,9 @@ export default function ContentDrawer() {
           duration: 6000,
           isClosable: true,
         });
+
         setPrompt(null);
         setPromptIsSet(false);
-        // console.log(prompt,'prompt after mint')
-        // console.log(promptIsSet,'prompt bool after mint')
       } else {
         // Handle other possible response statuses or errors here
         console.log('Error minting NFT.');
@@ -344,15 +477,18 @@ export default function ContentDrawer() {
 
   // Use useEffect to call generateArt() when promptIsSet is true
   useEffect(() => {
+    console.log('promptIsSet:', promptIsSet);
+    console.log('Prompt:', prompt);
     if (
       promptIsSet &&
       prompt !== null &&
       nftWalletAddress !== null &&
       nftWalletAddress !== '' &&
+      nftWalletAddress !== '' &&
       nftWalletAddress.startsWith('0x') &&
       nftWalletAddress.length === 42
     ) {
-      generateArt(prompt);
+      generateArt(prompt, placeHolderImageUrl);
     }
 
     if (
@@ -371,11 +507,125 @@ export default function ContentDrawer() {
     }
   }, [promptIsSet, prompt, nftWalletAddress]);
 
+  // Use useEffect to upload image to IPFS when fileMade is updated
+  useEffect(() => {
+    if (fileMade) {
+      // Call the function to upload the art to IPFS and get the imageURL
+      const uploadToIPFS = async () => {
+        const imageURL = await uploadArtToIpfs(prompt, fileMade);
+
+        // Call mintNft with the prompt and imageURL
+        await mintNft(prompt, imageURL, nftWalletAddress);
+      };
+
+      uploadToIPFS();
+    }
+  }, [fileMade]);
+
   /////////////////////////////////
   /////       END OF         /////
   ////     NFT MINTING CODE  /////
   ////                       /////
   ////////////////////////////////
+
+  // Helper function to format badge names
+  const formatBadgeName = name => {
+    const words = name.split('_');
+    const capitalizedWords = words.map(
+      word => word.charAt(0).toUpperCase() + word.slice(1)
+    );
+    return capitalizedWords.join(' ');
+  };
+
+  ////////////////////////////////////
+  //////    wiki on this day api /////
+  /////                          /////
+  ////////////////////////////////////
+
+  const wikiApiCall = async () => {
+    try {
+      ///get the date from backend api call for user
+      const month = 2;
+      const day = 2;
+      const url = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/births/${month}/${day}`;
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${process.env.REACT_APP_WIKI}`,
+        },
+      });
+
+      const data = await response.json();
+      console.log(data,'WIKI DATA!!!!!!')
+
+      // Extract the relevant information from the 0th index entry
+      const entry = data.births[0];
+      const text = entry.text;
+      const extract = entry.pages[0].extract;
+
+      // Create an object containing the desired information
+      const wikiResult = {
+        text: text,
+        extract: extract,
+      };
+
+      
+      console.log(data, 'THIS IS THE WIKI RESPONSE');
+      console.log('entry:', entry);
+      console.log('text:', text);
+      console.log(' extract:', extract);
+      setWikiData(wikiResult);
+      return wikiResult;
+    } catch (error) {
+      throw new Error('Error fetching data from the API');
+    }
+  };
+  const [wikiData, setWikiData] = useState({});
+
+  const {
+    isOpen: isWikiModalOpen,
+    onOpen: onWikiModalOpen,
+    onClose: onWikiModalClose,
+  } = useDisclosure();
+
+  useEffect(() => {
+     
+      const fetchData = async () => {
+        try {
+          const wikiApiResult = await wikiApiCall(); // Await the result
+          setWikiData(wikiApiResult);
+          onWikiModalOpen();
+
+        } catch (error) {
+          console.error(error);
+        }
+      
+  
+      fetchData();
+    }
+  }, [checkinState]);
+  
+  // useEffect(() => {
+  //   if (Object.keys(wikiData).length > 0) {
+  //     onWikiModalOpen();
+  //   }
+  // }, [wikiData]);
+  
+  
+
+  const WikiModal = ({ isOpen, onClose, text, extract }) => {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{text}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <p>{extract}</p>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    );
+  };
 
   return (
     <Drawer
@@ -424,7 +674,14 @@ export default function ContentDrawer() {
             {' '}
             <DrawerHeader>
               {`My Attractions`}
-              <span zIndex={9999999} id="confettiReward" />
+              <Box
+                position="absolute"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                zIndex={9999999}
+                id="confettiReward1"
+              />
             </DrawerHeader>
             <DrawerBody>
               <Tabs>
@@ -561,7 +818,9 @@ export default function ContentDrawer() {
                                                   attractionInfo.id,
                                                   attractionInfo.name,
                                                   attractionInfo.isOpen,
-                                                  randomWord
+                                                  randomWord,
+                                                  attractionInfo.name_alias
+
                                                 )
                                               // mintNft()
                                             }
@@ -581,6 +840,33 @@ export default function ContentDrawer() {
                       })
                     ) : (
                       <p>Loading attractions to visit...</p>
+                    )}
+
+                    {areAllAttractionsTrue() && (
+                      <FlipCard
+                        frontContent={
+                          <p>
+                            <img
+                              src={'/images/all_Attractions_Visited.jpg'}
+                              alt="All Attractions are True"
+                              style={{
+                                maxWidth: '500px',
+                                height: '500px',
+                                marginRight: '10px',
+                                border: '2px solid orangered',
+                                borderRadius: '5px',
+                              }}
+                            />
+                          </p>
+                        }
+                        backContent={
+                          <div>
+                            <Heading>
+                              You've Visited All the Attractions!
+                            </Heading>
+                          </div>
+                        }
+                      />
                     )}
                   </TabPanel>
 
@@ -714,32 +1000,6 @@ export default function ContentDrawer() {
                       <p>Loading attractions to visit...</p>
                     )}
 
-                    {areAllAttractionsTrue() && (
-                      <FlipCard
-                        frontContent={
-                          <p>
-                            <img
-                              src={'/images/all_Attractions_Visited.jpg'}
-                              alt="All Attractions are True"
-                              style={{
-                                maxWidth: '500px',
-                                height: '500px',
-                                marginRight: '10px',
-                                border: '2px solid orangered',
-                                borderRadius: '5px',
-                              }}
-                            />
-                          </p>
-                        }
-                        backContent={
-                          <div>
-                            <Heading>
-                              You've Visited All the Attractions!
-                            </Heading>
-                          </div>
-                        }
-                      />
-                    )}
                     {/* Conditional rendering for the image when all attractions are false */}
                     {areAllAttractionsFalse() && (
                       <p>
@@ -776,6 +1036,7 @@ export default function ContentDrawer() {
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
                         if (!status) {
+                              const formattedBadgeName = formatBadgeName(badge);
                           return (
                             <Flex
                               border="2px solid orangered"
@@ -805,8 +1066,14 @@ export default function ContentDrawer() {
                                     }}
                                   />
                                   <div style={{ width: '100%' }}>
-                                    <Heading size="md">{badge}</Heading>
-                                    <p> Badge info: Some badge info</p>
+                                    <Heading size="md">
+                                        {formattedBadgeName}
+                                      </Heading>
+                                    <p>
+                                        {' '}
+                                        You got the {formattedBadgeName}! Great
+                                        Job!
+                                      </p>
                                   </div>
                                 </Flex>
                               </Flex>
@@ -845,6 +1112,7 @@ export default function ContentDrawer() {
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
                         if (status) {
+                              const formattedBadgeName = formatBadgeName(badge);
                           return (
                             <Flex
                               border="2px solid gold"
@@ -874,8 +1142,14 @@ export default function ContentDrawer() {
                                     }}
                                   />
                                   <div style={{ width: '100%' }}>
-                                    <Heading size="md">{badge}</Heading>
-                                    <p> Badge info: Some badge info</p>
+                                    <Heading size="md">
+                                        {formattedBadgeName}
+                                      </Heading>
+                                    <p>
+                                        {' '}
+                                        You still have to get the{' '}
+                                        {formattedBadgeName}!
+                                      </p>
                                   </div>
                                 </Flex>
                               </Flex>
@@ -907,10 +1181,20 @@ export default function ContentDrawer() {
                   </TabPanel>
                 </TabPanels>
               </Tabs>
+              {Object.keys(wikiData).length > 0 && ( // Check if there is data in wikiData
+                <WikiModal
+                  isOpen={isWikiModalOpen}
+                  onClose={onWikiModalClose}
+                  text={wikiData.text}
+                  extract={wikiData.extract}
+                />
+              )}
             </DrawerBody>
           </>
         )}
       </DrawerContent>
     </Drawer>
   );
+}
+
 }
