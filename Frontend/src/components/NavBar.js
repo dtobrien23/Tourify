@@ -19,7 +19,7 @@ import SearchBar from './SearchBar';
 import { MapContext } from './MapContext';
 import ParallaxDrawer from './ParallaxDrawer';
 
-export default function NavBar() {
+const NavBar = React.forwardRef((props, ref) => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     // Retrieve the logged-in status from the cache
     const cachedStatus = localStorage.getItem('loggedInfo');
@@ -41,19 +41,17 @@ export default function NavBar() {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
-    // isDisabled(true);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    // isDisabled(false);
   };
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  //refresh the page when clicking the logo
+  // Refresh the page when clicking the logo
   const handleLogoClick = () => {
     window.location.reload();
   };
@@ -83,6 +81,7 @@ export default function NavBar() {
       <Flex flex="1" flexShrink={hasTouchScreen ? 0 : 1} alignItems="center">
         {!hasTouchScreen && <SearchBar />}
         <Button
+          ref={ref} // Use the forwarded ref here
           display="flex"
           flexDirection="column"
           bg="white"
@@ -192,4 +191,6 @@ export default function NavBar() {
       )}
     </Flex>
   );
-}
+});
+
+export default NavBar;

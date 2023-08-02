@@ -26,7 +26,6 @@ export default function LocationInput({}) {
   //settr for geolocation to be passed to recommender component via context
   const [inputWidth, setInputWidth] = useState('270px');
   const [waitingOnLocation, setWaitingOnLocation] = useState(false);
-  const [waitingOnRoute, setWaitingOnRoute] = useState(false);
   const toastInvalidSource = useToast();
   const toastOutsideNYC = useToast();
   const toastDenied = useToast();
@@ -331,18 +330,20 @@ export default function LocationInput({}) {
               menuStyle={{ backgroundColor: 'red', color: 'white' }}
               itemStyle={{ fontSize: '100px' }}
             >
-              <input
-                type="text"
-                placeholder="I am currently at..."
-                value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
-                style={{
-                  paddingLeft: '8px',
-                  borderRadius: '20px',
-                  fontSize: '16px',
-                  width: '112%',
-                }}
-              />
+              <div className="tutorial-input">
+                <input
+                  type="text"
+                  placeholder="I am currently at..."
+                  value={inputValue}
+                  onChange={e => setInputValue(e.target.value)}
+                  style={{
+                    paddingLeft: '8px',
+                    borderRadius: '20px',
+                    fontSize: '16px',
+                    width: '112%',
+                  }}
+                />
+              </div>
             </Autocomplete>
           </Flex>
           <LocationButton

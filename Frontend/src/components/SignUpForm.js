@@ -328,6 +328,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     console.log(globalCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
 
     if (globalCredential) {
+
       axios
         .post(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/user/delete?idTokenString=${globalCredential}`

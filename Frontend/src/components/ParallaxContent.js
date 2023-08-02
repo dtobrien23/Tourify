@@ -212,7 +212,6 @@ const ParallaxContent = ({ onClose }) => {
           </ParallaxLayer>
         </Parallax>
       </div>
-      <button onClick={onClose}>Close</button>
     </>
   );
 };
