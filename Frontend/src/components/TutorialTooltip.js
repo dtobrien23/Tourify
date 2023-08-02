@@ -4,19 +4,26 @@ import { useDisclosure, Button, Modal, ModalOverlay, ModalContent, ModalHeader, 
 const TutorialTooltip = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(1);
-  const maxSteps = 3;
+  const maxSteps = 4;
   const tutorialShownKey = 'tutorialShown'; // Local storage key
 
   useEffect(() => {
     const isTutorialShown = localStorage.getItem(tutorialShownKey);
 
-    if (isTutorialShown) {
+    if (isTutorialShown) { // Check if the tutorial has not been shown before
       onOpen();
     }
   }, [onOpen]);
 
   const handleNextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
+  };
+
+  const handleBackStep = () => {
+    setCurrentStep((prevStep) => {
+      const newStep = prevStep - 1;
+      return newStep < 1 ? 1 : newStep;
+    });
   };
 
   const handleSkipTutorial = () => {
@@ -31,39 +38,46 @@ const TutorialTooltip = () => {
       <Modal isOpen={isOpen} onClose={handleSkipTutorial} size="lg">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Tutorial Tooltip</ModalHeader>
-          <ModalCloseButton />
+          <ModalHeader> Welcome to Tourify! </ModalHeader>
+          <ModalCloseButton onClick={handleSkipTutorial} />
           <ModalBody>
             {/* Show different content based on the current step */}
             {currentStep === 1 && (
               <p>
-                Step 1: Welcome to Tourify! Collect experiences and enhance your journey with our amazing attractions.
+                Welcome to Tourify! Collect experiences and enhance your journey with our amazing attractions.
               </p>
             )}
             {currentStep === 2 && (
               <p>
-                Step 2: You can enjoy various activities on this website, including x, y, and z.
+                You can collect your own unique NFTs badges on our website by visiting famous New York attractions!
               </p>
             )}
             {currentStep === 3 && (
               <p>
-                Step 3: Press "About Us" to learn more about our team and mission!
+                To access all the fun features on our website please Log In through Google!
+              </p>
+            )}
+            {currentStep === 4 && (
+              <p>
+                Press "Guide" to learn more about about the features on this website!
               </p>
             )}
           </ModalBody>
           <ModalFooter>
+            {currentStep > 1 && (
+              <Button variant="ghost" variant='solid' onClick={handleBackStep} mr={2}>
+                Back
+              </Button>
+            )}
             {currentStep < maxSteps ? (
               <Button colorScheme="orange" mr={3} onClick={handleNextStep}>
                 Next Step
               </Button>
             ) : (
-              <Button colorScheme="orange" mr={3} onClick={handleSkipTutorial}>
+              <Button colorScheme="orange" onClick={handleSkipTutorial}>
                 Finish Tutorial
               </Button>
             )}
-            <Button variant="ghost" onClick={handleSkipTutorial}>
-              Skip Tutorial
-            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
