@@ -183,8 +183,8 @@ export default function ContentDrawer() {
     const requestBody = {
       id_token: idToken,
       attraction_id: attractionID,
-      lat: '40.7479925', //hardcoded for testing replace with geolocation variable
-      lng: '-74.0047649', //hardcoded for testing reaplace with geolocation variable
+      lat: '40.8115504', //hardcoded for testing replace with geolocation variable
+      lng: '-73.9464769', //hardcoded for testing reaplace with geolocation variable
     };
 
     axios
@@ -308,6 +308,7 @@ export default function ContentDrawer() {
 
         // // Check if the response status is successful
         if (response.status === 200) {
+          console.log('huggingface api responded')
           const generatedFile = new File([response.data], 'image.png', {
             type: 'image/png',
           });
@@ -421,6 +422,9 @@ export default function ContentDrawer() {
           },
         }
       );
+      console.log(imageURL,'THIS IS THE IMAGE URL')
+      console.log(prompt,'NFT PORT PROMPT')
+
 
       const data = response.data;
       console.log(data, 'data from mintNFT function');
@@ -781,13 +785,13 @@ export default function ContentDrawer() {
                                             '0 2px 4px rgba(0, 0, 0, 0.2)',
                                         }}
                                         onClick={() =>
-                                          // handleCheckIn(
-                                          //   attractionInfo.id,
-                                          //   attractionInfo.name,
-                                          //   randomWord,
-                                          //   attractionInfo.name_alias
-                                          // )
-                                           wikiApiCall()
+                                          handleCheckIn(
+                                            attractionInfo.id,
+                                            attractionInfo.name,
+                                            randomWord,
+                                            attractionInfo.name_alias
+                                          )
+                                          //  wikiApiCall()
                                         }
                                       >
                                         Check In!
