@@ -37,6 +37,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
     setSourceCoords,
     geolocation,
     handleAttractionSelect,
+    hasTouchScreen,
   } = useContext(MapContext);
 
   //geolocation, cant be null or error occurs
@@ -224,7 +225,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
           paddingTop="10px"
         />
         <TabPanels>
-          <TabPanel>
+          <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
             {nearestAttractions.map(attraction => (
               <>
                 {attraction.isOpen === true && (
@@ -235,8 +236,16 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                     overflow="hidden"
                     spacing="20px"
                     p="10px"
-                    width="425px"
+                    width={hasTouchScreen ? '100%' : '425px'}
                     mb="15px"
+                    onClick={
+                      hasTouchScreen
+                        ? () => {
+                            handleAttractionSelect(attraction);
+                            setIsDrawerOpen(false);
+                          }
+                        : null
+                    }
                   >
                     <Flex
                       key={attraction}
@@ -251,21 +260,25 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                           alt={attraction.name_alias}
                           style={{
                             maxWidth: '100px',
-                            height: '100px',
+                            height: !hasTouchScreen ? '100px' : '80px',
                             marginRight: '10px',
                             // border: '2px solid orangered',
                             borderRadius: '20px',
                           }}
                         />
                         <div style={{ width: '100%' }}>
-                          <Heading size="md">{attraction.name}</Heading>{' '}
+                          <Heading size={!hasTouchScreen ? 'md' : 'sm'}>
+                            {attraction.name}
+                          </Heading>{' '}
                           {/* <p> {attractionInfo.full_address}</p> */}
                           <Flex
                             mt="10px"
                             alignItems="center"
                             justifyContent="space-between"
                           >
-                            <Flex flexDirection="column">
+                            <Flex
+                              flexDirection={!hasTouchScreen ? 'column' : 'row'}
+                            >
                               <Alert
                                 pl="0"
                                 width="fit-content"
@@ -310,7 +323,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                                 </Flex>
                               </Alert>
                               <Flex alignItems="center">
-                                <Flex h="100%">
+                                <Flex>
                                   <FaWalking
                                     size="20"
                                     // style={{ marginRight: '3px' }}
@@ -322,31 +335,30 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                                 </Flex>
                               </Flex>
                             </Flex>
-                            <Flex justifyContent="flex-end">
-                              <Button
-                                bg="orange"
-                                _hover={{
-                                  bg: 'orangered',
-                                  color: 'white',
-                                }}
-                                style={{
-                                  color: 'white',
-                                  border: 'solid 1px orangered',
-                                  borderRadius: '20px',
-                                  marginBottom: '12px',
-                                  justifySelf: 'flex-end',
-                                }}
-                                onClick={
-                                  () => {
+                            {!hasTouchScreen && (
+                              <Flex justifyContent="flex-end">
+                                <Button
+                                  bg="orange"
+                                  _hover={{
+                                    bg: 'orangered',
+                                    color: 'white',
+                                  }}
+                                  style={{
+                                    color: 'white',
+                                    border: 'solid 1px orangered',
+                                    borderRadius: '20px',
+                                    marginBottom: '12px',
+                                    justifySelf: 'flex-end',
+                                  }}
+                                  onClick={() => {
                                     handleAttractionSelect(attraction);
                                     setIsDrawerOpen(false);
-                                  }
-                                  // mintNft()
-                                }
-                              >
-                                Go Here!
-                              </Button>
-                            </Flex>
+                                  }}
+                                >
+                                  Go Here!
+                                </Button>
+                              </Flex>
+                            )}
                           </Flex>
                         </div>
                       </Flex>
@@ -356,7 +368,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
               </>
             ))}
           </TabPanel>
-          <TabPanel>
+          <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
             {quietestAttractions.map(attraction => (
               <>
                 {attraction.isOpen === true && (
@@ -367,8 +379,16 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                     overflow="hidden"
                     spacing="20px"
                     p="10px"
-                    width="425px"
+                    width={hasTouchScreen ? '100%' : '425px'}
                     mb="15px"
+                    onClick={
+                      hasTouchScreen
+                        ? () => {
+                            handleAttractionSelect(attraction);
+                            setIsDrawerOpen(false);
+                          }
+                        : null
+                    }
                   >
                     <Flex
                       key={attraction}
@@ -383,14 +403,16 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                           alt={attraction.name_alias}
                           style={{
                             maxWidth: '100px',
-                            height: '100px',
+                            height: !hasTouchScreen ? '100px' : '80px',
                             marginRight: '10px',
                             // border: '2px solid orangered',
                             borderRadius: '20px',
                           }}
                         />
                         <div style={{ width: '100%' }}>
-                          <Heading size="md">{attraction.name}</Heading>{' '}
+                          <Heading size={!hasTouchScreen ? 'md' : 'sm'}>
+                            {attraction.name}
+                          </Heading>{' '}
                           {/* <p> {attractionInfo.full_address}</p> */}
                           <Flex
                             mt="10px"
@@ -454,31 +476,33 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                                 </Flex>
                               </Flex>
                             </Flex>
-                            <Flex justifyContent="flex-end">
-                              <Button
-                                bg="orange"
-                                _hover={{
-                                  bg: 'orangered',
-                                  color: 'white',
-                                }}
-                                style={{
-                                  color: 'white',
-                                  border: 'solid 1px orangered',
-                                  borderRadius: '20px',
-                                  marginBottom: '12px',
-                                  justifySelf: 'flex-end',
-                                }}
-                                onClick={
-                                  () => {
-                                    handleAttractionSelect(attraction);
-                                    setIsDrawerOpen(false);
+                            {!hasTouchScreen && (
+                              <Flex justifyContent="flex-end">
+                                <Button
+                                  bg="orange"
+                                  _hover={{
+                                    bg: 'orangered',
+                                    color: 'white',
+                                  }}
+                                  style={{
+                                    color: 'white',
+                                    border: 'solid 1px orangered',
+                                    borderRadius: '20px',
+                                    marginBottom: '12px',
+                                    justifySelf: 'flex-end',
+                                  }}
+                                  onClick={
+                                    () => {
+                                      handleAttractionSelect(attraction);
+                                      setIsDrawerOpen(false);
+                                    }
+                                    // mintNft()
                                   }
-                                  // mintNft()
-                                }
-                              >
-                                Go Here!
-                              </Button>
-                            </Flex>
+                                >
+                                  Go Here!
+                                </Button>
+                              </Flex>
+                            )}
                           </Flex>
                         </div>
                       </Flex>
@@ -488,7 +512,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
               </>
             ))}
           </TabPanel>
-          <TabPanel>
+          <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
             {combinedAttractions &&
               combinedAttractions.map(attraction => (
                 <>
@@ -500,8 +524,16 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                       overflow="hidden"
                       spacing="20px"
                       p="10px"
-                      width="425px"
+                      width={hasTouchScreen ? '100%' : '425px'}
                       mb="15px"
+                      onClick={
+                        hasTouchScreen
+                          ? () => {
+                              handleAttractionSelect(attraction);
+                              setIsDrawerOpen(false);
+                            }
+                          : null
+                      }
                     >
                       <Flex
                         key={attraction}
@@ -516,14 +548,16 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                             alt={attraction.name_alias}
                             style={{
                               maxWidth: '100px',
-                              height: '100px',
+                              height: !hasTouchScreen ? '100px' : '80px',
                               marginRight: '10px',
                               // border: '2px solid orangered',
                               borderRadius: '20px',
                             }}
                           />
                           <div style={{ width: '100%' }}>
-                            <Heading size="md">{attraction.name}</Heading>{' '}
+                            <Heading size={!hasTouchScreen ? 'md' : 'sm'}>
+                              {attraction.name}
+                            </Heading>{' '}
                             {/* <p> {attractionInfo.full_address}</p> */}
                             <Flex
                               mt="10px"
@@ -587,31 +621,33 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                                   </Flex>
                                 </Flex>
                               </Flex>
-                              <Flex justifyContent="flex-end">
-                                <Button
-                                  bg="orange"
-                                  _hover={{
-                                    bg: 'orangered',
-                                    color: 'white',
-                                  }}
-                                  style={{
-                                    color: 'white',
-                                    border: 'solid 1px orangered',
-                                    borderRadius: '20px',
-                                    marginBottom: '12px',
-                                    justifySelf: 'flex-end',
-                                  }}
-                                  onClick={
-                                    () => {
-                                      handleAttractionSelect(attraction);
-                                      setIsDrawerOpen(false);
+                              {!hasTouchScreen && (
+                                <Flex justifyContent="flex-end">
+                                  <Button
+                                    bg="orange"
+                                    _hover={{
+                                      bg: 'orangered',
+                                      color: 'white',
+                                    }}
+                                    style={{
+                                      color: 'white',
+                                      border: 'solid 1px orangered',
+                                      borderRadius: '20px',
+                                      marginBottom: '12px',
+                                      justifySelf: 'flex-end',
+                                    }}
+                                    onClick={
+                                      () => {
+                                        handleAttractionSelect(attraction);
+                                        setIsDrawerOpen(false);
+                                      }
+                                      // mintNft()
                                     }
-                                    // mintNft()
-                                  }
-                                >
-                                  Go Here!
-                                </Button>
-                              </Flex>
+                                  >
+                                    Go Here!
+                                  </Button>
+                                </Flex>
+                              )}
                             </Flex>
                           </div>
                         </Flex>

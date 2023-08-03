@@ -62,7 +62,15 @@ const NavBar = React.forwardRef((props, ref) => {
       // mt="10px"
       px="4px"
       pr="10px"
-      style={{ borderBottom: 'solid 1px orangered' }}
+      style={
+        !hasTouchScreen
+          ? { borderBottom: 'solid 1px orangered' }
+          : {
+              border: 'solid 1px orangered',
+              borderRadius: '25px',
+              padding: '5px',
+            }
+      }
     >
       {!hasTouchScreen && (
         <Box flexShrink={0}>
@@ -75,12 +83,20 @@ const NavBar = React.forwardRef((props, ref) => {
           />
         </Box>
       )}
-      <Flex flex="1" flexShrink={hasTouchScreen ? 0 : 1} alignItems="center">
+      <Flex
+        flex="1"
+        flexShrink={hasTouchScreen ? 0 : 1}
+        alignItems="center"
+        justifyContent={hasTouchScreen && 'space-between'}
+        pl={hasTouchScreen && '10px'}
+        pr={hasTouchScreen && '10px'}
+      >
         {!hasTouchScreen && <SearchBar />}
         <Button
           ref={ref} // Use the forwarded ref here
           display="flex"
           flexDirection="column"
+          p={hasTouchScreen && 0}
           bg="white"
           h="fit-content"
           w="fit-content"
@@ -115,6 +131,7 @@ const NavBar = React.forwardRef((props, ref) => {
           </Text>
         </Button>
         <Button
+          p={hasTouchScreen && 0}
           display="flex"
           flexDirection="column"
           bg="white"
@@ -139,6 +156,7 @@ const NavBar = React.forwardRef((props, ref) => {
           </Text>
         </Button>
         <Button
+          p={hasTouchScreen && 0}
           display="flex"
           flexDirection="column"
           bg="white"
@@ -163,6 +181,7 @@ const NavBar = React.forwardRef((props, ref) => {
           </Text>
         </Button>
         <Button
+          p={hasTouchScreen && 0}
           display="flex"
           flexDirection="column"
           bg="white"

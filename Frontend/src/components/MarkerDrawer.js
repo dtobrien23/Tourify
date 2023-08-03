@@ -178,7 +178,7 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
           justifyItems="left"
           // border="1px solid orangered"
 
-          height={hasTouchScreen ? '60vh' : '100%'}
+          height={hasTouchScreen ? '80vh' : '100%'}
           // marginTop="5px"
           borderRadius="20px"
           // overflow="hidden"

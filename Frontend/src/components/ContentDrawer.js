@@ -646,7 +646,7 @@ export default function ContentDrawer() {
       <DrawerContent
         pointerEvents="all"
         containerProps={{ pointerEvents: 'none', height: '100%' }}
-        height={hasTouchScreen ? '60vh' : '100%'}
+        height={hasTouchScreen ? '80vh' : '100%'}
         style={
           !hasTouchScreen
             ? {
@@ -721,7 +721,7 @@ export default function ContentDrawer() {
                 />
                 <TabPanels>
                   {/* ATTRACTIONS TO VISIT */}
-                  <TabPanel>
+                  <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
                     {globalUserInfo &&
                     globalUserInfo.data &&
                     globalUserInfo.data.attractionStatusDO ? (
@@ -755,14 +755,18 @@ export default function ContentDrawer() {
                                       alt={attractionInfo.name_alias}
                                       style={{
                                         maxWidth: '100px',
-                                        height: '100px',
+                                        height: !hasTouchScreen
+                                          ? '100px'
+                                          : '80px',
                                         marginRight: '10px',
                                         // border: '2px solid orangered',
                                         borderRadius: '20px',
                                       }}
                                     />
                                     <div style={{ width: '100%' }}>
-                                      <Heading size="md">
+                                      <Heading
+                                        size={!hasTouchScreen ? 'md' : 'sm'}
+                                      >
                                         {attractionInfo.name}
                                       </Heading>
                                       {/* <p> {attractionInfo.full_address}</p> */}
@@ -892,7 +896,7 @@ export default function ContentDrawer() {
                   </TabPanel>
 
                   {/* VISITED ATTRACTIONS */}
-                  <TabPanel>
+                  <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
                     {globalUserInfo &&
                     globalUserInfo.data &&
                     globalUserInfo.data.attractionStatusDO ? (
@@ -926,14 +930,18 @@ export default function ContentDrawer() {
                                       alt={attractionInfo.name_alias}
                                       style={{
                                         maxWidth: '100px',
-                                        height: '100px',
+                                        height: !hasTouchScreen
+                                          ? '100px'
+                                          : '80px',
                                         marginRight: '10px',
                                         // border: '2px solid orangered',
                                         borderRadius: '20px',
                                       }}
                                     />
                                     <div style={{ width: '100%' }}>
-                                      <Heading size="md">
+                                      <Heading
+                                        size={!hasTouchScreen ? 'md' : 'sm'}
+                                      >
                                         {attractionInfo.name}
                                       </Heading>
                                       {/* <p> {attractionInfo.full_address}</p> */}
@@ -1062,7 +1070,11 @@ export default function ContentDrawer() {
                   paddingTop="10px"
                 />
                 <TabPanels>
-                  <TabPanel width={hasTouchScreen && '100%'}>
+                  <TabPanel
+                    width={hasTouchScreen && '100%'}
+                    pl={hasTouchScreen && 0}
+                    pr={hasTouchScreen && 0}
+                  >
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
                         if (!status) {
@@ -1089,14 +1101,18 @@ export default function ContentDrawer() {
                                     alt={badge}
                                     style={{
                                       maxWidth: '100px',
-                                      height: '100px',
+                                      height: !hasTouchScreen
+                                        ? '100px'
+                                        : '80px',
                                       marginRight: '10px',
                                       border: '1px solid orangered',
                                       borderRadius: '20px',
                                     }}
                                   />
                                   <div style={{ width: '100%' }}>
-                                    <Heading size="md">
+                                    <Heading
+                                      size={!hasTouchScreen ? 'md' : 'sm'}
+                                    >
                                       {formattedBadgeName}
                                     </Heading>
                                     <p>
@@ -1138,7 +1154,7 @@ export default function ContentDrawer() {
                       />
                     )}
                   </TabPanel>
-                  <TabPanel>
+                  <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
                         if (status) {
@@ -1165,14 +1181,18 @@ export default function ContentDrawer() {
                                     alt={badge}
                                     style={{
                                       maxWidth: '100px',
-                                      height: '100px',
+                                      height: !hasTouchScreen
+                                        ? '100px'
+                                        : '80px',
                                       marginRight: '10px',
                                       border: '1px solid gold',
                                       borderRadius: '20px',
                                     }}
                                   />
                                   <div style={{ width: '100%' }}>
-                                    <Heading size="md">
+                                    <Heading
+                                      size={!hasTouchScreen ? 'md' : 'sm'}
+                                    >
                                       {formattedBadgeName}
                                     </Heading>
                                     <p>

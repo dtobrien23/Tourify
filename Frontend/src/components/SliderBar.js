@@ -29,7 +29,7 @@ export default function SliderBar({ setSliderListFunc }) {
 
   return (
     <Flex
-      width={hasTouchScreen ? '90%' : 'fit-content'}
+      width={hasTouchScreen ? '100%' : 'fit-content'}
       height={hasTouchScreen ? 'auto' : '100%'}
       mb={hasTouchScreen ? '10px' : '0px'}
       alignItems="center"
@@ -48,11 +48,15 @@ export default function SliderBar({ setSliderListFunc }) {
     >
       <Flex
         flexDirection={hasTouchScreen ? 'row' : 'column'}
+        pl={hasTouchScreen && '10px'}
+        pr={hasTouchScreen && '15px'}
+        mt={hasTouchScreen && '10px'}
         width={hasTouchScreen && '100%'}
+        boxShadow={!hasTouchScreen && '1px 1px 5px 1px rgba(0, 0, 0, 0.6)'}
+        border={hasTouchScreen && 'solid 1px orangered'}
         style={{
-          border: 'solid 2px white',
           borderRadius: '25px',
-          boxShadow: '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
+
           justifyContent: 'center',
           alignItems: 'center',
           background: 'white',
@@ -79,7 +83,7 @@ export default function SliderBar({ setSliderListFunc }) {
           minH={!hasTouchScreen && '505'}
           maxW={!hasTouchScreen && '20'}
           position={!hasTouchScreen && 'right'}
-          border={'solid 20px white'}
+          border={'solid 22px white'}
           borderRadius={'20px'}
           backgroundColor={'white'}
           step={1}

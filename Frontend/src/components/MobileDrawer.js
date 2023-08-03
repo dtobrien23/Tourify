@@ -30,7 +30,6 @@ export default function MobileDrawer() {
     setSliderList,
     isMobileDrawerOpen,
     setIsMobileDrawerOpen,
-    closeMobileDrawer,
   } = useContext(MapContext);
   const btnRef = React.useRef();
 
@@ -79,12 +78,12 @@ export default function MobileDrawer() {
         }}
         finalFocusRef={btnRef}
       >
-        {/* <DrawerOverlay /> */}
-        <DrawerContent>
+        <DrawerOverlay />
+        <DrawerContent borderTopLeftRadius="20px" borderTopRightRadius="20px">
           <DrawerCloseButton />
-          <DrawerHeader>Tourify</DrawerHeader>
+          <DrawerHeader>Features</DrawerHeader>
 
-          <DrawerBody>
+          <DrawerBody pt="0" pb="0">
             <Flex flexDirection="column">
               <NavBar map={map} />
               <SliderBar setSliderListFunc={setSliderList} />

@@ -33,40 +33,34 @@ const ParallaxDrawer = () => {
     >
       <TabList flex="1" width="100%" spacing={4} flexWrap="wrap">
         <Tab
-          m="0px 5px 0px 5px"
+          m={!hasTouchScreen && '0px 5px 0px 5px'}
           _selected={{
             color: 'white',
             bg: 'orangered',
           }}
+          width="30%"
         >
           Attractions
         </Tab>
         <Tab
-          m="0px 5px 0px 5px"
+          m={!hasTouchScreen && '0px 5px 0px 5px'}
           _selected={{
             color: 'white',
             bg: 'orangered',
           }}
+          width={!hasTouchScreen && '30%'}
         >
           Recommender
         </Tab>
         <Tab
-          m="0px 5px 0px 5px"
+          m={!hasTouchScreen && '0px 5px 0px 5px'}
           _selected={{
             color: 'white',
             bg: 'orangered',
           }}
+          width={!hasTouchScreen && '30%'}
         >
           NFTs
-        </Tab>
-        <Tab
-          m="0px 5px 0px 5px"
-          _selected={{
-            color: 'white',
-            bg: 'orangered',
-          }}
-        >
-          Meet the Team!
         </Tab>
       </TabList>
       <Divider
@@ -75,12 +69,11 @@ const ParallaxDrawer = () => {
         paddingTop="10px"
       />
       <TabPanels>
-        <TabPanel>
+        <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
           <ul
             style={{
               listStyleType: 'circle',
               paddingLeft: '20px',
-              paddingTop: '50px',
             }}
           >
             <li>
@@ -109,12 +102,11 @@ const ParallaxDrawer = () => {
             </li>
           </ul>
         </TabPanel>
-        <TabPanel>
+        <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
           <ul
             style={{
               listStyleType: 'circle',
               paddingLeft: '20px',
-              paddingTop: '50px',
             }}
           >
             <li>
@@ -143,12 +135,11 @@ const ParallaxDrawer = () => {
             </li>
           </ul>
         </TabPanel>
-        <TabPanel>
+        <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
           <ul
             style={{
               listStyleType: 'circle',
               paddingLeft: '20px',
-              paddingTop: '50px',
             }}
           >
             <li>
@@ -177,9 +168,6 @@ const ParallaxDrawer = () => {
               <img src="\images\tutorial\3.4.jpg" alt="NFTs" />
             </li>
           </ul>
-        </TabPanel>
-        <TabPanel>
-          <ParallaxContent onClose={onClose} />
         </TabPanel>
       </TabPanels>
     </Tabs>
