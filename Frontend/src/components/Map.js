@@ -37,7 +37,9 @@ export default function Map() {
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
-  // const [selectedFilters, setSelectedFilters] = useState(['ALL']);
+
+  // for active busyness pred button
+  const [activePredButton, setActivePredButton] = useState(null);
 
   const mapZoom = 13; // default map zoom
 
@@ -73,6 +75,7 @@ export default function Map() {
   const handleClose = () => {
     setMarkerState(false);
     setChartVisible(false);
+    setActivePredButton(null);
   };
 
   const recommendClose = () => {
@@ -215,6 +218,8 @@ export default function Map() {
         isOpenFunc={markerState}
         isCloseFunc={handleClose}
         markerObject={markerObject}
+        activePredButton={activePredButton}
+        setActivePredButton={setActivePredButton}
       />
       <ContentDrawer />
     </GoogleMap>

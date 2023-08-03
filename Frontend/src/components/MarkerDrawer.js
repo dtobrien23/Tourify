@@ -29,7 +29,13 @@ import PredBarChart from './PredBarChart';
 
 // passing it marker state and method to change state so the X button can close the drawer
 // also passing in marker object to render info in drawer
-function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
+function MarkerDrawer({
+  isOpenFunc,
+  isCloseFunc,
+  markerObject,
+  activePredButton,
+  setActivePredButton,
+}) {
   const {
     apiAttractions,
     fetchBusynessPredictions,
@@ -44,6 +50,10 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
   } = useContext(APIContext);
   const { setIsDrawerOpen, hasTouchScreen } = useContext(MapContext);
   const [openingHoursAdded, setOpeningHoursAdded] = useState(false);
+
+  const handleActiveButton = day => {
+    setActivePredButton(day);
+  };
 
   // useEffect(() => {
   //   // for checking if an attraction is open
@@ -402,55 +412,81 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                     if (attraction.name === markerObject.name.name) {
                       return (
                         <Flex flexDirection="column">
+                          <p>
+                            Click the below buttons to get busyness predictions
+                            for {attraction.name} for any of the next four days
+                            from the current time!
+                          </p>
+                          <br />
                           <Flex w="100%" justify="space-between" mb="10px">
                             <Button
+                              isActive={
+                                activePredButton === 'day1' ? true : false
+                              }
                               bg="white"
                               border="solid 1px orangered"
                               borderRadius="25px"
+                              _active={{ bg: 'orangered', color: 'white' }}
                               onClick={() => {
                                 fetchBusynessPredictions(
                                   attraction.id,
                                   day1Params
                                 );
+                                setActivePredButton('day1');
                               }}
                             >
                               Day 1
                             </Button>
                             <Button
+                              isActive={
+                                activePredButton === 'day2' ? true : false
+                              }
                               bg="white"
                               border="solid 1px orangered"
+                              _active={{ bg: 'orangered', color: 'white' }}
                               borderRadius="25px"
                               onClick={() => {
                                 fetchBusynessPredictions(
                                   attraction.id,
                                   day2Params
                                 );
+                                setActivePredButton('day2');
                               }}
                             >
                               Day 2
                             </Button>
                             <Button
+                              isActive={
+                                activePredButton === 'day3' ? true : false
+                              }
                               bg="white"
                               border="solid 1px orangered"
                               borderRadius="25px"
+                              _active={{ bg: 'orangered', color: 'white' }}
                               onClick={() => {
                                 fetchBusynessPredictions(
                                   attraction.id,
                                   day3Params
                                 );
+                                setActivePredButton('day3');
                               }}
                             >
                               Day 3
                             </Button>
                             <Button
+                              isActive={
+                                activePredButton === 'day4' ? true : false
+                              }
                               bg="white"
                               border="solid 1px orangered"
                               borderRadius="25px"
+                              _active={{ bg: 'orangered', color: 'white' }}
                               onClick={() => {
                                 fetchBusynessPredictions(
                                   attraction.id,
                                   day4Params
                                 );
+                                setActivePredButton('day4');
                               }}
                             >
                               Day 4

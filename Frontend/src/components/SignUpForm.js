@@ -556,6 +556,7 @@ export default function SignUpForm({}) {
               border="solid 1px orangered"
               borderRadius="25px"
               _hover={{ bg: 'orangered', color: 'white' }}
+              _active={{ bg: 'orangered', color: 'white' }}
             >
               {' '}
               User Options

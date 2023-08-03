@@ -78,7 +78,7 @@ export default function LocationInput({}) {
     }
   };
 
-  const deniedCoords = { lat: 40.758, lng: -73.9855 };
+  const deniedCoords = { lat: 40.7484405, lng: -73.9856644 };
   const [defaultGeolocationSet, setDefaultGeolocationSet] = useState(null);
 
   // useEffect(() => {
@@ -134,8 +134,9 @@ export default function LocationInput({}) {
             .catch(e => window.alert('Geocoder failed due to: ' + e));
 
           toastDenied({
-            title: 'Geolocation Permission Denied.',
-            description: 'We have set your location to Times Square',
+            title: 'Geolocation Permission Denied',
+            description:
+              'We have set your location to the Empire State Building',
             status: 'info',
             duration: 5000,
             isClosable: true,
@@ -184,8 +185,8 @@ export default function LocationInput({}) {
         .catch(e => window.alert('Geocoder failed due to: ' + e));
 
       toastUnable({
-        title: 'Unable to access location.',
-        description: 'We have set your location to Times Square',
+        title: 'Unable to Access Location',
+        description: 'We have set your location to the Empire State Building',
         status: 'info',
         duration: 5000,
         isClosable: true,
@@ -210,12 +211,12 @@ export default function LocationInput({}) {
         latlng.lng <= maxLongitude
       )
     ) {
-      latlng.lat = 40.758;
-      latlng.lng = -73.9855;
+      latlng.lat = 40.7484405;
+      latlng.lng = -73.9856644;
       toastOutsideNYC({
         title: 'You Are Not In NYC!',
         description:
-          "We have set your location to Times Square - we know you'd rather be there",
+          'We have set your location to the Empire State Building so you can test our check-in function',
         status: 'info',
         duration: 5000,
         isClosable: true,
