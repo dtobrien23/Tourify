@@ -160,9 +160,6 @@ const ParallaxDrawer = () => {
                       </li>
                     </ul>
                   </TabPanel>
-                  <TabPanel>
-                    <ParallaxContent onClose={onClose} /> 
-                  </TabPanel>
                 </TabPanels>
               </Tabs>
             </DrawerBody>
