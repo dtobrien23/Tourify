@@ -14,7 +14,6 @@ import {
   TabPanels,
   TabPanel,
 } from '@chakra-ui/react';
-import ParallaxContent from './ParallaxContent';
 
 const ParallaxDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,14 +83,6 @@ const ParallaxDrawer = () => {
                     }}
                   >
                     NFTs
-                  </Tab>
-                  <Tab
-                    _selected={{
-                      color: 'white',
-                      bg: 'orangered',
-                    }}
-                  >
-                    Meet the Team!
                   </Tab>
                 </TabList>
                 <TabPanels>
