@@ -34,6 +34,7 @@ const APIContextProvider = ({ children }) => {
   const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
   const [filteredAttractions, setFilteredAttractions] =
     useState(apiAttractions);
+  const [sliderValue, setSliderValue] = useState([0, 100]);
 
   const { mapCenter } = useContext(MapContext);
 
@@ -349,6 +350,23 @@ const APIContextProvider = ({ children }) => {
   }, [apiAllCurrentBusyness]);
 
   useEffect(() => {
+    if (attractionsWithBusyness) {
+      const filtered = attractionsWithBusyness.filter(
+        attraction =>
+          attraction.businessRate >= sliderValue[0] &&
+          attraction.businessRate <= sliderValue[1]
+      );
+      setFilteredAttractions(filtered);
+    }
+  }, [sliderValue]);
+
+  useEffect(() => {
+    if (filteredAttractions) {
+      setSliderList(filteredAttractions);
+    }
+  }, [filteredAttractions]);
+
+  useEffect(() => {
     if (
       apiAttractions &&
       currentModelTempParam &&
@@ -412,6 +430,8 @@ const APIContextProvider = ({ children }) => {
         setSliderList,
         attractionsWithBusyness,
         setAttractionsWithBusyness,
+        sliderValue,
+        setSliderValue,
       }}
     >
       {children}

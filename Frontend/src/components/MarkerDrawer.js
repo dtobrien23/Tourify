@@ -215,7 +215,9 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                   )}.jpg`}
                   alt={markerObject.name.name}
                   style={
-                    hasTouchScreen ? { height: '150px' } : { height: 'auto' }
+                    hasTouchScreen
+                      ? { borderRadius: '20px', height: '150px' }
+                      : { borderRadius: '20px', height: 'auto' }
                   }
                 />
                 <br></br>

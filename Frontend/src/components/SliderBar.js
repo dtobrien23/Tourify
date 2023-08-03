@@ -18,49 +18,14 @@ export default function SliderBar({ setSliderListFunc }) {
     filteredAttractions,
     setFilteredAttractions,
     setSliderList,
+    sliderValue,
+    setSliderValue,
   } = useContext(APIContext);
   const { hasTouchScreen } = useContext(MapContext);
-
-  const [sliderValue, setSliderValue] = useState([0, 100]);
-  // const [filteredAttractions, setFilteredAttractions] =
-  //   useState(apiAttractions);
 
   const handleSliderChange = value => {
     setSliderValue(value);
   };
-
-  // useEffect(() => {
-  //   // adds busyness score to attractions info object
-
-  //   if (apiAttractions && apiAllCurrentBusyness) {
-  //     apiAttractions.forEach(attraction => {
-  //       const matchingPred = apiAllCurrentBusyness.find(
-  //         prediction => prediction.name === attraction.name
-  //       );
-  //       if (matchingPred) {
-  //         attraction.businessRate = matchingPred.businessRate;
-  //       }
-  //     });
-  //     console.log(apiAttractions, 'PLS HAVE BUSYNESS SCORE');
-  //     setSliderListFunc(apiAttractions); // so all markers load when page loads
-  //     setAttractionsWithBusyness(apiAttractions);
-  //   }
-  // }, [apiAllCurrentBusyness]);
-
-  useEffect(() => {
-    if (attractionsWithBusyness) {
-      const filtered = attractionsWithBusyness.filter(
-        attraction =>
-          attraction.businessRate >= sliderValue[0] &&
-          attraction.businessRate <= sliderValue[1]
-      );
-      setFilteredAttractions(filtered);
-    }
-  }, [sliderValue]);
-
-  useEffect(() => {
-    setSliderList(filteredAttractions);
-  }, [filteredAttractions]);
 
   return (
     <Flex
@@ -108,7 +73,7 @@ export default function SliderBar({ setSliderListFunc }) {
         />
         <RangeSlider
           aria-label={['min', 'max']}
-          defaultValue={[0, 100]}
+          defaultValue={sliderValue}
           orientation={hasTouchScreen ? 'horizontal' : 'vertical'}
           width={hasTouchScreen && '100%'}
           minH={!hasTouchScreen && '505'}
