@@ -5,12 +5,13 @@ const TutorialTooltip = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentStep, setCurrentStep] = useState(1);
   const maxSteps = 4;
-  const tutorialShownKey = 'tutorialShown'; // Local storage key
+  // const tutorialShownKey = 'tutorialShown'; // Local storage key
 
   useEffect(() => {
-    const isTutorialShown = localStorage.getItem(tutorialShownKey);
+    // const isTutorialShown = localStorage.getItem(tutorialShownKey);
+    const isUserLoggedIn = localStorage.getItem('loggedInfo') === 'true';
 
-    if (isTutorialShown) { // Check if the tutorial has not been shown before
+    if (!isUserLoggedIn) { // Check if the tutorial has not been shown before
       onOpen();
     }
   }, [onOpen]);
@@ -30,7 +31,7 @@ const TutorialTooltip = () => {
     onClose();
 
     // Set the flag in local storage to indicate that the tutorial has been shown
-    localStorage.setItem(tutorialShownKey, 'true');
+    // localStorage.setItem(tutorialShownKey, 'true');
   };
 
   return (
