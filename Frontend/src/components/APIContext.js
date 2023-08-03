@@ -42,8 +42,8 @@ const APIContextProvider = ({ children }) => {
       try {
         const response = await fetch(
           // 'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
-          // 'http://localhost:8001/api/attraction/getAllAttraction'
-          'http://192.168.23.129:8001/api/attraction/getAllAttraction'
+          'http://localhost:8001/api/attraction/getAllAttraction'
+          // 'http://192.168.23.129:8001/api/attraction/getAllAttraction'
         );
         const data = await response.json(); //long/lat data
         console.log(data, 'THIS CAME FROM THE BACK END');
@@ -74,49 +74,61 @@ const APIContextProvider = ({ children }) => {
         };
 
         dataArray.forEach(attraction => {
-          const openingHours = attraction['openHour'];
-          const currentDayKey = dayMapping[currentDay].toLowerCase() + 'Open';
-          const currentDayOpeningTime = openingHours[currentDayKey];
-          const currentDayClosingTime =
-            openingHours[currentDayKey.replace('Open', 'Close')];
-
           if (
-            currentDayOpeningTime !== null &&
-            currentDayClosingTime !== null
+            attraction.name === 'Brooklyn Bridge' ||
+            attraction.name === 'Greenwich Village' ||
+            attraction.name === 'Harlem'
           ) {
-            const currentHoursEDT = new Date(currentTimeEDT).getHours();
-            const currentMinutesEDT = new Date(currentTimeEDT).getMinutes();
-            const openingHour = parseInt(currentDayOpeningTime.split(':')[0]);
-            const openingMinute = parseInt(currentDayOpeningTime.split(':')[1]);
-            let closingHour = parseInt(currentDayClosingTime.split(':')[0]);
-            const closingMinute = parseInt(currentDayClosingTime.split(':')[1]);
-
-            // for 12am and 1am closing times
-            if (closingHour === 0) {
-              closingHour = 24;
-            } else if (closingHour === 1) {
-              closingHour = 25;
-            }
+            attraction.isOpen = true;
+          } else {
+            const openingHours = attraction['openHour'];
+            const currentDayKey = dayMapping[currentDay].toLowerCase() + 'Open';
+            const currentDayOpeningTime = openingHours[currentDayKey];
+            const currentDayClosingTime =
+              openingHours[currentDayKey.replace('Open', 'Close')];
 
             if (
-              (currentHoursEDT > openingHour ||
-                (currentHoursEDT === openingHour &&
-                  currentMinutesEDT >= openingMinute)) &&
-              (currentHoursEDT < closingHour ||
-                (currentHoursEDT === closingHour &&
-                  currentMinutesEDT < closingMinute))
+              currentDayOpeningTime !== null &&
+              currentDayClosingTime !== null
             ) {
-              console.log(`${attraction.name} is open right now.`);
-              attraction.isOpen = true;
-            } else {
-              console.log(
-                `${attraction.name} is open today but not right now.`
+              const currentHoursEDT = new Date(currentTimeEDT).getHours();
+              const currentMinutesEDT = new Date(currentTimeEDT).getMinutes();
+              const openingHour = parseInt(currentDayOpeningTime.split(':')[0]);
+              const openingMinute = parseInt(
+                currentDayOpeningTime.split(':')[1]
               );
+              let closingHour = parseInt(currentDayClosingTime.split(':')[0]);
+              const closingMinute = parseInt(
+                currentDayClosingTime.split(':')[1]
+              );
+
+              // for 12am and 1am closing times
+              if (closingHour === 0) {
+                closingHour = 24;
+              } else if (closingHour === 1) {
+                closingHour = 25;
+              }
+
+              if (
+                (currentHoursEDT > openingHour ||
+                  (currentHoursEDT === openingHour &&
+                    currentMinutesEDT >= openingMinute)) &&
+                (currentHoursEDT < closingHour ||
+                  (currentHoursEDT === closingHour &&
+                    currentMinutesEDT < closingMinute))
+              ) {
+                console.log(`${attraction.name} is open right now.`);
+                attraction.isOpen = true;
+              } else {
+                console.log(
+                  `${attraction.name} is open today but not right now.`
+                );
+                attraction.isOpen = false;
+              }
+            } else {
+              console.log(`${attraction.name} is closed today.`);
               attraction.isOpen = false;
             }
-          } else {
-            console.log(`${attraction.name} is closed today.`);
-            attraction.isOpen = false;
           }
           // setOpeningHoursAdded(true);
         });
@@ -166,8 +178,8 @@ const APIContextProvider = ({ children }) => {
           );
           const response = await fetch(
             // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
-            // `http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
-            `http://192.168.23.129:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+            `http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+            // `http://192.168.23.129:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
           );
           const data = await response.json();
           console.log(data, 'THIS IS THE MODEL PREDICTION');
@@ -273,8 +285,8 @@ const APIContextProvider = ({ children }) => {
       try {
         const response = await fetch(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
-          // `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
-          `http://192.168.23.129:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
+          `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
+          // `http://192.168.23.129:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
         );
         const data = await response.json();
         console.log(data, 'THIS IS THE FORECAST PREDICTIONS');
@@ -323,7 +335,11 @@ const APIContextProvider = ({ children }) => {
           prediction => prediction.name === attraction.name
         );
         if (matchingPred) {
-          attraction.businessRate = matchingPred.businessRate;
+          if (attraction.isOpen === false) {
+            attraction.businessRate = 0;
+          } else {
+            attraction.businessRate = matchingPred.businessRate;
+          }
         }
       });
       console.log(apiAttractions, 'PLS HAVE BUSYNESS SCORE');

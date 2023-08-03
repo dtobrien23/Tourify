@@ -36,7 +36,7 @@ import {
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 
-export default function SignUpForm({ setIsLoggedIn }) {
+export default function SignUpForm({}) {
   const [loading, setLoading] = useState(true);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   const [buttonsDirection, setButtonsDirection] = useState('row');
@@ -54,7 +54,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
     setNewBadgeState,
   } = useContext(APIContext);
   const [userInfoFetched, setUserInfoFetched] = useState(false);
-  const { setIsDrawerOpen } = useContext(MapContext);
+  const { setIsDrawerOpen, isLoggedIn, setIsLoggedIn } = useContext(MapContext);
   const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
   const [modalContent, setModalContent] = useState('');
   const [isDeleteAlertOpen, setDeleteAlertOpen] = useState(false);
@@ -172,8 +172,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
       axios
         .post(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
-          // `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
-          `http://192.168.23.129:8001/api/user/info?idTokenString=${cachedUserCredential}`
+          `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
+          // `http://192.168.23.129:8001/api/user/info?idTokenString=${cachedUserCredential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'updated user info');
@@ -228,8 +228,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
       axios
         .post(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
-          // `http://localhost:8001/api/user/info?idTokenString=${credential}`
-          `http://192.168.23.129:8001/api/user/info?idTokenString=${credential}`
+          `http://localhost:8001/api/user/info?idTokenString=${credential}`
+          // `http://192.168.23.129:8001/api/user/info?idTokenString=${credential}`
         ) //user info, json w/ true false
         .then(response => {
           console.log(response.data, 'user info');
@@ -293,8 +293,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
       axios
         .post(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
-          // `http://localhost:8001/api/user/register?idTokenString=${credential}`
-          `http://192.168.23.129:8001/api/user/register?idTokenString=${credential}`
+          `http://localhost:8001/api/user/register?idTokenString=${credential}`
+          // `http://192.168.23.129:8001/api/user/register?idTokenString=${credential}`
         )
         .then(response => {
           // setGlobalUserInfo(response.data);
@@ -341,8 +341,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
       axios
         .post(
           // `https://csi6220-2-vm1.ucd.ie/backend/api/user/delete?idTokenString=${globalCredential}`
-          // `http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`
-          `http://192.168.23.129:8001/api/user/delete?idTokenString=${globalCredential}`
+          `http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`
+          // `http://192.168.23.129:8001/api/user/delete?idTokenString=${globalCredential}`
         ) //user info, json w/ true false
         .then(response => {
           // if (response.data.code === 10004) {
@@ -423,8 +423,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
     ) {
       axios
         .post(
-          // `http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
-          `http://192.168.23.129:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
+          `http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
+          // `http://192.168.23.129:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
         ) //Add Wallet address
         .then(response => {
           console.log(response.data, 'user info1');
@@ -519,8 +519,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
   return (
     <Flex
       flexDirection={buttonsDirection}
-      minWidth="190px"
-      justifyContent="flex-end"
+      minWidth={!hasTouchScreen && '190px'}
+      justifyContent={!hasTouchScreen ? 'flex-end' : 'center'}
     >
       {' '}
       <Box
@@ -532,150 +532,169 @@ export default function SignUpForm({ setIsLoggedIn }) {
         id="confettiReward"
       />
       {userLoggedIn ? (
+        <Menu width="fit-content">
+          {hasTouchScreen ? (
+            <Box
+              // display={{ base: 'block', md: 'none' }}
+              style={{ zIndex: '2' }}
+              width="fit-content"
+            >
+              <MenuButton
+                as={IconButton}
+                icon={<HamburgerIcon boxSize="25px" />}
+                variant="ghost"
+                _hover={{ bg: 'white' }}
+                // onClick={handleMenuToggle}
+                l={1}
+              />
+            </Box>
+          ) : (
+            <MenuButton
+              bg="orange"
+              as={Button}
+              color="white"
+              border="solid 1px orangered"
+              borderRadius="25px"
+              _hover={{ bg: 'orangered', color: 'white' }}
+            >
+              {' '}
+              User Options
+            </MenuButton>
+          )}
+
+          <MenuList
+            zIndex={5}
+            minW={hasTouchScreen && '150px'}
+            w={hasTouchScreen && 'fit-content'}
+          >
+            <MenuItem onClick={handleAddWalletClick}>Add NFT Wallet</MenuItem>
+            <MenuItem onClick={handleFeedbackClick}>User Feedback</MenuItem>
+            <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+            <MenuItem color="red" onClick={handleDeleteConfirmation}>
+              Delete Account
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      ) : (
         <>
           {!hasTouchScreen ? (
-            <Menu>
-              <MenuButton
-                bg="orange"
-                as={Button}
-                color="white"
-                border="solid 1px orangered"
-                borderRadius="25px"
-                _hover={{ bg: 'orangered', color: 'white' }}
-              >
-                User Options
-              </MenuButton>
-              <MenuList zIndex={5}>
-                <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-                <MenuItem onClick={handleDeleteConfirmation}>
-                  Delete Account
-                </MenuItem>
-                <MenuItem onClick={handleAddWalletClick}>
-                  Add NFT Wallet
-                </MenuItem>
-                <MenuItem onClick={handleFeedbackClick}>User Feedback</MenuItem>{' '}
-              </MenuList>
-            </Menu>
+            <>
+              <Flex mr={2}>
+                <Button
+                  bg="white"
+                  border="solid 1px orangered"
+                  borderRadius="25px"
+                  onClick={() => {
+                    handleButtonClick('logIn');
+                  }}
+                >
+                  Log In
+                </Button>
+              </Flex>
+              <Flex>
+                <Button
+                  bg="orange"
+                  color="white"
+                  border="solid 1px orangered"
+                  borderRadius="25px"
+                  _hover={{ bg: 'orangered', color: 'white' }}
+                  onClick={() => handleButtonClick('signUp')}
+                >
+                  Sign Up
+                </Button>
+              </Flex>
+            </>
           ) : (
             <Box
               display={{ base: 'block', md: 'none' }}
               style={{ zIndex: '2' }}
+              width="fit-content"
             >
               <Menu
                 isOpen={isMenuOpen}
                 onClose={() => setIsMenuOpen(false)}
-                style={{ width: '100px' }}
+                // style={{ width: '100px' }}
               >
                 <MenuButton
                   as={IconButton}
-                  icon={<HamburgerIcon />}
+                  icon={<HamburgerIcon boxSize="25px" />}
                   variant="ghost"
+                  _hover={{ bg: 'white' }}
                   onClick={handleMenuToggle}
                   l={1}
                 />
                 <MenuList minW="0" w="fit-content">
-                  <MenuItem onClick={handleLogout}>Log Out</MenuItem>
-                  <MenuItem onClick={handleDeleteConfirmation}>
-                    Delete Account
+                  <MenuItem onClick={() => handleButtonClick('logIn')}>
+                    Log In
                   </MenuItem>
-                  <MenuItem onClick={handleAddWalletClick}>
-                    Add NFT Wallet
+                  <MenuItem onClick={() => handleButtonClick('signUp')}>
+                    Sign Up
                   </MenuItem>
-                  <MenuItem onClick={handleFeedbackClick}>
-                    User Feedback
-                  </MenuItem>{' '}
                 </MenuList>
               </Menu>
             </Box>
           )}
         </>
-      ) : (
-        <>
-          <Flex mr={2}>
-            <Button
-              bg="white"
-              border="solid 1px orangered"
-              borderRadius="25px"
-              onClick={() => {
-                handleButtonClick('logIn');
-              }}
-            >
-              Log In
-            </Button>
-          </Flex>
-          <Flex>
-            <Button
-              bg="orange"
-              color="white"
-              border="solid 1px orangered"
-              borderRadius="25px"
-              _hover={{ bg: 'orangered', color: 'white' }}
-              onClick={() => handleButtonClick('signUp')}
-            >
-              Sign Up
-            </Button>
-          </Flex>
-
-          <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>
-                {modalContent === 'logIn' ? 'Welcome back!' : 'Welcome!'}
-              </ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                {modalContent === 'logIn' ? (
-                  <GoogleLogin
-                    clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
-                    onSuccess={backendLogin}
-                    onFailure={error =>
-                      console.log('Google login failed:', error)
-                    }
-                    cookiePolicy="single_host_origin"
-                    icon="false"
-                    style={{
-                      marginLeft: '1.5em',
-                      marginTop: '1em',
-                    }}
-                    color="black"
-                    bg="white"
-                    border="1px"
-                    borderRadius="0px"
-                    borderColor="orangered"
-                    shape="pill"
-                    buttonText="Login"
-                  />
-                ) : (
-                  <GoogleLogin
-                    clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
-                    onSuccess={backendSignUp}
-                    onFailure={error =>
-                      console.log('Google login failed:', error)
-                    }
-                    style={{
-                      marginLeft: '1.5em',
-                      marginTop: '1em',
-                    }}
-                    color="black"
-                    bg="white"
-                    border="1px"
-                    borderRadius="10px"
-                    borderColor="orangered"
-                    buttonText="Sign Up"
-                    shape="pill"
-                    text="Sign Up"
-                  />
-                )}
-              </ModalBody>
-              <ModalFooter />
-            </ModalContent>
-          </Modal>
-        </>
       )}
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        size={hasTouchScreen ? 'xs' : 'md'}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            {modalContent === 'logIn' ? 'Welcome back!' : 'Welcome!'}
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {modalContent === 'logIn' ? (
+              <GoogleLogin
+                clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
+                onSuccess={backendLogin}
+                onFailure={error => console.log('Google login failed:', error)}
+                cookiePolicy="single_host_origin"
+                icon="false"
+                style={{
+                  marginLeft: '1.5em',
+                  marginTop: '1em',
+                }}
+                color="black"
+                bg="white"
+                border="1px"
+                borderRadius="0px"
+                borderColor="orangered"
+                shape="pill"
+                buttonText="Login"
+              />
+            ) : (
+              <GoogleLogin
+                clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
+                onSuccess={backendSignUp}
+                onFailure={error => console.log('Google login failed:', error)}
+                style={{
+                  marginLeft: '1.5em',
+                  marginTop: '1em',
+                }}
+                color="black"
+                bg="white"
+                border="1px"
+                borderRadius="10px"
+                borderColor="orangered"
+                buttonText="Sign Up"
+                shape="pill"
+                text="Sign Up"
+              />
+            )}
+          </ModalBody>
+          <ModalFooter />
+        </ModalContent>
+      </Modal>
       <AlertDialog
         isOpen={isDeleteAlertOpen}
         leastDestructiveRef={undefined}
         onClose={handleDeleteCancel}
+        size={hasTouchScreen ? 'xs' : 'md'}
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -696,7 +715,12 @@ export default function SignUpForm({ setIsLoggedIn }) {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-      <Modal zIndex={9999} isOpen={isNFTModalOpen} onClose={onNFTModalClose}>
+      <Modal
+        zIndex={9999}
+        isOpen={isNFTModalOpen}
+        onClose={onNFTModalClose}
+        size={hasTouchScreen ? 'xs' : 'md'}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add NFT Wallet Address</ModalHeader>
@@ -710,7 +734,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
           </ModalBody>
           <ModalFooter>
             <Button
-              colorScheme="blue"
+              color="white"
+              bg="orangered"
               mr={3}
               onClick={() => handleWalletEntry(walletInput)}
             >
@@ -726,6 +751,7 @@ export default function SignUpForm({ setIsLoggedIn }) {
         zIndex={9999}
         isOpen={isFeedbackModalOpen}
         onClose={onFeedbackModalClose}
+        size={hasTouchScreen ? 'xs' : 'md'}
       >
         <ModalOverlay />
         <ModalContent>
@@ -740,7 +766,8 @@ export default function SignUpForm({ setIsLoggedIn }) {
           </ModalBody>
           <ModalFooter>
             <Button
-              colorScheme="blue"
+              color="white"
+              bg="orangered"
               mr={3}
               onClick={() => handleFeedbackEntry(feedbackInput)}
             >

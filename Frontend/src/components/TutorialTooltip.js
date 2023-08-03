@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   useDisclosure,
   Button,
@@ -10,6 +10,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
+import { MapContext } from './MapContext';
 
 const TutorialTooltip = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,6 +26,8 @@ const TutorialTooltip = () => {
       onOpen();
     }
   }, [onOpen]);
+
+  const { hasTouchScreen, setIsMobileDrawerOpen } = useContext(MapContext);
 
   const handleNextStep = () => {
     setCurrentStep(prevStep => prevStep + 1);
@@ -46,7 +49,11 @@ const TutorialTooltip = () => {
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={handleSkipTutorial} size="lg">
+      <Modal
+        isOpen={isOpen}
+        onClose={handleSkipTutorial}
+        size={hasTouchScreen ? 'xs' : 'md'}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader> Welcome to Tourify! </ModalHeader>

@@ -19,11 +19,11 @@ import { MapContext } from './MapContext';
 import ParallaxDrawer from './ParallaxDrawer';
 
 const NavBar = React.forwardRef((props, ref) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    // Retrieve the logged-in status from the cache
-    const cachedStatus = localStorage.getItem('loggedInfo');
-    return cachedStatus === 'true'; // Convert to boolean
-  });
+  // const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  //   // Retrieve the logged-in status from the cache
+  //   const cachedStatus = localStorage.getItem('loggedInfo');
+  //   return cachedStatus === 'true'; // Convert to boolean
+  // });
 
   const toastNoSourceLocation = useToast();
 
@@ -35,6 +35,9 @@ const NavBar = React.forwardRef((props, ref) => {
     hasTouchScreen,
     sourceCoords,
     geolocation,
+    isLoggedIn,
+    setIsLoggedIn,
+    setIsMobileDrawerOpen,
   } = useContext(MapContext);
 
   const handleLogin = () => {
@@ -84,6 +87,7 @@ const NavBar = React.forwardRef((props, ref) => {
           isDisabled={!isLoggedIn}
           onClick={() => {
             if (geolocation) {
+              setIsMobileDrawerOpen(false);
               setActiveDrawer('recommender');
               {
                 !isDrawerOpen && setIsDrawerOpen(true);
@@ -96,6 +100,7 @@ const NavBar = React.forwardRef((props, ref) => {
                 status: 'error',
                 duration: 3000,
                 isClosable: true,
+                containerStyle: { maxWidth: '80vw' },
               });
             }
           }}
@@ -117,6 +122,7 @@ const NavBar = React.forwardRef((props, ref) => {
           w="fit-content"
           isDisabled={!isLoggedIn}
           onClick={() => {
+            setIsMobileDrawerOpen(false);
             setActiveDrawer('attractions');
             {
               !isDrawerOpen && setIsDrawerOpen(true);
@@ -140,6 +146,7 @@ const NavBar = React.forwardRef((props, ref) => {
           w="fit-content"
           isDisabled={!isLoggedIn}
           onClick={() => {
+            setIsMobileDrawerOpen(false);
             setActiveDrawer('badges');
             {
               !isDrawerOpen && setIsDrawerOpen(true);
@@ -155,7 +162,30 @@ const NavBar = React.forwardRef((props, ref) => {
             Badges
           </Text>
         </Button>
-        <ParallaxDrawer />
+        <Button
+          display="flex"
+          flexDirection="column"
+          bg="white"
+          h="fit-content"
+          w="fit-content"
+          onClick={() => {
+            setIsMobileDrawerOpen(false);
+            setActiveDrawer('guide');
+            {
+              !isDrawerOpen && setIsDrawerOpen(true);
+            }
+          }}
+        >
+          <img
+            src="/images/navbar-icons/guide.svg"
+            alt="Badges"
+            style={{ paddingTop: '8px', width: '40px', height: '40px' }}
+          />
+          <Text fontWeight="normal" fontSize="11px" pb="6px" m="0">
+            Guide
+          </Text>
+        </Button>
+        {/* <ParallaxDrawer /> */}
       </Flex>
       {!hasTouchScreen && (
         <Flex>

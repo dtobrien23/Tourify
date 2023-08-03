@@ -13,6 +13,7 @@ import {
   TabList,
   TabPanel,
   TabPanels,
+  Divider,
   useForceUpdate,
   SimpleGrid,
   Heading,
@@ -27,7 +28,7 @@ import { APIContext } from './APIContext';
 import { FaWalking } from 'react-icons/fa';
 
 export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
-  const { apiAttractions } = useContext(APIContext);
+  const { apiAttractions, attractionsWithBusyness } = useContext(APIContext);
   const {
     activeDrawer,
     isDrawerOpen,
@@ -35,7 +36,6 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
     sourceCoords,
     setSourceCoords,
     geolocation,
-    attractionsWithBusyness,
     handleAttractionSelect,
   } = useContext(MapContext);
 
@@ -194,19 +194,35 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
   return (
     <>
-      <Tabs>
+      <Tabs variant="soft-rounded" justifyContent="space-evenly">
         <TabList width="100%">
-          <Tab width="33.3%" color="orangered">
+          <Tab
+            _selected={{ color: 'white', bg: 'orangered' }}
+            m="0px 5px 0px 5px"
+            width="33.3%"
+          >
             Nearest
           </Tab>
-          <Tab width="33.3%" color="orangered">
+          <Tab
+            _selected={{ color: 'white', bg: 'orangered' }}
+            m="0px 5px 0px 5px"
+            width="33.3%"
+          >
             Quietest
           </Tab>
-          <Tab width="33.3%" color="orangered">
+          <Tab
+            _selected={{ color: 'white', bg: 'orangered' }}
+            m="0px 5px 0px 5px"
+            width="33.3%"
+          >
             Best
           </Tab>
         </TabList>
-
+        <Divider
+          orientation="horizontal"
+          borderColor="orangered"
+          paddingTop="10px"
+        />
         <TabPanels>
           <TabPanel>
             {nearestAttractions.map(attraction => (
@@ -287,9 +303,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                                     <AlertDescription>
                                       <p>
                                         Busyness Index:&nbsp;
-                                        {attraction.isOpen === false
-                                          ? '0'
-                                          : attraction.businessRate}
+                                        {attraction.businessRate}
                                       </p>
                                     </AlertDescription>
                                   </Flex>
@@ -421,9 +435,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                                     <AlertDescription>
                                       <p>
                                         Busyness Index:&nbsp;
-                                        {attraction.isOpen === false
-                                          ? '0'
-                                          : attraction.businessRate}
+                                        {attraction.businessRate}
                                       </p>
                                     </AlertDescription>
                                   </Flex>
@@ -556,9 +568,7 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
                                       <AlertDescription>
                                         <p>
                                           Busyness Index:&nbsp;
-                                          {attraction.isOpen === false
-                                            ? '0'
-                                            : attraction.businessRate}
+                                          {attraction.businessRate}
                                         </p>
                                       </AlertDescription>
                                     </Flex>

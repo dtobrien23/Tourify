@@ -12,6 +12,7 @@ import {
   Button,
   useDisclosure,
 } from '@chakra-ui/react';
+import { ChevronUpIcon } from '@chakra-ui/icons';
 import { APIContext } from './APIContext';
 import { MapContext } from './MapContext';
 import NavBar from './NavBar';
@@ -20,40 +21,62 @@ import SliderBar from './SliderBar';
 import SignUpForm from './SignUpForm';
 
 export default function MobileDrawer() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     map,
     hasTouchScreen,
     selectedFilters,
     setSelectedFilters,
     setSliderList,
+    isMobileDrawerOpen,
+    setIsMobileDrawerOpen,
+    closeMobileDrawer,
   } = useContext(MapContext);
   const btnRef = React.useRef();
 
   return (
-    <Flex h="60px" bg="orange" justifyContent="center">
-      <img
-        ml={0}
-        style={{ cursor: 'pointer', overflow: 'visible' }} // cursor change on hover
-        // onClick={handleLogoClick}
-        src="mob-logo.svg"
-        alt="Tourify Logo"
-      />
-      <Button ref={btnRef} colorScheme="white" onClick={onOpen}>
-        <Box mt="20px" flexShrink={0}>
-          <img
-            ml={0}
-            style={{ cursor: 'pointer', overflow: 'visible' }} // cursor change on hover
-            // onClick={handleLogoClick}
-            src="mob-logo.svg"
-            alt="Tourify Logo"
-          />
-        </Box>
-      </Button>
+    <Flex h="53px" w="100vw" bg="white" borderTop="solid 2px orangered">
+      <Flex flex="1" justifyContent="flex-start" marginLeft="22px">
+        <SignUpForm />
+      </Flex>
+      <Flex>
+        <img
+          style={{
+            cursor: 'pointer',
+            overflow: 'visible',
+            height: '80px',
+            position: 'absolute',
+            bottom: 0,
+            left: '50%',
+            transform: 'translate(-50%)',
+            paddingBottom: '5px',
+          }} // cursor change on hover
+          // onClick={handleLogoClick}
+          src="mobile-logo.svg"
+          alt="Tourify Logo"
+          onClick={() => {
+            window.location.reload();
+          }}
+        />
+      </Flex>
+      <Flex flex="1" alignItems="center" justifyContent="flex-end" mr="12px">
+        <Button
+          ref={btnRef}
+          onClick={() => {
+            setIsMobileDrawerOpen(true);
+          }}
+          bg="white"
+          _hover={{ bg: 'white' }}
+        >
+          <ChevronUpIcon boxSize="30px" p="0" />
+        </Button>
+      </Flex>
       <Drawer
-        isOpen={isOpen}
+        isOpen={isMobileDrawerOpen}
         placement="bottom"
-        onClose={onClose}
+        onClose={() => {
+          setIsMobileDrawerOpen(false);
+        }}
         finalFocusRef={btnRef}
       >
         {/* <DrawerOverlay /> */}

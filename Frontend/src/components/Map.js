@@ -115,7 +115,6 @@ export default function Map() {
           });
 
           marker.addListener('click', () => handleMarkerClick(marker));
-          console.log(marker, 'these are the markers man!');
 
           return marker;
         });

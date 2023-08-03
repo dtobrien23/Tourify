@@ -10,7 +10,7 @@ const MapProvider = ({ children }) => {
     lat: 40.755091,
     lng: -73.978285,
   });
-  const [sliderList, setSliderList] = useState(null);
+  // const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
@@ -31,14 +31,18 @@ const MapProvider = ({ children }) => {
   const [inputValue, setInputValue] = useState('');
   const [inputColour, setInputColour] = useState('#718096');
   const [isHovered, setIsHovered] = useState(false);
-  const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
   const [waitingOnRoute, setWaitingOnRoute] = useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
 
   const toastNoSource = useToast();
   const toastNoDest = useToast();
   const toastNothing = useToast();
   const toastZeroResults = useToast();
   const toastDirectionsError = useToast();
+
+  const closeMobileDrawer = () => {
+    setIsMobileDrawerOpen(false);
+  };
 
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#mobile_device_detection
   const detectTouchScreen = () => {
@@ -63,6 +67,12 @@ const MapProvider = ({ children }) => {
       }
     }
   };
+
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    // Retrieve the logged-in status from the cache
+    const cachedStatus = localStorage.getItem('loggedInfo');
+    return cachedStatus === 'true'; // Convert to boolean
+  });
 
   const google = window.google;
 
@@ -123,6 +133,7 @@ const MapProvider = ({ children }) => {
             status: 'error',
             duration: 3000,
             isClosable: true,
+            containerStyle: { maxWidth: '80vw' },
           });
         } else {
           toastDirectionsError({
@@ -132,6 +143,7 @@ const MapProvider = ({ children }) => {
             status: 'error',
             duration: 3000,
             isClosable: true,
+            containerStyle: { maxWidth: '80vw' },
           });
         }
       }
@@ -142,6 +154,7 @@ const MapProvider = ({ children }) => {
         status: 'error',
         duration: 3000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     } else if (selectedAttraction) {
       toastNoSource({
@@ -150,6 +163,7 @@ const MapProvider = ({ children }) => {
         status: 'error',
         duration: 3000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     } else {
       toastNothing({
@@ -158,6 +172,7 @@ const MapProvider = ({ children }) => {
         status: 'error',
         duration: 3000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     }
     setWaitingOnRoute(false);
@@ -236,16 +251,19 @@ const MapProvider = ({ children }) => {
         setInputColour,
         sourceCoords,
         setSourceCoords,
-        attractionsWithBusyness,
-        setAttractionsWithBusyness,
         isHovered,
         setIsHovered,
         waitingOnRoute,
         handleAttractionSelect,
         selectedFilters,
         setSelectedFilters,
-        sliderList,
-        setSliderList,
+        // sliderList,
+        // setSliderList,
+        isLoggedIn,
+        setIsLoggedIn,
+        isMobileDrawerOpen,
+        setIsMobileDrawerOpen,
+        closeMobileDrawer,
       }}
     >
       {children}

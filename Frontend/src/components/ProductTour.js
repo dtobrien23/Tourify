@@ -11,7 +11,8 @@ const ProductTour = () => {
   const tourSteps = [
     {
       target: navbarRef, // Set the target to the NavBar component
-      content: 'Step 1: Welcome to our website! This is the first step of the tutorial.',
+      content:
+        'Step 1: Welcome to our website! This is the first step of the tutorial.',
       placement: 'center',
     },
     {
@@ -21,7 +22,8 @@ const ProductTour = () => {
     {
       content: 'Step 3: And here is another feature ABC explained.',
       placement: 'center',
-    },  ];
+    },
+  ];
 
   useEffect(() => {
     const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
@@ -41,7 +43,7 @@ const ProductTour = () => {
         continuous
         run={isTourRunning}
         steps={tourSteps}
-        callback={(data) => {
+        callback={data => {
           // You can handle tour events here if needed
           console.log(data);
         }}

@@ -18,6 +18,7 @@ import {
   TabList,
   TabPanel,
   TabPanels,
+  Divider,
   SimpleGrid,
   Heading,
   Stack,
@@ -40,18 +41,18 @@ import {
 import { MapContext } from './MapContext';
 import Recommender from './Recommender';
 import { APIContext } from './APIContext';
+import ParallaxDrawer from './ParallaxDrawer';
 
 export default function ContentDrawer() {
-  const { globalUserInfo, setCheckinState, checkinState } =
-    useContext(APIContext);
-
   const {
-    activeDrawer,
-    isDrawerOpen,
-    setIsDrawerOpen,
-    hasTouchScreen,
+    globalUserInfo,
+    setCheckinState,
+    checkinState,
     attractionsWithBusyness,
-  } = useContext(MapContext);
+  } = useContext(APIContext);
+
+  const { activeDrawer, isDrawerOpen, setIsDrawerOpen, hasTouchScreen } =
+    useContext(MapContext);
 
   const toastAttractionClosed = useToast();
   const toastCheckIn = useToast();
@@ -183,11 +184,12 @@ export default function ContentDrawer() {
         status: 'error',
         duration: 3000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     } else {
       // const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
-      // const apiEndpoint = 'http://localhost:8001/api/user/update';
-      const apiEndpoint = 'http://192.168.23.129:8001/api/user/update';
+      const apiEndpoint = 'http://localhost:8001/api/user/update';
+      // const apiEndpoint = 'http://192.168.23.129:8001/api/user/update';
       const cachedUserCredential = localStorage.getItem('userCredential');
 
       const placeHolder = attractionNameAlias;
@@ -225,6 +227,7 @@ export default function ContentDrawer() {
               status: 'success',
               duration: 3000,
               isClosable: true,
+              containerStyle: { maxWidth: '80vw' },
             });
 
             // Get the current timestamp and date
@@ -244,6 +247,7 @@ export default function ContentDrawer() {
               status: 'error',
               duration: 3000,
               isClosable: true,
+              containerStyle: { maxWidth: '80vw' },
             });
           }
         })
@@ -454,6 +458,7 @@ export default function ContentDrawer() {
           status: 'success',
           duration: 6000,
           isClosable: true,
+          containerStyle: { maxWidth: '80vw' },
         });
 
         setPrompt(null);
@@ -502,6 +507,7 @@ export default function ContentDrawer() {
         status: 'error',
         duration: 3000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     }
   }, [promptIsSet, prompt, nftWalletAddress]);
@@ -641,17 +647,31 @@ export default function ContentDrawer() {
         pointerEvents="all"
         containerProps={{ pointerEvents: 'none', height: '100%' }}
         height={hasTouchScreen ? '60vh' : '100%'}
-        style={{
-          position: 'absolute',
-          // top: '1',
-          // height: 'calc(100% - 74px)',
-          // border: 'solid 1px orangered',
-          borderLeft: '0px',
-          borderRadius: '20px',
-          borderTopLeftRadius: '0px',
-          borderBottomLeftRadius: '0px',
-          zIndex: -1,
-        }}
+        style={
+          !hasTouchScreen
+            ? {
+                position: 'absolute',
+                // top: '1',
+                // height: 'calc(100% - 74px)',
+                // border: 'solid 1px orangered',
+                borderLeft: '0px',
+                borderRadius: '20px',
+                borderTopLeftRadius: '0px',
+                borderBottomLeftRadius: '0px',
+                zIndex: -1,
+              }
+            : {
+                position: 'absolute',
+                // top: '1',
+                // height: 'calc(100% - 74px)',
+                // border: 'solid 1px orangered',
+                borderLeft: '0px',
+                borderRadius: '20px',
+                borderBottomRightRadius: '0px',
+                borderBottomLeftRadius: '0px',
+                zIndex: -1,
+              }
+        }
       >
         <DrawerCloseButton />
         {activeDrawer === 'recommender' && (
@@ -677,16 +697,28 @@ export default function ContentDrawer() {
               />
             </DrawerHeader>
             <DrawerBody>
-              <Tabs>
+              <Tabs variant="soft-rounded">
                 <TabList width="100%">
-                  <Tab width="50%" color="orangered">
+                  <Tab
+                    width="50%"
+                    m="0px 5px 0px 5px"
+                    _selected={{ color: 'white', bg: 'orangered' }}
+                  >
                     Attractions to Visit
                   </Tab>
-                  <Tab width="50%" color="orangered">
+                  <Tab
+                    width="50%"
+                    m="0px 5px 0px 5px"
+                    _selected={{ color: 'white', bg: 'orangered' }}
+                  >
                     Visited Attractions
                   </Tab>
                 </TabList>
-
+                <Divider
+                  orientation="horizontal"
+                  borderColor="orangered"
+                  paddingTop="10px"
+                />
                 <TabPanels>
                   {/* ATTRACTIONS TO VISIT */}
                   <TabPanel>
@@ -782,10 +814,7 @@ export default function ContentDrawer() {
                                               <AlertDescription>
                                                 <p>
                                                   Busyness Index:&nbsp;
-                                                  {attractionInfo.isOpen ===
-                                                  false
-                                                    ? '0'
-                                                    : attractionInfo.businessRate}
+                                                  {attractionInfo.businessRate}
                                                 </p>
                                               </AlertDescription>
                                             </Flex>
@@ -956,10 +985,7 @@ export default function ContentDrawer() {
                                               <AlertDescription>
                                                 <p>
                                                   Busyness Index:&nbsp;
-                                                  {attractionInfo.isOpen ===
-                                                  false
-                                                    ? '0'
-                                                    : attractionInfo.businessRate}
+                                                  {attractionInfo.businessRate}
                                                 </p>
                                               </AlertDescription>
                                             </Flex>
@@ -1013,16 +1039,28 @@ export default function ContentDrawer() {
             {' '}
             <DrawerHeader>{`My Badges`}</DrawerHeader>
             <DrawerBody>
-              <Tabs colorScheme="orange">
+              <Tabs variant="soft-rounded">
                 <TabList width="100%">
-                  <Tab width="50%" color="orangered">
+                  <Tab
+                    width="50%"
+                    m="0px 5px 0px 5px"
+                    _selected={{ color: 'white', bg: 'orangered' }}
+                  >
                     Badges to Collect
                   </Tab>
-                  <Tab width="50%" color="orangered">
+                  <Tab
+                    width="50%"
+                    m="0px 5px 0px 5px"
+                    _selected={{ color: 'white', bg: 'orangered' }}
+                  >
                     My Badges
                   </Tab>
                 </TabList>
-
+                <Divider
+                  orientation="horizontal"
+                  borderColor="orangered"
+                  paddingTop="10px"
+                />
                 <TabPanels>
                   <TabPanel width={hasTouchScreen && '100%'}>
                     {Object.entries(globalUserInfo.data.badgeDO).map(
@@ -1181,6 +1219,14 @@ export default function ContentDrawer() {
                   extract={wikiData.extract}
                 />
               )}
+            </DrawerBody>
+          </>
+        )}
+        {activeDrawer === 'guide' && (
+          <>
+            <DrawerHeader>{`Guide`}</DrawerHeader>
+            <DrawerBody>
+              <ParallaxDrawer />
             </DrawerBody>
           </>
         )}

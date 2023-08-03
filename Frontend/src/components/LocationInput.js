@@ -139,6 +139,7 @@ export default function LocationInput({}) {
             status: 'info',
             duration: 5000,
             isClosable: true,
+            containerStyle: { maxWidth: '80vw' },
           });
         }
       });
@@ -188,6 +189,7 @@ export default function LocationInput({}) {
         status: 'info',
         duration: 5000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     }
     setButtonClicked(buttonClicked + 1);
@@ -217,6 +219,7 @@ export default function LocationInput({}) {
         status: 'info',
         duration: 5000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     }
 
@@ -305,6 +308,7 @@ export default function LocationInput({}) {
           status: 'error',
           duration: 3000,
           isClosable: true,
+          containerStyle: { maxWidth: '80vw' },
         });
       }
     }

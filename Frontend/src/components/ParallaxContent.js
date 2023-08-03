@@ -199,16 +199,24 @@ const ParallaxContent = ({ onClose }) => {
             }}
             onClick={() => parallax.current.scrollTo(0)}
           >
-            <h2 style={{ color: 'white', fontSize: '24px', fontWeight: 'bold', position: 'absolute', marginBottom:'200px',border: '2px solid orangered',
-                                        borderRadius: '5px', }}>
+            <h2
+              style={{
+                color: 'white',
+                fontSize: '24px',
+                fontWeight: 'bold',
+                position: 'absolute',
+                marginBottom: '200px',
+                border: '2px solid orangered',
+                borderRadius: '5px',
+              }}
+            >
               The API King
             </h2>
             <img
               src={'/images/parallax/YJ.jpg'}
-              style={{ width: '100px', marginRight:'30px' }}
+              style={{ width: '100px', marginRight: '30px' }}
               alt="Clients"
             />
-            
           </ParallaxLayer>
         </Parallax>
       </div>

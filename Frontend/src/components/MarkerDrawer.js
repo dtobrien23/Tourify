@@ -19,6 +19,7 @@ import {
   TabList,
   TabPanel,
   TabPanels,
+  Divider,
   useEditable,
 } from '@chakra-ui/react';
 import { FaMapMarkerAlt, FaGlobe, FaClock, FaDollarSign } from 'react-icons/fa';
@@ -41,7 +42,7 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
     activeChart,
     attractionsWithBusyness,
   } = useContext(APIContext);
-  const { setIsDrawerOpen } = useContext(MapContext);
+  const { setIsDrawerOpen, hasTouchScreen } = useContext(MapContext);
   const [openingHoursAdded, setOpeningHoursAdded] = useState(false);
 
   // useEffect(() => {
@@ -123,16 +124,16 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
   const formatTime = timeString => {
     if (timeString !== null) {
       const [hours, minutes] = timeString.split(':');
-      let period = ' a.m.';
+      let period = 'am';
 
       let formattedHours = parseInt(hours, 10);
       if (formattedHours === 0) {
         formattedHours = 12;
       } else if (formattedHours === 12) {
-        period = ' p.m.';
+        period = 'pm';
       } else if (formattedHours > 12) {
         formattedHours -= 12;
-        period = ' p.m.';
+        period = 'pm';
       }
 
       const formattedMinutes = parseInt(minutes, 10)
@@ -166,8 +167,8 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
     <>
       <Drawer
         isOpen={isOpenFunc}
-        placement="right"
-        size="sm"
+        placement={hasTouchScreen ? 'bottom' : 'right'}
+        size={hasTouchScreen ? 'xs' : 'sm'}
         onClose={isCloseFunc}
       >
         <DrawerOverlay style={{ zIndex: '19' }} />
@@ -176,16 +177,28 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
           alignItems="left"
           justifyItems="left"
           // border="1px solid orangered"
-          borderRadius="20px"
-          borderTopRightRadius="0px"
-          borderBottomRightRadius="0px"
-          borderRight="0px"
+
+          height={hasTouchScreen ? '60vh' : '100%'}
           // marginTop="5px"
-          marginLeft="10px"
-          overflow="hidden"
+          borderRadius="20px"
+          // overflow="hidden"
           spacing={8}
           p="10px"
-          style={{ zIndex: '20' }}
+          style={
+            !hasTouchScreen
+              ? {
+                  borderTopRightRadius: '0px',
+                  borderBottomRightRadius: '0px',
+                  // marginLeft: '10px',
+                  zIndex: '20',
+                }
+              : {
+                  padding: 0,
+                  borderBottomLeftRadius: '0px',
+                  borderBottomRightRadius: '0px',
+                  zIndex: '20',
+                }
+          }
         >
           <DrawerCloseButton />
 
@@ -193,21 +206,47 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
             {markerObject.name.name}
           </DrawerHeader>
           <DrawerBody>
-            <img
-              src={`/images/${markerObject.name.name.replaceAll(' ', '_')}.jpg`}
-              alt={markerObject.name.name}
-            />
-            <br></br>
-            <Tabs>
-              <TabList width="100%">
-                <Tab width="50%" color="orangered">
-                  Info
-                </Tab>
-                <Tab width="50%" color="orangered">
-                  Busyness Prediction
-                </Tab>
-              </TabList>
-
+            <Tabs variant="soft-rounded">
+              <Flex mb="10px">
+                <img
+                  src={`/images/${markerObject.name.name.replaceAll(
+                    ' ',
+                    '_'
+                  )}.jpg`}
+                  alt={markerObject.name.name}
+                  style={
+                    hasTouchScreen ? { height: '150px' } : { height: 'auto' }
+                  }
+                />
+                <br></br>
+                <TabList
+                  justifyContent="center"
+                  alignItems="center"
+                  width="100%"
+                  flexDirection="column"
+                  borderColor="transparent"
+                >
+                  <Tab
+                    _selected={{ color: 'white', bg: 'orangered' }}
+                    width="50%"
+                    // color="orangered"
+                  >
+                    Info
+                  </Tab>
+                  <br /> <br />
+                  <Tab
+                    _selected={{ color: 'white', bg: 'orangered' }}
+                    width="75%"
+                  >
+                    Busyness Prediction
+                  </Tab>
+                </TabList>
+              </Flex>
+              <Divider
+                orientation="horizontal"
+                borderColor="orangered"
+                paddingTop="10px"
+              />
               <TabPanels>
                 <TabPanel>
                   {attractionsWithBusyness.map(attraction => {
@@ -258,12 +297,7 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                                 : 'Busy'}
                             </AlertTitle>
                             <AlertDescription>
-                              <p>
-                                Busyness Index:{' '}
-                                {attraction.isOpen === false
-                                  ? '0'
-                                  : attraction.businessRate}
-                              </p>
+                              <p>Busyness Index: {attraction.businessRate}</p>
                             </AlertDescription>
                           </Alert>
                           <Flex alignItems="center">
@@ -275,7 +309,7 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                             </Flex>
                             <Flex maxW="100%">
                               &nbsp;&nbsp;
-                              <p>
+                              <p style={{ maxWidth: '100%' }}>
                                 <a
                                   href={attraction.link}
                                   target="_blank"
@@ -313,31 +347,47 @@ function MarkerDrawer({ isOpenFunc, isCloseFunc, markerObject }) {
                                       : 'red',
                                 }}
                               >
-                                {attraction.isOpen === true ? 'Open' : 'Closed'}
+                                {attraction.isOpen === true
+                                  ? attraction.name === 'Brooklyn Bridge' ||
+                                    attraction.name === 'Greenwich Village' ||
+                                    attraction.name === 'Harlem'
+                                    ? 'Always Open'
+                                    : 'Open'
+                                  : 'Closed'}
                               </p>
-                              <p>Monday</p>
-                              <p>Tuesday</p>
-                              <p>Wednesday</p>
-                              <p>Thursday</p>
-                              <p>Friday</p>
-                              <p>Saturday</p>
-                              <p>Sunday</p>
-                              <br />
+                              {attraction.name !== 'Brooklyn Bridge' &&
+                                attraction.name !== 'Greenwich Village' &&
+                                attraction.name !== 'Harlem' && (
+                                  <>
+                                    <p>Monday</p>
+                                    <p>Tuesday</p>
+                                    <p>Wednesday</p>
+                                    <p>Thursday</p>
+                                    <p>Friday</p>
+                                    <p>Saturday</p>
+                                    <p>Sunday</p>
+                                    <br />
+                                  </>
+                                )}
                             </Flex>
-                            <Flex flexDirection="column" ml="15px">
-                              <br />
-                              {days.map(day => (
-                                <p key={day}>
-                                  {formatTime(
-                                    attraction.openHour[`${day}Open`]
-                                  )}{' '}
-                                  -{' '}
-                                  {formatTime(
-                                    attraction.openHour[`${day}Close`]
-                                  )}
-                                </p>
-                              ))}
-                            </Flex>
+                            {attraction.name !== 'Brooklyn Bridge' &&
+                              attraction.name !== 'Greenwich Village' &&
+                              attraction.name !== 'Harlem' && (
+                                <Flex flexDirection="column" ml="15px">
+                                  <br />
+                                  {days.map(day => (
+                                    <p key={day}>
+                                      {formatTime(
+                                        attraction.openHour[`${day}Open`]
+                                      )}{' '}
+                                      -{' '}
+                                      {formatTime(
+                                        attraction.openHour[`${day}Close`]
+                                      )}
+                                    </p>
+                                  ))}
+                                </Flex>
+                              )}
                           </Flex>
                         </div>
                       );
