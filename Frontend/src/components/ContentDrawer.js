@@ -578,6 +578,22 @@ export default function ContentDrawer() {
     return capitalizedWords.join(' ');
   };
 
+  function reformatDateTime(dateTimeString) {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+
+  const dateTime = new Date(dateTimeString);
+  const formattedDateTime = dateTime.toLocaleDateString('en-US', options);
+
+  return formattedDateTime;
+}
+
+
   return (
     <Drawer
       onClose={() => {
@@ -1022,103 +1038,15 @@ export default function ContentDrawer() {
                   paddingTop="10px"
                 />
                 <TabPanels>
-                  <TabPanel
-                    width={hasTouchScreen && '100%'}
-                    pl={hasTouchScreen && 0}
-                    pr={hasTouchScreen && 0}
-                  >
+                  
+                  <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
-                        if (!status) {
+                        if (status === false) {
                           const formattedBadgeName = formatBadgeName(badge);
                           return (
                             <Flex
                               border="2px solid orangered"
-                              borderRadius="20px"
-                              marginTop="5px"
-                              overflow="hidden"
-                              spacing="20px"
-                              p="10px"
-                              width={hasTouchScreen ? '100%' : '425px'}
-                              mb="15px"
-                            >
-                              <Flex
-                                key={badge}
-                                width="100%"
-                                flexDirection="column"
-                              >
-                                <Flex flexDirection="row">
-                                  <img
-                                    src={`/images/badgeimages/${badge}.jpg`}
-                                    alt={badge}
-                                    style={{
-                                      maxWidth: '100px',
-                                      height: !hasTouchScreen
-                                        ? '100px'
-                                        : '80px',
-                                      marginRight: '10px',
-                                      border: '1px solid orangered',
-                                      borderRadius: '20px',
-                                    }}
-                                  />
-                                  <div style={{ width: '100%' }}>
-                                    <Heading
-                                      size={!hasTouchScreen ? 'md' : 'sm'}
-                                    >
-                                      {formattedBadgeName}
-                                    </Heading>
-                                    <p>
-                                      {' '}
-                                      You got the {formattedBadgeName}! Great
-                                      Job!
-                                    </p>
-                                    <p>
-                                      {' '}
-                                      You got the {formattedBadgeName}! Great
-                                      Job!
-                                    </p>
-                                  </div>
-                                </Flex>
-                              </Flex>
-                            </Flex>
-                          );
-                        }
-                        return null;
-                      }
-                    )}
-                    {areAllBadgesTrue() && (
-                      <FlipCard
-                        frontContent={
-                          <p>
-                            <img
-                              src={'/images/badgeimages/all_Badges.jpg'}
-                              alt="All Attractions are True"
-                              style={{
-                                maxWidth: '500px',
-                                height: '500px',
-                                marginRight: '10px',
-                                border: '2px solid orangered',
-                                borderRadius: '5px',
-                              }}
-                            />
-                          </p>
-                        }
-                        backContent={
-                          <div>
-                            <Heading>You've Got All The Badges!</Heading>
-                          </div>
-                        }
-                      />
-                    )}
-                  </TabPanel>
-                  <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
-                    {Object.entries(globalUserInfo.data.badgeDO).map(
-                      ([badge, status]) => {
-                        if (status) {
-                          const formattedBadgeName = formatBadgeName(badge);
-                          return (
-                            <Flex
-                              border="2px solid gold"
                               borderRadius="20px"
                               marginTop="5px"
                               overflow="hidden"
@@ -1157,11 +1085,7 @@ export default function ContentDrawer() {
                                       You still have to get the{' '}
                                       {formattedBadgeName}!
                                     </p>
-                                    <p>
-                                      {' '}
-                                      You still have to get the{' '}
-                                      {formattedBadgeName}!
-                                    </p>
+                                    
                                   </div>
                                 </Flex>
                               </Flex>
@@ -1189,6 +1113,97 @@ export default function ContentDrawer() {
                           }}
                         />
                       </p>
+                    )}
+                  </TabPanel>
+                  <TabPanel
+                    width={hasTouchScreen && '100%'}
+                    pl={hasTouchScreen && 0}
+                    pr={hasTouchScreen && 0}
+                  >
+                    {Object.entries(globalUserInfo.data.badgeDO).map(
+                      ([badge, status]) => {
+                      const badgeCreateTimeKey = `${badge}_CreateTime`;
+                      const badgeCreateTime = globalUserInfo.data.badgeDO[badgeCreateTimeKey];
+
+                        if (status === true && badgeCreateTime !== "3333-01-01T01:00:00") {
+                          const formattedBadgeName = formatBadgeName(badge);
+                          console.log(badgeCreateTime,'badge time')
+                            
+                          
+                          return (
+                            <Flex
+                              border="2px solid gold"
+                              borderRadius="20px"
+                              marginTop="5px"
+                              overflow="hidden"
+                              spacing="20px"
+                              p="10px"
+                              width={hasTouchScreen ? '100%' : '425px'}
+                              mb="15px"
+                            >
+                              <Flex
+                                key={badge}
+                                width="100%"
+                                flexDirection="column"
+                              >
+                                <Flex flexDirection="row">
+                                  <img
+                                    src={`/images/badgeimages/${badge}.jpg`}
+                                    alt={badge}
+                                    style={{
+                                      maxWidth: '100px',
+                                      height: !hasTouchScreen
+                                        ? '100px'
+                                        : '80px',
+                                      marginRight: '10px',
+                                      border: '1px solid orangered',
+                                      borderRadius: '20px',
+                                    }}
+                                  />
+                                  <div style={{ width: '100%' }}>
+                                    <Heading
+                                      size={!hasTouchScreen ? 'md' : 'sm'}
+                                    >
+                                      {formattedBadgeName}
+                                    </Heading>
+                                    <p>
+                                      {' '}
+                                      You got the {formattedBadgeName} at {reformatDateTime(badgeCreateTime)} Great
+                                      Job!
+                                    </p>
+                                    
+                                  </div>
+                                </Flex>
+                              </Flex>
+                            </Flex>
+                          );
+                        }
+                        return null;
+                      }
+                    )}
+                    {areAllBadgesTrue() && (
+                      <FlipCard
+                        frontContent={
+                          <p>
+                            <img
+                              src={'/images/badgeimages/all_Badges.jpg'}
+                              alt="All Attractions are True"
+                              style={{
+                                maxWidth: '500px',
+                                height: '500px',
+                                marginRight: '10px',
+                                border: '2px solid orangered',
+                                borderRadius: '5px',
+                              }}
+                            />
+                          </p>
+                        }
+                        backContent={
+                          <div>
+                            <Heading>You've Got All The Badges!</Heading>
+                          </div>
+                        }
+                      />
                     )}
                   </TabPanel>
                 </TabPanels>

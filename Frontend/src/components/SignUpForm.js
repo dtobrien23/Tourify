@@ -486,7 +486,6 @@ useReward('confettiReward', 'confetti', {
   };
   const handleFeedbackEntry = feedbackInput => {
     setFeedbackInput('');
-    confettiReward();
     toastFeedback({
       title: 'Feedback Submitted.',
       description: 'Thankyou for the input to help us improve the site.',
