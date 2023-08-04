@@ -348,7 +348,8 @@ export default function LocationInput({}) {
                     borderRadius: '20px',
                     fontSize: '16px',
                     // width: !hasTouchScreen ? '115%' : '123%',
-                    width: !hasTouchScreen ? '15vw' : '60vw',
+                    width: !hasTouchScreen ? '14.5vw' : '60vw',
+                    minWidth: '145px',
                   }}
                 />
               </div>
