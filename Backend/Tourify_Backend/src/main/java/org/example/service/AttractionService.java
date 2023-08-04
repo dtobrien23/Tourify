@@ -253,15 +253,16 @@ public class AttractionService {
             if (futureDateTime.getDayOfWeek().getValue() == 7){attractionOpen = openHour.getSundayOpen();attractionClose = openHour.getSundayClose();}
             // compare the attraction's time range with the iterate time
             LocalTime futureLocalTime = futureDateTime.toLocalTime();        // Extract the time part from the current date-time
+            int hour = futureLocalTime.getHour();   // Only need the hour part
+            LocalTime futureTimeRounded = LocalTime.of(hour,0,1);
+
             if (attractionOpen!=null && attractionClose!=null) {  // The database is storing empty if the attraction is not open that day
-                // Check if current time is in between the start and end times
-                if (futureLocalTime.isAfter(attractionOpen.minusMinutes(59)) && futureLocalTime.isBefore(attractionClose.plusMinutes(59))) {
+                // Check Whether the time is inside the period
+                if (futureTimeRounded.isAfter(attractionOpen) && futureTimeRounded.isBefore(attractionClose)) {
                     OpenClose.add(true);
                     System.out.println("111111111");
                 } else {
                     OpenClose.add(false);
-                    System.out.println(attractionOpen.minusHours(1));
-                    System.out.println(attractionClose.plusHours(1));
                     System.out.println("222222222");
                 }
             }
