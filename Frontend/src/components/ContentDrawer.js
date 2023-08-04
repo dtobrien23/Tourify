@@ -228,9 +228,7 @@ export default function ContentDrawer() {
                 containerStyle: { maxWidth: '80vw' },
               });
 
-              // Get the current timestamp and date
-              const currentTimeStamp = new Date().getTime();
-              const currentDate = new Date().toLocaleDateString();
+              
 
               // get the updated user info from the backend
             }
@@ -490,6 +488,9 @@ export default function ContentDrawer() {
           duration: 6000,
           isClosable: true,
         });
+        setPrompt(null);
+        setPromptIsSet(false);
+        setFile(null);
       }
     } catch (err) {
       console.log(err);
@@ -533,6 +534,9 @@ export default function ContentDrawer() {
         isClosable: true,
         containerStyle: { maxWidth: '80vw' },
       });
+      setPrompt(null);
+        setPromptIsSet(false);
+        setFile(null);
     }
   }, [promptIsSet, prompt, nftWalletAddress]);
 
