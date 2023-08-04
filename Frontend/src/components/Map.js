@@ -148,7 +148,7 @@ export default function Map() {
         }
       }}
     >
-      {!hasTouchScreen && <WeatherDisplay />}
+      <WeatherDisplay />
       {hasTouchScreen ? (
         <Flex
           height="100%"
