@@ -515,6 +515,8 @@ export default function SignUpForm({}) {
     return <p>Loading...</p>;
   }
 
+  
+
   return (
     <Flex
       flexDirection={buttonsDirection}
