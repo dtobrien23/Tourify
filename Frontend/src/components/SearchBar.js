@@ -3,6 +3,7 @@ import { Flex, Divider, Button, Box, useDisclosure } from '@chakra-ui/react';
 import DestinationInput from './DestinationInput';
 import LocationInput from './LocationInput';
 import { MapContext } from './MapContext';
+import WeatherDisplay from './WeatherDisplay';
 
 export default function SearchBar() {
   const { calculateRoute, clearRoute, hasTouchScreen, waitingOnRoute } =
