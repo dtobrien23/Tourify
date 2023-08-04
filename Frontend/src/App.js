@@ -25,8 +25,11 @@ function App() {
 
   const { apisLoaded, setAPIIsLoaded, showLoading } = useContext(APIContext);
 
+  // for phones and small tablets in portrait
   useEffect(() => {
-    detectTouchScreen();
+    if (window.innerWidth <= 768) {
+      detectTouchScreen();
+    }
   }, []);
 
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#mobile_device_detection

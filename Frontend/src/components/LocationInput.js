@@ -349,7 +349,7 @@ export default function LocationInput({}) {
                     paddingLeft: '8px',
                     borderRadius: '20px',
                     fontSize: '16px',
-                    width: '115%',
+                    width: !hasTouchScreen ? '115%' : '123%',
                   }}
                 />
               </div>
