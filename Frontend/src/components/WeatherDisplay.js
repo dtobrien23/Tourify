@@ -75,7 +75,7 @@ export default function WeatherDisplay({
   }, [apiCurrentWeather]);
 
   return (
-    <Flex top="14px" left="14px" position="absolute">
+    <Flex top="12px" left={hasTouchScreen ? '5vw' : 5} position="absolute">
       <Flex
         bg="white"
         w="fit-content"
@@ -109,48 +109,51 @@ export default function WeatherDisplay({
             >
               Manhattan
             </h2>
-            <img
-              src={weatherIcon}
-              style={{
-                height: hasTouchScreen ? '30px' : '60px',
-                width: hasTouchScreen ? '30px' : '60px',
+            <Flex flexDirection={hasTouchScreen ? 'row' : 'column'}>
+              <img
+                src={weatherIcon}
+                style={{
+                  height: hasTouchScreen ? '30px' : '60px',
+                  width: hasTouchScreen ? '30px' : '60px',
 
-                marginBottom: '3px',
-              }}
-            />
-            <Flex flexDirection="row">
-              <Text style={{ fontSize: hasTouchScreen ? '17px' : '35px' }}>
-                {displayedTemp === 'F'
-                  ? `${Math.floor(apiCurrentWeather.main.temp)}\u00B0`
-                  : `${Math.floor(
-                      (apiCurrentWeather.main.temp - 32) * (5 / 9)
-                    )}\u00B0`}
-              </Text>
-              <Flex
-                flexDirection="column"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <button
-                  onClick={() => setDisplayedTemp('F')}
-                  style={{
-                    color: displayedTemp === 'F' ? 'black' : 'lightgrey',
-                    fontSize: hasTouchScreen ? '10px' : '14px',
-                    fontWeight: 'bold',
-                  }}
+                  marginBottom: '0px',
+                  marginRight: hasTouchScreen && '5px',
+                }}
+              />
+              <Flex flexDirection="row" alignItems="center">
+                <Text style={{ fontSize: hasTouchScreen ? '17px' : '35px' }}>
+                  {displayedTemp === 'F'
+                    ? `${Math.floor(apiCurrentWeather.main.temp)}\u00B0`
+                    : `${Math.floor(
+                        (apiCurrentWeather.main.temp - 32) * (5 / 9)
+                      )}\u00B0`}
+                </Text>
+                <Flex
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
                 >
-                  F
-                </button>
-                <button
-                  onClick={() => setDisplayedTemp('C')}
-                  style={{
-                    color: displayedTemp === 'C' ? 'black' : 'lightgrey',
-                    fontSize: hasTouchScreen ? '0px' : '14px',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  C
-                </button>
+                  <button
+                    onClick={() => setDisplayedTemp('F')}
+                    style={{
+                      color: displayedTemp === 'F' ? 'black' : 'lightgrey',
+                      fontSize: hasTouchScreen ? '10px' : '14px',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    F
+                  </button>
+                  <button
+                    onClick={() => setDisplayedTemp('C')}
+                    style={{
+                      color: displayedTemp === 'C' ? 'black' : 'lightgrey',
+                      fontSize: hasTouchScreen ? '0px' : '14px',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    C
+                  </button>
+                </Flex>
               </Flex>
             </Flex>
           </>

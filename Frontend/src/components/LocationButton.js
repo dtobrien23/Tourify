@@ -1,5 +1,5 @@
 import { React, useState, useContext } from 'react';
-import { Button, Tooltip, CircularProgress, useConst } from '@chakra-ui/react';
+import { Button, Tooltip, CircularProgress, Flex } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import { FaLocationArrow } from 'react-icons/fa';
 
@@ -8,8 +8,8 @@ export default function LocationButton({
   waitingOnLocation,
   currentLocation,
 }) {
-  const { geolocation, isHovered, setIsHovered } = useContext(MapContext);
-
+  const { geolocation, isHovered, setIsHovered, hasTouchScreen } =
+    useContext(MapContext);
 
   return (
     <>
@@ -22,22 +22,24 @@ export default function LocationButton({
         />
       ) : (
         <Tooltip label="Set Geolocation" placement="bottom">
-          <Button
-            size="auto"
-            mr="10px"
-            onClick={getPosition}
-            style={{ backgroundColor: 'white', borderRadius: '20px' }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            <FaLocationArrow
-              color={
-                isHovered || (currentLocation && geolocation)
-                  ? 'orangered'
-                  : '#b5bbc6'
-              }
-            />
-          </Button>
+          <Flex pl={!hasTouchScreen && '30px'} h="fit-content" w="fit-content">
+            <Button
+              size="auto"
+              mr="10px"
+              onClick={getPosition}
+              style={{ backgroundColor: 'white' }}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              <FaLocationArrow
+                color={
+                  isHovered || (currentLocation && geolocation)
+                    ? 'orangered'
+                    : '#b5bbc6'
+                }
+              />
+            </Button>
+          </Flex>
         </Tooltip>
       )}
     </>

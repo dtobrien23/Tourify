@@ -190,7 +190,9 @@ function MarkerDrawer({
                       : { borderRadius: '20px', height: 'auto' }
                   }
                 />
-                <br></br>
+                <div>
+                  <br />
+                </div>
                 <TabList
                   justifyContent="center"
                   alignItems="center"
@@ -199,14 +201,17 @@ function MarkerDrawer({
                   borderColor="transparent"
                 >
                   <Tab
+                    border="solid 1px orangered"
                     _selected={{ color: 'white', bg: 'orangered' }}
                     width="50%"
-                    // color="orangered"
                   >
                     Info
                   </Tab>
-                  <br /> <br />
+                  <div>
+                    <br /> <br />
+                  </div>
                   <Tab
+                    border="solid 1px orangered"
                     _selected={{ color: 'white', bg: 'orangered' }}
                     width="75%"
                   >
@@ -346,7 +351,9 @@ function MarkerDrawer({
                               attraction.name !== 'Greenwich Village' &&
                               attraction.name !== 'Harlem' && (
                                 <Flex flexDirection="column" ml="15px">
-                                  <br />
+                                  <div>
+                                    <br />
+                                  </div>
                                   {days.map(day => (
                                     <p key={day}>
                                       {formatTime(
@@ -377,7 +384,9 @@ function MarkerDrawer({
                             for {attraction.name} for any of the next four days
                             from now!
                           </p>
-                          <br />
+                          <div>
+                            <br />
+                          </div>
                           <Flex w="100%" justify="space-between" mb="10px">
                             <Button
                               isActive={

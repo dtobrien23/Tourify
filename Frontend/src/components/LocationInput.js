@@ -83,8 +83,6 @@ export default function LocationInput({}) {
   const deniedCoords = { lat: 40.7060855, lng: -73.9968643 };
   const [defaultGeolocationSet, setDefaultGeolocationSet] = useState(null);
 
-  
-
   const posError = error => {
     setWaitingOnLocation(false);
     setIsHovered(false);
@@ -348,7 +346,7 @@ export default function LocationInput({}) {
                     paddingLeft: '8px',
                     borderRadius: '20px',
                     fontSize: '16px',
-                    width: '112%',
+                    width: '115%',
                   }}
                 />
               </div>

@@ -208,7 +208,6 @@ export default function Map() {
       {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update
         the sliderList state */}
-
       <MarkerDrawer
         //marker state true opens drawer
         //false closes it
