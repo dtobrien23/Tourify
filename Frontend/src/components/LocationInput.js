@@ -21,6 +21,8 @@ export default function LocationInput({}) {
     setInputValue,
     sourceCoords,
     setIsHovered,
+    allowedLocation,
+    setAllowedLocation,
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
@@ -78,7 +80,7 @@ export default function LocationInput({}) {
     }
   };
 
-  const deniedCoords = { lat: 40.7484405, lng: -73.9856644 };
+  const deniedCoords = { lat: 40.7060855, lng: -73.9968643 };
   const [defaultGeolocationSet, setDefaultGeolocationSet] = useState(null);
 
   // useEffect(() => {
@@ -114,6 +116,7 @@ export default function LocationInput({}) {
                 setWaitingOnLocation(false);
 
                 setGeolocation(deniedCoords); // Update the geolocation value in the context
+                setAllowedLocation(deniedCoords);
                 console.log(deniedCoords, 'this is lat lang');
                 setSourceCoords(deniedCoords);
                 console.log(sourceCoords);
@@ -135,8 +138,7 @@ export default function LocationInput({}) {
 
           toastDenied({
             title: 'Geolocation Permission Denied',
-            description:
-              'We have set your location to the Empire State Building',
+            description: 'We have set your location to the Brooklyn Bridge',
             status: 'info',
             duration: 5000,
             isClosable: true,
@@ -165,6 +167,7 @@ export default function LocationInput({}) {
 
             setWaitingOnLocation(false);
             setGeolocation(deniedCoords); // Update the geolocation value in the context
+            setAllowedLocation(deniedCoords);
             console.log(deniedCoords, 'this is lat lang');
             setSourceCoords(deniedCoords);
             console.log(sourceCoords);
@@ -186,7 +189,7 @@ export default function LocationInput({}) {
 
       toastUnable({
         title: 'Unable to Access Location',
-        description: 'We have set your location to the Empire State Building',
+        description: 'We have set your location to the Brooklyn Bridge',
         status: 'info',
         duration: 5000,
         isClosable: true,
@@ -211,12 +214,12 @@ export default function LocationInput({}) {
         latlng.lng <= maxLongitude
       )
     ) {
-      latlng.lat = 40.7484405;
-      latlng.lng = -73.9856644;
+      latlng.lat = 40.7060855;
+      latlng.lng = -73.9968643;
       toastOutsideNYC({
         title: 'You Are Not In NYC!',
         description:
-          'We have set your location to the Empire State Building so you can test our check-in function',
+          'We have set your location to the Brooklyn Bridge so you can test our check-in function',
         status: 'info',
         duration: 5000,
         isClosable: true,
@@ -242,6 +245,8 @@ export default function LocationInput({}) {
           setWaitingOnLocation(false);
 
           setGeolocation(latlng); // Update the geolocation value in the context
+          setAllowedLocation(latlng);
+
           console.log(latlng, 'this is lat lang');
           setSourceCoords(latlng);
           console.log(sourceCoords);

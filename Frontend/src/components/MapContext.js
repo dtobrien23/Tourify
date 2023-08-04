@@ -33,6 +33,7 @@ const MapProvider = ({ children }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [waitingOnRoute, setWaitingOnRoute] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [allowedLocation, setAllowedLocation] = useState(null);
 
   const toastNoSource = useToast();
   const toastNoDest = useToast();
@@ -264,6 +265,8 @@ const MapProvider = ({ children }) => {
         isMobileDrawerOpen,
         setIsMobileDrawerOpen,
         closeMobileDrawer,
+        allowedLocation,
+        setAllowedLocation,
       }}
     >
       {children}

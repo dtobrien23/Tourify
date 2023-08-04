@@ -51,10 +51,17 @@ export default function ContentDrawer() {
     attractionsWithBusyness,
   } = useContext(APIContext);
 
-  const { activeDrawer, isDrawerOpen, setIsDrawerOpen, hasTouchScreen } =
-    useContext(MapContext);
+  const {
+    activeDrawer,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    hasTouchScreen,
+    allowedLocation,
+    setAllowedLocation,
+  } = useContext(MapContext);
 
   const toastAttractionClosed = useToast();
+  const toastNoLocation = useToast();
   const toastCheckIn = useToast();
   const toastNotCheckIn = useToast();
   const toastNFT = useToast();
@@ -187,74 +194,85 @@ export default function ContentDrawer() {
         containerStyle: { maxWidth: '80vw' },
       });
     } else {
-      // const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
-      const apiEndpoint = 'http://localhost:8001/api/user/update';
-      // const apiEndpoint = 'http://192.168.23.129:8001/api/user/update';
-      const cachedUserCredential = localStorage.getItem('userCredential');
+      if (allowedLocation !== null) {
+        // const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
+        const apiEndpoint = 'http://localhost:8001/api/user/update';
+        // const apiEndpoint = 'http://192.168.23.129:8001/api/user/update';
+        const cachedUserCredential = localStorage.getItem('userCredential');
 
-      const placeHolder = attractionNameAlias;
-      setPlaceHolderImaegUrl(placeHolder);
+        const placeHolder = attractionNameAlias;
+        setPlaceHolderImaegUrl(placeHolder);
 
-      const idToken = cachedUserCredential; // get this from credential in signupform
-      console.log(cachedUserCredential, 'this is the global credential');
+        const idToken = cachedUserCredential; // get this from credential in signupform
+        console.log(cachedUserCredential, 'this is the global credential');
 
-      const requestBody = {
-        id_token: idToken,
-        attraction_id: attractionID,
-        lat: '40.7060855', //hardcoded for testing replace with geolocation variable
-        lng: '-73.9968643', //hardcoded for testing reaplace with geolocation variable
-      };
+        const requestBody = {
+          id_token: idToken,
+          attraction_id: attractionID,
+          lat: allowedLocation.lat, //hardcoded for testing replace with geolocation variable
+          lng: allowedLocation.lng, //hardcoded for testing reaplace with geolocation variable
+        };
 
-      axios
-        .post(apiEndpoint, requestBody)
-        .then(response => {
-          console.log('API call successful:', response.data);
-          console.log(response, 'this is response data');
-          // Handle the response data here
-          if (response.data.code === 200) {
-            //   // set logic that your marker has been ticked off
-            setCheckinState(true);
-            const PROMPT_TEST = `${attractionName} ${randomWord}`;
-            setPrompt(PROMPT_TEST);
-            setPlaceHolderImaegUrl(placeHolder);
+        axios
+          .post(apiEndpoint, requestBody)
+          .then(response => {
+            console.log('API call successful:', response.data);
+            console.log(response, 'this is response data');
+            // Handle the response data here
+            if (response.data.code === 200) {
+              //   // set logic that your marker has been ticked off
+              setCheckinState(true);
+              const PROMPT_TEST = `${attractionName} ${randomWord}`;
+              setPrompt(PROMPT_TEST);
+              setPlaceHolderImaegUrl(placeHolder);
 
-            console.log(PROMPT_TEST, 'PROMPT_TEST');
-            console.log(checkinState, 'checkinstate - contentdrawer');
-            confettiReward();
-            toastCheckIn({
-              title: 'Check in Successful.',
-              description: "You've Checked in Successfully.",
-              status: 'success',
-              duration: 3000,
-              isClosable: true,
-              containerStyle: { maxWidth: '80vw' },
-            });
+              console.log(PROMPT_TEST, 'PROMPT_TEST');
+              console.log(checkinState, 'checkinstate - contentdrawer');
+              confettiReward();
+              toastCheckIn({
+                title: 'Check in Successful!',
+                description: "You've checked in successfully",
+                status: 'success',
+                duration: 3000,
+                isClosable: true,
+                containerStyle: { maxWidth: '80vw' },
+              });
 
-            // Get the current timestamp and date
-            const currentTimeStamp = new Date().getTime();
-            const currentDate = new Date().toLocaleDateString();
+              // Get the current timestamp and date
+              const currentTimeStamp = new Date().getTime();
+              const currentDate = new Date().toLocaleDateString();
 
-            // get the updated user info from the backend
-          }
-          if (response.data.code === 10050) {
-            // distance too long
-            setCheckinState(false);
+              // get the updated user info from the backend
+            }
+            if (response.data.code === 10050) {
+              // distance too long
+              setCheckinState(false);
 
-            console.log(response.data.code, 'this is the repsonse code!');
-            toastNotCheckIn({
-              title: 'Check in Unsuccessful.',
-              description: "You're too far away.",
-              status: 'error',
-              duration: 3000,
-              isClosable: true,
-              containerStyle: { maxWidth: '80vw' },
-            });
-          }
-        })
-        .catch(error => {
-          console.error('Error in API call:', error);
-          // Handle errors here
+              console.log(response.data.code, 'this is the repsonse code!');
+              toastNotCheckIn({
+                title: 'Check In Unsuccessful!',
+                description: "You're too far away",
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+                containerStyle: { maxWidth: '80vw' },
+              });
+            }
+          })
+          .catch(error => {
+            console.error('Error in API call:', error);
+            // Handle errors here
+          });
+      } else {
+        toastNoLocation({
+          title: 'Check In Unsuccessful!',
+          description: 'You must allow your current location',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          containerStyle: { maxWidth: '80vw' },
         });
+      }
     }
   };
 
