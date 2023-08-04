@@ -157,7 +157,7 @@ export default function WeatherDisplay({
             h="50px"
             p="10px"
             onClick={() => {
-              setUpdateClick(updateClick + 1);
+              window.location.reload();
             }}
           >
             <img src="/images/refresh.svg" />

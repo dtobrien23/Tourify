@@ -161,7 +161,6 @@ export default function SignUpForm({}) {
   };
 
   const userInfoUpdate = async credentialResponse => {
-
     const cachedUserCredential = localStorage.getItem('userCredential');
     if (cachedUserCredential) {
       axios
@@ -426,9 +425,9 @@ export default function SignUpForm({}) {
             console.log(globalUserInfo, 'retrieving the cached info');
 
             toastWallet({
-              title: 'NFT Wallet Added!.',
+              title: 'NFT Wallet Added!',
               description:
-                'You can now mint NFTs when you get a badge!. Be sure to connect your wallet with OpenSea to see your NFTs!',
+                'You can now mint NFTs when you get a badge! Be sure to connect your wallet with OpenSea to see your NFTs',
               status: 'success',
               duration: 6000,
               isClosable: true,
@@ -462,12 +461,12 @@ export default function SignUpForm({}) {
   ///                     ////////
   ////////////////////////////////
 
-const { reward: confettiReward, isAnimating: isConfettiAnimating } =
-useReward('confettiReward', 'confetti', {
-  lifetime: 190,
-  elementSize: 16,
-  elementCount: 100,
-});
+  const { reward: confettiReward, isAnimating: isConfettiAnimating } =
+    useReward('confettiReward', 'confetti', {
+      lifetime: 190,
+      elementSize: 16,
+      elementCount: 100,
+    });
   const [feedbackInput, setFeedbackInput] = useState('');
 
   // Function to handle changes in the user feedback input field
@@ -507,10 +506,10 @@ useReward('confettiReward', 'confetti', {
 };
 
 
-const handleFeedbackCancel = () => {
-  setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
-  onFeedbackModalClose();
-};
+  const handleFeedbackCancel = () => {
+    setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
+    onFeedbackModalClose();
+  };
 
   if (loading) {
     return <p>Loading...</p>;

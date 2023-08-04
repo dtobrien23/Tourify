@@ -190,8 +190,8 @@ export default function ContentDrawer() {
         // const apiEndpoint = 'http://192.168.23.129:8001/api/user/update';
         const cachedUserCredential = localStorage.getItem('userCredential');
 
-      const placeHolder = attractionNameAlias;
-      setPlaceHolderImaegUrl(placeHolder);
+        const placeHolder = attractionNameAlias;
+        setPlaceHolderImaegUrl(placeHolder);
 
         const idToken = cachedUserCredential; // get this from credential in signupform
         console.log(cachedUserCredential, 'this is the global credential');
@@ -276,7 +276,10 @@ export default function ContentDrawer() {
 
   const areAllBadgesFalse = () => {
     if (globalUserInfo && globalUserInfo.data && globalUserInfo.data.badgeDO) {
-      const badgesStatusArray = Object.values(globalUserInfo.data.badgeDO);
+      const badgesStatusArray = Object.keys(globalUserInfo.data.badgeDO)
+        .filter(key => !key.includes('_CreateTime'))
+        .map(key => globalUserInfo.data.badgeDO[key]);
+
       return badgesStatusArray.every(status => status === false);
     }
     return false;
@@ -548,11 +551,11 @@ export default function ContentDrawer() {
             duration: 6000,
             isClosable: true,
           });
-          
+
           // Call mintNft with the prompt and imageURL
-          await new Promise((resolve) => setTimeout(resolve, 60000));
+          await new Promise(resolve => setTimeout(resolve, 60000));
           console.log('60-second timer ended. Minting NFT now.');
-          
+
           await mintNft(prompt, imageURL, nftWalletAddress);
           console.log('NFT minted successfully.');
           setFile(null);
@@ -579,20 +582,19 @@ export default function ContentDrawer() {
   };
 
   function reformatDateTime(dateTimeString) {
-  const options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  };
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    };
 
-  const dateTime = new Date(dateTimeString);
-  const formattedDateTime = dateTime.toLocaleDateString('en-US', options);
+    const dateTime = new Date(dateTimeString);
+    const formattedDateTime = dateTime.toLocaleDateString('en-US', options);
 
-  return formattedDateTime;
-}
-
+    return formattedDateTime;
+  }
 
   return (
     <Drawer
@@ -843,10 +845,8 @@ export default function ContentDrawer() {
                               src={'/images/all_Attractions_Visited.jpg'}
                               alt="All Attractions are True"
                               style={{
-                                maxWidth: '500px',
-                                height: '500px',
+                                width: '100%',
                                 marginRight: '10px',
-                                border: '2px solid orangered',
                                 borderRadius: '5px',
                               }}
                             />
@@ -854,8 +854,8 @@ export default function ContentDrawer() {
                         }
                         backContent={
                           <div>
-                            <Heading>
-                              You've Visited All the Attractions!
+                            <Heading size="md">
+                              You Have Visited All the Attractions!
                             </Heading>
                           </div>
                         }
@@ -996,13 +996,20 @@ export default function ContentDrawer() {
 
                     {/* Conditional rendering for the image when all attractions are false */}
                     {areAllAttractionsFalse() && (
-                      <p>
-                        <img
-                          src={'/images/no_Attractions_Visited.jpg'}
-                          alt="All Attractions are False"
-                          style={{ maxWidth: '500px', height: '500px' }}
-                        />
-                      </p>
+                      <FlipCard
+                        frontContent={
+                          <img
+                            src={'/images/no_Attractions_Visited.jpg'}
+                            alt="All Attractions are False"
+                            style={{ maxWidth: '100%' }}
+                          />
+                        }
+                        backContent={
+                          <Heading size="md">
+                            You Have Not Visited Any Attractions Yet!
+                          </Heading>
+                        }
+                      />
                     )}
                   </TabPanel>
                 </TabPanels>
@@ -1038,7 +1045,6 @@ export default function ContentDrawer() {
                   paddingTop="10px"
                 />
                 <TabPanels>
-                  
                   <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
@@ -1065,12 +1071,14 @@ export default function ContentDrawer() {
                                     src={`/images/badgeimages/${badge}.jpg`}
                                     alt={badge}
                                     style={{
-                                      maxWidth: '100px',
+                                      maxWidth: !hasTouchScreen
+                                        ? '100px'
+                                        : '80px',
                                       height: !hasTouchScreen
                                         ? '100px'
                                         : '80px',
                                       marginRight: '10px',
-                                      border: '1px solid gold',
+                                      border: '1px solid orangered',
                                       borderRadius: '20px',
                                     }}
                                   />
@@ -1085,7 +1093,6 @@ export default function ContentDrawer() {
                                       You still have to get the{' '}
                                       {formattedBadgeName}!
                                     </p>
-                                    
                                   </div>
                                 </Flex>
                               </Flex>
@@ -1095,24 +1102,30 @@ export default function ContentDrawer() {
                         return null;
                       }
                     )}
-                    {areAllBadgesFalse() && (
-                      <p>
-                        {''}
-                        <br />
-                        <Heading>You Dont Have Any Badges Yet!</Heading>
-                        <br />
-                        <img
-                          src={'/images/badgeimages/no_badges.jpg'}
-                          alt="All Badges are True"
-                          style={{
-                            maxWidth: '500px',
-                            height: '500px',
-                            marginRight: '10px',
-                            border: '2px solid orangered',
-                            borderRadius: '5px',
-                          }}
-                        />
-                      </p>
+                    {areAllBadgesTrue() && (
+                      <FlipCard
+                        frontContent={
+                          <p>
+                            <img
+                              src={'/images/badgeimages/all_Badges.jpg'}
+                              alt="All Attractions are True"
+                              style={{
+                                width: '100%',
+                                marginRight: '10px',
+
+                                borderRadius: '5px',
+                              }}
+                            />
+                          </p>
+                        }
+                        backContent={
+                          <div>
+                            <Heading size="md">
+                              You've Got All The Badges!
+                            </Heading>
+                          </div>
+                        }
+                      />
                     )}
                   </TabPanel>
                   <TabPanel
@@ -1122,14 +1135,17 @@ export default function ContentDrawer() {
                   >
                     {Object.entries(globalUserInfo.data.badgeDO).map(
                       ([badge, status]) => {
-                      const badgeCreateTimeKey = `${badge}_CreateTime`;
-                      const badgeCreateTime = globalUserInfo.data.badgeDO[badgeCreateTimeKey];
+                        const badgeCreateTimeKey = `${badge}_CreateTime`;
+                        const badgeCreateTime =
+                          globalUserInfo.data.badgeDO[badgeCreateTimeKey];
 
-                        if (status === true && badgeCreateTime !== "3333-01-01T01:00:00") {
+                        if (
+                          status === true &&
+                          badgeCreateTime !== '3333-01-01T01:00:00'
+                        ) {
                           const formattedBadgeName = formatBadgeName(badge);
-                          console.log(badgeCreateTime,'badge time')
-                            
-                          
+                          console.log(badgeCreateTime, 'badge time');
+
                           return (
                             <Flex
                               border="2px solid gold"
@@ -1151,12 +1167,14 @@ export default function ContentDrawer() {
                                     src={`/images/badgeimages/${badge}.jpg`}
                                     alt={badge}
                                     style={{
-                                      maxWidth: '100px',
+                                      maxWidth: !hasTouchScreen
+                                        ? '100px'
+                                        : '80px',
                                       height: !hasTouchScreen
                                         ? '100px'
                                         : '80px',
                                       marginRight: '10px',
-                                      border: '1px solid orangered',
+                                      border: '1px solid gold',
                                       borderRadius: '20px',
                                     }}
                                   />
@@ -1168,10 +1186,10 @@ export default function ContentDrawer() {
                                     </Heading>
                                     <p>
                                       {' '}
-                                      You got the {formattedBadgeName} at {reformatDateTime(badgeCreateTime)} Great
+                                      You got the {formattedBadgeName} at{' '}
+                                      {reformatDateTime(badgeCreateTime)} Great
                                       Job!
                                     </p>
-                                    
                                   </div>
                                 </Flex>
                               </Flex>
@@ -1181,26 +1199,24 @@ export default function ContentDrawer() {
                         return null;
                       }
                     )}
-                    {areAllBadgesTrue() && (
+                    {areAllBadgesFalse() && (
                       <FlipCard
                         frontContent={
-                          <p>
-                            <img
-                              src={'/images/badgeimages/all_Badges.jpg'}
-                              alt="All Attractions are True"
-                              style={{
-                                maxWidth: '500px',
-                                height: '500px',
-                                marginRight: '10px',
-                                border: '2px solid orangered',
-                                borderRadius: '5px',
-                              }}
-                            />
-                          </p>
+                          <img
+                            src={'/images/badgeimages/no_badges.jpg'}
+                            alt="All Badges are False"
+                            style={{
+                              width: '100%',
+                              marginRight: '10px',
+                              borderRadius: '5px',
+                            }}
+                          />
                         }
                         backContent={
                           <div>
-                            <Heading>You've Got All The Badges!</Heading>
+                            <Heading size="md">
+                              You Do Not Have Any Badges Yet!
+                            </Heading>
                           </div>
                         }
                       />
@@ -1211,7 +1227,7 @@ export default function ContentDrawer() {
             </DrawerBody>
           </>
         )}
-        
+
         {activeDrawer === 'guide' && (
           <>
             <DrawerHeader>{`Guide`}</DrawerHeader>
