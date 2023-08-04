@@ -26,19 +26,6 @@ function App() {
   const { apisLoaded, setAPIIsLoaded, showLoading } = useContext(APIContext);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 810);
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Set initial value
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  useEffect(() => {
     detectTouchScreen();
   }, []);
 

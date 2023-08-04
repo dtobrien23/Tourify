@@ -492,19 +492,16 @@ export default function SignUpForm({}) {
       duration: 3000,
       isClosable: true,
     });
-    // 
-  axios
-  .get(`http://localhost:8001/api/user/test`)
-  .then(response => {
-    
-    onFeedbackModalClose(); 
-  })
-  .catch(error => {
-    console.error('Error submitting feedback:', error);
-    
-  });
-};
-
+    //
+    axios
+      .get(`http://localhost:8001/api/user/test`)
+      .then(response => {
+        onFeedbackModalClose();
+      })
+      .catch(error => {
+        console.error('Error submitting feedback:', error);
+      });
+  };
 
   const handleFeedbackCancel = () => {
     setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
@@ -515,13 +512,11 @@ export default function SignUpForm({}) {
     return <p>Loading...</p>;
   }
 
-  
-
   return (
     <Flex
       flexDirection={buttonsDirection}
-      minWidth={!hasTouchScreen && '190px'}
-      justifyContent={!hasTouchScreen ? 'flex-end' : 'center'}
+      minWidth={!hasTouchScreen || (!isMobile && '190px')}
+      justifyContent={!hasTouchScreen || !isMobile ? 'flex-end' : 'center'}
     >
       {' '}
       <Box
@@ -534,7 +529,7 @@ export default function SignUpForm({}) {
       />
       {userLoggedIn ? (
         <Menu width="fit-content">
-          {hasTouchScreen ? (
+          {hasTouchScreen || isMobile ? (
             <Box
               // display={{ base: 'block', md: 'none' }}
               style={{ zIndex: '2' }}
@@ -566,8 +561,8 @@ export default function SignUpForm({}) {
 
           <MenuList
             zIndex={5}
-            minW={hasTouchScreen && '150px'}
-            w={hasTouchScreen && 'fit-content'}
+            minW={hasTouchScreen || (isMobile && '150px')}
+            w={hasTouchScreen || (isMobile && 'fit-content')}
           >
             <MenuItem onClick={handleAddWalletClick}>Add NFT Wallet</MenuItem>
             <MenuItem onClick={handleFeedbackClick}>User Feedback</MenuItem>
@@ -579,7 +574,7 @@ export default function SignUpForm({}) {
         </Menu>
       ) : (
         <>
-          {!hasTouchScreen ? (
+          {!hasTouchScreen || !isMobile ? (
             <>
               <Flex mr={2}>
                 <Button
@@ -641,7 +636,7 @@ export default function SignUpForm({}) {
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        size={hasTouchScreen ? 'xs' : 'md'}
+        size={hasTouchScreen || isMobile ? 'xs' : 'md'}
       >
         <ModalOverlay />
         <ModalContent>
@@ -696,7 +691,7 @@ export default function SignUpForm({}) {
         isOpen={isDeleteAlertOpen}
         leastDestructiveRef={undefined}
         onClose={handleDeleteCancel}
-        size={hasTouchScreen ? 'xs' : 'md'}
+        size={hasTouchScreen || isMobile ? 'xs' : 'md'}
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -721,7 +716,7 @@ export default function SignUpForm({}) {
         zIndex={9999}
         isOpen={isNFTModalOpen}
         onClose={onNFTModalClose}
-        size={hasTouchScreen ? 'xs' : 'md'}
+        size={hasTouchScreen || isMobile ? 'xs' : 'md'}
       >
         <ModalOverlay />
         <ModalContent>
@@ -753,7 +748,7 @@ export default function SignUpForm({}) {
         zIndex={9999}
         isOpen={isFeedbackModalOpen}
         onClose={onFeedbackModalClose}
-        size={hasTouchScreen ? 'xs' : 'md'}
+        size={hasTouchScreen || isMobile ? 'xs' : 'md'}
       >
         <ModalOverlay />
         <ModalContent>

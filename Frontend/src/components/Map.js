@@ -27,6 +27,7 @@ export default function Map() {
     setIsDrawerOpen,
     selectedFilters,
     setSelectedFilters,
+    mapRef,
   } = useContext(MapContext);
 
   ////////////////
@@ -133,6 +134,7 @@ export default function Map() {
 
   return (
     <GoogleMap
+      ref={mapRef}
       zoom={mapZoom}
       center={mapCenter}
       options={mapOptions}

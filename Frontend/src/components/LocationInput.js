@@ -314,7 +314,10 @@ export default function LocationInput({}) {
 
   return (
     <Flex
-      w={inputWidth}
+      w={hasTouchScreen && inputWidth}
+      minWidth={!hasTouchScreen && '175px'}
+      width={!hasTouchScreen && '17vw'}
+      maxWidth={!hasTouchScreen && '17vw'}
       ml={1}
       alignItems="center"
       justifyContent="space-between"
@@ -323,7 +326,7 @@ export default function LocationInput({}) {
       {google && (
         <>
           <Flex
-            w={hasTouchScreen ? '100%' : '230px'}
+            w={hasTouchScreen ? '100%' : '100%'}
             h={hasTouchScreen && '35px'}
             alignItems="center"
           >

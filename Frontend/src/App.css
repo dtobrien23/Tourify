@@ -4,8 +4,11 @@
 }
 
 .map {
+  border-top: solid 1px orangered;
   height: calc(100vh - 79px);
-  width: 100vw;
+  width: 100%;
+  min-width: 1001px;
+  /* min-width: 100vw; */
 }
 
 .mobile-map {

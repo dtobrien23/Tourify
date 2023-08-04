@@ -48,7 +48,7 @@ export default function DestinationInput({}) {
   } else {
     return (
       <Flex
-        w={hasTouchScreen ? '100%' : '230px'}
+        w={hasTouchScreen ? '100%' : '100%'}
         justifyContent="space-between"
         h={hasTouchScreen && '35px'}
         alignItems="center"
@@ -74,7 +74,9 @@ export default function DestinationInput({}) {
             _hover={{ bg: 'white' }}
             _expanded={{ bg: 'white' }}
             style={{
-              maxWidth: '100%',
+              minWidth: !hasTouchScreen && '120px',
+              width: !hasTouchScreen && '12vw',
+              maxWidth: !hasTouchScreen ? '12vw' : '100%',
               maxHeight: '100%',
               borderRadius: '20px',
               textAlign: 'left',

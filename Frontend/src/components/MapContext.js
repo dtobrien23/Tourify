@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useRef, useEffect } from 'react';
 import { useToast } from '@chakra-ui/react';
 
 const MapContext = createContext();
@@ -34,6 +34,9 @@ const MapProvider = ({ children }) => {
   const [waitingOnRoute, setWaitingOnRoute] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [allowedLocation, setAllowedLocation] = useState(null);
+  const navBarRef = useRef(null);
+  const mapRef = useRef(null);
+  const [mapWidth, setMapWidth] = useState('100%');
 
   const toastNoSource = useToast();
   const toastNoDest = useToast();
@@ -213,6 +216,19 @@ const MapProvider = ({ children }) => {
     setInputColour('black');
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1125);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Set initial value
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <MapContext.Provider
       value={{
@@ -268,6 +284,9 @@ const MapProvider = ({ children }) => {
         closeMobileDrawer,
         allowedLocation,
         setAllowedLocation,
+        navBarRef,
+        mapRef,
+        mapWidth,
       }}
     >
       {children}

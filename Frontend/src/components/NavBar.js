@@ -11,15 +11,8 @@ import {
 import SignUpForm from './SignUpForm';
 import SearchBar from './SearchBar';
 import { MapContext } from './MapContext';
-import ParallaxDrawer from './ParallaxDrawer';
 
 const NavBar = React.forwardRef((props, ref) => {
-  // const [isLoggedIn, setIsLoggedIn] = useState(() => {
-  //   // Retrieve the logged-in status from the cache
-  //   const cachedStatus = localStorage.getItem('loggedInfo');
-  //   return cachedStatus === 'true'; // Convert to boolean
-  // });
-
   const toastNoSourceLocation = useToast();
 
   const {
@@ -33,6 +26,7 @@ const NavBar = React.forwardRef((props, ref) => {
     isLoggedIn,
     setIsLoggedIn,
     setIsMobileDrawerOpen,
+    navBarRef,
   } = useContext(MapContext);
 
   const handleLogin = () => {
@@ -51,6 +45,7 @@ const NavBar = React.forwardRef((props, ref) => {
 
   return (
     <Flex
+      ref={navBarRef}
       align="center"
       justify="space-between"
       h="75px"
@@ -61,9 +56,9 @@ const NavBar = React.forwardRef((props, ref) => {
       pr="10px"
       style={
         !hasTouchScreen
-          ? { borderBottom: 'solid 1px orangered' }
+          ? { borderBottom: '0' }
           : {
-              border: 'solid 1px orangered',
+              border: '0',
               borderRadius: '25px',
               padding: '5px',
             }
@@ -203,9 +198,7 @@ const NavBar = React.forwardRef((props, ref) => {
           </Text>
         </Button>
       </Flex>
-      {hasTouchScreen ? (
-        <div></div>
-      ) : (
+      {!hasTouchScreen && (
         <Flex>
           <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
         </Flex>
