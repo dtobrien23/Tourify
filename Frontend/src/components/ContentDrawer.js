@@ -190,8 +190,8 @@ export default function ContentDrawer() {
         // const apiEndpoint = 'http://192.168.23.129:8001/api/user/update';
         const cachedUserCredential = localStorage.getItem('userCredential');
 
-      const placeHolder = attractionNameAlias;
-      setPlaceHolderImaegUrl(placeHolder);
+        const placeHolder = attractionNameAlias;
+        setPlaceHolderImaegUrl(placeHolder);
 
         const idToken = cachedUserCredential; // get this from credential in signupform
         console.log(cachedUserCredential, 'this is the global credential');
@@ -548,11 +548,11 @@ export default function ContentDrawer() {
             duration: 6000,
             isClosable: true,
           });
-          
+
           // Call mintNft with the prompt and imageURL
-          await new Promise((resolve) => setTimeout(resolve, 60000));
+          await new Promise(resolve => setTimeout(resolve, 60000));
           console.log('60-second timer ended. Minting NFT now.');
-          
+
           await mintNft(prompt, imageURL, nftWalletAddress);
           console.log('NFT minted successfully.');
           setFile(null);
@@ -1196,7 +1196,7 @@ export default function ContentDrawer() {
             </DrawerBody>
           </>
         )}
-        
+
         {activeDrawer === 'guide' && (
           <>
             <DrawerHeader>{`Guide`}</DrawerHeader>

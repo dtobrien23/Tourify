@@ -161,7 +161,6 @@ export default function SignUpForm({}) {
   };
 
   const userInfoUpdate = async credentialResponse => {
-
     const cachedUserCredential = localStorage.getItem('userCredential');
     if (cachedUserCredential) {
       axios
@@ -462,12 +461,12 @@ export default function SignUpForm({}) {
   ///                     ////////
   ////////////////////////////////
 
-const { reward: confettiReward, isAnimating: isConfettiAnimating } =
-useReward('confettiReward', 'confetti', {
-  lifetime: 190,
-  elementSize: 16,
-  elementCount: 100,
-});
+  const { reward: confettiReward, isAnimating: isConfettiAnimating } =
+    useReward('confettiReward', 'confetti', {
+      lifetime: 190,
+      elementSize: 16,
+      elementCount: 100,
+    });
   const [feedbackInput, setFeedbackInput] = useState('');
 
   // Function to handle changes in the user feedback input field
@@ -486,7 +485,6 @@ useReward('confettiReward', 'confetti', {
   };
   const handleFeedbackEntry = feedbackInput => {
     setFeedbackInput('');
-    confettiReward();
     toastFeedback({
       title: 'Feedback Submitted.',
       description: 'Thankyou for the input to help us improve the site.',
@@ -498,10 +496,10 @@ useReward('confettiReward', 'confetti', {
     onFeedbackModalClose();
   };
 
-const handleFeedbackCancel = () => {
-  setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
-  onFeedbackModalClose();
-};
+  const handleFeedbackCancel = () => {
+    setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
+    onFeedbackModalClose();
+  };
 
   if (loading) {
     return <p>Loading...</p>;
