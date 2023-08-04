@@ -5,7 +5,7 @@ import {
   Button,
   Text,
   useToast,
-  useBreakpointValue
+  useBreakpointValue,
 } from '@chakra-ui/react';
 
 import SignUpForm from './SignUpForm';
@@ -49,15 +49,13 @@ const NavBar = React.forwardRef((props, ref) => {
     window.location.reload();
   };
 
-  
-
   return (
     <Flex
       align="center"
       justify="space-between"
       h="75px"
       //maxWidth="100vw"
-      width ="100vw"
+      width={!hasTouchScreen ? '100vw' : '100%'}
       // mt="10px"
       px="4px"
       pr="10px"
@@ -80,7 +78,6 @@ const NavBar = React.forwardRef((props, ref) => {
             src="logo.svg"
             alt="Tourify Logo"
             width="100%"
-            
           />
         </Box>
       )}
@@ -126,7 +123,6 @@ const NavBar = React.forwardRef((props, ref) => {
             src="/images/navbar-icons/recommender-icon.svg"
             alt="Recommender"
             style={{ paddingTop: '8px', width: '40px', height: '40px' }}
-            
           />
           <Text fontWeight="normal" fontSize="11px" pb="6px" m="0">
             Recommender
@@ -210,8 +206,7 @@ const NavBar = React.forwardRef((props, ref) => {
       {hasTouchScreen ? (
         <div></div>
       ) : (
-        
-        <Flex> 
+        <Flex>
           <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
         </Flex>
       )}

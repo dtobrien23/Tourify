@@ -827,10 +827,8 @@ export default function ContentDrawer() {
                               src={'/images/all_Attractions_Visited.jpg'}
                               alt="All Attractions are True"
                               style={{
-                                maxWidth: '500px',
-                                height: '500px',
+                                width: '100%',
                                 marginRight: '10px',
-                                border: '2px solid orangered',
                                 borderRadius: '5px',
                               }}
                             />
@@ -838,8 +836,8 @@ export default function ContentDrawer() {
                         }
                         backContent={
                           <div>
-                            <Heading>
-                              You've Visited All the Attractions!
+                            <Heading size="md">
+                              You Have Visited All the Attractions!
                             </Heading>
                           </div>
                         }
@@ -980,13 +978,20 @@ export default function ContentDrawer() {
 
                     {/* Conditional rendering for the image when all attractions are false */}
                     {areAllAttractionsFalse() && (
-                      <p>
-                        <img
-                          src={'/images/no_Attractions_Visited.jpg'}
-                          alt="All Attractions are False"
-                          style={{ maxWidth: '500px', height: '500px' }}
-                        />
-                      </p>
+                      <FlipCard
+                        frontContent={
+                          <img
+                            src={'/images/no_Attractions_Visited.jpg'}
+                            alt="All Attractions are False"
+                            style={{ maxWidth: '100%' }}
+                          />
+                        }
+                        backContent={
+                          <Heading size="md">
+                            You Have Not Visited Any Attractions Yet!
+                          </Heading>
+                        }
+                      />
                     )}
                   </TabPanel>
                 </TabPanels>
@@ -1052,7 +1057,9 @@ export default function ContentDrawer() {
                                     src={`/images/badgeimages/${badge}.jpg`}
                                     alt={badge}
                                     style={{
-                                      maxWidth: '100px',
+                                      maxWidth: !hasTouchScreen
+                                        ? '100px'
+                                        : '80px',
                                       height: !hasTouchScreen
                                         ? '100px'
                                         : '80px',
@@ -1092,12 +1099,10 @@ export default function ContentDrawer() {
                           <p>
                             <img
                               src={'/images/badgeimages/all_Badges.jpg'}
-                              alt="All Attractions are True"
+                              alt="All Badges are True"
                               style={{
-                                maxWidth: '500px',
-                                height: '500px',
+                                maxWidth: '100%',
                                 marginRight: '10px',
-                                border: '2px solid orangered',
                                 borderRadius: '5px',
                               }}
                             />
@@ -1105,7 +1110,9 @@ export default function ContentDrawer() {
                         }
                         backContent={
                           <div>
-                            <Heading>You've Got All The Badges!</Heading>
+                            <Heading size="md">
+                              You Have Got All The Badges!
+                            </Heading>
                           </div>
                         }
                       />
@@ -1137,7 +1144,9 @@ export default function ContentDrawer() {
                                     src={`/images/badgeimages/${badge}.jpg`}
                                     alt={badge}
                                     style={{
-                                      maxWidth: '100px',
+                                      maxWidth: !hasTouchScreen
+                                        ? '100px'
+                                        : '80px',
                                       height: !hasTouchScreen
                                         ? '100px'
                                         : '80px',
@@ -1172,23 +1181,28 @@ export default function ContentDrawer() {
                       }
                     )}
                     {areAllBadgesFalse() && (
-                      <p>
-                        {''}
-                        <br />
-                        <Heading>You Dont Have Any Badges Yet!</Heading>
-                        <br />
-                        <img
-                          src={'/images/badgeimages/no_badges.jpg'}
-                          alt="All Badges are True"
-                          style={{
-                            maxWidth: '500px',
-                            height: '500px',
-                            marginRight: '10px',
-                            border: '2px solid orangered',
-                            borderRadius: '5px',
-                          }}
-                        />
-                      </p>
+                      <FlipCard
+                        frontContent={
+                          <p>
+                            <img
+                              src={'/images/badgeimages/no_badges.jpg'}
+                              alt="All Badges are False"
+                              style={{
+                                width: '100%',
+                                marginRight: '10px',
+                                borderRadius: '5px',
+                              }}
+                            />
+                          </p>
+                        }
+                        backContent={
+                          <div>
+                            <Heading size="md">
+                              You Do Not Have Any Badges Yet!{' '}
+                            </Heading>
+                          </div>
+                        }
+                      />
                     )}
                   </TabPanel>
                 </TabPanels>

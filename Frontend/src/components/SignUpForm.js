@@ -425,9 +425,9 @@ export default function SignUpForm({}) {
             console.log(globalUserInfo, 'retrieving the cached info');
 
             toastWallet({
-              title: 'NFT Wallet Added!.',
+              title: 'NFT Wallet Added!',
               description:
-                'You can now mint NFTs when you get a badge!. Be sure to connect your wallet with OpenSea to see your NFTs!',
+                'You can now mint NFTs when you get a badge! Be sure to connect your wallet with OpenSea to see your NFTs',
               status: 'success',
               duration: 6000,
               isClosable: true,

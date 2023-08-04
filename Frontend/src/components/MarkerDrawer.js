@@ -86,8 +86,6 @@ function MarkerDrawer({
   //         const currentDayClosingTime =
   //           openingHours[currentDayKey.replace('Open', 'Close')];
 
- 
-
   if (!markerObject) {
     return null; // Return null when markerObject is null
   }
