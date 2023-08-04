@@ -324,36 +324,65 @@ export default function SignUpForm({}) {
     }
   };
 
-  const deleteAccount = async () => {
-    console.log(globalCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
 
-    if (globalCredential) {
+  const deleteAccount = async () => {
+    const cachedUserCredential = localStorage.getItem('userCredential');
+    console.log(cachedUserCredential, 'cached delete cred');
+  
+    if (cachedUserCredential) {
       axios
         .post(
-          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/delete?idTokenString=${globalCredential}`
-          `http://localhost:8001/api/user/delete?idTokenString=${globalCredential}`
-          // `http://192.168.23.129:8001/api/user/delete?idTokenString=${globalCredential}`
-        ) //user info, json w/ true false
+          `http://localhost:8001/api/user/delete?idTokenString=${cachedUserCredential}`
+        )
         .then(response => {
-          // if (response.data.code === 10004) {
-          setUserLoggedIn(false);
-          setIsLoggedIn(false);
-          localStorage.clear(); // Clear the cache
-
-          handleLogout();
-
+          if (response.data.code === 200) {
+            console.log(response, 'delete response!!!!');
+            setUserLoggedIn(false);
+            setIsLoggedIn(false);
+            localStorage.clear();
+            handleLogout();
+            toastLogin({
+              title: 'Account successfully deleted.',
+              description: 'We hope to see you again.',
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
+            onClose();
+          } else {
+            // Handle unsuccessful response
+            console.log(response, 'delete response error!!!!');
+            toastLogin({
+              title: 'Deletion Error.',
+              description: 'There was an error deleting your account.',
+              status: 'error',
+              duration: 3000,
+              isClosable: true,
+            });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+          // Handle Axios error
           toastLogin({
-            title: 'Account successfully deleted.',
-            description: 'We hope to see you again.',
-            status: 'success',
+            title: 'Request Error.',
+            description: 'There was an error sending the deletion request.',
+            status: 'error',
             duration: 3000,
             isClosable: true,
           });
-          onClose();
-        })
-        .catch(error => console.log(error));
+        });
+    } else {
+      toastLogin({
+        title: 'Credential Error.',
+        description: 'Please log out and login again and try again, please.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     }
   };
+  
 
   const handleDeleteConfirmation = () => {
     setDeleteAlertOpen(true);
@@ -404,16 +433,18 @@ export default function SignUpForm({}) {
   };
 
   const handleWalletEntry = walletInput => {
-    console.log(globalCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
+        const cachedUserCredential = localStorage.getItem('userCredential');
+    console.log(cachedUserCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
+
 
     if (
-      globalCredential &&
+      cachedUserCredential &&
       walletInput.startsWith('0x') &&
       walletInput.length === 42
     ) {
       axios
         .post(
-          `http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
+          `http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${cachedUserCredential}`
           // `http://192.168.23.129:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
         ) //Add Wallet address
         .then(response => {
@@ -440,7 +471,7 @@ export default function SignUpForm({}) {
             toastWallet({
               title: 'Google Credential Error',
               description:
-                'Please log out and login again to refresh the credential',
+                'Please log out and login again and try again.',
               status: 'error',
               duration: 6000,
               isClosable: true,
