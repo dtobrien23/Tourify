@@ -336,8 +336,6 @@ export default function LocationInput({}) {
               }}
               onPlaceChanged={handlePlaceSelect}
               options={autocompleteOptions}
-              menuStyle={{ backgroundColor: 'red', color: 'white' }}
-              itemStyle={{ fontSize: '100px' }}
             >
               <div className="tutorial-input">
                 <input
@@ -349,7 +347,8 @@ export default function LocationInput({}) {
                     paddingLeft: '8px',
                     borderRadius: '20px',
                     fontSize: '16px',
-                    width: !hasTouchScreen ? '115%' : '123%',
+                    // width: !hasTouchScreen ? '115%' : '123%',
+                    width: !hasTouchScreen ? '15vw' : '60vw',
                   }}
                 />
               </div>

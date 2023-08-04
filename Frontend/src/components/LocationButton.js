@@ -22,7 +22,7 @@ export default function LocationButton({
         />
       ) : (
         <Tooltip label="Set Geolocation" placement="bottom">
-          <Flex pl={!hasTouchScreen && '32px'} h="fit-content" w="fit-content">
+          <Flex h="fit-content" w="fit-content">
             <Button
               size="auto"
               mr={!hasTouchScreen ? '10px' : '6px'}
