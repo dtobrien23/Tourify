@@ -255,11 +255,13 @@ public class AttractionService {
             LocalTime futureLocalTime = futureDateTime.toLocalTime();        // Extract the time part from the current date-time
             if (attractionOpen!=null && attractionClose!=null) {  // The database is storing empty if the attraction is not open that day
                 // Check if current time is in between the start and end times
-                if (futureLocalTime.isAfter(attractionOpen.minusHours(1)) && futureLocalTime.isBefore(attractionClose.plusHours(1))) {
+                if (futureLocalTime.isAfter(attractionOpen.minusMinutes(59)) && futureLocalTime.isBefore(attractionClose.plusMinutes(59))) {
                     OpenClose.add(true);
                     System.out.println("111111111");
                 } else {
                     OpenClose.add(false);
+                    System.out.println(attractionOpen.minusHours(1));
+                    System.out.println(attractionClose.plusHours(1));
                     System.out.println("222222222");
                 }
             }
