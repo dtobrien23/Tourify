@@ -8,11 +8,9 @@ import {
   MenuDivider,
   Button,
   Image,
-  useConst,
 } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { MapContext } from './MapContext';
-import attractions from '../static/attractions.json';
 import { APIContext } from './APIContext';
 
 export default function DestinationInput({}) {
@@ -20,9 +18,7 @@ export default function DestinationInput({}) {
   const { apiAttractions, apiLoaded } = useContext(APIContext);
   const {
     selectedAttraction,
-    setSelectedAttraction,
     inputColour,
-    setInputColour,
     handleAttractionSelect,
     hasTouchScreen,
   } = useContext(MapContext);

@@ -10,13 +10,6 @@ export default function LocationButton({
 }) {
   const { geolocation, isHovered, setIsHovered } = useContext(MapContext);
 
-  // const handleMouseEnter = () => {
-  //   setIsHovered(true);
-  // };
-
-  // const handleMouseLeave = () => {
-  //   setIsHovered(false);
-  // };
 
   return (
     <>

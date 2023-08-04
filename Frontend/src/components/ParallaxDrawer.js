@@ -8,7 +8,6 @@ import {
   Divider,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
-import ParallaxContent from './ParallaxContent';
 
 const ParallaxDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);

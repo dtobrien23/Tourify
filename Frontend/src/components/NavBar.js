@@ -2,17 +2,12 @@ import React, { useState, useContext } from 'react';
 import {
   Box,
   Flex,
-  TabList,
-  Tab,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
   Button,
   Text,
-  MenuItem,
   useToast,
+  useBreakpointValue
 } from '@chakra-ui/react';
+
 import SignUpForm from './SignUpForm';
 import SearchBar from './SearchBar';
 import { MapContext } from './MapContext';
@@ -42,6 +37,7 @@ const NavBar = React.forwardRef((props, ref) => {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
+    // isDisabled(true);
   };
 
   const handleLogout = () => {
@@ -53,12 +49,15 @@ const NavBar = React.forwardRef((props, ref) => {
     window.location.reload();
   };
 
+  
+
   return (
     <Flex
       align="center"
       justify="space-between"
       h="75px"
-      maxWidth="100%"
+      //maxWidth="100vw"
+      width ="100vw"
       // mt="10px"
       px="4px"
       pr="10px"
@@ -80,6 +79,8 @@ const NavBar = React.forwardRef((props, ref) => {
             onClick={handleLogoClick}
             src="logo.svg"
             alt="Tourify Logo"
+            width="100%"
+            
           />
         </Box>
       )}
@@ -125,6 +126,7 @@ const NavBar = React.forwardRef((props, ref) => {
             src="/images/navbar-icons/recommender-icon.svg"
             alt="Recommender"
             style={{ paddingTop: '8px', width: '40px', height: '40px' }}
+            
           />
           <Text fontWeight="normal" fontSize="11px" pb="6px" m="0">
             Recommender
@@ -204,10 +206,12 @@ const NavBar = React.forwardRef((props, ref) => {
             Guide
           </Text>
         </Button>
-        {/* <ParallaxDrawer /> */}
       </Flex>
-      {!hasTouchScreen && (
-        <Flex>
+      {hasTouchScreen ? (
+        <div></div>
+      ) : (
+        
+        <Flex> 
           <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
         </Flex>
       )}

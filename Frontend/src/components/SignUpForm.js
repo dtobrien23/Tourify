@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { NFTStorage } from 'nft.storage';
 import {
   Button,
   useDisclosure,
@@ -70,7 +69,6 @@ export default function SignUpForm({}) {
   const toastSignupError = useToast();
   const toastLoginError = useToast();
   const toastBadge = useToast();
-  const toastNFT = useToast();
   const toastUpdate = useToast();
   const toastUpdateError = useToast();
   const toastWallet = useToast();
@@ -163,10 +161,7 @@ export default function SignUpForm({}) {
   };
 
   const userInfoUpdate = async credentialResponse => {
-    //console.log(credentialResponse, 'THIS IS THE CRED for checkin');
-    // const { checkinCredential } = credentialResponse;
 
-    //setGlobalCredential(credentialResponse.credential); // Set the credential as a global variable
     const cachedUserCredential = localStorage.getItem('userCredential');
     if (cachedUserCredential) {
       axios
@@ -189,8 +184,6 @@ export default function SignUpForm({}) {
             localStorage.setItem('userInfo', JSON.stringify(response.data));
 
             // Cache the user credential
-            //localStorage.setItem('userCredential', globalCredential);
-            //reset checkinstate to false
             setCheckinState(false);
 
             toastUpdate({
@@ -203,8 +196,6 @@ export default function SignUpForm({}) {
 
             setUserInfoFetched(true);
           } else {
-            //setUserLoggedIn(false);
-            //setIsLoggedIn(false);
             toastUpdateError({
               title: 'Update Error.',
               description: 'Error with update, please please refresh page.',
@@ -471,12 +462,12 @@ export default function SignUpForm({}) {
   ///                     ////////
   ////////////////////////////////
 
-  const { reward: confettiReward, isAnimating: isConfettiAnimating } =
-    useReward('confettiReward', 'confetti', {
-      lifetime: 2400,
-      elementSize: 16,
-      elementCount: 100,
-    });
+const { reward: confettiReward, isAnimating: isConfettiAnimating } =
+useReward('confettiReward', 'confetti', {
+  lifetime: 190,
+  elementSize: 16,
+  elementCount: 100,
+});
   const [feedbackInput, setFeedbackInput] = useState('');
 
   // Function to handle changes in the user feedback input field
@@ -507,10 +498,10 @@ export default function SignUpForm({}) {
     onFeedbackModalClose();
   };
 
-  const handleFeedbackCancel = () => {
-    setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
-    onFeedbackModalClose();
-  };
+const handleFeedbackCancel = () => {
+  setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
+  onFeedbackModalClose();
+};
 
   if (loading) {
     return <p>Loading...</p>;

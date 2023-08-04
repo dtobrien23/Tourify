@@ -1,12 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
+  
   Flex,
   Tab,
   Tabs,
@@ -31,24 +25,13 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   const { apiAttractions, attractionsWithBusyness } = useContext(APIContext);
   const {
     activeDrawer,
-    isDrawerOpen,
     setIsDrawerOpen,
-    sourceCoords,
-    setSourceCoords,
     geolocation,
     handleAttractionSelect,
     hasTouchScreen,
   } = useContext(MapContext);
 
-  //geolocation, cant be null or error occurs
-  // const userLocation = geolocation
-  //   ? { lat: geolocation.latitude, lng: geolocation.longitude }
-  //   : { lat: 40.7484405, lng: -73.9856974 }; // hardcoded user location as a fallback if user opts out
-
-  // console.log(
-  //   userLocation,
-  //   'this is reformatted userlocation from geolocation'
-  // );
+  
 
   const [nearestAttractions, setNearestAttractions] = useState([]);
   const [quietestAttractions, setQuietestAttractions] = useState([]);

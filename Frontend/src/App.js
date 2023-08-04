@@ -1,18 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Map from './components/Map';
-import AttractionsList from './components/AttractionsList';
 import NavBar from './components/NavBar';
 import {
   ChakraProvider,
-  Box,
   theme,
-  Tabs,
-  TabPanels,
-  TabPanel,
   Flex,
   CircularProgress,
 } from '@chakra-ui/react';
-import BadgePanel from './components/BadgePanel';
 import './App.css';
 import { MapContext } from './components/MapContext';
 import { APIContext } from './components/APIContext';

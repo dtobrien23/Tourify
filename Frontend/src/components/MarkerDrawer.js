@@ -37,14 +37,12 @@ function MarkerDrawer({
   setActivePredButton,
 }) {
   const {
-    apiAttractions,
     fetchBusynessPredictions,
     day1Params,
     day2Params,
     day3Params,
     day4Params,
     chartVisible,
-    busynessPred,
     activeChart,
     attractionsWithBusyness,
   } = useContext(APIContext);
@@ -88,43 +86,7 @@ function MarkerDrawer({
   //         const currentDayClosingTime =
   //           openingHours[currentDayKey.replace('Open', 'Close')];
 
-  //         if (
-  //           currentDayOpeningTime !== null &&
-  //           currentDayClosingTime !== null
-  //         ) {
-  //           const currentHoursEDT = new Date(currentTimeEDT).getHours();
-  //           const currentMinutesEDT = new Date(currentTimeEDT).getMinutes();
-  //           const openingHour = parseInt(currentDayOpeningTime.split(':')[0]);
-  //           const openingMinute = parseInt(currentDayOpeningTime.split(':')[1]);
-  //           const closingHour = parseInt(currentDayClosingTime.split(':')[0]);
-  //           const closingMinute = parseInt(currentDayClosingTime.split(':')[1]);
-
-  //           if (
-  //             (currentHoursEDT > openingHour ||
-  //               (currentHoursEDT === openingHour &&
-  //                 currentMinutesEDT >= openingMinute)) &&
-  //             (currentHoursEDT < closingHour ||
-  //               (currentHoursEDT === closingHour &&
-  //                 currentMinutesEDT < closingMinute))
-  //           ) {
-  //             console.log(`${attraction.name} is open right now.`);
-  //             attraction.isOpen = true;
-  //           } else {
-  //             console.log(
-  //               `${attraction.name} is open today but not right now.`
-  //             );
-  //             attraction.isOpen = false;
-  //           }
-  //         } else {
-  //           console.log(`${attraction.name} is closed today.`);
-  //           attraction.isOpen = false;
-  //         }
-  //         setOpeningHoursAdded(true);
-  //       });
-  //     }
-  //   };
-  //   checkIsAttractionOpen();
-  // }, [attractionsWithBusyness]);
+ 
 
   if (!markerObject) {
     return null; // Return null when markerObject is null
