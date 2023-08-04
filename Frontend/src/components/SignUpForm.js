@@ -493,9 +493,19 @@ useReward('confettiReward', 'confetti', {
       duration: 3000,
       isClosable: true,
     });
+    // 
+  axios
+  .get(`http://localhost:8001/api/user/test`)
+  .then(response => {
+    
+    onFeedbackModalClose(); 
+  })
+  .catch(error => {
+    console.error('Error submitting feedback:', error);
+    
+  });
+};
 
-    onFeedbackModalClose();
-  };
 
 const handleFeedbackCancel = () => {
   setFeedbackInput(''); // Clear the input field when "Cancel" is clicked
