@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
 
 const MapContext = createContext();
@@ -10,7 +10,7 @@ const MapProvider = ({ children }) => {
     lat: 40.755091,
     lng: -73.978285,
   });
-  const [sliderList, setSliderList] = useState(null);
+  // const [sliderList, setSliderList] = useState(null);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
@@ -29,14 +29,21 @@ const MapProvider = ({ children }) => {
   const [isBadgesDrawerOpen, setIsBadgesDrawerOpen] = useState(false); // for My Badges drawer
   const [hasTouchScreen, setHasTouchScreen] = useState(null);
   const [inputValue, setInputValue] = useState('');
-  const [inputColour, setInputColour] = useState('#B5BBC6');
-  const [attractionsWithBusyness, setAttractionsWithBusyness] = useState(null);
+  const [inputColour, setInputColour] = useState('#718096');
+  const [isHovered, setIsHovered] = useState(false);
+  const [waitingOnRoute, setWaitingOnRoute] = useState(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
+  const [allowedLocation, setAllowedLocation] = useState(null);
 
   const toastNoSource = useToast();
   const toastNoDest = useToast();
   const toastNothing = useToast();
   const toastZeroResults = useToast();
   const toastDirectionsError = useToast();
+
+  const closeMobileDrawer = () => {
+    setIsMobileDrawerOpen(false);
+  };
 
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#mobile_device_detection
   const detectTouchScreen = () => {
@@ -62,6 +69,12 @@ const MapProvider = ({ children }) => {
     }
   };
 
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    // Retrieve the logged-in status from the cache
+    const cachedStatus = localStorage.getItem('loggedInfo');
+    return cachedStatus === 'true'; // Convert to boolean
+  });
+
   const google = window.google;
 
   /////////////
@@ -70,6 +83,7 @@ const MapProvider = ({ children }) => {
 
   async function calculateRoute() {
     if (geolocation && selectedAttraction) {
+      setWaitingOnRoute(true);
       if (directionsRenderers.length !== 0) {
         for (const renderer of directionsRenderers) {
           renderer.setMap(null);
@@ -120,6 +134,7 @@ const MapProvider = ({ children }) => {
             status: 'error',
             duration: 3000,
             isClosable: true,
+            containerStyle: { maxWidth: '80vw' },
           });
         } else {
           toastDirectionsError({
@@ -129,6 +144,7 @@ const MapProvider = ({ children }) => {
             status: 'error',
             duration: 3000,
             isClosable: true,
+            containerStyle: { maxWidth: '80vw' },
           });
         }
       }
@@ -139,6 +155,7 @@ const MapProvider = ({ children }) => {
         status: 'error',
         duration: 3000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     } else if (selectedAttraction) {
       toastNoSource({
@@ -147,6 +164,7 @@ const MapProvider = ({ children }) => {
         status: 'error',
         duration: 3000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     } else {
       toastNothing({
@@ -155,8 +173,10 @@ const MapProvider = ({ children }) => {
         status: 'error',
         duration: 3000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     }
+    setWaitingOnRoute(false);
   }
 
   function clearRoute() {
@@ -173,16 +193,24 @@ const MapProvider = ({ children }) => {
       }
       setLocationMarker([]);
     }
-    setInputColour('#B5BBC6');
+    setInputColour('#718096');
     setSelectedAttraction(null);
     setSourceCoords(null);
     setInputValue('');
+    setGeolocation(null);
+    setAllowedLocation(null);
+    setIsHovered(false); // to turn the location button back grey
   }
 
   const [buttonState, setButtonState] = useState();
   const handleRecommenderClick = () => {
     //state opens drawer
     setButtonState(true);
+  };
+
+  const handleAttractionSelect = attraction => {
+    setSelectedAttraction(attraction);
+    setInputColour('black');
   };
 
   return (
@@ -225,8 +253,21 @@ const MapProvider = ({ children }) => {
         setInputColour,
         sourceCoords,
         setSourceCoords,
-        attractionsWithBusyness,
-        setAttractionsWithBusyness,
+        isHovered,
+        setIsHovered,
+        waitingOnRoute,
+        handleAttractionSelect,
+        selectedFilters,
+        setSelectedFilters,
+        // sliderList,
+        // setSliderList,
+        isLoggedIn,
+        setIsLoggedIn,
+        isMobileDrawerOpen,
+        setIsMobileDrawerOpen,
+        closeMobileDrawer,
+        allowedLocation,
+        setAllowedLocation,
       }}
     >
       {children}

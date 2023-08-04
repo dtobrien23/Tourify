@@ -13,15 +13,22 @@ import {
   TabList,
   TabPanel,
   TabPanels,
+  Divider,
   useForceUpdate,
   SimpleGrid,
   Heading,
+  Button,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 import { APIContext } from './APIContext';
+import { FaWalking } from 'react-icons/fa';
 
 export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
-  const { apiAttractions } = useContext(APIContext);
+  const { apiAttractions, attractionsWithBusyness } = useContext(APIContext);
   const {
     activeDrawer,
     isDrawerOpen,
@@ -29,7 +36,8 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
     sourceCoords,
     setSourceCoords,
     geolocation,
-    attractionsWithBusyness,
+    handleAttractionSelect,
+    hasTouchScreen,
   } = useContext(MapContext);
 
   //geolocation, cant be null or error occurs
@@ -158,12 +166,14 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
           const newIndex = nearestIndex + quietestIndex;
 
           combinedAttractionsArray.push({
-            name: matchingAttraction.name,
-            id: matchingAttraction.id,
+            // name: matchingAttraction.name,
+            // id: matchingAttraction.id,
+            // businessRate: matchingAttraction.businessRate,
+            // distance: matchingAttraction.distance,
+            // name_alias: matchingAttraction.name_alias,
+            // isOpen: matchingAttraction.isOpen,
+            ...matchingAttraction,
             combinedIndex: newIndex,
-            businessRate: matchingAttraction.businessRate,
-            distance: matchingAttraction.distance,
-            name_alias: matchingAttraction.name_alias,
           });
         }
       });
@@ -185,102 +195,466 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
   return (
     <>
-      <Tabs>
-        <TabList>
-          <Tab>Nearest Attractions</Tab>
-          <Tab>Quietest Attractions</Tab>
-          <Tab>Nearest + Quietest</Tab>
+      <Tabs variant="soft-rounded" justifyContent="space-evenly">
+        <TabList width="100%">
+          <Tab
+            _selected={{ color: 'white', bg: 'orangered' }}
+            m="0px 5px 0px 5px"
+            width="33.3%"
+          >
+            Nearest
+          </Tab>
+          <Tab
+            _selected={{ color: 'white', bg: 'orangered' }}
+            m="0px 5px 0px 5px"
+            width="33.3%"
+          >
+            Quietest
+          </Tab>
+          <Tab
+            _selected={{ color: 'white', bg: 'orangered' }}
+            m="0px 5px 0px 5px"
+            width="33.3%"
+          >
+            Best
+          </Tab>
         </TabList>
-
+        <Divider
+          orientation="horizontal"
+          borderColor="orangered"
+          paddingTop="10px"
+        />
         <TabPanels>
-          <TabPanel>
+          <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
             {nearestAttractions.map(attraction => (
-              <SimpleGrid
-                alignItems="left"
-                justifyItems="left"
-                border="3px solid orangered"
-                borderRadius="20px"
-                marginTop="5px"
-                marginLeft="10px"
-                overflow="hidden"
-                spacing={8}
-                p="10px"
-              >
-                <Flex key={attraction.id} mb={4}>
-                  <p>
-                    {' '}
-                    <img
-                      src={`/images/${attraction.name_alias}.jpg`}
-                      alt={attraction.name_alias}
-                      style={{
-                        width: '100px',
-                        height: '100px',
-                        marginRight: '10px',
-                        border: '3px solid orangered',
-                        borderRadius: '5px',
-                      }}
-                    />
-                  </p>
-
-                  <div>
-                    <Heading size="md">{attraction.name}</Heading>{' '}
-                    <p>Busyness Score: {attraction.businessRate}</p>
-                    <p>Distance: {attraction.distance}</p>
-                  </div>
-                </Flex>
-              </SimpleGrid>
+              <>
+                {attraction.isOpen === true && (
+                  <Flex
+                    border="2px solid orangered"
+                    borderRadius="20px"
+                    marginTop="5px"
+                    overflow="hidden"
+                    spacing="20px"
+                    p="10px"
+                    width={hasTouchScreen ? '100%' : '425px'}
+                    mb="15px"
+                    onClick={
+                      hasTouchScreen
+                        ? () => {
+                            handleAttractionSelect(attraction);
+                            setIsDrawerOpen(false);
+                          }
+                        : null
+                    }
+                  >
+                    <Flex
+                      key={attraction}
+                      // mb={4}
+                      width="100%"
+                      flexDirection="column"
+                    >
+                      <Flex flexDirection="row">
+                        {' '}
+                        <img
+                          src={`/images/${attraction.name_alias}.jpg`}
+                          alt={attraction.name_alias}
+                          style={{
+                            maxWidth: '100px',
+                            height: !hasTouchScreen ? '100px' : '80px',
+                            marginRight: '10px',
+                            // border: '2px solid orangered',
+                            borderRadius: '20px',
+                          }}
+                        />
+                        <div style={{ width: '100%' }}>
+                          <Heading size={!hasTouchScreen ? 'md' : 'sm'}>
+                            {attraction.name}
+                          </Heading>{' '}
+                          {/* <p> {attractionInfo.full_address}</p> */}
+                          <Flex
+                            mt="10px"
+                            alignItems="center"
+                            justifyContent="space-between"
+                          >
+                            <Flex
+                              flexDirection={!hasTouchScreen ? 'column' : 'row'}
+                            >
+                              <Alert
+                                pl="0"
+                                width="fit-content"
+                                status="info"
+                                colorScheme={'white'}
+                                borderRadius={20}
+                                mt="-10px"
+                              >
+                                <Flex alignItems="center">
+                                  <AlertIcon
+                                    boxSize={5}
+                                    mr="8px"
+                                    color={
+                                      attraction.isOpen === false
+                                        ? 'grey'
+                                        : attraction.businessRate < 35
+                                        ? 'green'
+                                        : 35 <= attraction.businessRate &&
+                                          attraction.businessRate < 70
+                                        ? 'gold'
+                                        : 'red'
+                                    }
+                                  />
+                                  <Flex flexDirection="column">
+                                    <AlertTitle>
+                                      {attraction.isOpen === false
+                                        ? 'Closed'
+                                        : attraction.businessRate < 35
+                                        ? 'Quiet'
+                                        : 35 <= attraction.businessRate &&
+                                          attraction.businessRate < 70
+                                        ? 'Not Too Busy'
+                                        : 'Busy'}
+                                    </AlertTitle>
+                                    <AlertDescription>
+                                      <p>
+                                        Busyness Index:&nbsp;
+                                        {attraction.businessRate}
+                                      </p>
+                                    </AlertDescription>
+                                  </Flex>
+                                </Flex>
+                              </Alert>
+                              <Flex alignItems="center">
+                                <Flex>
+                                  <FaWalking
+                                    size="20"
+                                    // style={{ marginRight: '3px' }}
+                                  />
+                                </Flex>
+                                <Flex maxW="100%">
+                                  &nbsp;&nbsp;
+                                  <p>Distance: {attraction.distance}</p>
+                                </Flex>
+                              </Flex>
+                            </Flex>
+                            {!hasTouchScreen && (
+                              <Flex justifyContent="flex-end">
+                                <Button
+                                  bg="orange"
+                                  _hover={{
+                                    bg: 'orangered',
+                                    color: 'white',
+                                  }}
+                                  style={{
+                                    color: 'white',
+                                    border: 'solid 1px orangered',
+                                    borderRadius: '20px',
+                                    marginBottom: '12px',
+                                    justifySelf: 'flex-end',
+                                  }}
+                                  onClick={() => {
+                                    handleAttractionSelect(attraction);
+                                    setIsDrawerOpen(false);
+                                  }}
+                                >
+                                  Go Here!
+                                </Button>
+                              </Flex>
+                            )}
+                          </Flex>
+                        </div>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                )}
+              </>
             ))}
           </TabPanel>
-          <TabPanel>
+          <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
             {quietestAttractions.map(attraction => (
-              <Flex key={attraction.id} mb={4}>
-                <p>
-                  {' '}
-                  <img
-                    src={`/images/${attraction.name_alias}.jpg`}
-                    alt={attraction.name_alias}
-                    style={{
-                      width: '100px',
-                      height: '100px',
-                      marginRight: '10px',
-                      border: '3px solid orangered',
-                      borderRadius: '5px',
-                    }}
-                  />
-                </p>
-                <div>
-                  <Heading size="md">{attraction.name}</Heading>{' '}
-                  <p>Busyness Score: {attraction.businessRate}</p>
-                  <p>Distance: {attraction.distance}</p>
-                </div>
-              </Flex>
+              <>
+                {attraction.isOpen === true && (
+                  <Flex
+                    border="2px solid orangered"
+                    borderRadius="20px"
+                    marginTop="5px"
+                    overflow="hidden"
+                    spacing="20px"
+                    p="10px"
+                    width={hasTouchScreen ? '100%' : '425px'}
+                    mb="15px"
+                    onClick={
+                      hasTouchScreen
+                        ? () => {
+                            handleAttractionSelect(attraction);
+                            setIsDrawerOpen(false);
+                          }
+                        : null
+                    }
+                  >
+                    <Flex
+                      key={attraction}
+                      // mb={4}
+                      width="100%"
+                      flexDirection="column"
+                    >
+                      <Flex flexDirection="row">
+                        {' '}
+                        <img
+                          src={`/images/${attraction.name_alias}.jpg`}
+                          alt={attraction.name_alias}
+                          style={{
+                            maxWidth: '100px',
+                            height: !hasTouchScreen ? '100px' : '80px',
+                            marginRight: '10px',
+                            // border: '2px solid orangered',
+                            borderRadius: '20px',
+                          }}
+                        />
+                        <div style={{ width: '100%' }}>
+                          <Heading size={!hasTouchScreen ? 'md' : 'sm'}>
+                            {attraction.name}
+                          </Heading>{' '}
+                          {/* <p> {attractionInfo.full_address}</p> */}
+                          <Flex
+                            mt="10px"
+                            alignItems="center"
+                            justifyContent="space-between"
+                          >
+                            <Flex flexDirection="column">
+                              <Alert
+                                pl="0"
+                                width="fit-content"
+                                status="info"
+                                colorScheme={'white'}
+                                borderRadius={20}
+                                mt="-10px"
+                              >
+                                <Flex alignItems="center">
+                                  <AlertIcon
+                                    boxSize={5}
+                                    mr="8px"
+                                    color={
+                                      attraction.isOpen === false
+                                        ? 'grey'
+                                        : attraction.businessRate < 35
+                                        ? 'green'
+                                        : 35 <= attraction.businessRate &&
+                                          attraction.businessRate < 70
+                                        ? 'gold'
+                                        : 'red'
+                                    }
+                                  />
+                                  <Flex flexDirection="column">
+                                    <AlertTitle>
+                                      {attraction.isOpen === false
+                                        ? 'Closed'
+                                        : attraction.businessRate < 35
+                                        ? 'Quiet'
+                                        : 35 <= attraction.businessRate &&
+                                          attraction.businessRate < 70
+                                        ? 'Not Too Busy'
+                                        : 'Busy'}
+                                    </AlertTitle>
+                                    <AlertDescription>
+                                      <p>
+                                        Busyness Index:&nbsp;
+                                        {attraction.businessRate}
+                                      </p>
+                                    </AlertDescription>
+                                  </Flex>
+                                </Flex>
+                              </Alert>
+                              <Flex alignItems="center">
+                                <Flex h="100%">
+                                  <FaWalking
+                                    size="20"
+                                    // style={{ marginRight: '3px' }}
+                                  />
+                                </Flex>
+                                <Flex maxW="100%">
+                                  &nbsp;&nbsp;
+                                  <p>Distance: {attraction.distance}</p>
+                                </Flex>
+                              </Flex>
+                            </Flex>
+                            {!hasTouchScreen && (
+                              <Flex justifyContent="flex-end">
+                                <Button
+                                  bg="orange"
+                                  _hover={{
+                                    bg: 'orangered',
+                                    color: 'white',
+                                  }}
+                                  style={{
+                                    color: 'white',
+                                    border: 'solid 1px orangered',
+                                    borderRadius: '20px',
+                                    marginBottom: '12px',
+                                    justifySelf: 'flex-end',
+                                  }}
+                                  onClick={
+                                    () => {
+                                      handleAttractionSelect(attraction);
+                                      setIsDrawerOpen(false);
+                                    }
+                                    // mintNft()
+                                  }
+                                >
+                                  Go Here!
+                                </Button>
+                              </Flex>
+                            )}
+                          </Flex>
+                        </div>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                )}
+              </>
             ))}
           </TabPanel>
-          <TabPanel>
+          <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
             {combinedAttractions &&
               combinedAttractions.map(attraction => (
-                <Flex key={attraction.id} mb={4}>
-                  <p>
-                    {' '}
-                    <img
-                      src={`/images/${attraction.name_alias}.jpg`}
-                      alt={attraction.name_alias}
-                      style={{
-                        width: '100px',
-                        height: '100px',
-                        marginRight: '10px',
-                        border: '3px solid orangered',
-                        borderRadius: '5px',
-                      }}
-                    />
-                  </p>
-                  <div>
-                    <Heading size="md">{attraction.name}</Heading>{' '}
-                    <p>Busyness Score: {attraction.businessRate}</p>
-                    <p>Distance: {attraction.distance}</p>
-                    <p>Combined Score: {attraction.combinedIndex}</p>
-                  </div>
-                </Flex>
+                <>
+                  {attraction.isOpen === true && (
+                    <Flex
+                      border="2px solid orangered"
+                      borderRadius="20px"
+                      marginTop="5px"
+                      overflow="hidden"
+                      spacing="20px"
+                      p="10px"
+                      width={hasTouchScreen ? '100%' : '425px'}
+                      mb="15px"
+                      onClick={
+                        hasTouchScreen
+                          ? () => {
+                              handleAttractionSelect(attraction);
+                              setIsDrawerOpen(false);
+                            }
+                          : null
+                      }
+                    >
+                      <Flex
+                        key={attraction}
+                        // mb={4}
+                        width="100%"
+                        flexDirection="column"
+                      >
+                        <Flex flexDirection="row">
+                          {' '}
+                          <img
+                            src={`/images/${attraction.name_alias}.jpg`}
+                            alt={attraction.name_alias}
+                            style={{
+                              maxWidth: '100px',
+                              height: !hasTouchScreen ? '100px' : '80px',
+                              marginRight: '10px',
+                              // border: '2px solid orangered',
+                              borderRadius: '20px',
+                            }}
+                          />
+                          <div style={{ width: '100%' }}>
+                            <Heading size={!hasTouchScreen ? 'md' : 'sm'}>
+                              {attraction.name}
+                            </Heading>{' '}
+                            {/* <p> {attractionInfo.full_address}</p> */}
+                            <Flex
+                              mt="10px"
+                              alignItems="center"
+                              justifyContent="space-between"
+                            >
+                              <Flex flexDirection="column">
+                                <Alert
+                                  pl="0"
+                                  width="fit-content"
+                                  status="info"
+                                  colorScheme={'white'}
+                                  borderRadius={20}
+                                  mt="-10px"
+                                >
+                                  <Flex alignItems="center">
+                                    <AlertIcon
+                                      boxSize={5}
+                                      mr="8px"
+                                      color={
+                                        attraction.isOpen === false
+                                          ? 'grey'
+                                          : attraction.businessRate < 35
+                                          ? 'green'
+                                          : 35 <= attraction.businessRate &&
+                                            attraction.businessRate < 70
+                                          ? 'gold'
+                                          : 'red'
+                                      }
+                                    />
+                                    <Flex flexDirection="column">
+                                      <AlertTitle>
+                                        {attraction.isOpen === false
+                                          ? 'Closed'
+                                          : attraction.businessRate < 35
+                                          ? 'Quiet'
+                                          : 35 <= attraction.businessRate &&
+                                            attraction.businessRate < 70
+                                          ? 'Not Too Busy'
+                                          : 'Busy'}
+                                      </AlertTitle>
+                                      <AlertDescription>
+                                        <p>
+                                          Busyness Index:&nbsp;
+                                          {attraction.businessRate}
+                                        </p>
+                                      </AlertDescription>
+                                    </Flex>
+                                  </Flex>
+                                </Alert>
+                                <Flex alignItems="center">
+                                  <Flex h="100%">
+                                    <FaWalking
+                                      size="20"
+                                      // style={{ marginRight: '3px' }}
+                                    />
+                                  </Flex>
+                                  <Flex maxW="100%">
+                                    &nbsp;&nbsp;
+                                    <p>Distance: {attraction.distance}</p>
+                                  </Flex>
+                                </Flex>
+                              </Flex>
+                              {!hasTouchScreen && (
+                                <Flex justifyContent="flex-end">
+                                  <Button
+                                    bg="orange"
+                                    _hover={{
+                                      bg: 'orangered',
+                                      color: 'white',
+                                    }}
+                                    style={{
+                                      color: 'white',
+                                      border: 'solid 1px orangered',
+                                      borderRadius: '20px',
+                                      marginBottom: '12px',
+                                      justifySelf: 'flex-end',
+                                    }}
+                                    onClick={
+                                      () => {
+                                        handleAttractionSelect(attraction);
+                                        setIsDrawerOpen(false);
+                                      }
+                                      // mintNft()
+                                    }
+                                  >
+                                    Go Here!
+                                  </Button>
+                                </Flex>
+                              )}
+                            </Flex>
+                          </div>
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  )}
+                </>
               ))}
           </TabPanel>
         </TabPanels>

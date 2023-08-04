@@ -13,20 +13,18 @@ import {
   MenuItem,
   useToast,
 } from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
 import SignUpForm from './SignUpForm';
 import SearchBar from './SearchBar';
 import { MapContext } from './MapContext';
 import ParallaxDrawer from './ParallaxDrawer';
 
 const NavBar = React.forwardRef((props, ref) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    // Retrieve the logged-in status from the cache
-    const cachedStatus = localStorage.getItem('loggedInfo');
-    return cachedStatus === 'true'; // Convert to boolean
-  });
+  // const [isLoggedIn, setIsLoggedIn] = useState(() => {
+  //   // Retrieve the logged-in status from the cache
+  //   const cachedStatus = localStorage.getItem('loggedInfo');
+  //   return cachedStatus === 'true'; // Convert to boolean
+  // });
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toastNoSourceLocation = useToast();
 
   const {
@@ -37,6 +35,9 @@ const NavBar = React.forwardRef((props, ref) => {
     hasTouchScreen,
     sourceCoords,
     geolocation,
+    isLoggedIn,
+    setIsLoggedIn,
+    setIsMobileDrawerOpen,
   } = useContext(MapContext);
 
   const handleLogin = () => {
@@ -45,10 +46,6 @@ const NavBar = React.forwardRef((props, ref) => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-  };
-
-  const handleMenuToggle = () => {
-    setIsMenuOpen(!isMenuOpen);
   };
 
   // Refresh the page when clicking the logo
@@ -65,7 +62,15 @@ const NavBar = React.forwardRef((props, ref) => {
       // mt="10px"
       px="4px"
       pr="10px"
-      style={{ borderBottom: 'solid 1px orangered' }}
+      style={
+        !hasTouchScreen
+          ? { borderBottom: 'solid 1px orangered' }
+          : {
+              border: 'solid 1px orangered',
+              borderRadius: '25px',
+              padding: '5px',
+            }
+      }
     >
       {!hasTouchScreen && (
         <Box flexShrink={0}>
@@ -78,18 +83,27 @@ const NavBar = React.forwardRef((props, ref) => {
           />
         </Box>
       )}
-      <Flex flex="1" flexShrink={hasTouchScreen ? 0 : 1} alignItems="center">
+      <Flex
+        flex="1"
+        flexShrink={hasTouchScreen ? 0 : 1}
+        alignItems="center"
+        justifyContent={hasTouchScreen && 'space-between'}
+        pl={hasTouchScreen && '10px'}
+        pr={hasTouchScreen && '10px'}
+      >
         {!hasTouchScreen && <SearchBar />}
         <Button
           ref={ref} // Use the forwarded ref here
           display="flex"
           flexDirection="column"
+          p={hasTouchScreen && 0}
           bg="white"
           h="fit-content"
           w="fit-content"
           isDisabled={!isLoggedIn}
           onClick={() => {
             if (geolocation) {
+              setIsMobileDrawerOpen(false);
               setActiveDrawer('recommender');
               {
                 !isDrawerOpen && setIsDrawerOpen(true);
@@ -102,6 +116,7 @@ const NavBar = React.forwardRef((props, ref) => {
                 status: 'error',
                 duration: 3000,
                 isClosable: true,
+                containerStyle: { maxWidth: '80vw' },
               });
             }
           }}
@@ -116,6 +131,7 @@ const NavBar = React.forwardRef((props, ref) => {
           </Text>
         </Button>
         <Button
+          p={hasTouchScreen && 0}
           display="flex"
           flexDirection="column"
           bg="white"
@@ -123,6 +139,7 @@ const NavBar = React.forwardRef((props, ref) => {
           w="fit-content"
           isDisabled={!isLoggedIn}
           onClick={() => {
+            setIsMobileDrawerOpen(false);
             setActiveDrawer('attractions');
             {
               !isDrawerOpen && setIsDrawerOpen(true);
@@ -139,6 +156,7 @@ const NavBar = React.forwardRef((props, ref) => {
           </Text>
         </Button>
         <Button
+          p={hasTouchScreen && 0}
           display="flex"
           flexDirection="column"
           bg="white"
@@ -146,6 +164,7 @@ const NavBar = React.forwardRef((props, ref) => {
           w="fit-content"
           isDisabled={!isLoggedIn}
           onClick={() => {
+            setIsMobileDrawerOpen(false);
             setActiveDrawer('badges');
             {
               !isDrawerOpen && setIsDrawerOpen(true);
@@ -161,30 +180,33 @@ const NavBar = React.forwardRef((props, ref) => {
             Badges
           </Text>
         </Button>
-        <ParallaxDrawer />
+        <Button
+          p={hasTouchScreen && 0}
+          display="flex"
+          flexDirection="column"
+          bg="white"
+          h="fit-content"
+          w="fit-content"
+          onClick={() => {
+            setIsMobileDrawerOpen(false);
+            setActiveDrawer('guide');
+            {
+              !isDrawerOpen && setIsDrawerOpen(true);
+            }
+          }}
+        >
+          <img
+            src="/images/navbar-icons/guide.svg"
+            alt="Badges"
+            style={{ paddingTop: '8px', width: '40px', height: '40px' }}
+          />
+          <Text fontWeight="normal" fontSize="11px" pb="6px" m="0">
+            Guide
+          </Text>
+        </Button>
+        {/* <ParallaxDrawer /> */}
       </Flex>
-      {hasTouchScreen ? (
-        <Box display={{ base: 'block', md: 'none' }} style={{ zIndex: '2' }}>
-          <Menu
-            isOpen={isMenuOpen}
-            onClose={() => setIsMenuOpen(false)}
-            style={{ width: '100px' }}
-          >
-            <MenuButton
-              as={IconButton}
-              icon={<HamburgerIcon />}
-              variant="ghost"
-              onClick={handleMenuToggle}
-              l={1}
-            />
-            <MenuList minW="0" w="fit-content">
-              <MenuItem style={{ width: '100px' }}>
-                <SignUpForm setIsLoggedIn={setIsLoggedIn} />
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </Box>
-      ) : (
+      {!hasTouchScreen && (
         <Flex>
           <SignUpForm setIsLoggedIn={setIsLoggedIn} align="center" />
         </Flex>

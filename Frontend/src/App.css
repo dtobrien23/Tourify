@@ -8,6 +8,11 @@
   width: 100%;
 }
 
+.mobile-map {
+  height: calc(100vh - 53px);
+  width: 100%;
+}
+
 input:focus {
   outline: none;
   box-shadow: none;

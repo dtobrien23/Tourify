@@ -3,6 +3,9 @@ from flask import Flask, request, jsonify
 import traceback
 import pandas as pd
 import joblib
+import numpy as np
+import sklearn
+from flask_cors import CORS  # Import the CORS module
 from zipfile import ZipFile
 
 # Import the main_model and models list of taxi_locationIDs
@@ -10,6 +13,7 @@ from models import models, main_model
 
 # Your API definition
 app = Flask(__name__)
+CORS(app)  # This enables CORS for the entire app
 
 @app.route('/predict', methods=['POST'])
 def predict():

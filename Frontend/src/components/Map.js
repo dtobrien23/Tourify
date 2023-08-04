@@ -13,7 +13,8 @@ import { MapContext } from './MapContext';
 import ContentDrawer from './ContentDrawer.js';
 
 export default function Map() {
-  const { apiAttractions } = useContext(APIContext);
+  const { apiAttractions, setChartVisible, sliderList, setSliderList } =
+    useContext(APIContext);
   const {
     map,
     setMap,
@@ -23,18 +24,22 @@ export default function Map() {
     hasTouchScreen,
     mapCenter,
     setMapCenter,
-    attractionsWithBusyness,
+    setIsDrawerOpen,
+    selectedFilters,
+    setSelectedFilters,
   } = useContext(MapContext);
 
   ////////////////
   // USE STATES //
   ////////////////
 
-  const [sliderList, setSliderList] = useState(attractionsWithBusyness);
+  // const [sliderList, setSliderList] = useState(attractionsWithBusyness);
   const [markerState, setMarkerState] = useState(false); //marker click state to open drawer
   const [markerObject, setMarkerObject] = useState(null); // get the marker object info when clicking on a marker
   const [markers, setMarkers] = useState([]);
-  const [selectedFilters, setSelectedFilters] = useState(['ALL']);
+
+  // for active busyness pred button
+  const [activePredButton, setActivePredButton] = useState(null);
 
   const mapZoom = 13; // default map zoom
 
@@ -59,6 +64,9 @@ export default function Map() {
     };
     setMarkerObject(markerData);
 
+    // close content drawer if open
+    setIsDrawerOpen(false);
+
     //state opens drawer
     setMarkerState(true);
   };
@@ -66,6 +74,8 @@ export default function Map() {
   // close the drawer when state goes to false
   const handleClose = () => {
     setMarkerState(false);
+    setChartVisible(false);
+    setActivePredButton(null);
   };
 
   const recommendClose = () => {
@@ -108,7 +118,6 @@ export default function Map() {
           });
 
           marker.addListener('click', () => handleMarkerClick(marker));
-          console.log(marker, 'these are the markers man!');
 
           return marker;
         });
@@ -127,7 +136,7 @@ export default function Map() {
       zoom={mapZoom}
       center={mapCenter}
       options={mapOptions}
-      mapContainerClassName="map"
+      mapContainerClassName={!hasTouchScreen ? 'map' : 'mobile-map'}
       onLoad={map => {
         setMap(map);
       }}
@@ -139,15 +148,15 @@ export default function Map() {
         }
       }}
     >
-      <WeatherDisplay />
+      {!hasTouchScreen && <WeatherDisplay />}
       {hasTouchScreen ? (
         <Flex
           height="100%"
           flexDirection="column"
-          justifyContent="space-between"
+          // justifyContent="flex-end"
           alignItems="center"
         >
-          <Flex justifyContent="center" alignItems="center" mt="5px">
+          <Flex justifyContent="center" alignItems="center" mt="10px">
             <SearchBar />
           </Flex>
           <Flex
@@ -167,36 +176,39 @@ export default function Map() {
               },
             }}
           >
+            {/* <FiltersNavBar
+              hasTouchScreen={hasTouchScreen}
+              selectedFilters={selectedFilters}
+              setSelectedFilters={setSelectedFilters}
+            /> */}
+          </Flex>
+        </Flex>
+      ) : (
+        <>
+          <Flex
+            flexDirection="column"
+            style={{
+              position: 'absolute',
+              top: 10,
+              right: 120,
+              height: 'fit-content',
+              // width: 'calc(100% - 20px)',
+              width: '295px',
+            }}
+          >
             <FiltersNavBar
               isMobile={isMobile}
               selectedFilters={selectedFilters}
               setSelectedFilters={setSelectedFilters}
             />
           </Flex>
-        </Flex>
-      ) : (
-        <Flex
-          flexDirection="column"
-          style={{
-            position: 'absolute',
-            top: 10,
-            right: 120,
-            height: 'fit-content',
-            // width: 'calc(100% - 20px)',
-            width: '295px',
-          }}
-        >
-          <FiltersNavBar
-            isMobile={isMobile}
-            selectedFilters={selectedFilters}
-            setSelectedFilters={setSelectedFilters}
-          />
-        </Flex>
+          <SliderBar setSliderListFunc={setSliderList} />
+        </>
       )}
       {/* passing the setSliderListFunc to the slider from map 
          data it receives will be used by setSliderList method to update
         the sliderList state */}
-      {!hasTouchScreen && <SliderBar setSliderListFunc={setSliderList} />}
+
       <MarkerDrawer
         //marker state true opens drawer
         //false closes it
@@ -206,6 +218,8 @@ export default function Map() {
         isOpenFunc={markerState}
         isCloseFunc={handleClose}
         markerObject={markerObject}
+        activePredButton={activePredButton}
+        setActivePredButton={setActivePredButton}
       />
       <ContentDrawer />
     </GoogleMap>

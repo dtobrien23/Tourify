@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import LocationButton from './LocationButton';
-import { Flex, useToast, Tooltip } from '@chakra-ui/react';
+import { Flex, useToast } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 
 export default function LocationInput({}) {
@@ -11,31 +11,23 @@ export default function LocationInput({}) {
 
   const {
     map,
-    setMap,
-    selectedAttraction,
-    setSelectedAttraction,
     setSourceCoords,
     locationMarker,
-    isSourceAlertOpen,
     setLocationMarker,
-    setIsSourceAlertOpen,
-    buttonState,
-    setButtonState,
-    handleRecommenderClick,
-    clearRoute,
-    calculateRoute,
-    geolocation,
     setGeolocation,
     google,
-    isMobile,
     hasTouchScreen,
     inputValue,
     setInputValue,
     sourceCoords,
+    setIsHovered,
+    allowedLocation,
+    setAllowedLocation,
   } = useContext(MapContext);
 
   //settr for geolocation to be passed to recommender component via context
   const [inputWidth, setInputWidth] = useState('270px');
+  const [waitingOnLocation, setWaitingOnLocation] = useState(false);
   const toastInvalidSource = useToast();
   const toastOutsideNYC = useToast();
   const toastDenied = useToast();
@@ -49,7 +41,7 @@ export default function LocationInput({}) {
   const rangeThreshold = 0.5;
 
   useEffect(() => {
-    if (autocompleteRef.current && currentLocation !== null) {
+    if (autocompleteRef.current) {
       setInputValue(currentLocation);
     }
   }, [currentLocation, buttonClicked]);
@@ -76,6 +68,8 @@ export default function LocationInput({}) {
 
   // getting user's current location
   const getPosition = () => {
+    setWaitingOnLocation(true);
+    // setCurrentLocation(null); // reset current location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition, error => {
         console.log('Error getting geolocation:', error);
@@ -85,7 +79,8 @@ export default function LocationInput({}) {
       alert('Sorry, Geolocation is not supported by this browser.');
     }
   };
-  const deniedCoords = { lat: 40.758, lng: -73.9855 };
+
+  const deniedCoords = { lat: 40.7060855, lng: -73.9968643 };
   const [defaultGeolocationSet, setDefaultGeolocationSet] = useState(null);
 
   // useEffect(() => {
@@ -97,6 +92,8 @@ export default function LocationInput({}) {
   // }, [geolocation, defaultGeolocationSet]);
 
   const posError = error => {
+    setWaitingOnLocation(false);
+    setIsHovered(false);
     if (navigator.permissions) {
       navigator.permissions.query({ name: 'geolocation' }).then(res => {
         if (res.state === 'denied') {
@@ -116,8 +113,10 @@ export default function LocationInput({}) {
                 }
                 const formattedAddress = response.results[0].formatted_address;
                 setCurrentLocation(formattedAddress);
+                setWaitingOnLocation(false);
 
                 setGeolocation(deniedCoords); // Update the geolocation value in the context
+                setAllowedLocation(deniedCoords);
                 console.log(deniedCoords, 'this is lat lang');
                 setSourceCoords(deniedCoords);
                 console.log(sourceCoords);
@@ -138,11 +137,12 @@ export default function LocationInput({}) {
             .catch(e => window.alert('Geocoder failed due to: ' + e));
 
           toastDenied({
-            title: 'Geolocation Permission Denied.',
-            description: 'We have set your location to Times Square',
+            title: 'Geolocation Permission Denied',
+            description: 'We have set your location to the Brooklyn Bridge',
             status: 'info',
             duration: 5000,
             isClosable: true,
+            containerStyle: { maxWidth: '80vw' },
           });
         }
       });
@@ -163,7 +163,11 @@ export default function LocationInput({}) {
             const formattedAddress = response.results[0].formatted_address;
             setCurrentLocation(formattedAddress);
 
+            // setInputValue(formattedAddress);
+
+            setWaitingOnLocation(false);
             setGeolocation(deniedCoords); // Update the geolocation value in the context
+            setAllowedLocation(deniedCoords);
             console.log(deniedCoords, 'this is lat lang');
             setSourceCoords(deniedCoords);
             console.log(sourceCoords);
@@ -184,13 +188,15 @@ export default function LocationInput({}) {
         .catch(e => window.alert('Geocoder failed due to: ' + e));
 
       toastUnable({
-        title: 'Unable to access location.',
-        description: 'We have set your location to Times Square',
+        title: 'Unable to Access Location',
+        description: 'We have set your location to the Brooklyn Bridge',
         status: 'info',
         duration: 5000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     }
+    setButtonClicked(buttonClicked + 1);
   };
 
   const showPosition = position => {
@@ -208,15 +214,16 @@ export default function LocationInput({}) {
         latlng.lng <= maxLongitude
       )
     ) {
-      latlng.lat = 40.758;
-      latlng.lng = -73.9855;
+      latlng.lat = 40.7060855;
+      latlng.lng = -73.9968643;
       toastOutsideNYC({
         title: 'You Are Not In NYC!',
         description:
-          "We have set your location to Times Square - we know you'd rather be there",
+          'We have set your location to the Brooklyn Bridge so you can test our check-in function',
         status: 'info',
         duration: 5000,
         isClosable: true,
+        containerStyle: { maxWidth: '80vw' },
       });
     }
 
@@ -234,8 +241,12 @@ export default function LocationInput({}) {
           }
           const formattedAddress = response.results[0].formatted_address;
           setCurrentLocation(formattedAddress);
+          // setInputValue(formattedAddress);
+          setWaitingOnLocation(false);
 
           setGeolocation(latlng); // Update the geolocation value in the context
+          setAllowedLocation(latlng);
+
           console.log(latlng, 'this is lat lang');
           setSourceCoords(latlng);
           console.log(sourceCoords);
@@ -257,94 +268,55 @@ export default function LocationInput({}) {
     setButtonClicked(buttonClicked + 1);
   };
 
-  // // Use useEffect with geolocation as the dependency to handle the panning
-  // useEffect(() => {
-  //   if (geolocation && google) {
-  //     console.log(geolocation, 'THIS IS GEOOOOOOOO');
-  //     // Check if geolocation and google are available
-  //     const geocoder = new google.maps.Geocoder();
-  //     const latLng = new google.maps.LatLng(geolocation.lat, geolocation.lng);
-
-  //     geocoder
-  //       .geocode({ location: latLng })
-  //       .then(response => {
-  //         if (response.results[0]) {
-  //           if (locationMarker.length !== 0) {
-  //             for (const marker of locationMarker) {
-  //               marker.setMap(null);
-  //             }
-  //             setLocationMarker([]);
-  //           }
-  //           const formattedAddress = response.results[0].formatted_address;
-  //           setCurrentLocation(formattedAddress);
-  //           setGeolocation(geolocation);
-  //           setSourceCoords(geolocation);
-  //           map.panTo(geolocation); // Pan the map to the current location using geolocation
-  //           map.setZoom(15);
-
-  //           // eslint-disable-next-line
-  //           const marker = new google.maps.Marker({
-  //             position: geolocation, // Use the geolocation context variable here
-  //             map: map,
-  //             icon: '/images/you-are-here.png',
-  //           });
-  //           setLocationMarker([marker]);
-  //         } else {
-  //           window.alert('No results found');
-  //         }
-  //       })
-  //       .catch(e => window.alert('Geocoder failed due to: ' + e));
-  //   }
-  // }, [geolocation, google]);
-
   // when user selects their current location
   const handlePlaceSelect = () => {
-    const selectedPlace = autocompleteRef.current.getPlace();
-    let latLng;
+    if (autocompleteRef.current) {
+      const selectedPlace = autocompleteRef.current.getPlace();
+      let latLng;
 
-    try {
-      if (map) {
-        if (
-          selectedPlace &&
-          selectedPlace.geometry &&
-          selectedPlace.geometry.location
-        ) {
-          latLng = selectedPlace.geometry.location;
-          console.log(latLng, '??????????');
-        }
-
-        if (locationMarker.length !== 0) {
-          for (const marker of locationMarker) {
-            marker.setMap(null);
+      try {
+        if (map) {
+          if (
+            selectedPlace &&
+            selectedPlace.geometry &&
+            selectedPlace.geometry.location
+          ) {
+            latLng = selectedPlace.geometry.location;
+            console.log(latLng, '??????????');
           }
-          setLocationMarker([]);
-        }
 
-        setInputValue(selectedPlace.name);
-        setSourceCoords(latLng);
-        // setGeolocation(sourceCoords);
-        setGeolocation(latLng);
-        map.panTo(latLng);
-        map.setZoom(15);
-        // eslint-disable-next-line
-        const marker = new google.maps.Marker({
-          position: latLng,
-          map: map,
-          title: selectedPlace.formatted_address,
-          icon: '/images/you-are-here.png',
+          if (locationMarker.length !== 0) {
+            for (const marker of locationMarker) {
+              marker.setMap(null);
+            }
+            setLocationMarker([]);
+          }
+          setCurrentLocation(selectedPlace.name);
+          setInputValue(selectedPlace.name);
+          setSourceCoords(latLng);
+          setGeolocation(latLng);
+          map.panTo(latLng);
+          map.setZoom(15);
+          // eslint-disable-next-line
+          const marker = new google.maps.Marker({
+            position: latLng,
+            map: map,
+            title: selectedPlace.formatted_address,
+            icon: '/images/you-are-here.png',
+          });
+          setLocationMarker([marker]);
+        }
+      } catch {
+        setInputValue('');
+        toastInvalidSource({
+          title: 'Source Error!',
+          description: 'Please Select your Location from the Dropdown.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+          containerStyle: { maxWidth: '80vw' },
         });
-        setLocationMarker([marker]);
       }
-    } catch {
-      setInputValue('');
-      toastInvalidSource({
-        title: 'Source Error!',
-        description: 'Please Select your Location from the Dropdown.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-      setInputValue('');
     }
   };
 
@@ -358,7 +330,11 @@ export default function LocationInput({}) {
     >
       {google && (
         <>
-          <Flex w="100%">
+          <Flex
+            w={hasTouchScreen ? '100%' : '230px'}
+            h={hasTouchScreen && '35px'}
+            alignItems="center"
+          >
             <Autocomplete
               onLoad={autocomplete => {
                 autocompleteRef.current = autocomplete;
@@ -368,23 +344,29 @@ export default function LocationInput({}) {
               menuStyle={{ backgroundColor: 'red', color: 'white' }}
               itemStyle={{ fontSize: '100px' }}
             >
-          <div className="tutorial-input">
-            <input
-              type="text"
-              placeholder="I am currently at..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              style={{
-                paddingLeft: '8px',
-                borderRadius: '20px',
-                fontSize: '16px',
-                width: '112%',
-              }}
-            />
-          </div>
+              <div className="tutorial-input">
+                <input
+                  type="text"
+                  placeholder="I am currently at..."
+                  value={inputValue}
+                  onChange={e => setInputValue(e.target.value)}
+                  style={{
+                    paddingLeft: '8px',
+                    borderRadius: '20px',
+                    fontSize: '16px',
+                    width: '112%',
+                  }}
+                />
+              </div>
             </Autocomplete>
           </Flex>
-          <LocationButton getPosition={getPosition}></LocationButton>
+          <Flex mr="1px">
+            <LocationButton
+              getPosition={getPosition}
+              waitingOnLocation={waitingOnLocation}
+              currentLocation={currentLocation}
+            ></LocationButton>
+          </Flex>
         </>
       )}
     </Flex>

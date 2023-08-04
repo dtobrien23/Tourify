@@ -12,8 +12,6 @@ import {
   Heading,
 } from '@chakra-ui/react';
 
-
-
 function Attraction({
   name,
   full_address,
@@ -84,4 +82,3 @@ export default function AttractionsList({ isMobile }) {
     </SimpleGrid>
   );
 }
-
