@@ -436,11 +436,21 @@ export default function SignUpForm({}) {
             // Close the modal after successful entry
             onNFTModalClose();
           }
+          else {
+            toastWallet({
+              title: 'Google Credential Error',
+              description:
+                'Please log out and login again to refresh the credential',
+              status: 'error',
+              duration: 6000,
+              isClosable: true,
+            });
+          }
         })
         .catch(error => console.log(error));
     } else {
       toastWallet({
-        title: 'Please enter a valid NFT Wallet Address.',
+        title: ' Please enter a valid NFT wallet address. ',
         description:
           'Your Address must be 42 characters long and begin with 0x',
         status: 'error',

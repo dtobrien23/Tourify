@@ -490,6 +490,9 @@ export default function ContentDrawer() {
           duration: 6000,
           isClosable: true,
         });
+        setPrompt(null);
+        setPromptIsSet(false);
+        setFile(null);
       }
     } catch (err) {
       console.log(err);
@@ -533,6 +536,9 @@ export default function ContentDrawer() {
         isClosable: true,
         containerStyle: { maxWidth: '80vw' },
       });
+      setPrompt(null);
+        setPromptIsSet(false);
+        setFile(null);
     }
   }, [promptIsSet, prompt, nftWalletAddress]);
 
