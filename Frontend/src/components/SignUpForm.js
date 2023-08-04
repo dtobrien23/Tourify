@@ -88,7 +88,15 @@ export default function SignUpForm({}) {
     }
     setTimerId(
       setTimeout(() => {
-        handleLogout(); // Call  logout function here
+        handleLogout();
+        toastLogout({
+          title: 'Session Expired.',
+          description:
+            'Your session has expired. Please Login again to continue.',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        }); // Call  logout function here
       }, 45 * 60 * 1000) // 45 minutes in milliseconds
     );
   };
@@ -324,11 +332,10 @@ export default function SignUpForm({}) {
     }
   };
 
-
   const deleteAccount = async () => {
     const cachedUserCredential = localStorage.getItem('userCredential');
     console.log(cachedUserCredential, 'cached delete cred');
-  
+
     if (cachedUserCredential) {
       axios
         .post(
@@ -382,7 +389,6 @@ export default function SignUpForm({}) {
       });
     }
   };
-  
 
   const handleDeleteConfirmation = () => {
     setDeleteAlertOpen(true);
@@ -433,9 +439,8 @@ export default function SignUpForm({}) {
   };
 
   const handleWalletEntry = walletInput => {
-        const cachedUserCredential = localStorage.getItem('userCredential');
+    const cachedUserCredential = localStorage.getItem('userCredential');
     console.log(cachedUserCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
-
 
     if (
       cachedUserCredential &&
@@ -466,12 +471,10 @@ export default function SignUpForm({}) {
 
             // Close the modal after successful entry
             onNFTModalClose();
-          }
-          else {
+          } else {
             toastWallet({
               title: 'Google Credential Error',
-              description:
-                'Please log out and login again and try again.',
+              description: 'Please log out and login again and try again.',
               status: 'error',
               duration: 6000,
               isClosable: true,
