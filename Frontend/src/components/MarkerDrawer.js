@@ -375,7 +375,7 @@ function MarkerDrawer({
                           <p>
                             Click the below buttons to get busyness predictions
                             for {attraction.name} for any of the next four days
-                            from the current time!
+                            from now!
                           </p>
                           <br />
                           <Flex w="100%" justify="space-between" mb="10px">
@@ -395,7 +395,7 @@ function MarkerDrawer({
                                 setActivePredButton('day1');
                               }}
                             >
-                              Day 1
+                              24 Hrs
                             </Button>
                             <Button
                               isActive={
@@ -413,7 +413,7 @@ function MarkerDrawer({
                                 setActivePredButton('day2');
                               }}
                             >
-                              Day 2
+                              48 Hrs
                             </Button>
                             <Button
                               isActive={
@@ -431,7 +431,7 @@ function MarkerDrawer({
                                 setActivePredButton('day3');
                               }}
                             >
-                              Day 3
+                              72 Hrs
                             </Button>
                             <Button
                               isActive={
@@ -449,7 +449,7 @@ function MarkerDrawer({
                                 setActivePredButton('day4');
                               }}
                             >
-                              Day 4
+                              96 Hrs
                             </Button>
                           </Flex>
                           <Flex marginLeft="-10px">

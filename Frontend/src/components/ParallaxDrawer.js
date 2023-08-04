@@ -6,6 +6,7 @@ import {
   TabPanels,
   TabPanel,
   Divider,
+  Heading,
 } from '@chakra-ui/react';
 import { MapContext } from './MapContext';
 
@@ -75,27 +76,96 @@ const ParallaxDrawer = () => {
               paddingLeft: '20px',
             }}
           >
+            <Heading size="md">On The Map</Heading>
+            <br />
             <li>
-              <strong>Step 1:</strong> Go to the top of the page and click on
-              Attractions
+              <strong>1:</strong> Each map marker represents a different
+              attraction. You can filter these markers by their current busyness
+              using the busyness slider, or by their category by using the
+              filter buttons.
               <br />
               <br />
-              <img src="\images\tutorial\1.1.png" alt="Attractions" />
+              {hasTouchScreen ? (
+                <img
+                  src="\images\tutorial\filters-mobile.png"
+                  alt="Attractions"
+                />
+              ) : (
+                <img src="\images\tutorial\filters.png" alt="Attractions" />
+              )}
+            </li>
+            <br />
+            <Heading size="md">Attraction Information</Heading>
+            <br />
+            <li>
+              <strong>1:</strong> Click on a marker to view detailed information
+              about an attraction.
+              <br />
+              <br />
+              <img
+                src="\images\tutorial\attractions-info-desktop.png"
+                alt="Attractions"
+              />
             </li>
             <br />
             <br />
             <li>
-              <strong>Step 2:</strong> Here you have 2 tabs: Attractions to
-              Visit and Visited Attractions
+              <strong>2:</strong> Here you have 2 tabs: Info, for attraction
+              information, and Busyness Prediction, for viewing charts
+              displaying the future busyness prediction for this attraction.
+              <br />
+              <br />
+              <img
+                src="\images\tutorial\prediction-desktop.png"
+                alt="Attractions"
+              />
+            </li>
+            <br />
+            <li>
+              <strong>3:</strong> Click on one of the buttons to get busyness
+              predictions for the next 24 hours, 48 hours, etc, displayed in
+              graphs of 24 hour periods.
+              <br />
+              <br />
+            </li>
+            <Heading size="md">Checking In</Heading>
+            <br />
+            <li>
+              {hasTouchScreen ? (
+                <p>
+                  <strong>1:</strong> Tap the arrow on the bottom right of your
+                  display, and tap on Attractions.
+                </p>
+              ) : (
+                <p>
+                  <strong>1:</strong> Go to the top of the page and click on
+                  Attractions
+                </p>
+              )}
+              <br />
+              <br />
+              {hasTouchScreen ? (
+                <img src="\images\tutorial\mobile\1.1.png" alt="Attractions" />
+              ) : (
+                <img src="\images\tutorial\1.1.png" alt="Attractions" />
+              )}
+            </li>
+            <br />
+            <br />
+            <li>
+              <strong>2:</strong> Here you have 2 tabs: Attractions to Visit and
+              Visited Attractions
               <br />
               <br />
               <img src="\images\tutorial\1.2.png" alt="Attractions" />
             </li>
             <br />
             <li>
-              <strong>Step 3:</strong> Go to a location and press Check-in to
-              receive your own custom NFT badge (make sure you've enabled
-              geolocation on your browser!)
+              <strong>3:</strong> When you visit this attraction, press Check In
+              to mark this location as visited and to receive your own custom
+              NFT badge. Note! Make sure you've allowed your current location
+              (location arrow image in the search bar will be highlighted
+              orange), otherwise you will not be able to check into a location.
               <br />
               <br />
             </li>
@@ -109,24 +179,39 @@ const ParallaxDrawer = () => {
             }}
           >
             <li>
-              <strong>Step 1:</strong> Go to the top of the page and click on
-              Recommendations
+              {hasTouchScreen ? (
+                <p>
+                  <strong>1:</strong> Once you have input your location, tap on
+                  the arrow in the bottom right of your display, and then tap on
+                  Recommender.
+                </p>
+              ) : (
+                <p>
+                  <strong>1:</strong> Once you have input your location, go to
+                  the top of the page and click on Recommender.
+                </p>
+              )}
+
               <br />
-              <br />
-              <img src="\images\tutorial\1.1.png" alt="Attractions" />
+              {hasTouchScreen ? (
+                <img src="\images\tutorial\mobile\1.1.png" alt="Attractions" />
+              ) : (
+                <img src="\images\tutorial\1.12.png" alt="Attractions" />
+              )}
             </li>
             <br />
             <br />
             <li>
-              <strong>Step 2:</strong> Here you have 3 tabs: Nearest
-              Attractions, Quietest Attractions, and a mix of the two
+              <strong>2:</strong> Here you have 3 tabs: Nearest Attractions,
+              Quietest Attractions, and Best (the attractions with the best
+              average of their combined nearest and quietest positions)
               <br />
               <br />
               <img src="\images\tutorial\2.1.png" alt="Recommender" />
             </li>
             <br />
             <li>
-              <strong>Step 3:</strong> These features can be used to find the
+              <strong>3:</strong> These features can be used to find the
               attractions closest to you or if you want to find the least
               busiest attraction closest to you!
               <br />
@@ -142,29 +227,45 @@ const ParallaxDrawer = () => {
             }}
           >
             <li>
-              <strong>Step 1:</strong> Go to the top of the page and click on
-              User Options/Add Wallet after logging in
+              {hasTouchScreen ? (
+                <p>
+                  <strong>1:</strong> After logging in, tap the hamburger menu
+                  on the bottom left of your display. Then tap on Add NFT
+                  Wallet, and submit your wallet address.
+                </p>
+              ) : (
+                <p>
+                  <strong>1:</strong> After logging in, go to the top of the
+                  page and click on User Options/Add NFT Wallet, and submit your
+                  wallet address.
+                </p>
+              )}
               <br />
-              <br />
-              <img src="\images\tutorial\3.1.jpg" alt="NFTs" />
+              {hasTouchScreen ? (
+                <img src="\images\tutorial\mobile\3.1.png" alt="NFTs" />
+              ) : (
+                <img src="\images\tutorial\3.1.png" alt="NFTs" />
+              )}
               <br />
             </li>
             <br />
-            <br />
             <li>
-              <strong>Step 2:</strong> Add your wallet address here
+              <strong>2:</strong> After successfully receiving a badge, and
+              provided you have added your wallet address, your NFT will be
+              minted!
               <br />
               <br />
-              <img src="\images\tutorial\3.2.jpg" alt="NFTs" />
+              <img src="\images\tutorial\nft-in-progress.png" alt="NFTs" />
+              <br />
+              <img src="\images\tutorial\minted.png" alt="NFTs" />
             </li>
             <br />
             <li>
-              <strong>Step 3:</strong> After successfully checking in to a
-              location, connect your wallet to OpenSeas to get your own custom
-              minted NFT!
+              <strong>3:</strong> Be sure to connect your wallet to OpenSeas so
+              you can view your NFT.
               <br />
               <br />
-              <img src="\images\tutorial\3.4.jpg" alt="NFTs" />
+              <img src="\images\tutorial\3.4.png" alt="NFTs" />
             </li>
           </ul>
         </TabPanel>

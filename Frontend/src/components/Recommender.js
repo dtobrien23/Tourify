@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
 import {
-  
   Flex,
   Tab,
   Tabs,
@@ -30,8 +29,6 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
     handleAttractionSelect,
     hasTouchScreen,
   } = useContext(MapContext);
-
-  
 
   const [nearestAttractions, setNearestAttractions] = useState([]);
   const [quietestAttractions, setQuietestAttractions] = useState([]);
@@ -209,6 +206,14 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
         />
         <TabPanels>
           <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
+            {hasTouchScreen && (
+              <p>
+                Tap on any of the below attractions to select it as your
+                destination and add it to the routing!
+                <br />
+                <br />
+              </p>
+            )}
             {nearestAttractions.map(attraction => (
               <>
                 {attraction.isOpen === true && (
@@ -352,6 +357,14 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
             ))}
           </TabPanel>
           <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
+            {hasTouchScreen && (
+              <p>
+                Tap on any of the below attractions to select it as your
+                destination and add it to the routing!
+                <br />
+                <br />
+              </p>
+            )}
             {quietestAttractions.map(attraction => (
               <>
                 {attraction.isOpen === true && (
@@ -496,6 +509,14 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
             ))}
           </TabPanel>
           <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
+            {hasTouchScreen && (
+              <p>
+                Tap on any of the below attractions to select it as your
+                destination and add it to the routing!
+                <br />
+                <br />
+              </p>
+            )}
             {combinedAttractions &&
               combinedAttractions.map(attraction => (
                 <>
