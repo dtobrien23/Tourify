@@ -19,10 +19,8 @@ import { MapContext } from './MapContext';
 import '../App.css';
 
 export default function WeatherDisplay({
-  isMobile,
   selectedFilters,
   setSelectedFilters,
-  hasTouchScreen,
 }) {
   const {
     apiCurrentWeather,
@@ -33,6 +31,8 @@ export default function WeatherDisplay({
   const { modelTempParam } = useContext(MapContext);
   const [weatherIcon, setWeatherIcon] = useState(null);
   const [displayedTemp, setDisplayedTemp] = useState('F');
+  const { isMobile, hasTouchScreen } = useContext(MapContext);
+
   //   const weatherDesc = apiWeather.weather[0].main;
   const mistWeather = [
     'Mist',
@@ -85,6 +85,16 @@ export default function WeatherDisplay({
         boxShadow="1px 1px 5px 1px rgba(0, 0, 0, 0.6)"
         justifyContent="center"
         alignItems="center"
+        style={{
+          marginTop: hasTouchScreen ? '80px' : '0px',
+          paddingLeft: hasTouchScreen ? '6px' : '0px',
+          paddingRight: hasTouchScreen ? '6px' : '0px',
+          paddingBottom: hasTouchScreen ? '4px' : '0px',
+          border: hasTouchScreen ? 'solid 1px orangered' : '',
+          boxShadow: hasTouchScreen
+            ? 'none'
+            : '1px 1px 5px 1px rgba(0, 0, 0, 0.6)',
+        }}
       >
         {apiCurrentWeather && (
           <>
@@ -94,6 +104,7 @@ export default function WeatherDisplay({
                 margin: '10px',
                 marginTop: '5px',
                 marginBottom: '5px',
+                display: hasTouchScreen ? 'none' : 'block',
               }}
             >
               Manhattan
@@ -101,13 +112,14 @@ export default function WeatherDisplay({
             <img
               src={weatherIcon}
               style={{
-                height: '60px',
-                width: '60px',
+                height: hasTouchScreen ? '30px' : '60px',
+                width: hasTouchScreen ? '30px' : '60px',
+
                 marginBottom: '3px',
               }}
             />
             <Flex flexDirection="row">
-              <Text fontSize="35px">
+              <Text style={{ fontSize: hasTouchScreen ? '17px' : '35px' }}>
                 {displayedTemp === 'F'
                   ? `${Math.floor(apiCurrentWeather.main.temp)}\u00B0`
                   : `${Math.floor(
@@ -123,7 +135,7 @@ export default function WeatherDisplay({
                   onClick={() => setDisplayedTemp('F')}
                   style={{
                     color: displayedTemp === 'F' ? 'black' : 'lightgrey',
-                    fontSize: '14px',
+                    fontSize: hasTouchScreen ? '10px' : '14px',
                     fontWeight: 'bold',
                   }}
                 >
@@ -133,7 +145,7 @@ export default function WeatherDisplay({
                   onClick={() => setDisplayedTemp('C')}
                   style={{
                     color: displayedTemp === 'C' ? 'black' : 'lightgrey',
-                    fontSize: '14px',
+                    fontSize: hasTouchScreen ? '0px' : '14px',
                     fontWeight: 'bold',
                   }}
                 >
