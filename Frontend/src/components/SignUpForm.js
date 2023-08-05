@@ -686,7 +686,7 @@ export default function SignUpForm({}) {
           <ModalBody>
             {modalContent === 'logIn' ? (
               <GoogleLogin
-                clientId={process.env.REACT_APP_ClientId}
+                clientId={process.env.REACT_APP_clientId}
                 onSuccess={backendLogin}
                 onFailure={error => console.log('Google login failed:', error)}
                 cookiePolicy="single_host_origin"
@@ -705,7 +705,7 @@ export default function SignUpForm({}) {
               />
             ) : (
               <GoogleLogin
-                clientId={process.env.REACT_APP_ClientId}
+                clientId={process.env.REACT_APP_clientId}
                 onSuccess={backendSignUp}
                 onFailure={error => console.log('Google login failed:', error)}
                 style={{
