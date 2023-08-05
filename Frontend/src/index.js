@@ -12,7 +12,7 @@ const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 
 root.render(
-  <GoogleOAuthProvider clientId={process.env.REACT_APP_cliendId}>
+  <GoogleOAuthProvider clientId={process.env.REACT_APP_clientId}>
     <StrictMode>
       <ColorModeScript />
       <MapProvider>
