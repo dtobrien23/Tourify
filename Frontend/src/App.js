@@ -34,10 +34,8 @@ function App() {
 
   // https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent#mobile_device_detection
   const detectTouchScreen = () => {
-    console.log('HEEEEEEEELLLLLOOOOOOO');
     if ('maxTouchPoints' in navigator) {
       setHasTouchScreen(navigator.maxTouchPoints > 0);
-      console.log('touch screen???', hasTouchScreen);
     } else if ('msMaxTouchPoints' in navigator) {
       setHasTouchScreen(navigator.msMaxTouchPoints > 0);
     } else {

@@ -24,7 +24,6 @@ export default function PredBarChart() {
 
   useEffect(() => {
     if (chartData) {
-      console.log(chartData, 'CHART DATAAAAA');
     }
   }, [chartData]);
 

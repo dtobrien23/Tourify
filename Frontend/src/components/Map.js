@@ -92,7 +92,6 @@ export default function Map() {
       // fetchData();
 
       if (sliderList !== null) {
-        console.log(apiAttractions, 'this is the log');
         // clear existing markers from the map for filter
         markers.forEach(marker => {
           marker.setMap(null);

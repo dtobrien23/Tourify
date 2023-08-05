@@ -72,7 +72,6 @@ export default function LocationInput({}) {
     // setCurrentLocation(null); // reset current location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition, error => {
-        console.log('Error getting geolocation:', error);
         posError();
       });
     } else {
@@ -109,9 +108,7 @@ export default function LocationInput({}) {
 
                 setGeolocation(deniedCoords); // Update the geolocation value in the context
                 setAllowedLocation(deniedCoords);
-                console.log(deniedCoords, 'this is lat lang');
                 setSourceCoords(deniedCoords);
-                console.log(sourceCoords);
                 map.panTo(deniedCoords);
                 map.setZoom(15);
 
@@ -160,9 +157,7 @@ export default function LocationInput({}) {
             setWaitingOnLocation(false);
             setGeolocation(deniedCoords); // Update the geolocation value in the context
             setAllowedLocation(deniedCoords);
-            console.log(deniedCoords, 'this is lat lang');
             setSourceCoords(deniedCoords);
-            console.log(sourceCoords);
             map.panTo(deniedCoords);
             map.setZoom(15);
 
@@ -239,9 +234,7 @@ export default function LocationInput({}) {
           setGeolocation(latlng); // Update the geolocation value in the context
           setAllowedLocation(latlng);
 
-          console.log(latlng, 'this is lat lang');
           setSourceCoords(latlng);
-          console.log(sourceCoords);
           map.panTo(latlng);
           map.setZoom(15);
 
@@ -274,7 +267,6 @@ export default function LocationInput({}) {
             selectedPlace.geometry.location
           ) {
             latLng = selectedPlace.geometry.location;
-            console.log(latLng, '??????????');
           }
 
           if (locationMarker.length !== 0) {

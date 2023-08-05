@@ -52,7 +52,6 @@ const MapProvider = ({ children }) => {
   const detectTouchScreen = () => {
     if ('maxTouchPoints' in navigator) {
       setHasTouchScreen(navigator.maxTouchPoints > 0);
-      console.log('touch screen???', hasTouchScreen);
     } else if ('msMaxTouchPoints' in navigator) {
       setHasTouchScreen(navigator.msMaxTouchPoints > 0);
     } else {
@@ -128,7 +127,6 @@ const MapProvider = ({ children }) => {
           }
         );
       } catch (error) {
-        console.log(error);
         if (error.message.includes('ZERO_RESULTS')) {
           toastZeroResults({
             title: 'No Route Available!',

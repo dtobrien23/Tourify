@@ -125,10 +125,8 @@ export default function SignUpForm({}) {
   }, []);
 
   useEffect(() => {
-    console.log(hasTouchScreen);
     if (hasTouchScreen) {
       setButtonsDirection('column');
-      console.log('buttonssssss', buttonsDirection);
     } else {
       setButtonsDirection('row');
     }
@@ -173,12 +171,11 @@ export default function SignUpForm({}) {
     if (cachedUserCredential) {
       axios
         .post(
-          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
-          `http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
+          //`http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
           // `http://192.168.23.129:8001/api/user/info?idTokenString=${cachedUserCredential}`
         ) //user info, json w/ true false
         .then(response => {
-          console.log(response.data, 'updated user info');
           setGlobalUserInfo(response.data);
 
           if (response.status === 200) {
@@ -217,7 +214,6 @@ export default function SignUpForm({}) {
   };
 
   const backendLogin = async credentialResponse => {
-    console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
 
     setGlobalCredential(credential); // Set the credential as a global variable
@@ -225,15 +221,13 @@ export default function SignUpForm({}) {
     if (credential) {
       axios
         .post(
-          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
-          `http://localhost:8001/api/user/info?idTokenString=${credential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
+          //`http://localhost:8001/api/user/info?idTokenString=${credential}`
           // `http://192.168.23.129:8001/api/user/info?idTokenString=${credential}`
         ) //user info, json w/ true false
         .then(response => {
-          console.log(response.data, 'user info');
           setGlobalUserInfo(response.data);
           setGlobalCredential(credential);
-          console.log(globalUserInfo, 'retrieving the cached info');
           setGlobalCredential(credential);
           setBadgeState(response.data);
 
@@ -282,24 +276,19 @@ export default function SignUpForm({}) {
   };
 
   const backendSignUp = credentialResponse => {
-    console.log(credentialResponse, 'THIS IS THE CRED');
     const { credential } = credentialResponse;
     setGlobalCredential(credentialResponse.credential);
 
     if (credential) {
-      console.log(credential);
       axios
         .post(
-          // `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
-          `http://localhost:8001/api/user/register?idTokenString=${credential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
+          //`http://localhost:8001/api/user/register?idTokenString=${credential}`
           // `http://192.168.23.129:8001/api/user/register?idTokenString=${credential}`
         )
         .then(response => {
           // setGlobalUserInfo(response.data);
-          console.log(
-            response.data,
-            'this is from the backend login for sign up'
-          );
+          
 
           if (response.data.code !== 10006) {
             backendLogin(credentialResponse);
@@ -334,16 +323,15 @@ export default function SignUpForm({}) {
 
   const deleteAccount = async () => {
     const cachedUserCredential = localStorage.getItem('userCredential');
-    console.log(cachedUserCredential, 'cached delete cred');
 
     if (cachedUserCredential) {
       axios
         .post(
-          `http://localhost:8001/api/user/delete?idTokenString=${cachedUserCredential}`
+          //`http://localhost:8001/api/user/delete?idTokenString=${cachedUserCredential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/delete?idTokenString=${cachedUserCredential}`
         )
         .then(response => {
           if (response.data.code === 200) {
-            console.log(response, 'delete response!!!!');
             setUserLoggedIn(false);
             setIsLoggedIn(false);
             localStorage.clear();
@@ -358,7 +346,6 @@ export default function SignUpForm({}) {
             onClose();
           } else {
             // Handle unsuccessful response
-            console.log(response, 'delete response error!!!!');
             toastLogin({
               title: 'Deletion Error.',
               description: 'There was an error deleting your account.',
@@ -440,7 +427,6 @@ export default function SignUpForm({}) {
 
   const handleWalletEntry = walletInput => {
     const cachedUserCredential = localStorage.getItem('userCredential');
-    console.log(cachedUserCredential, 'THIS IS THE CRED!!!ASDJASJDL!!');
 
     if (
       cachedUserCredential &&
@@ -449,16 +435,14 @@ export default function SignUpForm({}) {
     ) {
       axios
         .post(
-          `http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${cachedUserCredential}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/user/updateNft?nftLink=${walletInput}&idTokenString=${cachedUserCredential}`
+          //`http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${cachedUserCredential}`
           // `http://192.168.23.129:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
         ) //Add Wallet address
         .then(response => {
-          console.log(response.data, 'user info1');
 
           if (response.data.code === 200) {
-            console.log(response.data, 'user info');
             setGlobalUserInfo(response.data);
-            console.log(globalUserInfo, 'retrieving the cached info');
 
             toastWallet({
               title: 'NFT Wallet Added!',
@@ -538,7 +522,10 @@ export default function SignUpForm({}) {
     });
     //
     axios
-      .get(`http://localhost:8001/api/user/test`)
+      .get(`https://csi6220-2-vm1.ucd.ie/backend/api/attraction/feedback`
+        //`http://localhost:8001/api/user/test`
+      
+            )
       .then(response => {
         onFeedbackModalClose();
       })

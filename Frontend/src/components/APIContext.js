@@ -42,14 +42,12 @@ const APIContextProvider = ({ children }) => {
     const fetchAttractionData = async () => {
       try {
         const response = await fetch(
-          // 'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
-          'http://localhost:8001/api/attraction/getAllAttraction'
+          'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
+          //'http://localhost:8001/api/attraction/getAllAttraction'
           // 'http://192.168.23.129:8001/api/attraction/getAllAttraction'
         );
         const data = await response.json(); //long/lat data
-        console.log(data, 'THIS CAME FROM THE BACK END');
         const dataArray = data.data;
-        console.log(dataArray, 'back end data without wrapper');
 
         // setting open or closed boolean
         const currentTime = new Date();
@@ -118,16 +116,12 @@ const APIContextProvider = ({ children }) => {
                   (currentHoursEDT === closingHour &&
                     currentMinutesEDT < closingMinute))
               ) {
-                console.log(`${attraction.name} is open right now.`);
                 attraction.isOpen = true;
               } else {
-                console.log(
-                  `${attraction.name} is open today but not right now.`
-                );
+               
                 attraction.isOpen = false;
               }
             } else {
-              console.log(`${attraction.name} is closed today.`);
               attraction.isOpen = false;
             }
           }
@@ -137,10 +131,7 @@ const APIContextProvider = ({ children }) => {
         setAPIAttractions(dataArray);
         setApiLoaded(true);
 
-        console.log(apiLoaded, 'youve set it!!');
-        console.log(apiLoaded, 'youve set it!!');
       } catch (error) {
-        console.error('Error fetching attraction data:', error);
         setApiLoaded(false);
       }
     };
@@ -151,7 +142,6 @@ const APIContextProvider = ({ children }) => {
           `https://api.openweathermap.org/data/2.5/weather?lat=${mapCenter.lat}&lon=${mapCenter.lng}&units=imperial&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`
         );
         const data = await response.json();
-        console.log(data, 'THIS IS THE WEATHER');
         setAPICurrentWeather(data);
         setCurrentModelTempParam(Math.floor(data.main.temp)); // must convert kelvin to fahrenheit
         if (data.rain) {
@@ -172,23 +162,17 @@ const APIContextProvider = ({ children }) => {
     const fetchAllCurrentBusynessData = async () => {
       try {
         if (currentModelTempParam && currentModelRainParam >= 0) {
-          console.log(
-            currentModelTempParam,
-            currentModelRainParam,
-            'these are the params for the model'
-          );
+          
           const response = await fetch(
-            // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
-            `http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+             `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+            //`http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
             // `http://192.168.23.129:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
           );
           const data = await response.json();
-          console.log(data, 'THIS IS THE MODEL PREDICTION');
           const dataArray = data.data;
           setAPIAllCurrentBusyness(dataArray);
         }
       } catch (error) {
-        console.error('Error fetching model prediction data:', error);
       }
     };
     fetchAllCurrentBusynessData();
@@ -202,11 +186,9 @@ const APIContextProvider = ({ children }) => {
           `https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=${mapCenter.lat}&lon=${mapCenter.lng}&units=imperial&appid=${process.env.REACT_APP_OPEN_WEATHER_API_KEY}`
         );
         const data = await response.json();
-        console.log(data, 'THIS IS THE FORECAST');
 
         setAPIWeatherForecast(data.list);
       } catch (error) {
-        console.error('Error fetching weather data:', error);
       }
     };
     getForecast();
@@ -277,27 +259,21 @@ const APIContextProvider = ({ children }) => {
       if (chartData) {
         setChartData(null);
       }
-      console.log(params, 'THESE ARE THE MODEL PARAMS');
       setChartVisible(true);
       setActiveChart(attractionID);
-      console.log(attractionID);
-      console.log(params[0].temperature);
-      console.log(params[0].rain);
       try {
         const response = await fetch(
-          // `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
-          `http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
+          `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
+          //`http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
           // `http://192.168.23.129:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
         );
         const data = await response.json();
-        console.log(data, 'THIS IS THE FORECAST PREDICTIONS');
         const dataArray = data.data.attractionPredictionDetailVOList;
         dataArray.forEach(hour => {
           if (hour.openOrClose === false) {
             hour.businessRate = 0;
           }
         });
-        console.log(dataArray, 'YYYYYYYES');
         setChartData({
           labels: data.data.attractionPredictionDetailVOList.map(
             hour => hour.hour
@@ -343,7 +319,6 @@ const APIContextProvider = ({ children }) => {
           }
         }
       });
-      console.log(apiAttractions, 'PLS HAVE BUSYNESS SCORE');
       setSliderList(apiAttractions); // so all markers load when page loads
       setAttractionsWithBusyness(apiAttractions);
     }

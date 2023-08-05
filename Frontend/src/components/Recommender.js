@@ -44,8 +44,6 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
             attraction.coordinates_lng
           )
       );
-      console.log('Origin:', origin);
-      console.log('Destinations:', destinations);
 
       const service = new window.google.maps.DistanceMatrixService();
 
@@ -118,7 +116,6 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
   };
 
   const topFiveNearestAttractions = nearestAttractions.slice(0, 5);
-  console.log(topFiveNearestAttractions, 'TOP 5 NEAREST');
 
   useEffect(() => {
     const leastBusyAttractions = nearestAttractions.slice().sort((a, b) => {
@@ -169,7 +166,6 @@ export default function Recommender({ recommendOpenFunc, recommendCloseFunc }) {
 
   useEffect(() => {
     if (combinedAttractions) {
-      console.log(combinedAttractions, 'COMBINED ATTRACTIONS');
     }
   }, [combinedAttractions]);
 

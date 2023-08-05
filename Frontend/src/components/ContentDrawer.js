@@ -185,8 +185,8 @@ export default function ContentDrawer() {
       });
     } else {
       if (allowedLocation !== null) {
-        // const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
-        const apiEndpoint = 'http://localhost:8001/api/user/update';
+        const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
+        //const apiEndpoint = 'http://localhost:8001/api/user/update';
         // const apiEndpoint = 'http://192.168.23.129:8001/api/user/update';
         const cachedUserCredential = localStorage.getItem('userCredential');
 
@@ -194,7 +194,6 @@ export default function ContentDrawer() {
         setPlaceHolderImaegUrl(placeHolder);
 
         const idToken = cachedUserCredential; // get this from credential in signupform
-        console.log(cachedUserCredential, 'this is the global credential');
 
         const requestBody = {
           id_token: idToken,
@@ -206,8 +205,6 @@ export default function ContentDrawer() {
         axios
           .post(apiEndpoint, requestBody)
           .then(response => {
-            console.log('API call successful:', response.data);
-            console.log(response, 'this is response data');
             // Handle the response data here
             if (response.data.code === 200) {
               //   // set logic that your marker has been ticked off
@@ -216,8 +213,6 @@ export default function ContentDrawer() {
               setPrompt(PROMPT_TEST);
               setPlaceHolderImaegUrl(placeHolder);
 
-              console.log(PROMPT_TEST, 'PROMPT_TEST');
-              console.log(checkinState, 'checkinstate - contentdrawer');
               confettiReward();
               toastCheckIn({
                 title: 'Check in Successful!',
@@ -236,7 +231,6 @@ export default function ContentDrawer() {
               // distance too long
               setCheckinState(false);
 
-              console.log(response.data.code, 'this is the repsonse code!');
               toastNotCheckIn({
                 title: 'Check In Unsuccessful!',
                 description: "You're too far away",
@@ -338,8 +332,6 @@ export default function ContentDrawer() {
 
         // // Check if the response status is successful
         if (response.status === 200) {
-          console.log('huggingface api responded');
-          console.log('huggingface api responded');
           const generatedFile = new File([response.data], 'image.png', {
             type: 'image/png',
           });
@@ -363,7 +355,6 @@ export default function ContentDrawer() {
           // Use the object URL of the fetched Blob as the image blob
           const url = URL.createObjectURL(safetyImageBlob);
           setImageBlob(url);
-          console.log('API call unsuccessful. Using placeholder image.');
         }
       } catch (err) {
         // Handle errors here and use the placeholder image
@@ -381,12 +372,8 @@ export default function ContentDrawer() {
         // Use the object URL of the fetched Blob as the image blob
         const url = URL.createObjectURL(safetyImageBlob);
         setImageBlob(url);
-        console.log(safetyImageBlob, 'safety im age blob');
-        console.log(url, 'this is the error url');
-        console.log('API call unsuccessful. Using placeholder image.', err);
       }
     } else {
-      console.log('THE PROMPT WAS NULL!!! WHY?? ');
     }
   };
 
@@ -409,13 +396,10 @@ export default function ContentDrawer() {
         description: `You got the ${PROMPT_TEST} Badge!`,
         image: generatedFile,
       });
-      console.log(store, 'this is the store');
       return cleanupIPFS(store.data.image.href);
     } catch (err) {
-      console.log(err);
     }
   };
-  console.log(localStorage.getItem('loggedInfo'), 'this is logged info');
 
   // nft wallet address from cached user info
   const [nftWalletAddress, setNFTWalletAddress] = useState(null);
@@ -432,10 +416,8 @@ export default function ContentDrawer() {
   // Update mintNft function to accept the prompt and imageURL as parameters
   const mintNft = async (promptFromFunc, imageURL, nftWalletAddress) => {
     try {
-      console.log('URL for image ', imageURL);
 
       if (!imageURL) {
-        console.log('Error uploading image to IPFS.');
         return;
       }
 
@@ -455,13 +437,8 @@ export default function ContentDrawer() {
           },
         }
       );
-      console.log(imageURL, 'THIS IS THE IMAGE URL');
-      console.log(prompt, 'NFT PORT PROMPT');
-      console.log(imageURL, 'THIS IS THE IMAGE URL');
-      console.log(prompt, 'NFT PORT PROMPT');
 
       const data = response.data;
-      console.log(data, 'data from mintNFT function');
 
       // Check if the minting was successful (e.g., status 200 or 201)
       if (response.status === 200 || response.status === 201) {
@@ -480,7 +457,6 @@ export default function ContentDrawer() {
         setFile(null);
       } else {
         // Handle other possible response statuses or errors here
-        console.log('Error minting NFT.');
         toastNFT({
           title: 'Error Minting NFT.',
           description: `An error has occured in the minting process please try again later`,
@@ -493,7 +469,6 @@ export default function ContentDrawer() {
         setFile(null);
       }
     } catch (err) {
-      console.log(err);
     }
   };
 
@@ -506,8 +481,6 @@ export default function ContentDrawer() {
 
   // Use useEffect to call generateArt() when promptIsSet is true
   useEffect(() => {
-    console.log('promptIsSet:', promptIsSet);
-    console.log('Prompt:', prompt);
     if (
       promptIsSet &&
       prompt !== null &&
@@ -547,7 +520,6 @@ export default function ContentDrawer() {
       const uploadToIPFS = async () => {
         const imageURL = await uploadArtToIpfs(prompt, fileMade);
         if (imageURL) {
-          console.log('Uploading to IPFS completed. Image URL:', imageURL);
           toastNFT({
             title: 'NFT Minting in progress.',
             description: `Please wait as this can take several minutes.`,
@@ -558,10 +530,8 @@ export default function ContentDrawer() {
 
           // Call mintNft with the prompt and imageURL
           await new Promise(resolve => setTimeout(resolve, 60000));
-          console.log('60-second timer ended. Minting NFT now.');
 
           await mintNft(prompt, imageURL, nftWalletAddress);
-          console.log('NFT minted successfully.');
           setFile(null);
         }
       };
@@ -1148,7 +1118,6 @@ export default function ContentDrawer() {
                           badgeCreateTime !== '3333-01-01T01:00:00'
                         ) {
                           const formattedBadgeName = formatBadgeName(badge);
-                          console.log(badgeCreateTime, 'badge time');
 
                           return (
                             <Flex
