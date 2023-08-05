@@ -522,7 +522,7 @@ export default function SignUpForm({}) {
     });
     //
     axios
-      .get(`https://csi6220-2-vm1.ucd.ie/backend/api/attraction/feedback`
+      .post(`https://csi6220-2-vm1.ucd.ie/backend/api/attraction/feedback`
         //`http://localhost:8001/api/user/test`
       
             )
