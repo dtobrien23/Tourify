@@ -618,7 +618,32 @@ export default function SignUpForm({}) {
         </Menu>
       ) : (
         <>
-          {!hasTouchScreen || !isMobile ? (
+          {hasTouchScreen || isMobile ? (
+            <Menu>
+              <Box
+                // display={{ base: 'block', md: 'none' }}
+                style={{ zIndex: '2' }}
+                width="fit-content"
+              >
+                <MenuButton
+                  as={IconButton}
+                  icon={<HamburgerIcon boxSize="25px" />}
+                  variant="ghost"
+                  _hover={{ bg: 'white' }}
+                  // onClick={handleMenuToggle}
+                  l={1}
+                />
+              </Box>
+              <MenuList minW="0" w="fit-content">
+                <MenuItem onClick={() => handleButtonClick('logIn')}>
+                  Log In
+                </MenuItem>
+                <MenuItem onClick={() => handleButtonClick('signUp')}>
+                  Sign Up
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          ) : (
             <>
               <Flex mr={2}>
                 <Button
@@ -645,35 +670,6 @@ export default function SignUpForm({}) {
                 </Button>
               </Flex>
             </>
-          ) : (
-            <Box
-              display={{ base: 'block', md: 'none' }}
-              style={{ zIndex: '2' }}
-              width="fit-content"
-            >
-              <Menu
-                isOpen={isMenuOpen}
-                onClose={() => setIsMenuOpen(false)}
-                // style={{ width: '100px' }}
-              >
-                <MenuButton
-                  as={IconButton}
-                  icon={<HamburgerIcon boxSize="25px" />}
-                  variant="ghost"
-                  _hover={{ bg: 'white' }}
-                  onClick={handleMenuToggle}
-                  l={1}
-                />
-                <MenuList minW="0" w="fit-content">
-                  <MenuItem onClick={() => handleButtonClick('logIn')}>
-                    Log In
-                  </MenuItem>
-                  <MenuItem onClick={() => handleButtonClick('signUp')}>
-                    Sign Up
-                  </MenuItem>
-                </MenuList>
-              </Menu>
-            </Box>
           )}
         </>
       )}
