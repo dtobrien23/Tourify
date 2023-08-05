@@ -98,11 +98,16 @@ const TutorialTooltip = () => {
               </Button>
             )}
             {currentStep < maxSteps ? (
-              <Button colorScheme="orange" mr={3} onClick={handleNextStep}>
+              <Button
+                bg="orangered"
+                color="white"
+                mr={3}
+                onClick={handleNextStep}
+              >
                 Next Step
               </Button>
             ) : (
-              <Button colorScheme="orange" onClick={handleSkipTutorial}>
+              <Button bg="orangered" color="white" onClick={handleSkipTutorial}>
                 Finish Tutorial
               </Button>
             )}

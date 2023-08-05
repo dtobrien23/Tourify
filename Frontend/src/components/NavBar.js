@@ -52,15 +52,14 @@ const NavBar = React.forwardRef((props, ref) => {
       //maxWidth="100vw"
       width={!hasTouchScreen ? '100vw' : '100%'}
       // mt="10px"
-      px="4px"
-      pr="10px"
+      px={!hasTouchScreen && '4px'}
+      pr={!hasTouchScreen && '10px'}
       style={
         !hasTouchScreen
           ? { borderBottom: '0' }
           : {
               border: '0',
               borderRadius: '25px',
-              padding: '5px',
             }
       }
     >
@@ -77,12 +76,16 @@ const NavBar = React.forwardRef((props, ref) => {
         </Box>
       )}
       <Flex
+        m="0"
         flex="1"
         flexShrink={hasTouchScreen ? 0 : 1}
         alignItems="center"
+        w={hasTouchScreen && '110%'}
         justifyContent={hasTouchScreen && 'space-between'}
-        pl={hasTouchScreen && '10px'}
-        pr={hasTouchScreen && '10px'}
+        pl={hasTouchScreen && '15px'}
+        pr={hasTouchScreen && '15px'}
+        border={hasTouchScreen && 'solid 1px orangered'}
+        borderRadius={hasTouchScreen && '25px'}
       >
         {!hasTouchScreen && <SearchBar />}
         <Button
