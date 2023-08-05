@@ -18,7 +18,7 @@ export default function LocationButton({
           isIndeterminate
           color="orange.400"
           size="20px"
-          mr="7px"
+          mr={!hasTouchScreen ? '7px' : '4px'}
         />
       ) : (
         <Tooltip label="Set Geolocation" placement="bottom">
