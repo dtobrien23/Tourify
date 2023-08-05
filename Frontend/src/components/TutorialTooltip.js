@@ -81,8 +81,7 @@ const TutorialTooltip = () => {
             )}
             {currentStep === 4 && (
               <p>
-                Press "Guide" to learn more about about the features on this
-                website!
+                Press "Guide" to learn more about the features on this website!
               </p>
             )}
           </ModalBody>
