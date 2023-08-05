@@ -24,6 +24,7 @@ export default function LocationButton({
         <Tooltip label="Set Geolocation" placement="bottom">
           <Flex h="fit-content" w="fit-content">
             <Button
+              _focus={{ outline: 'none', boxShadow: 'none' }}
               size="auto"
               mr={!hasTouchScreen ? '10px' : '6px'}
               onClick={getPosition}

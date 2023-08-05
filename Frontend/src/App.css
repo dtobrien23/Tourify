@@ -1,5 +1,5 @@
 .App {
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
 }
 
@@ -21,6 +21,10 @@ input:focus {
   box-shadow: none;
 }
 
+button:focus {
+  outline: none; /* Remove the default focus outline */
+  box-shadow: none; /* Example: Add an orange box shadow */
+}
 .content::-webkit-scrollbar {
   display: none;
 }

@@ -185,9 +185,9 @@ export default function ContentDrawer() {
       });
     } else {
       if (allowedLocation !== null) {
-        const apiEndpoint = 'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
+        const apiEndpoint =
+          'https://csi6220-2-vm1.ucd.ie/backend/api/user/update';
         //const apiEndpoint = 'http://localhost:8001/api/user/update';
-        // const apiEndpoint = 'http://192.168.23.129:8001/api/user/update';
         const cachedUserCredential = localStorage.getItem('userCredential');
 
         const placeHolder = attractionNameAlias;
@@ -222,8 +222,6 @@ export default function ContentDrawer() {
                 isClosable: true,
                 containerStyle: { maxWidth: '80vw' },
               });
-
-              
 
               // get the updated user info from the backend
             }
@@ -397,8 +395,7 @@ export default function ContentDrawer() {
         image: generatedFile,
       });
       return cleanupIPFS(store.data.image.href);
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   // nft wallet address from cached user info
@@ -416,7 +413,6 @@ export default function ContentDrawer() {
   // Update mintNft function to accept the prompt and imageURL as parameters
   const mintNft = async (promptFromFunc, imageURL, nftWalletAddress) => {
     try {
-
       if (!imageURL) {
         return;
       }
@@ -468,8 +464,7 @@ export default function ContentDrawer() {
         setPromptIsSet(false);
         setFile(null);
       }
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   // Use useEffect to set promptIsSet to true after prompt has been set
@@ -508,8 +503,8 @@ export default function ContentDrawer() {
         containerStyle: { maxWidth: '80vw' },
       });
       setPrompt(null);
-        setPromptIsSet(false);
-        setFile(null);
+      setPromptIsSet(false);
+      setFile(null);
     }
   }, [promptIsSet, prompt, nftWalletAddress]);
 
@@ -617,7 +612,12 @@ export default function ContentDrawer() {
               }
         }
       >
-        <DrawerCloseButton />
+        <DrawerCloseButton
+          _focus={{
+            outline: 'none',
+            boxShadow: 'none',
+          }}
+        />
         {activeDrawer === 'recommender' && (
           <>
             <DrawerHeader>{`Recommender`}</DrawerHeader>
@@ -774,6 +774,10 @@ export default function ContentDrawer() {
                                             _hover={{
                                               bg: 'orangered',
                                               color: 'white',
+                                            }}
+                                            _focus={{
+                                              outline: 'none',
+                                              boxShadow: 'none',
                                             }}
                                             style={{
                                               color: 'white',
@@ -943,6 +947,10 @@ export default function ContentDrawer() {
                                         </Alert>
                                         <Flex justifyContent="flex-end">
                                           <Button
+                                            _focus={{
+                                              outline: 'none',
+                                              boxShadow: 'none',
+                                            }}
                                             style={{
                                               backgroundColor: '#17B169',
                                               color: 'white',

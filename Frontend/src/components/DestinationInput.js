@@ -73,6 +73,10 @@ export default function DestinationInput({}) {
             fontSize={'16px'}
             _hover={{ bg: 'white' }}
             _expanded={{ bg: 'white' }}
+            _focus={{
+              outline: 'none',
+              boxShadow: 'none',
+            }}
             style={{
               minWidth: !hasTouchScreen && '120px',
               width: !hasTouchScreen && '12vw',

@@ -173,7 +173,6 @@ export default function SignUpForm({}) {
         .post(
           `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${cachedUserCredential}`
           //`http://localhost:8001/api/user/info?idTokenString=${cachedUserCredential}`
-          // `http://192.168.23.129:8001/api/user/info?idTokenString=${cachedUserCredential}`
         ) //user info, json w/ true false
         .then(response => {
           setGlobalUserInfo(response.data);
@@ -223,7 +222,6 @@ export default function SignUpForm({}) {
         .post(
           `https://csi6220-2-vm1.ucd.ie/backend/api/user/info?idTokenString=${credential}`
           //`http://localhost:8001/api/user/info?idTokenString=${credential}`
-          // `http://192.168.23.129:8001/api/user/info?idTokenString=${credential}`
         ) //user info, json w/ true false
         .then(response => {
           setGlobalUserInfo(response.data);
@@ -284,11 +282,9 @@ export default function SignUpForm({}) {
         .post(
           `https://csi6220-2-vm1.ucd.ie/backend/api/user/register?idTokenString=${credential}`
           //`http://localhost:8001/api/user/register?idTokenString=${credential}`
-          // `http://192.168.23.129:8001/api/user/register?idTokenString=${credential}`
         )
         .then(response => {
           // setGlobalUserInfo(response.data);
-          
 
           if (response.data.code !== 10006) {
             backendLogin(credentialResponse);
@@ -437,10 +433,8 @@ export default function SignUpForm({}) {
         .post(
           `https://csi6220-2-vm1.ucd.ie/backend/api/user/updateNft?nftLink=${walletInput}&idTokenString=${cachedUserCredential}`
           //`http://localhost:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${cachedUserCredential}`
-          // `http://192.168.23.129:8001/api/user/updateNft?nftLink=${walletInput}&idTokenString=${globalCredential}`
         ) //Add Wallet address
         .then(response => {
-
           if (response.data.code === 200) {
             setGlobalUserInfo(response.data);
 
@@ -522,10 +516,10 @@ export default function SignUpForm({}) {
     });
     //
     axios
-      .post(`https://csi6220-2-vm1.ucd.ie/backend/api/attraction/feedback`
+      .post(
+        `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/feedback`
         //`http://localhost:8001/api/user/test`
-      
-            )
+      )
       .then(response => {
         onFeedbackModalClose();
       })

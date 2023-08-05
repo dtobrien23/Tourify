@@ -44,7 +44,6 @@ const APIContextProvider = ({ children }) => {
         const response = await fetch(
           'https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllAttraction'
           //'http://localhost:8001/api/attraction/getAllAttraction'
-          // 'http://192.168.23.129:8001/api/attraction/getAllAttraction'
         );
         const data = await response.json(); //long/lat data
         const dataArray = data.data;
@@ -118,7 +117,6 @@ const APIContextProvider = ({ children }) => {
               ) {
                 attraction.isOpen = true;
               } else {
-               
                 attraction.isOpen = false;
               }
             } else {
@@ -130,7 +128,6 @@ const APIContextProvider = ({ children }) => {
 
         setAPIAttractions(dataArray);
         setApiLoaded(true);
-
       } catch (error) {
         setApiLoaded(false);
       }
@@ -162,18 +159,15 @@ const APIContextProvider = ({ children }) => {
     const fetchAllCurrentBusynessData = async () => {
       try {
         if (currentModelTempParam && currentModelRainParam >= 0) {
-          
           const response = await fetch(
-             `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
+            `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
             //`http://localhost:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
-            // `http://192.168.23.129:8001/api/attraction/getAllPrediction?temperature=${currentModelTempParam}&precipitation=${currentModelRainParam}`
           );
           const data = await response.json();
           const dataArray = data.data;
           setAPIAllCurrentBusyness(dataArray);
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     fetchAllCurrentBusynessData();
   }, [currentModelTempParam, currentModelRainParam, updateClick]);
@@ -188,8 +182,7 @@ const APIContextProvider = ({ children }) => {
         const data = await response.json();
 
         setAPIWeatherForecast(data.list);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     getForecast();
   }, []);
@@ -265,7 +258,6 @@ const APIContextProvider = ({ children }) => {
         const response = await fetch(
           `https://csi6220-2-vm1.ucd.ie/backend/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
           //`http://localhost:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
-          // `http://192.168.23.129:8001/api/attraction/getOnePrediction?attraction_id=${attractionID}&predictionDays=${params[0].day}&temperatures=${params[0].temperature}&precipitation=${params[0].rain}`
         );
         const data = await response.json();
         const dataArray = data.data.attractionPredictionDetailVOList;

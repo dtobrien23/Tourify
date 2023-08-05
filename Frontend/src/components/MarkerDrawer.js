@@ -389,6 +389,7 @@ function MarkerDrawer({
                           </div>
                           <Flex w="100%" justify="space-between" mb="10px">
                             <Button
+                              _focus={{ outline: 'none', boxShadow: 'none' }}
                               isActive={
                                 activePredButton === 'day1' ? true : false
                               }

@@ -58,7 +58,13 @@ const TutorialTooltip = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader> Welcome to Tourify! </ModalHeader>
-          <ModalCloseButton onClick={handleSkipTutorial} />
+          <ModalCloseButton
+            _focus={{
+              outline: 'none',
+              boxShadow: 'none',
+            }}
+            onClick={handleSkipTutorial}
+          />
           <ModalBody>
             {/* Show different content based on the current step */}
             {currentStep === 1 && (
@@ -92,6 +98,10 @@ const TutorialTooltip = () => {
                 // variant="solid"
                 onClick={handleBackStep}
                 mr={2}
+                _focus={{
+                  outline: 'none',
+                  boxShadow: 'none',
+                }}
               >
                 Back
               </Button>
@@ -102,11 +112,27 @@ const TutorialTooltip = () => {
                 color="white"
                 mr={3}
                 onClick={handleNextStep}
+                _active={{ bg: 'orangered', color: 'white' }}
+                _hover={{ bg: 'orangered', color: 'white' }}
+                _focus={{
+                  outline: 'none',
+                  boxShadow: 'none',
+                }}
               >
                 Next Step
               </Button>
             ) : (
-              <Button bg="orangered" color="white" onClick={handleSkipTutorial}>
+              <Button
+                bg="orangered"
+                color="white"
+                _active={{ bg: 'orangered', color: 'white' }}
+                _hover={{ bg: 'orangered', color: 'white' }}
+                onClick={handleSkipTutorial}
+                _focus={{
+                  outline: 'none',
+                  boxShadow: 'none',
+                }}
+              >
                 Finish Tutorial
               </Button>
             )}
