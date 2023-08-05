@@ -622,7 +622,7 @@ export default function SignUpForm({}) {
             <Menu>
               <Box
                 // display={{ base: 'block', md: 'none' }}
-                style={{ zIndex: '2' }}
+
                 width="fit-content"
               >
                 <MenuButton
@@ -634,7 +634,7 @@ export default function SignUpForm({}) {
                   l={1}
                 />
               </Box>
-              <MenuList minW="0" w="fit-content">
+              <MenuList minW="0" w="fit-content" zIndex={5}>
                 <MenuItem onClick={() => handleButtonClick('logIn')}>
                   Log In
                 </MenuItem>

@@ -344,7 +344,7 @@ export default function LocationInput({}) {
                   value={inputValue}
                   onChange={e => setInputValue(e.target.value)}
                   style={{
-                    paddingLeft: '5px',
+                    paddingLeft: hasTouchScreen ? '6px' : '8px',
                     borderRadius: '20px',
                     fontSize: '16px',
                     // width: !hasTouchScreen ? '115%' : '123%',
