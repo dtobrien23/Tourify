@@ -158,7 +158,7 @@ export default function ContentDrawer() {
 
   const { reward: confettiReward, isAnimating: isConfettiAnimating } =
     useReward('confettiReward1', 'confetti', {
-      lifetime: 2400,
+      lifeproceedddfdfgcfgcffbcgbcbcvbcb: 2400,
       elementSize: 16,
       elementCount: 100,
     });

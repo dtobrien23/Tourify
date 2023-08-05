@@ -622,7 +622,7 @@ export default function SignUpForm({}) {
             <Menu>
               <Box
                 // display={{ base: 'block', md: 'none' }}
-                style={{ zIndex: '2' }}
+                style={{ zIndex: '9' }}
                 width="fit-content"
               >
                 <MenuButton
@@ -687,7 +687,7 @@ export default function SignUpForm({}) {
           <ModalBody>
             {modalContent === 'logIn' ? (
               <GoogleLogin
-                clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
+                clientId={process.env.REACT_APP_ClientId}
                 onSuccess={backendLogin}
                 onFailure={error => console.log('Google login failed:', error)}
                 cookiePolicy="single_host_origin"
@@ -706,7 +706,7 @@ export default function SignUpForm({}) {
               />
             ) : (
               <GoogleLogin
-                clientId="568208948795-5dv85a002gctb076vpor6905ur987is0.apps.googleusercontent.com"
+                clientId={process.env.REACT_APP_ClientId}
                 onSuccess={backendSignUp}
                 onFailure={error => console.log('Google login failed:', error)}
                 style={{
