@@ -90,6 +90,7 @@ export default function WeatherDisplay({
           paddingLeft: hasTouchScreen ? '6px' : '0px',
           paddingRight: hasTouchScreen ? '6px' : '0px',
           paddingBottom: hasTouchScreen ? '4px' : '0px',
+          paddingTop: hasTouchScreen ? '4px' : '0px',
           border: hasTouchScreen ? 'solid 1px orangered' : '',
           boxShadow: hasTouchScreen
             ? 'none'
@@ -109,7 +110,11 @@ export default function WeatherDisplay({
             >
               Manhattan
             </h2>
-            <Flex flexDirection={hasTouchScreen ? 'row' : 'column'}>
+            <Flex
+              flexDirection={hasTouchScreen ? 'row' : 'column'}
+              alignItems="center"
+              justifyContent="center"
+            >
               <img
                 src={weatherIcon}
                 style={{
