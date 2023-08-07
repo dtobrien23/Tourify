@@ -666,6 +666,14 @@ export default function ContentDrawer() {
                 <TabPanels>
                   {/* ATTRACTIONS TO VISIT */}
                   <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
+                    {hasTouchScreen && (
+                      <p>
+                        Find the attraction you are visiting below and tap on it
+                        to check in!
+                        <br />
+                        <br />
+                      </p>
+                    )}
                     {globalUserInfo &&
                     globalUserInfo.data &&
                     globalUserInfo.data.attractionStatusDO ? (
@@ -685,6 +693,19 @@ export default function ContentDrawer() {
                                 p="10px"
                                 width={hasTouchScreen ? '100%' : '425px'}
                                 mb="15px"
+                                onClick={
+                                  hasTouchScreen
+                                    ? () => {
+                                        handleCheckIn(
+                                          attractionInfo.id,
+                                          attractionInfo.name,
+                                          attractionInfo.isOpen,
+                                          randomWord,
+                                          attractionInfo.name_alias
+                                        );
+                                      }
+                                    : null
+                                }
                               >
                                 <Flex
                                   key={attraction}
@@ -768,39 +789,41 @@ export default function ContentDrawer() {
                                             </Flex>
                                           </Flex>
                                         </Alert>
-                                        <Flex justifyContent="flex-end">
-                                          <Button
-                                            bg="orange"
-                                            _hover={{
-                                              bg: 'orangered',
-                                              color: 'white',
-                                            }}
-                                            _focus={{
-                                              outline: 'none',
-                                              boxShadow: 'none',
-                                            }}
-                                            style={{
-                                              color: 'white',
-                                              border: 'solid 1px orangered',
-                                              borderRadius: '20px',
-                                              marginBottom: '12px',
-                                              justifySelf: 'flex-end',
-                                            }}
-                                            onClick={
-                                              () =>
-                                                handleCheckIn(
-                                                  attractionInfo.id,
-                                                  attractionInfo.name,
-                                                  attractionInfo.isOpen,
-                                                  randomWord,
-                                                  attractionInfo.name_alias
-                                                )
-                                              // mintNft()
-                                            }
-                                          >
-                                            Check In!
-                                          </Button>
-                                        </Flex>
+                                        {!hasTouchScreen && (
+                                          <Flex justifyContent="flex-end">
+                                            <Button
+                                              bg="orange"
+                                              _hover={{
+                                                bg: 'orangered',
+                                                color: 'white',
+                                              }}
+                                              _focus={{
+                                                outline: 'none',
+                                                boxShadow: 'none',
+                                              }}
+                                              style={{
+                                                color: 'white',
+                                                border: 'solid 1px orangered',
+                                                borderRadius: '20px',
+                                                marginBottom: '12px',
+                                                justifySelf: 'flex-end',
+                                              }}
+                                              onClick={
+                                                () =>
+                                                  handleCheckIn(
+                                                    attractionInfo.id,
+                                                    attractionInfo.name,
+                                                    attractionInfo.isOpen,
+                                                    randomWord,
+                                                    attractionInfo.name_alias
+                                                  )
+                                                // mintNft()
+                                              }
+                                            >
+                                              Check In!
+                                            </Button>
+                                          </Flex>
+                                        )}
                                       </Flex>
                                     </div>
                                   </Flex>

@@ -162,10 +162,11 @@ const ParallaxDrawer = () => {
             <br />
             <li>
               <strong>3:</strong> When you visit this attraction, press Check In
-              to mark this location as visited and to receive your own custom
-              NFT badge. Note! Make sure you've allowed your current location
-              (location arrow image in the search bar will be highlighted
-              orange), otherwise you will not be able to check into a location.
+              (or simply tap on the attraction if you are on mobile) to mark
+              this location as visited and to receive your own custom NFT badge.
+              Note! Make sure you've allowed your current location (location
+              arrow image in the search bar will be highlighted orange),
+              otherwise you will not be able to check into a location.
               <br />
               <br />
             </li>
