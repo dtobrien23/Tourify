@@ -95,7 +95,7 @@ const TutorialTooltip = () => {
                   <p>
                     <br />
                     Note, using some older mobile browsers may require you to
-                    scroll to view the nav bar.
+                    scroll down to view the user menu.
                   </p>
                 )}
               </>
