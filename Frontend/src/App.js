@@ -57,37 +57,40 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
-      {showLoading === true && (
-        <Flex
-          height="100vh"
-          width="100vw"
-          alignItems="center"
-          justifyContent="center"
-          style={{
-            position: 'fixed',
-            opacity: apisLoaded ? 0 : 1,
-            transition: 'opacity 0.5s ease',
-            pointerEvents: apisLoaded ? 'none' : 'auto',
-            backgroundColor: '#ffffff',
-            zIndex: 99999999,
-          }}
-        >
-          <CircularProgress isIndeterminate color="orange.400" size="100px" />
-        </Flex>
-      )}
-      <TutorialTooltip />
-      {!hasTouchScreen ? (
-        <>
-          <NavBar map={map} />
-          <Map map={map} setMap={setMap} />
-        </>
-      ) : (
-        <>
-          <Map map={map} setMap={setMap} />
-          {/* <NavBar map={map} /> */}
-          <MobileDrawer />
-        </>
-      )}
+      <Flex flexDirection="column">
+        {showLoading === true && (
+          <Flex
+            height="100vh"
+            width="100vw"
+            alignItems="center"
+            justifyContent="center"
+            style={{
+              height: '100dvh',
+              position: 'fixed',
+              opacity: apisLoaded ? 0 : 1,
+              transition: 'opacity 0.5s ease',
+              pointerEvents: apisLoaded ? 'none' : 'auto',
+              backgroundColor: '#ffffff',
+              zIndex: 99999999,
+            }}
+          >
+            <CircularProgress isIndeterminate color="orange.400" size="100px" />
+          </Flex>
+        )}
+        <TutorialTooltip />
+        {!hasTouchScreen ? (
+          <>
+            <NavBar map={map} />
+            <Map map={map} setMap={setMap} />
+          </>
+        ) : (
+          <>
+            <Map map={map} setMap={setMap} />
+            {/* <NavBar map={map} /> */}
+            <MobileDrawer />
+          </>
+        )}
+      </Flex>
     </ChakraProvider>
   );
 }
