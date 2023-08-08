@@ -86,9 +86,19 @@ const TutorialTooltip = () => {
               </p>
             )}
             {currentStep === 4 && (
-              <p>
-                Press "Guide" to learn more about the features on this website!
-              </p>
+              <>
+                <p>
+                  Press "Guide" to learn more about the features on this
+                  website!
+                </p>
+                {hasTouchScreen && (
+                  <p>
+                    <br />
+                    Note, using some older mobile browsers may require you to
+                    scroll to view the nav bar.
+                  </p>
+                )}
+              </>
             )}
           </ModalBody>
           <ModalFooter>
