@@ -170,6 +170,13 @@ const ParallaxDrawer = () => {
               <br />
               <br />
             </li>
+            <li>
+              <strong>4:</strong> After checking into an attraction, you will
+              receive a badge! Check the Badges section to view the badges you
+              have received and the ones you still need to get!
+              <br />
+              <br />
+            </li>
           </ul>
         </TabPanel>
         <TabPanel pl={hasTouchScreen && 0} pr={hasTouchScreen && 0}>
@@ -262,7 +269,7 @@ const ParallaxDrawer = () => {
             </li>
             <br />
             <li>
-              <strong>3:</strong> Be sure to connect your wallet to OpenSeas so
+              <strong>3:</strong> Be sure to connect your wallet to OpenSea so
               you can view your NFT.
               <br />
               <br />

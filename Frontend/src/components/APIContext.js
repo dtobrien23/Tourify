@@ -261,11 +261,16 @@ const APIContextProvider = ({ children }) => {
         );
         const data = await response.json();
         const dataArray = data.data.attractionPredictionDetailVOList;
-        dataArray.forEach(hour => {
-          if (hour.openOrClose === false) {
-            hour.businessRate = 0;
-          }
-        });
+        if (
+          attractionID !== '64a412387432f019915b07c9' &&
+          attractionID !== '64a414087432f019915b07cc'
+        ) {
+          dataArray.forEach(hour => {
+            if (hour.openOrClose === false) {
+              hour.businessRate = 0;
+            }
+          });
+        }
         setChartData({
           labels: data.data.attractionPredictionDetailVOList.map(
             hour => hour.hour
