@@ -136,7 +136,9 @@ export default function ContentDrawer() {
   const randomWord = getRandomAdjective();
 
   const [prompt, setPrompt] = useState(null);
+  const [prompt_No_Adj, setPromptAdj] = useState(null);
   const [promptIsSet, setPromptIsSet] = useState(false);
+  const [promptNoAdjIsSet, setPromptNoAdj] = useState(false);
 
   const kebabToCamelCase = str => {
     return str.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase());
@@ -210,8 +212,10 @@ export default function ContentDrawer() {
               //   // set logic that your marker has been ticked off
               setCheckinState(true);
               const PROMPT_TEST = `${attractionName} ${randomWord}`;
+              const PROMPT_TEST_NO_ADJ = `${attractionName}`;
+
               setPrompt(PROMPT_TEST);
-              setPlaceHolderImaegUrl(placeHolder);
+              setPromptAdj(PROMPT_TEST_NO_ADJ);
 
               confettiReward();
               toastCheckIn({
@@ -423,7 +427,7 @@ export default function ContentDrawer() {
         {
           file_url: imageURL,
           chain: 'polygon',
-          name: prompt,
+          name: prompt_No_Adj,
           description: `You got the ${promptFromFunc} Badge.`,
           mint_to_address: nftWalletAddress,
         },
@@ -467,12 +471,13 @@ export default function ContentDrawer() {
     } catch (err) {}
   };
 
-  // Use useEffect to set promptIsSet to true after prompt has been set
-  useEffect(() => {
-    if (prompt !== null && promptIsSet === false) {
-      setPromptIsSet(true);
-    }
-  }, [prompt]);
+ // Use useEffect to set promptIsSet to true after prompt has been set
+ useEffect(() => {
+  if (prompt !== null && promptIsSet === false && prompt_No_Adj !== null && promptNoAdjIsSet === false ) {
+    setPromptIsSet(true);
+    setPromptNoAdj(true);
+  }
+}, [prompt]);
 
   // Use useEffect to call generateArt() when promptIsSet is true
   useEffect(() => {
@@ -526,7 +531,7 @@ export default function ContentDrawer() {
           // Call mintNft with the prompt and imageURL
           await new Promise(resolve => setTimeout(resolve, 60000));
 
-          await mintNft(prompt, imageURL, nftWalletAddress);
+          await mintNft(prompt_No_Adj, imageURL, nftWalletAddress);
           setFile(null);
         }
       };
