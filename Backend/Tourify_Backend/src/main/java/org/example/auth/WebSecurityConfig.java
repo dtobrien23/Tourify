@@ -70,7 +70,7 @@ public class WebSecurityConfig{
         //Allow all request header fields
         configuration.setAllowedHeaders(Arrays.asList("*"));
         //Allowed to carry credentials, if allowed to carry credentials, setAllowedOrigins may not be set to *.
-//        configuration.setAllowCredentials(true);
+       configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
