@@ -1,4 +1,4 @@
-## Manhattan Journey Planner
+![image](https://github.com/ajwadjaved/ManhattanJourney/assets/87294643/5b9b5dc9-233d-4e6d-b742-b011ea1e04a7)## Manhattan Journey Planner
   
 App being developed to help user's discover New York in a new light.
   
@@ -27,4 +27,4 @@ This directory contains the pre-trained Random Forest models saved as pickle fil
 
 
 ![image](./Linux_Docker_Working-Flow_Diagram.png)
-![image](./tech stack archi .png)
+![image](./TechStackArchitecture.png)
