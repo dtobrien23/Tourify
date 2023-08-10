@@ -2,4 +2,4 @@ spring:
   application:
     name: system-tourify
   profiles:
-    active: dev
+    active: pro
