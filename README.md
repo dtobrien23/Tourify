@@ -27,3 +27,4 @@ This directory contains the pre-trained Random Forest models saved as pickle fil
 
 
 ![image](./Linux_Docker_Working-Flow_Diagram.png)
+![image](./tech stack archi .png)
