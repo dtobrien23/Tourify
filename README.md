@@ -56,36 +56,6 @@ This directory contains the pre-trained Random Forest models saved as pickle fil
 * [Uber NYC for-hire vehicles trip data (2021)](https://www.kaggle.com/datasets/shuhengmo/uber-nyc-forhire-vehicles-trip-data-2021)  
 * [Free historical weather data (table per month)](https://www.wunderground.com/history/monthly/us/ny/new-york-city/)
   
-We also curated our own datasets, such as a list of major attractions in Manhattan and a relational table that links the closest subway station to a taxi zone in the taxi data that the [nyc.gov](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) releases:
-  
-  | Name                           | Station Complex ID                                              |
-|--------------------------------|-----------------------------------------------------------------|
-| Empire State Building          | \'34 St-Penn Station (A,C,E)\', \'34 St-Penn Station (1,2,3)\'      |
-| Statue of Liberty             | \'South Ferry (1)/Whitehall St (R,W)\', \'Bowling Green (4,5)\'     |
-| Brooklyn Bridge               | -                                                               |
-| Metropolitan Museum of Art    | \'86 St (4,5,6)\'                                                 |
-| Museum of Modern Art (MoMA)   | \'47-50 Sts-Rockefeller Center (B,D,F,M)\'                        |
-| Guggenheim Museum             | \'Lexington Av-53 St (E,M)/51 St (6)\'                            |
-| Central Park                  | \'59 St-Columbus Circle (A,B,C,D,1)\'                             |
-| Bryant Park                   | \'47-50 Sts-Rockefeller Center (B,D,F,M)\'                        |
-| (repeat)                      |                                                                 |
-| High Line                     | \'Canarsie-Rockaway Pkwy (L)\'                                    |
-| Broadway                      | \'Broadway (N,W)\', \'163 St-Amsterdam Av (C)\'                     |
-| Radio City Music Hall         | \'50 St (D)\', \'49 St (N,R,W)\', \'47-50 Sts-Rockefeller Center\'   |
-| (repeat)                      | \(B,D,F,M)\'                                                      |
-| Lincoln Center                | \'66 St-Lincoln Center (1)\'                                      |
-| Greenwich Village             | \'34 St-Hudson Yards (7)\'                                        |
-| Harlem                        | \'Central Park North-110 St (2,3)\'                               |
-| Eataly                        | \'23 St (1)\'                                                     |
-| Grand Central Market          | \'Grand Central-42 St (S,4,5,6,7)\'                               |
-| Whitney Museum                | \'14 St-Union Sq (L,N,Q,R,W,4,5,6)\'                              |
-| Museum of Arts and Design     | \'59 St-Columbus Circle (A,B,C,D,1)\'                             |
-| New Museum                    | ‘Houston St (1)’, ‘2 Av (F)\'                                    |
-| Morgan Library & Museum       | \'Grand Central-42 St (S,4,5,6,7)\'                               |
-| Trinity Church                | \'Canal St (J,N,Q,R,W,Z,6)\'                                      |
-| Fraunces Tavern               | \'South Ferry (1)/Whitehall St (R,W)\'                            |
-
-  
 ## How to Run Tourify Locally
 
 - refer to Linux Server Architecture Diagram above when you want to run Tourify locally 
