@@ -25,8 +25,57 @@ The API applies rounding to the prediction value and ensures that it does not ex
 #### pickle_files
 This directory contains the pre-trained Random Forest models saved as pickle files. Each pickle file corresponds to a specific taxi location ID and is loaded by the `models.py` file.
 
+## Linux Server Architecture Diagram
 
 ![image](./Linux_Docker_Working-Flow_Diagram.png)
 
+## Project Tech Stack & Architecture 
+
 ![image](https://github.com/ajwadjaved/ManhattanJourney/assets/87294643/5b9b5dc9-233d-4e6d-b742-b011ea1e04a7)
+
+## How to Run Tourify Locally:
+
+- refer to Linux Server Architecture Diagram above when you want to run Tourify locally 
+
+Here are the steps to properly run the application:
+- download docker engine 
+- create a network named tourify within docker engine and indicate the network's subnet(172.18.0.0/16)
+
+### Frontend container: 
+- add .env file which contains the necessary api key in frontend folder
+- run npm install && npm run build on IDE and get the build folder
+- upload the build folder and frontend dockerfile to docker engine
+- build docker image 
+- run docker container under the tourify network, map the docker port to a linux port if needed
+- edit the coop policy in frontend Apache configuration file to allow pop-up window if the google-login function is blocked by your browser
+- restart container after apache editing
+
+### Backend container: 
+- upload .jar file and backend dockerfile to docker engine
+- build docker image 
+- run docker container under the tourify network, map the docker port to a linux port if needed
+
+### ML container: 
+- upload the whole ML folder include model, flask file and requirement.txt and ML dockerfile to docker engine
+- build docker image 
+- run docker container under the tourify network, map the docker port to a linux port if needed
+- allocate ip :172.18.0.3 manually for ML container when run ML container 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
