@@ -7,6 +7,14 @@ Immerse yourself in Manhattan with Tourify! Tourify integrates React's interacti
   
 Uniting tech and user-centric design, Tourify elevates your journey, redefining urban exploration. Built for scalability, its modern architecture can enhance travel worldwide.
   
+**Welcome Screen**
+  
+![Screenshot 11](/images/img1.png)
+  
+**User Interface**
+  
+![Screenshot 2](/images/img2.png)
+      
 ### Features
 * Creating user accounts using Google OAuth
 * Real-time busyness predictions for our curated list of attractions in Manhattan
