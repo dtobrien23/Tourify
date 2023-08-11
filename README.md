@@ -56,7 +56,7 @@ This directory contains the pre-trained Random Forest models saved as pickle fil
 * [Foot Traffic Data from BestTime.app](https://besttime.app/)
 * [Weather Data from Open Weather](https://openweathermap.org/current)
 * [Weather Data from Weather Underground](https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA)
-* [Top Attractions within Manhattan]((https://www.timeout.com/newyork/attractions/new-york-attractions)
+* [Top Attractions within Manhattan](https://www.timeout.com/newyork/attractions/new-york-attractions)
 
   
 ## How to Run Tourify Locally
