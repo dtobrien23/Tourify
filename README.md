@@ -51,10 +51,13 @@ This directory contains the pre-trained Random Forest models saved as pickle fil
   
 ## Datasets
   
-* [MTA Subway Hourly Ridership](https://data.ny.gov/Transportation/MTA-Subway-Hourly-Ridership-Beginning-February-202/wujg-7c2s)  
-* [TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)  
-* [Uber NYC for-hire vehicles trip data (2021)](https://www.kaggle.com/datasets/shuhengmo/uber-nyc-forhire-vehicles-trip-data-2021)  
-* [Free historical weather data (table per month)](https://www.wunderground.com/history/monthly/us/ny/new-york-city/)
+* [Yellow Taxi data from NYC Taxi and Limousine Commission Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+* [Subway Hourly Ridership from Metropolitan Transportation Authority](https://data.ny.gov/Transportation/MTA-Subway-Hourly-Ridership-Beginning-February-2022/ekwu-khcy)
+* [Foot Traffic Data from BestTime.app](https://besttime.app/)
+* [Weather Data from Open Weather](https://openweathermap.org/current)
+* [Weather Data from Weather Underground](https://www.wunderground.com/history/daily/us/ny/new-york-city/KLGA)
+* [Top Attractions within Manhattan]((https://www.timeout.com/newyork/attractions/new-york-attractions)
+
   
 ## How to Run Tourify Locally
 
