@@ -1,13 +1,26 @@
 ## Tourify
   
 Temporarily hosted on UCD servers: https://csi6220-2-vm1.ucd.ie/
-  
-Tourify is an app developed to help user's discover New York in a new light.
-  
 
+### Abstract
+Exploring a new city, particularly one as diverse and vibrant as Manhattan can be a daunting task for tourists. They often grapple with challenges like navigating unfamiliar attractions, gauging crowd density, and lacking personalised travel recommendations. Such issues can detract from their overall experience and potentially hinder willingness to travel and explore more. To address these issues our development team has created a dynamic single-page web application that we are naming Tourify. By combining the interactivity of React on the frontend, the robustness of Spring Boot for our backend, and integrating machine learning models we developed a holistic solution aimed at simplifying the exploration of Manhattan. Our application offers features such as real-time route planning, geolocation-based check-ins at tourist attractions and an innovative Non-Fungible Token (NFT) minting feature tied to user check-ins. In addition to this our machine learning models predict the level of activity at tourist attractions which empowers users to plan their journeys strategically and avoid crowded locations. By addressing the common challenges faced by tourists when navigating a new city our web application not only elevates the travel experience but also showcases the successful fusion of technology and user-centric design. The result is an innovative platform that revolutionises the way tourists engage with and immerse themselves in Manhattan's cultural and architectural richness. The application is built using a modern technology stack and architecture that is scalable and could be expanded to other cities across the globe elevating the travel experience of an international user base.
+
+### Features
+* Creating user accounts using Google OAuth
+* Real-time busyness predictions for our curated list of attractions in Manhattan
+* Route Planning for users to get real-time directions
+* Geo-location based Check-ins at tourist attractions
+* Rewards for Check-ins that include Badges and a unique minted NFTs sent to their wallet address
+* Real-time weather display updates in Manhattan
+* A recommender for users to see the nearest and least busy attractions
+* Ability to change the users NFT wallet address
+* Ability to delete their accounts and all user data hosted on our servers
+* Ability to provide user feedback to be fed back into the Machine Learning model to improve the predictions
+* A helping starting guide with attached screenshots for how to use each feature on the application
+  
 ### Machine Learning
 This folder contains the code for a Flask API that predicts the demand for taxis in different zones based on input parameters. It uses pre-trained Random Forest models that are loaded from pickle files.
-
+  
 #### models.py
 This file contains the code to load the pre-trained Random Forest models from pickle files. The models are stored in a dictionary called `models`, where the keys are the taxi location IDs and the values are the corresponding loaded models. The pickle files for the models are located in the `pickle_files` directory.
 
