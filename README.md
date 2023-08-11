@@ -3,8 +3,10 @@
 Temporarily hosted on UCD servers: https://csi6220-2-vm1.ucd.ie/
 
 ### Abstract
-Exploring a new city, particularly one as diverse and vibrant as Manhattan can be a daunting task for tourists. They often grapple with challenges like navigating unfamiliar attractions, gauging crowd density, and lacking personalised travel recommendations. Such issues can detract from their overall experience and potentially hinder willingness to travel and explore more. To address these issues our development team has created a dynamic single-page web application that we are naming Tourify. By combining the interactivity of React on the frontend, the robustness of Spring Boot for our backend, and integrating machine learning models we developed a holistic solution aimed at simplifying the exploration of Manhattan. Our application offers features such as real-time route planning, geolocation-based check-ins at tourist attractions and an innovative Non-Fungible Token (NFT) minting feature tied to user check-ins. In addition to this our machine learning models predict the level of activity at tourist attractions which empowers users to plan their journeys strategically and avoid crowded locations. By addressing the common challenges faced by tourists when navigating a new city our web application not only elevates the travel experience but also showcases the successful fusion of technology and user-centric design. The result is an innovative platform that revolutionises the way tourists engage with and immerse themselves in Manhattan's cultural and architectural richness. The application is built using a modern technology stack and architecture that is scalable and could be expanded to other cities across the globe elevating the travel experience of an international user base.
-
+Immerse yourself in Manhattan with Tourify! Tourify integrates React's interactivity, Spring Boot's robustness, and modern Machine Learning tools for an all-in-one solution. Tourify offers real-time route planning, geolocation check-ins at attractions, and collect uniquely minted NFTs to commemorate your visits. Our Artificial Intelligence model empowers you to make smart travel decisions by calculating the crowd density at prime attractions throughout Manhattan — even into the future!
+  
+Uniting tech and user-centric design, Tourify elevates your journey, redefining urban exploration. Built for scalability, its modern architecture can enhance travel worldwide.
+  
 ### Features
 * Creating user accounts using Google OAuth
 * Real-time busyness predictions for our curated list of attractions in Manhattan
@@ -76,7 +78,7 @@ We also curated our own datasets, such as a list of major attractions in Manhatt
 | Fraunces Tavern               | \'South Ferry (1)/Whitehall St (R,W)\'                            |
 
   
-## How to Run Tourify Locally:
+## How to Run Tourify Locally
 
 - refer to Linux Server Architecture Diagram above when you want to run Tourify locally 
 
@@ -86,7 +88,7 @@ Here are the steps to properly run the application:
 - get a ssl cert for your localhost to support google-login function
 - change the host name of each api request to localhost 
 
-#### Frontend container: 
+#### Frontend container
 - add .env file which contains the necessary api key in frontend folder
 - run npm install && npm run build on IDE and get the build folder
 - upload the build folder and frontend dockerfile to docker engine
@@ -95,20 +97,20 @@ Here are the steps to properly run the application:
 - edit the coop policy in frontend Apache configuration file to allow pop-up window if the google-login function is blocked by your browser
 - restart container after apache editing
 
-#### Backend container: 
+#### Backend container 
 - upload .jar file and backend dockerfile to docker engine
 - build docker image 
 - run docker container under the tourify network, map the docker port to a linux port if needed
 
-#### ML container: 
+#### ML container
 - upload the whole ML folder include model, flask file and requirement.txt and ML dockerfile to docker engine
 - build docker image 
 - run docker container under the tourify network, map the docker port to a linux port if needed
 - allocate ip :172.18.0.3 manually for ML container when run ML container 
 
-
-
-
+#### Contact
+  
+This project was made for the UCD COMP47360 summer project. For any questions feel free to get in touch with any of the the collaborators.
 
 
 
