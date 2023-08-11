@@ -39,7 +39,9 @@ This directory contains the pre-trained Random Forest models saved as pickle fil
 
 Here are the steps to properly run the application:
 - download docker engine 
-- create a network named tourify within docker engine and indicate the network's subnet(172.18.0.0/16)
+- create a network named tourify within docker engine and indicate the network's subnet(172.18.0.0/16)( as to fix ML container's ip address)
+- get a ssl cert for your localhost to support google-login function
+- change the host name of each api request to localhost 
 
 ### Frontend container: 
 - add .env file which contains the necessary api key in frontend folder
