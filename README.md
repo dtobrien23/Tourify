@@ -110,7 +110,7 @@ Here are the steps to properly run the application:
 
 #### Contact
   
-This project was made for the UCD COMP47360 summer project. For any questions feel free to get in touch with any of the the collaborators.
+This project was made for the UCD COMP47360 summer project. For any questions feel free to get in touch with any of the collaborators.
 
 
 
