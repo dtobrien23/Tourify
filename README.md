@@ -3,7 +3,7 @@
 Temporarily hosted on UCD servers: https://csi6220-2-vm1.ucd.ie/
 
 ### Abstract
-Immerse yourself in Manhattan with Tourify! Tourify integrates React's interactivity, Spring Boot's robustness, and modern Machine Learning tools for an all-in-one solution. Tourify offers real-time route planning, geolocation check-ins at attractions, and collect uniquely minted NFTs to commemorate your visits. Our Artificial Intelligence model empowers you to make smart travel decisions by calculating the crowd density at prime attractions throughout Manhattan — even into the future!
+Immerse yourself in Manhattan with Tourify! Tourify integrates React's interactivity, Spring Boot's robustness, and modern Machine Learning tools for an all-in-one solution. Tourify offers real-time route planning, geolocation check-ins at attractions, and uniquely minted NFTs to commemorate your visits. Our Artificial Intelligence model empowers you to make smart travel decisions by calculating the crowd density at prime attractions throughout Manhattan — even into the future!
   
 Uniting tech and user-centric design, Tourify elevates your journey, redefining urban exploration. Built for scalability, its modern architecture can enhance travel worldwide.
   
