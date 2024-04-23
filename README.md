@@ -1,6 +1,6 @@
 # Tourify
 ## Abstract
-Dive into the heart of Manhattan with Tourify! Tourify seamlessly combines React's interactivity, Spring Boot's robustness, and cutting-edge machine learning tools to offer an all-in-one solution to discovering the best attractions to visit and the ideal times to explore them. Tourify provides route planning, geolocation check-ins at attractions, and even mints unique NFTs to commemorate your visits. Our machine learning model empowers you to make intelligent travel decisions by forecasting crowd density at prime Manhattan attractions, both in real time and for future visits.
+Dive into the heart of Manhattan with Tourify! Tourify seamlessly combines React's interactivity, Spring Boot's robustness, and cutting-edge machine learning tools to offer an all-in-one solution to discovering the best attractions to visit and the ideal times to explore them. Tourify provides route planning, geolocation check-ins at attractions, and mints unique NFTs to commemorate your visits. Our machine learning model empowers you to make intelligent travel decisions by forecasting crowd density at prime Manhattan attractions, both in real time and for future visits.
 
 ![Screenshot 11](/images/img1.png)
 <br><br>
