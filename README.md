@@ -7,16 +7,16 @@ Dive into the heart of Manhattan with Tourify! Tourify seamlessly combines React
 ![Screenshot 2](/images/img2.png)
       
 ## Features
-* Creating user accounts using Google OAuth
 * Real-time busyness predictions for our curated list of attractions in Manhattan
 * Route Planning for users to get directions to their chosen attraction
-* Geo-location based check-ins at tourist attractions
-* Rewards for check-ins such as badges and uniquely minted NFTs sent to their wallet address
+* Creating user accounts using Google OAuth
+* Geolocation based check-ins at tourist attractions
+* Rewards for check-ins such as badges and uniquely minted NFTs sent to user's wallet address
 * Real-time weather display updates in Manhattan
 * A Recommender feature that recommends the best attractions for users based on their current location and the current busyness of attractions
 * Ability for users to delete their accounts and all user data hosted on our servers
 * Ability for users to provide feedback
-* A helpfulo starting guide with attached screenshots for how to use each feature on the application
+* A helpful start guide with steps detailing how to use each feature
 
 ## Video Demonstration
 Below is a video showcasing Tourify in action (skip to 1:17 to see the demonstration).
